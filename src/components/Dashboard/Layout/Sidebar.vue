@@ -1,0 +1,77 @@
+<script setup>
+import HomeIcon from '../../icons/IconHome.vue'
+import CalendarIcon from '../../icons/IconCalendar.vue'
+import DietIcon from '../../icons/IconDiet.vue'
+import MessagesIcon from '../../icons/IconMessages.vue'
+import PatientsIcon from '../../icons/IconPatients.vue'
+import QuotesIcon from '../../icons/IconQuotes.vue'
+import QuizzesIcon from '../../icons/IconQuizzes.vue'
+import ResultsIcon from '../../icons/IconResults.vue'
+import SettingsIcon from '../../icons/IconSettings.vue'
+
+import MedicineIcon from '../../icons/IconMedicine.vue'
+import ProfileIcon from '../../icons/IconProfile.vue'
+import { RouterLink } from 'vue-router'
+
+</script>
+
+<template>
+
+  <div id="sidebarMenu" class="d-md-flex flex-column flex-shrink-0 overflow-auto sidebar collapse px-3">
+    <img alt="NaviWell" class="logo mx-auto m-2 img-fluid" src="@/assets/naviwell-logo.png" />
+    <ul class="nav nav-pills nav-flush mb-auto text-center d-flex justify-content-center py-3 gap-3">
+      <li class="nav-item mx-auto m-2">
+        <RouterLink to="/home" class="nav-link p-3 rounded-circle">
+          <HomeIcon width="30" height="30" />
+        </RouterLink>
+      </li>
+      <li class="nav-item">
+        <RouterLink to="/about" class="nav-link p-3 rounded-circle">
+          <CalendarIcon width="30" height="30" />
+        </RouterLink>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link p-3 rounded-circle" aria-current="page" title="" data-bs-toggle="tooltip"
+          data-bs-placement="right" data-bs-original-title="Home">
+          <MessagesIcon width="30" height="30" />
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link p-3 rounded-circle" aria-current="page" title="" data-bs-toggle="tooltip"
+          data-bs-placement="right" data-bs-original-title="Home">
+          <QuizzesIcon width="30" height="30" />
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link p-3 rounded-circle" aria-current="page" title="" data-bs-toggle="tooltip"
+          data-bs-placement="right" data-bs-original-title="Home">
+          <PatientsIcon width="30" height="30" />
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link p-3 rounded-circle" aria-current="page" title="" data-bs-toggle="tooltip"
+          data-bs-placement="right" data-bs-original-title="Home">
+          <ResultsIcon width="30" height="30" />
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link p-3 rounded-circle" aria-current="page" title="" data-bs-toggle="tooltip"
+          data-bs-placement="right" data-bs-original-title="Home">
+          <DietIcon width="30" height="30" />
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link p-3 rounded-circle" aria-current="page" title="" data-bs-toggle="tooltip"
+          data-bs-placement="right" data-bs-original-title="Home">
+          <QuotesIcon width="30" height="30" />
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link p-3 rounded-circle" aria-current="page" title="" data-bs-toggle="tooltip"
+          data-bs-placement="right" data-bs-original-title="Home">
+          <SettingsIcon width="30" height="30" />
+        </a>
+      </li>
+    </ul>
+  </div>
+</template>

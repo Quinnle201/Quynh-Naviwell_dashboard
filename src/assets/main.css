@@ -1,35 +1,96 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
-
   font-weight: normal;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
+body {
+  font-size: .875rem;
+  background: #FFF;
+  padding: 4.5rem 0.5rem 0.5rem 7.5rem;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+/*
+ * Sidebar
+ */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+  background: #F4F4FF;
+  width: 7rem;
+}
+
+@media (max-width: 767.98px) {
+  .sidebar {
+    top: 4.5rem;
   }
-}
 
-@media (min-width: 1024px) {
+  .sidebar .logo {
+    display: none;
+  }
+
   body {
-    display: flex;
-    place-items: center;
+    padding-top: 5.5rem;
+    padding-left: 0.5rem;
   }
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+.sidebar .nav-link {
+  font-weight: 500;
+  background-color: #FFF;
+}
+
+.sidebar .nav-link path {
+  fill: #AFAFAF;
+}
+
+.sidebar .router-link-active {
+  background-color: #0258BC;
+}
+
+.sidebar .router-link-active path {
+  fill: #FFF;
+}
+
+/*
+ * Navbar
+ */
+
+.navbar {
+  background: #F4F4FF;
+
+}
+
+@media (max-width: 767.98px) {
+  .navbar {
+    height: 5rem;
   }
+}
+
+.text-small {
+  font-size: 85%;
+}
+
+
+.bi {
+  vertical-align: -.125em;
+  pointer-events: none;
+  fill: currentColor;
+}
+
+.scrollarea {
+  overflow-y: auto;
+}
+
+.fw-semibold {
+  font-weight: 600;
+}
+
+.lh-tight {
+  line-height: 1.25;
 }
