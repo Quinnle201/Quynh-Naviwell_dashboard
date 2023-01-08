@@ -1,4 +1,23 @@
 @import './base.css';
+@import './fonts.css';
+
+:root {
+  --bg-color:#5C90F1;
+  --main-color: #0258BC;
+  --text-color: #464646;
+  --border-color: #737373;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+  object-fit: cover;
+  display: block;
+}
 
 #app {
   margin: 0 auto;
@@ -7,6 +26,7 @@
 
 body {
   font-size: .875rem;
+  font-family: "Metropolis";
   background: #FFF;
   padding: 4.5rem 0.5rem 0.5rem 7.5rem;
 }
@@ -41,8 +61,13 @@ body {
 }
 
 .sidebar .nav-link {
-  font-weight: 500;
   background-color: #FFF;
+  width: 75px;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
 }
 
 .sidebar .nav-link path {
@@ -93,4 +118,341 @@ body {
 
 .lh-tight {
   line-height: 1.25;
+}
+
+/* header */
+.user-block {
+  padding-right: 68px;
+}
+
+/* homepage */
+.wrapper {
+  padding: 30px 40px;
+}
+
+.top-block {
+  margin-bottom: 36px;
+  display: flex;
+}
+
+.top-block-logo {
+  background: #FFFFFF;
+  min-width: 340px;
+  width: auto;
+  margin-right: 34px;
+  padding: 14px 25px 14px 14px;
+  display: flex;
+  align-items: center;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+}
+
+.top-block-logo img {
+  max-width: 110px;
+  max-height: 110px;
+  margin-right: 4px;
+}
+
+.top-block-info_text {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Montserrat';
+  color: #3D77A2;
+}
+
+.top-block-info_text span:first-child {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 29px;
+}
+
+.top-block-info_text span {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  white-space: nowrap;
+}
+
+.top-block-info {
+  background-color: #222873;
+  width: 100%;
+  padding: 25px 30px;
+  color: #FFFFFF;
+  border: 0.5px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.top-block-info h3 {
+  margin-bottom: 14px;
+  font-size: 48px;
+  font-weight: 500;
+  line-height: 48px;
+}
+
+.top-block-info-date {
+  display: flex;
+}
+
+.top-block-info-date span:first-child {
+  margin-right: 54px;
+}
+
+.top-block-info-date span {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.main-grid {
+  display: grid;
+  /* grid-template-columns: repeat(3, auto); */
+  grid-template-columns: 40fr 30fr 30fr;
+  gap: 32px;
+}
+
+/* homepage cards */
+.cards-wrapper {
+  min-width: 325px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dashboard-card {
+  background-color: #FFFEFE;
+  display: flex;
+  flex-direction: column;
+  border: 0.75px solid #737373;
+  border-radius: 16.7164px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.dashboard-card h4 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--text-color);
+}
+
+.dashboard-card-btn {
+  align-self: center;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--main-color);
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+.dashboard-card-btn.active-btn:after, 
+.dashboard-card-btn.active-btn:before {
+  content: "*";
+  color: red;
+}
+
+.calendar-card {
+  margin-bottom: 32px;
+  padding: 26px 23px 0 23px;
+}
+
+.calendar-card h4 {
+  margin-bottom: 40px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.calendar-card-list {
+  padding-left: 28px;
+}
+
+.calendar-card-list ul {
+  margin-top: 27px;
+  margin-left: 26px;
+}
+
+.calendar-card-list ul li {
+  background-color: #F4F4FF;
+  margin-bottom: 14px;
+  padding: 20px 16px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+  border-radius: 10px;
+}
+
+.calendar-card-list ul li:last-child {
+  margin-bottom: 0;
+}
+
+.calendar-card-list ul li:before {
+  content: url("/public/img/marker.svg");
+  position: absolute;
+  left: -28px;
+  top: -5px;
+}
+
+.calendar-card-list ul li:after {
+  content: "";
+  position: absolute;
+  left: -22px;
+  top: 24px;
+  background-color: #0467DC;
+  width: 2px;
+  height: 40px;
+}
+
+.calendar-card-list ul li.active:before {
+  content: url("/public/img/marker-active.svg");
+}
+
+.calendar-card-list ul li .calendar-list-time {
+  min-width: 92px;
+  margin-right: 25px;
+  font-size: 20px;
+}
+
+.calendar-card-list ul li.active {
+  background-color: var(--bg-color);
+  color: #FFFFFF;
+}
+
+.cards-wrapper-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.cards-wrapper-grid .dashboard-card {
+  padding: 20px 25px;
+}
+
+.cards-wrapper-grid .dashboard-card h4 {
+  margin-bottom: 50px;
+}
+
+.cards-wrapper-grid .dashboard-card img {
+  max-width: 90px;
+  margin: 0 auto 50px;
+}
+
+.messages-card {
+  padding: 15px;
+}
+
+.messages-card ul li {
+  background-color: #F4F4FF;
+  margin-bottom: 26px;
+  padding: 12px 12px 12px 30px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #5C90F1;
+  border-radius: 10px;
+}
+
+/* .messages-card ul li:nth-child(2) {
+  padding-left: 40px;
+}
+
+.messages-card ul li:nth-child(3) {
+  padding-left: 30px;
+} */
+
+.messages-card ul li div {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px;
+  color: #000000;
+}
+
+.messages-card-name {
+  min-width: 72px;
+  margin-right: 12px;
+  text-align: right;
+}
+
+.patients-card {
+  padding: 25px 22px;
+}
+
+.patients-card ul {
+  list-style: none;
+}
+
+.patients-card ul li {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px;
+  color: #000000;
+}
+
+.patients-card img {
+  max-width: 40px;
+  max-height: 40px;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.education-card {
+  padding: 22px 24px 30px;
+}
+
+.education-card h4 {
+  margin-bottom: 44px;
+}
+
+.education-card img {
+  max-width: 100px;
+  margin: 0 auto 22px;
+}
+
+.education-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.education-card ul li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.education-card ul li:first-child {
+  margin-bottom: 50px;
+}
+
+.quotes-card {
+  min-height: 268px;
+  padding: 20px 25px;
+  justify-content: space-between;
+}
+
+.quotes-card p {
+  /* max-width: 250px; */
+  font-size: 16px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 16px;
+  text-align: center;
+  align-self: center;
+  display: flex;
+}
+
+
+
+
+
+/* hover */
+@media (hover: hover) and (pointer: fine) {
+  .dashboard-card-btn:hover {
+    color: #222873;
+  }
 }

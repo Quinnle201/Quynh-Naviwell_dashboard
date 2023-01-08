@@ -8,7 +8,7 @@ import Sidebar from './Layout/Sidebar.vue'
     <div class="container-fluid">
         <div class="row">
             <Sidebar />
-            <main class="bg-light">
+            <main>
                 <router-view v-slot="{ Component }">
                     <transition name="fade">
                         <component :is="Component" />
