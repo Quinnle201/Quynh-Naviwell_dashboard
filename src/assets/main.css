@@ -290,24 +290,24 @@ body {
 }
 
 .calendar-card-list ul li:before {
-  content: url("/public/img/marker.svg");
+  content: url("/img/marker.svg");
   position: absolute;
   left: -28px;
-  top: -5px;
+  top: -3px;
 }
 
 .calendar-card-list ul li:after {
   content: "";
   position: absolute;
   left: -22px;
-  top: 24px;
+  top: 26px;
   background-color: #0467DC;
   width: 2px;
   height: 40px;
 }
 
 .calendar-card-list ul li.active:before {
-  content: url("/public/img/marker-active.svg");
+  content: url("/img/marker-active.svg");
 }
 
 .calendar-card-list ul li .calendar-list-time {
