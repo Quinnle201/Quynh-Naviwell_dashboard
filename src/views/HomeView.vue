@@ -1,4 +1,6 @@
 <script setup>
+import LabIcon from '../components/icons/IconLab.vue'
+import RecipeIcon from '../components/icons/IconRecipe.vue'
 </script>
 
 <template>
@@ -53,13 +55,15 @@
         <div class="cards-wrapper-grid">
           <div class="dashboard-card">
             <h4>Lab Results</h4>
-            <img src="@/assets/img/icon.svg" alt="Icon" />
+            <!-- <img src="@/assets/img/icon.svg" alt="Icon" /> -->
+            <LabIcon />
             <span class="dashboard-card-btn active-btn">3 New Reports to Review</span>
           </div>
 
           <div class="dashboard-card">
             <h4>Diet & Recipes</h4>
-            <img src="@/assets/img/icon-2.svg" alt="Icon" />
+            <!-- <img src="@/assets/img/icon-2.svg" alt="Icon" /> -->
+            <RecipeIcon />
             <span class="dashboard-card-btn">Add New Diet/Recipes</span>
           </div>
         </div>
