@@ -458,6 +458,68 @@ body {
   display: flex;
 }
 
+
+/* my patients */
+.patients-button {
+  background-color: #FFFEFE;
+  padding: 24px 14px;
+  display: flex;
+  border: 0.746809px solid #737373;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+}
+
+.patients-button a {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 18px;
+  color: #000000;
+  text-decoration: none;
+}
+
+.patients-input {
+  background-color: #FFFEFE;
+  width: 285px;
+  padding: 5px 12px;
+  border: 0.6px solid #737373;
+  border-radius: 14px;
+  box-shadow: 1.71353px 3.42706px 8.56764px rgba(0, 0, 0, 0.25);
+
+  font-family: 'SFPro';
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #858585;
+  outline: none;
+}
+
+.patients-top-wrapper {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.patient-select {
+  background-color: #FFFEFE;
+  background-image: url("@/assets/img/select-icon.svg");
+  background-repeat: no-repeat;
+  background-position: top 50% left 80%;
+  padding: 5px 55px 5px 12px;
+  font-family: 'SFPro';
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #000000;
+  border: 0.6px solid #737373;
+  border-radius: 14px;
+  box-shadow: 1.71353px 3.42706px 8.56764px rgba(0, 0, 0, 0.25);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+
+
 /* hover */
 @media (hover: hover) and (pointer: fine) {
   .dashboard-card-btn:hover {

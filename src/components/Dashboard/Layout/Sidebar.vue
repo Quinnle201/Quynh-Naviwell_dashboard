@@ -45,10 +45,9 @@ import { RouterLink } from 'vue-router'
         </a>
       </li>
       <li class="nav-item">
-        <a href="#" class="nav-link p-3 rounded-circle" aria-current="page" title="" data-bs-toggle="tooltip"
-          data-bs-placement="right" data-bs-original-title="Home">
+        <RouterLink to="/patients" class="nav-link p-3 rounded-circle">
           <PatientsIcon width="30" height="30" />
-        </a>
+        </RouterLink>
       </li>
       <li class="nav-item">
         <a href="#" class="nav-link p-3 rounded-circle" aria-current="page" title="" data-bs-toggle="tooltip"
