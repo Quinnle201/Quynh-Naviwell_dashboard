@@ -23,6 +23,126 @@
                     <option value="2">2</option>
                 </select>
             </div>
+
+            <div class="patients-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Age</th>
+                            <th>Next Appointment</th>
+                            <th>Quiz Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="patients-img">
+                                <img src="@/assets/img/image.png" alt="">
+                                <span>Howard Aarons</span>
+                            </td>
+                            <td>36</td>
+                            <td>December 22, 2022</td>
+                            <td>
+                                <div class="patients-status incomplete">Incomplete</div>
+                            </td>
+                            <td class="patients-details">
+                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="patients-img">
+                                <img src="@/assets/img/image.png" alt="">
+                                <span>Howard Aarons</span>
+                            </td>
+                            <td>36</td>
+                            <td>December 22, 2022</td>
+                            <td>
+                                <div class="patients-status complete">Complete</div>
+                            </td>
+                            <td class="patients-details">
+                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="patients-img">
+                                <img src="@/assets/img/image.png" alt="">
+                                <span>Howard Aarons</span>
+                            </td>
+                            <td>36</td>
+                            <td>December 22, 2022</td>
+                            <td>
+                                <div class="patients-status complete">Complete</div>
+                            </td>
+                            <td class="patients-details">
+                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="patients-img">
+                                <img src="@/assets/img/image.png" alt="">
+                                <span>Howard Aarons</span>
+                            </td>
+                            <td>36</td>
+                            <td>December 22, 2022</td>
+                            <td>
+                                <div class="patients-status incomplete">Incomplete</div>
+                            </td>
+                            <td class="patients-details">
+                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="patients-img">
+                                <img src="@/assets/img/image.png" alt="">
+                                <span>Howard Aarons</span>
+                            </td>
+                            <td>36</td>
+                            <td>December 22, 2022</td>
+                            <td>
+                                <div class="patients-status complete">Complete</div>
+                            </td>
+                            <td class="patients-details">
+                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="patients-img">
+                                <img src="@/assets/img/image.png" alt="">
+                                <span>Howard Aarons</span>
+                            </td>
+                            <td>36</td>
+                            <td>December 22, 2022</td>
+                            <td>
+                                <div class="patients-status incomplete">Incomplete</div>
+                            </td>
+                            <td class="patients-details">
+                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="patients-img">
+                                <img src="@/assets/img/image.png" alt="">
+                                <span>Howard Aarons</span>
+                            </td>
+                            <td>36</td>
+                            <td>December 22, 2022</td>
+                            <td>
+                                <div class="patients-status complete">Complete</div>
+                            </td>
+                            <td class="patients-details">
+                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>
