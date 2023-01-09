@@ -207,21 +207,29 @@ body {
 .main-grid {
   display: grid;
   grid-template-columns: 40fr 30fr 30fr;
-  gap: 32px;
+  gap: 26px;
 }
 
 /* homepage cards */
 .cards-wrapper {
-  min-width: 325px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  gap: 26px;
+}
+
+.cards-wrapper:nth-child(odd) {
+  grid-template-rows: 60fr 40fr;
+}
+
+.cards-wrapper:nth-child(even) {
+  grid-template-rows: 40fr 60fr;
 }
 
 .dashboard-card {
   background-color: #FFFEFE;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  padding: 18px 20px;
   border: 0.75px solid #737373;
   border-radius: 16.7164px;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
@@ -252,8 +260,7 @@ body {
 }
 
 .calendar-card {
-  margin-bottom: 32px;
-  padding: 26px 23px 0 23px;
+  padding-bottom: 0;
 }
 
 .calendar-card h4 {
@@ -267,8 +274,14 @@ body {
   padding-left: 28px;
 }
 
+.messages-card h4,
+.dashboard-card h4 {
+  margin-bottom: 12px;
+}
+
 .calendar-card-list h4 {
   margin-bottom: 0;
+  margin-top: 4px;
   font-size: 24px;
   font-weight: 500;
   line-height: 24px;
@@ -276,14 +289,14 @@ body {
 }
 
 .calendar-card-list ul {
-  margin-top: 27px;
-  margin-left: 26px;
+  margin-top: 16px;
+  margin-left: 30px;
 }
 
 .calendar-card-list ul li {
   background-color: #F4F4FF;
   margin-bottom: 14px;
-  padding: 16px 16px 16px 32px;
+  padding: 12px 16px 12px 32px;
   display: flex;
   align-items: center;
   font-size: 16px;
@@ -334,36 +347,27 @@ body {
   gap: 28px;
 }
 
-.cards-wrapper-grid .dashboard-card {
-  padding: 20px 25px;
-}
-
 .cards-wrapper-grid .dashboard-card h4 {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .cards-wrapper-grid .dashboard-card img {
   max-width: 65px;
-  margin: 0 auto 50px;
-}
-
-.messages-card {
-  padding: 15px;
-}
-
-.messages-card h4,
-.dashboard-card h4 {
-  margin-bottom: 12px;
+  margin: 0 auto 40px;
 }
 
 .messages-card ul li {
   background-color: #F4F4FF;
   margin-bottom: 14px;
-  padding: 14px 12px 14px 30px;
+  padding: 12px 12px 12px 30px;
   display: flex;
   align-items: center;
   border: 1px solid #5C90F1;
   border-radius: 10px;
+}
+
+.messages-card ul li:last-child {
+  margin-bottom: 0;
 }
 
 .messages-card .dashboard-card-btn {
@@ -384,7 +388,6 @@ body {
 }
 
 .patients-card {
-  margin-top: 30px;
   padding: 25px 22px;
 }
 
@@ -410,11 +413,11 @@ body {
 }
 
 .education-card {
-  padding: 22px 24px 30px;
+  justify-content: unset;
 }
 
 .education-card h4 {
-  margin-bottom: 44px;
+  margin-bottom: 40px;
 }
 
 .education-card img {
@@ -425,6 +428,9 @@ body {
 .education-card ul {
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
   list-style: none;
 }
 
@@ -435,13 +441,10 @@ body {
 }
 
 .education-card ul li:first-child {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .quotes-card {
-  min-height: 268px;
-  margin-top: 30px;
-  padding: 20px 25px;
   justify-content: space-between;
 }
 

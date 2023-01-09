@@ -111,10 +111,6 @@
               <img src="@/assets/img/image.png" alt="Patient Photo" />
               <div>Karen Bartley</div>
             </li>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Jack Black</div>
-            </li>
           </ul>
 
           <span class="dashboard-card-btn">Add New Patient</span>
