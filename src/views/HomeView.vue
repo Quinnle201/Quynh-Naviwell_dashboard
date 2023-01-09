@@ -2,138 +2,10 @@
 </script>
 
 <template>
-  <!-- <div class="table-responsive">
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Header</th>
-          <th scope="col">Header</th>
-          <th scope="col">Header</th>
-          <th scope="col">Header</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1,001</td>
-          <td>random</td>
-          <td>data</td>
-          <td>placeholder</td>
-          <td>text</td>
-        </tr>
-        <tr>
-          <td>1,002</td>
-          <td>placeholder</td>
-          <td>irrelevant</td>
-          <td>visual</td>
-          <td>layout</td>
-        </tr>
-        <tr>
-          <td>1,003</td>
-          <td>data</td>
-          <td>rich</td>
-          <td>dashboard</td>
-          <td>tabular</td>
-        </tr>
-        <tr>
-          <td>1,003</td>
-          <td>information</td>
-          <td>placeholder</td>
-          <td>illustrative</td>
-          <td>data</td>
-        </tr>
-        <tr>
-          <td>1,004</td>
-          <td>text</td>
-          <td>random</td>
-          <td>layout</td>
-          <td>dashboard</td>
-        </tr>
-        <tr>
-          <td>1,005</td>
-          <td>dashboard</td>
-          <td>irrelevant</td>
-          <td>text</td>
-          <td>placeholder</td>
-        </tr>
-        <tr>
-          <td>1,006</td>
-          <td>dashboard</td>
-          <td>illustrative</td>
-          <td>rich</td>
-          <td>data</td>
-        </tr>
-        <tr>
-          <td>1,007</td>
-          <td>placeholder</td>
-          <td>tabular</td>
-          <td>information</td>
-          <td>irrelevant</td>
-        </tr>
-        <tr>
-          <td>1,008</td>
-          <td>random</td>
-          <td>data</td>
-          <td>placeholder</td>
-          <td>text</td>
-        </tr>
-        <tr>
-          <td>1,009</td>
-          <td>placeholder</td>
-          <td>irrelevant</td>
-          <td>visual</td>
-          <td>layout</td>
-        </tr>
-        <tr>
-          <td>1,010</td>
-          <td>data</td>
-          <td>rich</td>
-          <td>dashboard</td>
-          <td>tabular</td>
-        </tr>
-        <tr>
-          <td>1,011</td>
-          <td>information</td>
-          <td>placeholder</td>
-          <td>illustrative</td>
-          <td>data</td>
-        </tr>
-        <tr>
-          <td>1,012</td>
-          <td>text</td>
-          <td>placeholder</td>
-          <td>layout</td>
-          <td>dashboard</td>
-        </tr>
-        <tr>
-          <td>1,013</td>
-          <td>dashboard</td>
-          <td>irrelevant</td>
-          <td>text</td>
-          <td>visual</td>
-        </tr>
-        <tr>
-          <td>1,014</td>
-          <td>dashboard</td>
-          <td>illustrative</td>
-          <td>rich</td>
-          <td>data</td>
-        </tr>
-        <tr>
-          <td>1,015</td>
-          <td>random</td>
-          <td>tabular</td>
-          <td>information</td>
-          <td>text</td>
-        </tr>
-      </tbody>
-    </table>
-  </div> -->
-
   <div class="wrapper">
     <div class="top-block">
       <div class="top-block-logo">
-        <img src="/img/variohealth-logo.png" alt="VarioHealth Logo" />
+        <img src="@/assets/img/variohealth-logo.png" alt="VarioHealth Logo" />
         <div class="top-block-info_text">
           <span>VarioHealth</span>
           <span>Advanced Integrative Medicine</span>
@@ -155,7 +27,7 @@
           <h4>Calendar for Monday, November 28</h4>
 
           <div class="calendar-card-list">
-            <span>Today</span>
+            <h4>Today</h4>
 
             <ul>
               <li class="active">
@@ -181,13 +53,13 @@
         <div class="cards-wrapper-grid">
           <div class="dashboard-card">
             <h4>Lab Results</h4>
-            <img src="/img/icon.svg" alt="Icon" />
+            <img src="@/assets/img/icon.svg" alt="Icon" />
             <span class="dashboard-card-btn active-btn">3 New Reports to Review</span>
           </div>
 
           <div class="dashboard-card">
             <h4>Diet & Recipes</h4>
-            <img src="/img/icon-2.svg" alt="Icon" />
+            <img src="@/assets/img/icon-2.svg" alt="Icon" />
             <span class="dashboard-card-btn">Add New Diet/Recipes</span>
           </div>
         </div>
@@ -220,27 +92,27 @@
 
           <ul>
             <li>
-              <img src="/img/image.png" alt="Patient Photo" />
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
               <div>Howard Aarons</div>
             </li>
             <li>
-              <img src="/img/image.png" alt="Patient Photo" />
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
               <div>Edward Alvarez</div>
             </li>
             <li>
-              <img src="/img/image.png" alt="Patient Photo" />
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
               <div>Emily Atilla</div>
             </li>
             <li>
-              <img src="/img/image.png" alt="Patient Photo" />
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
               <div>Courtney Bailey</div>
             </li>
             <li>
-              <img src="/img/image.png" alt="Patient Photo" />
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
               <div>Karen Bartley</div>
             </li>
             <li>
-              <img src="/img/image.png" alt="Patient Photo" />
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
               <div>Jack Black</div>
             </li>
           </ul>
@@ -255,12 +127,12 @@
 
           <ul>
             <li>
-              <img src="/img/icon-3.png" alt="Icon" />
+              <img src="@/assets/img/icon-3.png" alt="Icon" />
               <span class="dashboard-card-btn active-btn">4 Quiz Results to Review</span>
             </li>
 
             <li>
-              <img src="/img/icon-4.png" alt="Icon" />
+              <img src="@/assets/img/icon-4.png" alt="Icon" />
               <span class="dashboard-card-btn active-btn">2 Questionnaire Results to Review</span>
             </li>
           </ul>
