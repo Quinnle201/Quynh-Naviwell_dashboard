@@ -467,9 +467,7 @@ body {
   border: 0.746809px solid #737373;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
-}
-
-.patients-button a {
+  cursor: pointer;
   font-size: 18px;
   font-weight: 400;
   line-height: 18px;

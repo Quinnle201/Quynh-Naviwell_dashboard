@@ -8,7 +8,7 @@
 
             <div class="patients-top-wrapper">
                 <div class="patients-button">
-                    <a href="#">Create New Patient Account</a>
+                    Create New Patient Account
                 </div>
 
                 <form class="" method="get">
@@ -19,8 +19,10 @@
 
                 <select class="patient-select">
                     <option value="">Sort</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
+                    <option value="1">Last visit</option>
+                    <option value="2">Age</option>
+                    <option value="3">Name A-Z</option>
+                    <option value="4">Name Z-A</option>
                 </select>
             </div>
 
