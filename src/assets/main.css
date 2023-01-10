@@ -1,5 +1,6 @@
 @import './base.css';
 @import './fonts.css';
+@import './buttons.css';
 
 :root {
   --primary:#5C90F1;
@@ -17,6 +18,11 @@ img {
   max-width: 100%;
   object-fit: cover;
   display: block;
+}
+
+button {
+  background-color: transparent;
+  border: none;
 }
 
 #app {
@@ -639,6 +645,9 @@ body {
 .calendar-btn {
   display: flex;
   align-items: center;
+}
+
+.calendar-btn svg {
   cursor: pointer;
 }
 
@@ -649,6 +658,7 @@ body {
   line-height: 20px;
   text-align: center;
   color: var(--primary);
+  cursor: pointer;
 }
 
 .calendar-visit-type ul {
@@ -693,6 +703,106 @@ body {
   background-color: #FFFCBC;
 }
 
+/* calendar popup */
+.type-select {
+  background-color: #EFEFEF;
+  margin-bottom: 24px;
+  display: flex;
+  border-radius: 20px;
+}
+
+.type-select-item {
+  padding: 12px 20px 12px 24px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.type-select-item.active {
+  background-color: var(--primary);
+  font-size: 14px;
+  font-weight: 500;
+  color: #FFFFFF;
+}
+
+.popup-content-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-content-item label {
+  margin: 0 0 6px 8px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  color: #000000;
+}
+
+.popup-content-item .label-w-icon {
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.popup-content-item .label-w-icon input {
+  margin-left: -8px;
+  margin-top: 6px;
+}
+
+.popup-content-item .label-w-icon svg {
+  width: 24px;
+  position: absolute;
+  right: 14px;
+  top: 40%;
+}
+
+.popup-content-item .label-w-icon svg path {
+  fill: #B8B8B8;
+}
+
+.popup-content-item input, 
+.popup-content-item textarea, 
+.popup-content-item select {
+  margin-bottom: 14px;
+  padding-left: 16px;
+  border: 1px solid #737373;
+  border-radius: 16px;
+  outline: none;
+}
+
+.popup-content-item input {
+  height: 50px;
+}
+
+.popup-content-item textarea {
+  height: 104px;
+  resize: none;
+}
+
+.popup-content-item select {
+  background-color: #FFFEFE;
+  background-image: url("@/assets/img/select-icon.svg");
+  background-repeat: no-repeat;
+  background-position: top 50% left 80%;
+  height: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #6A6A6A;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.popup-content-item-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.popup-content-item-wrapper input {
+  max-width: 155px;
+}
 
 
 

@@ -1,12 +1,29 @@
 <script>
+import Modal from '../components/Dashboard/Layout/Modal.vue'
 import AddIcon from '../components/icons/IconAdd.vue'
+import CalendarIcon from '../components/icons/IconCalendar.vue'
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 
 export default {
     components: {
+        Modal, 
+        AddIcon,
         VueCal, 
-        AddIcon
+        CalendarIcon
+    },
+    data() {
+      return {
+        isModalVisible: false,
+      };
+    },
+    methods: {
+        showModal() {
+            this.isModalVisible = true;
+        },
+        closeModal() {
+            this.isModalVisible = false;
+        },
     },
 }
 </script>
@@ -39,7 +56,52 @@ export default {
 
             <div class="calendar-btn">
                 <AddIcon />
-                <div class="calendar-btn-text">Add New Event</div>
+                <button type="button" class="calendar-btn-text" @click="showModal">Add New Event</button>
+                <Modal v-show="isModalVisible" @close="closeModal">
+                    <template #header>Add New Event</template>
+                    <template #content>
+                        <div class="type-select">
+                            <div class="type-select-item active">Appointment</div>
+                            <div class="type-select-item">Telehealth</div>
+                            <div class="type-select-item">Personal</div>
+                        </div>
+                        <form>
+                            <div class="popup-content-item">
+                                <label>Patient Name</label>
+                                <input type="text" />
+                            </div>
+
+                            <div class="popup-content-item">
+                                <label class="label-w-icon">Date
+                                    <input type="text" />
+                                    <CalendarIcon />
+                                </label>
+                            </div>
+
+                            <div class="popup-content-item-wrapper">
+                                <div class="popup-content-item">
+                                    <label>From</label>
+                                    <select>
+                                        <option value="">09:00</option>
+                                    </select>
+                                </div>
+
+                                <div class="popup-content-item">
+                                    <label>To</label>
+                                    <select>
+                                        <option value="">09:30</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="popup-content-item">
+                                <label for="textarea">Notes</label>
+                                <textarea id="textarea"></textarea>
+                            </div>
+                        </form>
+                    </template>
+                    <template #footer></template>
+                </Modal>
             </div>
         </div>
 
