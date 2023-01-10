@@ -2,7 +2,7 @@
 @import './fonts.css';
 
 :root {
-  --bg-color:#5C90F1;
+  --primary:#5C90F1;
   --main-color: #0258BC;
   --text-color: #464646;
   --border-color: #737373;
@@ -128,6 +128,21 @@ body {
 /* homepage */
 .wrapper {
   padding: 30px 40px;
+}
+
+.layout-wrapper {
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.layout-wrapper h3 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 28px;
+  color: #000000;
 }
 
 .top-block {
@@ -302,7 +317,7 @@ body {
 }
 
 .calendar-card-list ul li.active {
-  background-color: var(--bg-color);
+  background-color: var(--primary);
   color: #FFFFFF;
 }
 
@@ -327,7 +342,7 @@ body {
   padding: 12px 12px 12px 30px;
   display: flex;
   align-items: center;
-  border: 1px solid #5C90F1;
+  border: 1px solid var(--primary);
   border-radius: 10px;
 }
 
@@ -457,7 +472,7 @@ body {
 }
 
 .patients-top-wrapper {
-  margin-top: 24px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -611,6 +626,76 @@ body {
   width: 38px;
   height: 38px;
 }
+
+/* calendar page */
+.calendar-wrapper {
+  height: 78vh;
+}
+
+.calendar-visit-type {
+  display: flex;
+}
+
+.calendar-btn {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.calendar-btn-text {
+  margin-left: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+  color: var(--primary);
+}
+
+.calendar-visit-type ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.calendar-visit-type ul li {
+  margin-right: 40px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px;
+  color: #8E8E8E;
+}
+
+.calendar-visit-type ul li p {
+  margin-bottom: 6px;
+}
+
+.calendar-visit-type ul li span {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto;
+  display: flex;
+  border-radius: 5px;
+}
+
+.calendar-visit-type ul li:first-child span {
+  background-color: #B2C4E7;
+}
+
+.calendar-visit-type ul li:nth-child(2) span {
+  background-color: #CCEED0;
+}
+
+.calendar-visit-type ul li:nth-child(3) span {
+  background-color: #FED9FF;
+}
+
+.calendar-visit-type ul li:last-child span {
+  background-color: #FFFCBC;
+}
+
+
+
+
 
 /* hover */
 @media (hover: hover) and (pointer: fine) {

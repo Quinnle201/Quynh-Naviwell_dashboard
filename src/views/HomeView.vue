@@ -4,32 +4,33 @@ import LabIcon from '../components/icons/IconLab.vue'
 import RecipeIcon from '../components/icons/IconRecipe.vue'
 
 export default {
-  components: { Card,
-     LabIcon,
-      RecipeIcon
+  components: {
+    Card, 
+    LabIcon, 
+    RecipeIcon
+  },
+  methods: {
+    currentDate() {
+      let date = new Date();
+      let currentWeekday = date.toLocaleString('en-us', {weekday: 'short'});
+      let currentMonth = date.toLocaleString('en-us', {month: 'short'});
+      let currentDay = date.toLocaleString('en-us', {day: 'numeric'});
+      let currentYear = date.toLocaleString('en-us', {year: 'numeric'});
+      let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
+      return currentDate;
     },
-    methods: {
-      currentDate() {
-        let date = new Date();
-        let currentWeekday = date.toLocaleString('en-us', {weekday: 'short'});
-        let currentMonth = date.toLocaleString('en-us', {month: 'short'});
-        let currentDay = date.toLocaleString('en-us', {day: 'numeric'});
-        let currentYear = date.toLocaleString('en-us', {year: 'numeric'});
-        let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
-        return currentDate;
-      },
 
-      currentTime() {
-        let date = new Date();
-        let hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-        let am_pm = date.getHours() >= 12 ? "pm" : "am";
-        hours = hours < 10 ? "0" + hours : hours;
-        let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-        let currentTime = hours + ":" + minutes + " " + am_pm;
-        return currentTime;
-      }
+    currentTime() {
+      let date = new Date();
+      let hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+      let am_pm = date.getHours() >= 12 ? "pm" : "am";
+      hours = hours < 10 ? "0" + hours : hours;
+      let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+      let currentTime = hours + ":" + minutes + " " + am_pm;
+      return currentTime;
     }
-  };
+  }
+};
 </script>
 
 <template>

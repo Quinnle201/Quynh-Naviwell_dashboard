@@ -28,7 +28,7 @@ import { RouterLink } from 'vue-router'
         </RouterLink>
       </li>
       <li class="nav-item">
-        <RouterLink to="/about" class="nav-link p-3 rounded-circle">
+        <RouterLink to="/calendar" class="nav-link p-3 rounded-circle">
           <CalendarIcon width="30" height="30" />
         </RouterLink>
       </li>

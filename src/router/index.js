@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import PatientsView from '../views/PatientsView.vue'
+import CalendarView from '../views/CalendarView.vue'
 
 import Dashboard from '../components/Dashboard/Dashboard.vue'
 
@@ -37,6 +38,11 @@ const router = createRouter({
           path: "patients",
           name: "patients",
           component: PatientsView
+        },
+        {
+          path: "calendar",
+          name: "calendar",
+          component: CalendarView
         }
       ]
     },

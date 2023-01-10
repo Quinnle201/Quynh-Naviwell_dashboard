@@ -3,9 +3,11 @@
 
 <template>
     <div class="wrapper">
-        <div>
+        <div class="layout-wrapper">
             <h3>My Patients</h3>
-
+        </div>
+        
+        <div class="patients-wrapper">
             <div class="patients-top-wrapper">
                 <div class="patients-button">
                     Create New Patient Account
