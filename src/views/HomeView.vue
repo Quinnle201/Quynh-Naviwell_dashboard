@@ -1,6 +1,35 @@
-<script setup>
+<script>
+import Card from '../components/Dashboard/Layout/Card.vue'
 import LabIcon from '../components/icons/IconLab.vue'
 import RecipeIcon from '../components/icons/IconRecipe.vue'
+
+export default {
+  components: { Card,
+     LabIcon,
+      RecipeIcon
+    },
+    methods: {
+      currentDate() {
+        let date = new Date();
+        let currentWeekday = date.toLocaleString('en-us', {weekday: 'short'});
+        let currentMonth = date.toLocaleString('en-us', {month: 'short'});
+        let currentDay = date.toLocaleString('en-us', {day: 'numeric'});
+        let currentYear = date.toLocaleString('en-us', {year: 'numeric'});
+        let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
+        return currentDate;
+      },
+
+      currentTime() {
+        let date = new Date();
+        let hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+        let am_pm = date.getHours() >= 12 ? "pm" : "am";
+        hours = hours < 10 ? "0" + hours : hours;
+        let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        let currentTime = hours + ":" + minutes + " " + am_pm;
+        return currentTime;
+      }
+    }
+  };
 </script>
 
 <template>
@@ -53,23 +82,23 @@ import RecipeIcon from '../components/icons/IconRecipe.vue'
         </div>
 
         <div class="cards-wrapper-grid">
-          <div class="dashboard-card">
-            <h4>Lab Results</h4>
+          <Card>
+            <template #card-title>Lab Results</template>
             <LabIcon />
-            <span class="dashboard-card-btn active-btn">3 New Reports to Review</span>
-          </div>
+            <template #card-btn>3 New Reports to Review</template>
+          </Card>
 
-          <div class="dashboard-card">
-            <h4>Diet & Recipes</h4>
+          <Card>
+            <template #card-title>Diet & Recipes</template>
             <RecipeIcon />
-            <span class="dashboard-card-btn">Add New Diet/Recipes</span>
-          </div>
+            <template #card-btn>Add New Diet/Recipes</template>
+          </Card>
         </div>
       </div>
 
       <div class="cards-wrapper">
-        <div class="dashboard-card messages-card">
-          <h4>Messages</h4>
+        <Card class="messages-card">
+          <template #card-title>Messages</template>
 
           <ul>
             <li>
@@ -87,36 +116,34 @@ import RecipeIcon from '../components/icons/IconRecipe.vue'
           </ul>
 
           <span class="dashboard-card-btn active-btn">3 New Messages</span>
-        </div>
+        </Card>
 
-        <div class="dashboard-card patients-card">
-          <h4>Patients</h4>
-
-          <ul>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Howard Aarons</div>
-            </li>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Edward Alvarez</div>
-            </li>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Emily Atilla</div>
-            </li>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Courtney Bailey</div>
-            </li>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Karen Bartley</div>
-            </li>
-          </ul>
-
-          <span class="dashboard-card-btn">Add New Patient</span>
-        </div>
+        <Card class="patients-card">
+          <template #card-title>Patients</template>
+            <ul>
+              <li>
+                <img src="@/assets/img/image.png" alt="Patient Photo" />
+                <div>Howard Aarons</div>
+              </li>
+              <li>
+                <img src="@/assets/img/image.png" alt="Patient Photo" />
+                <div>Edward Alvarez</div>
+              </li>
+              <li>
+                <img src="@/assets/img/image.png" alt="Patient Photo" />
+                <div>Emily Atilla</div>
+              </li>
+              <li>
+                <img src="@/assets/img/image.png" alt="Patient Photo" />
+                <div>Courtney Bailey</div>
+              </li>
+              <li>
+                <img src="@/assets/img/image.png" alt="Patient Photo" />
+                <div>Karen Bartley</div>
+              </li>
+            </ul>
+          <template #card-btn>Add New Patient</template>
+        </Card>
       </div>
 
       <div class="cards-wrapper">
@@ -135,41 +162,15 @@ import RecipeIcon from '../components/icons/IconRecipe.vue'
             </li>
           </ul>
         </div>
-
-        <div class="dashboard-card quotes-card">
-          <h4>Inspirational Quotes</h4>
+        
+        <Card class="quotes-card">
+          <template #card-title>Inspirational Quotes</template>
 
           <p>“Wellness is a connection of paths: knowledge and action.”</p>
 
-          <span class="dashboard-card-btn">Manage Quote of the Day</span>
-        </div>
+          <template #card-btn>Manage Quote of the Day</template>
+        </Card>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-  export default {
-    methods: {
-      currentDate() {
-        let date = new Date();
-        let currentWeekday = date.toLocaleString('en-us', {weekday: 'short'});
-        let currentMonth = date.toLocaleString('en-us', {month: 'short'});
-        let currentDay = date.toLocaleString('en-us', {day: 'numeric'});
-        let currentYear = date.toLocaleString('en-us', {year: 'numeric'});
-        let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
-        return currentDate;
-      },
-
-      currentTime() {
-        let date = new Date();
-        let hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-        let am_pm = date.getHours() >= 12 ? "pm" : "am";
-        hours = hours < 10 ? "0" + hours : hours;
-        let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-        let currentTime = hours + ":" + minutes + " " + am_pm;
-        return currentTime;
-      }
-    }
-  };
-</script>
