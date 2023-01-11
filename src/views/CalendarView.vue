@@ -15,6 +15,51 @@ export default {
     data() {
       return {
         isModalVisible: false,
+        specialHours: {
+            1: [{
+                from: 9 * 60,
+                to: 13 * 60,
+                class: 'appointment',
+                label: 'Appointment'
+                },{
+                    from: 14 * 60,
+                    to: 16 * 60,
+                    class: 'new-patient-visit',
+                    label: 'New Patient Visit'
+                }],
+            2: {
+                from: 9 * 60,
+                to: 12 * 60,
+                class: 'new-patient-visit',
+                label: 'New Patient Visit'
+            },
+            3: [
+                {
+                from: 10 * 60,
+                to: 12 * 60,
+                class: 'appointment',
+                label: 'Appointment',
+                },
+                {
+                from: 14 * 60,
+                to: 17 * 60,
+                class: 'telehealth-visit',
+                label: 'Telehealth Visit'
+                }
+            ],
+            4: {
+                from: 12 * 60,
+                to: 16 * 60,
+                class: 'personal',
+                label: 'Personal'
+            },
+            5: {
+                from: 9 * 60,
+                to: 11 * 60,
+                class: 'telehealth-visit',
+                label: 'Telehealth Visit'
+            },
+            }
       };
     },
     methods: {
@@ -106,7 +151,11 @@ export default {
         </div>
 
         <div class="calendar-wrapper">
-            <vue-cal />
+            <vue-cal hide-view-selector :disable-views="['years', 'year', 'month']" :time-from="8 * 60" :time-to="18 * 60" :special-hours="specialHours">
+                <template v-slot:no-event>
+                    <div></div>
+                </template>
+            </vue-cal>
         </div>
     </div>
 </template>

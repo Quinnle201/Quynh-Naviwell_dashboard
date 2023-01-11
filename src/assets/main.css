@@ -683,7 +683,7 @@ body {
 
 /* calendar page */
 .calendar-wrapper {
-  height: 74vh;
+  height: 78vh;
 }
 
 .calendar-visit-type {
@@ -852,8 +852,96 @@ body {
   max-width: 155px;
 }
 
+/* vue cal */
+.calendar-wrapper .vuecal {
+  box-shadow: none;
+}
+
+.calendar-wrapper .vuecal__bg {
+  background: #FFFEFE;
+  border: 0.8px solid #737373;
+  border-radius: 20px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.calendar-wrapper .vuecal__title-bar {
+  background-color: #FFFEFE;
+  height: 55px;
+  margin-bottom: 20px;
+  justify-content: flex-start;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+}
+
+.calendar-wrapper .vuecal__title-bar .vuecal__flex[grow] {
+  width: auto;
+  flex: unset;
+}
+
+.calendar-wrapper .vuecal__title {
+  font-family: "Metropolis";
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--text-color);
+}
+
+.calendar-wrapper .vuecal__flex.weekday-label {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--text-color);
+}
 
 
+.calendar-wrapper .vuecal__special-hours {
+  width: 94%;
+  margin: 0 auto;
+  padding: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #727272;
+  border-radius: 20px;
+}
+
+.calendar-wrapper .vuecal__special-hours em {
+  font-size: 0.9em;
+  color: #999;
+}
+
+.calendar-wrapper .vuecal__time-column {
+  width: 90px;
+}
+
+.calendar-wrapper .vuecal__time-cell {
+  height: 100px!important;
+  font-size: 14px;
+  font-weight: 600;
+  color: #8E8E8E;
+  text-align: center;
+}
+
+.appointment {
+  background-color: #B2C4E7;
+}
+
+.new-patient-visit {
+  background-color: #CCEED0;
+}
+
+.telehealth-visit {
+  background-color: #FED9FF;
+}
+
+.personal {
+  background-color: #FFFCBC;
+}
+
+.closed {
+  background:#fff7f0 repeating-linear-gradient(-45deg, rgba(255, 162, 87, 0.25), rgba(255, 162, 87, 0.25) 5px, rgba(255, 255, 255, 0) 5px, rgba(255, 255, 255, 0) 15px);
+  color: #f6984c;
+}
 
 /* hover */
 @media (hover: hover) and (pointer: fine) {
