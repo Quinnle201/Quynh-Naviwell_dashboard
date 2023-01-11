@@ -127,10 +127,6 @@ body {
 }
 
 /* header */
-/* .user-block {
-  padding-right: 68px;
-} */
-
 .header-datetime, 
 .header-logo {
   display: none;
@@ -197,10 +193,10 @@ body {
 
 .layout-wrapper h3 {
   margin: 0;
-  font-size: 28px;
-  font-weight: 400;
-  line-height: 28px;
-  color: #000000;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 26px;
+  color: var(--text-color);
 }
 
 .top-block {
@@ -502,7 +498,7 @@ body {
   background-color: #FFFEFE;
   padding: 24px 14px;
   display: flex;
-  border: 0.746809px solid #737373;
+  border: 0.746809px solid var(--border-color);
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
   cursor: pointer;
@@ -517,7 +513,7 @@ body {
   background-color: #FFFEFE;
   width: 285px;
   padding: 5px 12px;
-  border: 0.6px solid #737373;
+  border: 0.6px solid var(--border-color);
   border-radius: 14px;
   box-shadow: 1.71353px 3.42706px 8.56764px rgba(0, 0, 0, 0.25);
 
@@ -547,7 +543,7 @@ body {
   font-weight: 400;
   line-height: 24px;
   color: #000000;
-  border: 0.6px solid #737373;
+  border: 0.6px solid var(--border-color);
   border-radius: 14px;
   box-shadow: 1.71353px 3.42706px 8.56764px rgba(0, 0, 0, 0.25);
   -webkit-appearance: none;
@@ -817,7 +813,7 @@ body {
 .popup-content-item select {
   margin-bottom: 14px;
   padding-left: 16px;
-  border: 1px solid #737373;
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   outline: none;
 }
