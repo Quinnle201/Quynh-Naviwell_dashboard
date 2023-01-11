@@ -127,13 +127,60 @@ body {
 }
 
 /* header */
-.user-block {
+/* .user-block {
   padding-right: 68px;
+} */
+
+.header-datetime, 
+.header-logo {
+  display: none;
+}
+
+.pg-header .navbar {
+  min-height: 100px;
+}
+
+.pg-header .header-datetime, 
+.pg-header .header-logo {
+  display: block;
+}
+
+.header-datetime {
+  position: absolute;
+  bottom: 0;
+  left: 145px;
+}
+
+.header-datetime span {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.header-datetime span:first-child {
+  margin-right: 38px;
+}
+
+.header-logo .top-block-logo {
+  background-color: transparent;
+  min-width: auto;
+  margin: 0;
+  padding: 0;
+  margin-right: -95px;
+  box-shadow: none;
+}
+
+.header-logo .top-block-logo img {
+  max-width: 80px;
+  max-height: 80px;
 }
 
 /* homepage */
 .wrapper {
   padding: 30px 40px;
+}
+
+.pg-header .wrapper {
+  margin-top: 36px;
 }
 
 .layout-wrapper {
@@ -635,7 +682,7 @@ body {
 
 /* calendar page */
 .calendar-wrapper {
-  height: 78vh;
+  height: 74vh;
 }
 
 .calendar-visit-type {
