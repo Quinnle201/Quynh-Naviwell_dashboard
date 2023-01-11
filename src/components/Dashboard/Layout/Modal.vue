@@ -10,8 +10,8 @@
 </script>
 
 <template>
-    <div class="popup-overlay">
-        <div class="popup">
+    <div class="popup-overlay" @click="$emit('close')">
+        <div class="popup" @click.stop>
         <header class="popup-header">
             <h4>
                 <slot name="header"></slot>
