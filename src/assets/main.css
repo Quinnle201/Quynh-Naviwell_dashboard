@@ -700,7 +700,7 @@ body {
 }
 
 .calendar-btn-text {
-  margin-left: 10px;
+  padding-left: 10px;
   font-size: 20px;
   font-weight: 600;
   line-height: 20px;

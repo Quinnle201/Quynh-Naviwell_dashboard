@@ -99,9 +99,9 @@ export default {
                 </ul>
             </div>
 
-            <div class="calendar-btn">
+            <div class="calendar-btn" @click="showModal">
                 <AddIcon />
-                <button type="button" class="calendar-btn-text" @click="showModal">Add New Event</button>
+                <button type="button" class="calendar-btn-text">Add New Event</button>
                 <Modal v-show="isModalVisible" @close="closeModal">
                     <template #header>Add New Event</template>
                     <template #content>
