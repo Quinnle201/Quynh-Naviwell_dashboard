@@ -693,12 +693,13 @@ body {
 }
 
 .patients-details {
-  cursor: pointer;
+  position: relative;
 }
 
 .patients-details img {
   width: 38px;
   height: 38px;
+  cursor: pointer;
 }
 
 /* calendar page */

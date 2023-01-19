@@ -1,13 +1,28 @@
 <script>
 import SearchIcon from '../components/icons/IconSearch.vue'
 import AddIcon from '../components/icons/IconAdd.vue'
+import PatientDetails from '../components/Dashboard/Layout/PatientDetails.vue'
+import { ref } from "vue";
 
 export default {
     components: {
         SearchIcon,
-        AddIcon
+        AddIcon,
+        PatientDetails
+    },
+    setup() {
+        const show = ref(null);
+
+        const showDetails = (idx) => {
+            show.value === idx ? (show.value = null) : (show.value = idx);
+        };
+
+        return {
+            show, 
+            showDetails
+        };
     }
-}
+};
 </script>
 
 <template>
@@ -53,7 +68,7 @@ export default {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr v-for="(index) in 6" :key="index">
                             <td class="patients-img">
                                 <img src="@/assets/img/image.png" alt="">
                                 <span>Howard Aarons</span>
@@ -62,84 +77,13 @@ export default {
                             <td>December 22, 2022</td>
                             <td>
                                 <div class="patients-status incomplete">Incomplete</div>
+                                <!-- <div class="patients-status complete">Complete</div> -->
                             </td>
                             <td class="patients-details">
-                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="patients-img">
-                                <img src="@/assets/img/image.png" alt="">
-                                <span>Howard Aarons</span>
-                            </td>
-                            <td>36</td>
-                            <td>December 22, 2022</td>
-                            <td>
-                                <div class="patients-status complete">Complete</div>
-                            </td>
-                            <td class="patients-details">
-                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="patients-img">
-                                <img src="@/assets/img/image.png" alt="">
-                                <span>Howard Aarons</span>
-                            </td>
-                            <td>36</td>
-                            <td>December 22, 2022</td>
-                            <td>
-                                <div class="patients-status complete">Complete</div>
-                            </td>
-                            <td class="patients-details">
-                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="patients-img">
-                                <img src="@/assets/img/image.png" alt="">
-                                <span>Howard Aarons</span>
-                            </td>
-                            <td>36</td>
-                            <td>December 22, 2022</td>
-                            <td>
-                                <div class="patients-status incomplete">Incomplete</div>
-                            </td>
-                            <td class="patients-details">
-                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="patients-img">
-                                <img src="@/assets/img/image.png" alt="">
-                                <span>Howard Aarons</span>
-                            </td>
-                            <td>36</td>
-                            <td>December 22, 2022</td>
-                            <td>
-                                <div class="patients-status incomplete">Incomplete</div>
-                            </td>
-                            <td class="patients-details">
-                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="patients-img">
-                                <img src="@/assets/img/image.png" alt="">
-                                <span>Howard Aarons</span>
-                            </td>
-                            <td>36</td>
-                            <td>December 22, 2022</td>
-                            <td>
-                                <div class="patients-status complete">Complete</div>
-                            </td>
-                            <td class="patients-details">
-                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+                                <img @click="showDetails(index)" src="@/assets/img/details-icon.png" alt="Details Icon" />
+                                <Transition>
+                                    <PatientDetails v-if="show === index" />
+                                </Transition>
                             </td>
                         </tr>
                     </tbody>
