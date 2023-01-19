@@ -101,9 +101,9 @@ export default {
 
             <div class="calendar-btn" @click="showModal">
                 <AddIcon />
-                <button type="button" class="calendar-btn-text">Add New Event</button>
+                <button type="button" class="calendar-btn-text">Add New Visit</button>
                 <Modal v-show="isModalVisible" @close="closeModal">
-                    <template #header>Add New Event</template>
+                    <template #header>Add New Visit</template>
                     <template #content>
                         <div class="type-select">
                             <div class="type-select-item active">Appointment</div>
