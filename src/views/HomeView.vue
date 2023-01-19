@@ -1,10 +1,12 @@
 <script>
+import CurrrentTime from '../components/Dashboard/Layout/CurrentTime.vue'
 import Card from '../components/Dashboard/Layout/Card.vue'
 import LabIcon from '../components/icons/IconLab.vue'
 import RecipeIcon from '../components/icons/IconRecipe.vue'
 
 export default {
   components: {
+    CurrrentTime,
     Card, 
     LabIcon, 
     RecipeIcon
@@ -19,16 +21,6 @@ export default {
       let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
       return currentDate;
     },
-
-    currentTime() {
-      let date = new Date();
-      let hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-      let am_pm = date.getHours() >= 12 ? "pm" : "am";
-      hours = hours < 10 ? "0" + hours : hours;
-      let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-      let currentTime = hours + ":" + minutes + " " + am_pm;
-      return currentTime;
-    }
   }
 };
 </script>
@@ -48,7 +40,7 @@ export default {
         <h3>Good Morning Dr. Wendell</h3>
         <div class="top-block-info-date">
           <span>{{currentDate()}}</span>
-          <span>{{currentTime()}}</span>
+          <span><CurrrentTime /></span>
         </div>
       </div>
     </div>
