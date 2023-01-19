@@ -131,13 +131,13 @@ body {
 .header-logo {
   display: none;
 }
-
-.pg-header .header-datetime, 
+ 
 .pg-header .header-logo {
   display: block;
 }
 
 .header-datetime {
+  display: flex;
   position: absolute;
   bottom: -8px;
   left: 125px;

@@ -11,7 +11,7 @@ const authStore = useAuthStore();
                 data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
                 aria-label="Toggle navigation" />
                 <div class="header-datetime">
-                    <span>{{currentTime()}}</span>
+                    <span><CurrentTime /></span>
                     <span>{{currentDate()}}</span>
                 </div>
                 <div class="header-logo">
@@ -36,7 +36,12 @@ const authStore = useAuthStore();
 </template>
 
 <script>
+    import CurrentTime from '../Layout/CurrentTime.vue';
+
     export default {
+        components: {
+            CurrentTime,
+        },
         methods: {
             currentDate() {
                 let date = new Date();
@@ -47,16 +52,6 @@ const authStore = useAuthStore();
                 let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
                 return currentDate;
             },
-
-            currentTime() {
-                let date = new Date();
-                let hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-                let am_pm = date.getHours() >= 12 ? "pm" : "am";
-                hours = hours < 10 ? "0" + hours : hours;
-                let minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                let currentTime = hours + ":" + minutes + " " + am_pm;
-                return currentTime;
-            }
         }
     };
 </script>
