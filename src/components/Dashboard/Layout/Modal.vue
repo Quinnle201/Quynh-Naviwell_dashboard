@@ -46,6 +46,7 @@
   .v-leave-to {
     opacity: 0;
   }
+  
   .popup-overlay {
     position: fixed;
     top: 0;
