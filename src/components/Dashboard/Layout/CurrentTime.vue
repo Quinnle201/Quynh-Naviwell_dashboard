@@ -2,8 +2,9 @@
     export default {
     data() {
         return {
-        hours: null,
-        minutes: null,
+            hours: null,
+            minutes: null,
+            am_pm: null
         }
     },
     mounted() {
@@ -11,13 +12,15 @@
     },
     methods: {
         setTime() {
-        const date = new Date();
-        let hours = date.getHours();
-        let minutes = date.getMinutes();
-        hours = hours <= 9 ? `${hours}`.padStart(2, 0) : hours;
-        minutes = minutes <= 9 ? `${minutes}`.padStart(2, 0) : minutes;
-        this.hours = hours;
-        this.minutes = minutes;
+            const date = new Date();
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let am_pm = date.getHours() >= 12 ? "pm" : "am";
+            hours = hours <= 9 ? `${hours}`.padStart(2, 0) : hours;
+            minutes = minutes <= 9 ? `${minutes}`.padStart(2, 0) : minutes;
+            this.hours = hours;
+            this.minutes = minutes;
+            this.am_pm = am_pm;
         }
     }
     }
@@ -28,6 +31,8 @@
         <div>{{ hours }}</div>
         <div>:</div>
         <div>{{ minutes }}</div>
+        <div>&nbsp;</div>
+        <div>{{ am_pm }}</div>
     </div>
 </template>
 
