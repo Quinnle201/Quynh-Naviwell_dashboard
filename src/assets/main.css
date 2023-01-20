@@ -289,12 +289,16 @@ body {
   gap: 26px;
 }
 
-.cards-wrapper:nth-child(odd) {
+.cards-wrapper:nth-child(1) {
   grid-template-rows: 60fr 40fr;
 }
 
-.cards-wrapper:nth-child(even) {
+.cards-wrapper:nth-child(2) {
   grid-template-rows: 40fr 60fr;
+}
+
+.cards-wrapper:nth-child(3) {
+  grid-template-rows: 90fr 10fr;
 }
 
 .calendar-card {
@@ -464,10 +468,12 @@ body {
 }
 
 .education-card ul {
+  height: 100%;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-self: center;
   list-style: none;
 }
@@ -483,7 +489,8 @@ body {
 }
 
 .quotes-card {
-  justify-content: space-between;
+  padding: 0;
+  justify-content: center;
 }
 
 .quotes-card p {

@@ -156,13 +156,9 @@ export default {
           </ul>
         </div>
         
-        <Card class="quotes-card">
-          <template #card-title>Inspirational Quotes</template>
-
-          <p>“Wellness is a connection of paths: knowledge and action.”</p>
-
-          <template #card-btn>Manage Quote of the Day</template>
-        </Card>
+        <div class="dashboard-card quotes-card">
+          <span class="dashboard-card-btn">Manage Quote of the Day</span>
+        </div>
       </div>
     </div>
   </div>
