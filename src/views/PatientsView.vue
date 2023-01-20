@@ -10,6 +10,25 @@ export default {
         AddIcon,
         PatientDetails
     },
+    data() {
+        return {
+            selected: '',
+            options: [
+                {
+                    text: 'Last visit', value: 'Last visit'
+                },
+                {
+                    text: 'Age', value: 'Age'
+                },
+                {
+                    text: 'Name A-Z', value: 'Name A-Z'
+                },
+                {
+                    text: 'Name Z-A', value: 'Name Z-A'
+                },
+            ]
+        }
+    },
     setup() {
         const show = ref(null);
 
@@ -40,13 +59,12 @@ export default {
                             <SearchIcon  class="patients-search-icon" />
                         </label>
                     </form>
-
-                    <select class="patient-select">
-                        <option value="">Sort</option>
-                        <option value="1">Last visit</option>
-                        <option value="2">Age</option>
-                        <option value="3">Name A-Z</option>
-                        <option value="4">Name Z-A</option>
+                    
+                    <select v-model="selected" class="patient-select">
+                        <option disabled value="">Sort</option>
+                        <option v-for="option in options" :value="option.value">
+                            {{ option.text }}
+                        </option>
                     </select>
                 </div>
                 

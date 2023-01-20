@@ -556,9 +556,9 @@ body {
   background-color: #FFFEFE;
   background-image: url("@/assets/img/select-icon.svg");
   background-repeat: no-repeat;
-  background-position: top 50% left 80%;
+  background-position: top 50% left 90%;
   margin-left: 10px;
-  padding: 5px 12px;
+  padding: 5px 26px 5px 12px;
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
