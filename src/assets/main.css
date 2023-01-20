@@ -547,19 +547,6 @@ body {
   transform: translate(-20px, -50%);
 }
 
-.patients-button {
-  cursor: pointer;
-}
-
-.patients-button button {
-  padding-left: 10px;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 20px;
-  text-align: center;
-  color: var(--primary);
-}
-
 .patient-select {
   background-color: #FFFEFE;
   background-image: url("@/assets/img/select-icon.svg");
@@ -725,16 +712,6 @@ body {
 }
 
 .calendar-btn svg {
-  cursor: pointer;
-}
-
-.calendar-btn-text {
-  padding-left: 10px;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 20px;
-  text-align: center;
-  color: var(--primary);
   cursor: pointer;
 }
 

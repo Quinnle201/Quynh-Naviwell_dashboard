@@ -100,7 +100,7 @@ export default {
             </div>
 
             <div class="calendar-btn">
-                <div @click="showModal">
+                <div @click="showModal" class="add-button">
                     <AddIcon />
                     <button type="button" class="calendar-btn-text">Add New Visit</button>
                 </div>

@@ -79,7 +79,7 @@ export default {
                     </select>
                 </div>
                 
-                <div class="patients-button" @click="showModal">
+                <div class="add-button" @click="showModal">
                     <AddIcon />
                     <button type="button">Add New Patient</button>
                 </div>

@@ -16,3 +16,19 @@
 .w-btn-save {
   background-color: var(--primary);
 }
+
+.add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.add-button button {
+  padding-left: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+  color: var(--primary);
+}
