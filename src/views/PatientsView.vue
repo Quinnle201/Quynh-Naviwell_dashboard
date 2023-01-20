@@ -1,17 +1,20 @@
 <script>
 import SearchIcon from '../components/icons/IconSearch.vue'
+import AddPatientModal from '../components/Dashboard/Layout/AddPatientModal.vue'
 import AddIcon from '../components/icons/IconAdd.vue'
 import PatientDetails from '../components/Dashboard/Layout/PatientDetails.vue'
-import { ref } from "vue";
+import { ref } from 'vue';
 
 export default {
     components: {
         SearchIcon,
+        AddPatientModal,
         AddIcon,
         PatientDetails
     },
     data() {
         return {
+            isModalVisible: false,
             selected: '',
             options: [
                 {
@@ -40,7 +43,15 @@ export default {
             show, 
             showDetails
         };
-    }
+    },
+    methods: {
+        showModal() {
+            this.isModalVisible = true;
+        },
+        closeModal() {
+            this.isModalVisible = false;
+        },
+    },
 };
 </script>
 
@@ -68,7 +79,7 @@ export default {
                     </select>
                 </div>
                 
-                <div class="patients-button">
+                <div class="patients-button" @click="showModal">
                     <AddIcon />
                     <button type="button">Add New Patient</button>
                 </div>
@@ -108,5 +119,7 @@ export default {
                 </table>
             </div>
         </div>
+
+        <AddPatientModal v-show="isModalVisible" @close="closeModal"></AddPatientModal>
     </div>
 </template>

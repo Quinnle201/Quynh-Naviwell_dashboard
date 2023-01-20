@@ -500,6 +500,7 @@ body {
 /* my patients */
 .patients-wrapper {
   background-color: #F3F3F3;
+  height: 80vh;
   padding: 30px 20px;
   border-radius: 16px;
 }
