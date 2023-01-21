@@ -3,43 +3,47 @@ import ChatIcon from '../../icons/IconChat.vue'
 import EditIcon from '../../icons/IconEdit.vue'
 import CalendarIcon from '../../icons/IconCalendar.vue'
 import RemoveIcon from '../../icons/IconRemove.vue'
+import RoundBtn from '../../Dashboard/Layout/RoundBtn.vue'
+import RoundBtnDelete from '../../Dashboard/Layout/RoundBtnDelete.vue'
 
 export default {
     components: {
         ChatIcon,
         EditIcon,
         CalendarIcon,
-        RemoveIcon
+        RemoveIcon,
+        RoundBtn,
+        RoundBtnDelete
     },
 }
 </script>
 
 <template>
     <div class="details-inner">
-        <div class="details-item">
-            <div class="details-icon">
+        <RoundBtn>
+            <template #btn-icon>
                 <ChatIcon width="30" height="30" />
-            </div>
-            Chat
-        </div>
-        <div class="details-item">
-            <div class="details-icon">
+            </template>
+            <template #btn-name>Chat</template>
+        </RoundBtn>
+        <RoundBtn>
+            <template #btn-icon>
                 <EditIcon width="30" height="30" />
-            </div>
-            Update
-        </div>
-        <div class="details-item">
-            <div class="details-icon">
+            </template>
+            <template #btn-name>Update</template>
+        </RoundBtn>
+        <RoundBtn>
+            <template #btn-icon>
                 <CalendarIcon width="30" height="30" />
-            </div>
-            Schedule
-        </div>
-        <div class="details-item">
-            <div class="details-icon delete">
+            </template>
+            <template #btn-name>Schedule</template>
+        </RoundBtn>
+        <RoundBtnDelete>
+            <template #btn-icon>
                 <RemoveIcon width="30" height="30" />
-            </div>
-            Delete
-        </div>
+            </template>
+            <template #btn-name>Delete</template>
+        </RoundBtnDelete>
     </div>
 </template>
 
@@ -69,28 +73,5 @@ export default {
         border-radius: 16px;
         box-shadow: 2px 4px 28px rgba(0, 0, 0, 0.1);
         z-index: 10;
-    }
-
-    .details-item {
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--text-color);
-        text-align: center;
-        cursor: pointer;
-    }
-
-    .details-icon {
-        background-color: var(--primary);
-        width: 50px;
-        height: 50px;
-        margin: 0 auto 16px auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-    }
-
-    .details-icon.delete {
-        background-color: #FF0000;
     }
 </style>
