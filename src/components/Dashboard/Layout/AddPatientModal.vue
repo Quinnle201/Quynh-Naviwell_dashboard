@@ -205,13 +205,14 @@
         height: 100%;
         padding: 28px 32px;
         position: absolute;
-        top: 0;
+        top: -8px;
     }
 
     .addpatient-head {
         margin-bottom: 20px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
 
     .addpatient-head h4 {
