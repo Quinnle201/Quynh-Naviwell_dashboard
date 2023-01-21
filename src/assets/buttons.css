@@ -1,6 +1,8 @@
 .w-btn {
-  width: 155px;
-  height: 40px;
+  background-color: var(--primary);
+  min-width: 155px;
+  padding: 12px 32px;
+  /* height: 40px; */
   font-size: 14px;
   font-weight: 500;
   line-height: 16px;
@@ -13,8 +15,9 @@
   color: var(--primary);
 }
 
-.w-btn-save {
-  background-color: var(--primary);
+.w-btn-delete {
+  background-color: #FF0000;
+  color: #FFFFFF;
 }
 
 .add-button {

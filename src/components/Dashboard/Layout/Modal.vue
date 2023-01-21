@@ -28,7 +28,7 @@
             <button type="button" class="w-btn w-btn-close" @click="close">
                 Cancel
             </button>
-            <button type="button" class="w-btn w-btn-save">
+            <button type="button" class="w-btn">
                 Save Event
             </button>
         </footer>

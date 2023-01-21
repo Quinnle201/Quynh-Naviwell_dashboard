@@ -15,7 +15,7 @@
             <div class="addpatient-head">
                 <h4>Create New Patient</h4>
                 <div>
-                    <button type="button" class="w-btn w-btn-save">Save</button>
+                    <button type="button" class="w-btn">Save</button>
                     <button type="button" class="w-btn w-btn-close" @click="close">Cancel</button>
                 </div>
             </div>
@@ -222,8 +222,8 @@
         color: #000000;
     }
 
-    .addpatient-head button.w-btn.w-btn-save {
-        margin-right: 36px;
+    .addpatient-head button.w-btn.w-btn-close {
+        margin-left: 36px;
     }
 
     .add-patient-inner {
