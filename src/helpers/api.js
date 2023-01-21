@@ -26,12 +26,10 @@ axiosInstance.interceptors.response.use(
   async (err) => {
     const authStore = useAuthStore();
     const originalConfig = err.config;
-    // TODO - figure out proper handling for dev env
-    const dev_ENV = import.meta.env.VITE_APP_ENV == 'development'
-    if(dev_ENV) {
+
+    if(!authStore.user) {
       return Promise.reject(err);
     }
-
 
     if (err.response) {
       // Access Token was expired
