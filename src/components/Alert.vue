@@ -8,12 +8,10 @@ const { alert } = storeToRefs(alertStore);
 </script>
 
 <template>
-    <div v-if="alert" class="container">
-        <div class="m-3">
-            <div class="alert alert-dismissable" :class="alert.type">
-                <button @click="alertStore.clear()" class="btn btn-link close">&times;</button>
-                {{alert.message}}
-            </div>
+    <div v-if="alert" class="position-absolute bottom-0 end-0">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{alert.message}}
+            <button @click="alertStore.clear()" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </div>
 </template>

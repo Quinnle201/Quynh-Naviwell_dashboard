@@ -8,6 +8,7 @@ import PatientDetailView from '../views/PatientDetailView.vue'
 import Dashboard from '../components/Dashboard/Dashboard.vue'
 
 import Login from '../views/Login.vue'
+import SetPassword from '../views/SetPassword.vue'
 
 import { useAuthStore, useAlertStore } from '@/stores';
 
@@ -18,6 +19,19 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/set-password',
+      name: 'setpassword',
+      component: SetPassword,
+      beforeEnter: (to, from) => {
+        const authStore = useAuthStore();
+        if(!authStore.user || authStore.claim != null){
+          return from
+        }
+        // reject the navigation
+        
+      },
     },
     {
       path: '/',
@@ -61,14 +75,11 @@ router.beforeEach(async (to) => {
   alertStore.clear();
 
   // redirect to login page if not logged in and trying to access a restricted page 
-  const publicPages = ['/login'];
+  const publicPages = ['/login', '/set-password'];
   const authRequired = !publicPages.includes(to.path);
   const authStore = useAuthStore();
 
-  // TODO - figure out proper handling for dev env
-  const dev_ENV = `${import.meta.env.VITE_APP_ENV}` == 'development'
-
-  if (authRequired && !authStore.user && !dev_ENV) {
+  if (authRequired && !authStore.user) {
       authStore.returnUrl = to.fullPath;
       return '/login';
   }

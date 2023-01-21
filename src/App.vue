@@ -10,8 +10,8 @@ const authStore = useAuthStore();
 
 <template>
   <div class="app-container" :class="authStore.user, checkPath('/home') ? '' : 'pg-header'">
-    <Alert />
     <RouterView />
+    <Alert />
   </div>  
 </template>
 
