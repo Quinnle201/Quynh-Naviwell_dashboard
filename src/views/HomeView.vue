@@ -78,7 +78,7 @@ export default {
           <Card>
             <template #card-title>Lab Results</template>
             <LabIcon />
-            <template #card-btn>3 New Reports to Review</template>
+            <span class="dashboard-card-btn active-btn">3 New Reports to Review</span>
           </Card>
 
           <Card>
