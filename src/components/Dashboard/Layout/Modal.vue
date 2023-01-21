@@ -62,7 +62,7 @@
 
   .popup {
     background: #FFFFFF;
-    width: 410px;
+    width: auto;
     height: auto;
     padding: 32px 30px;
     display: flex;

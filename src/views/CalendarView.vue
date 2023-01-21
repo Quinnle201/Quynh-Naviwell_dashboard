@@ -2,6 +2,7 @@
 import Modal from '../components/Dashboard/Layout/Modal.vue'
 import AddIcon from '../components/icons/IconAdd.vue'
 import CalendarIcon from '../components/icons/IconCalendar.vue'
+import CheckIcon from '../components/icons/IconCheck.vue'
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 
@@ -10,7 +11,8 @@ export default {
         Modal, 
         AddIcon,
         VueCal, 
-        CalendarIcon
+        CalendarIcon,
+        CheckIcon
     },
     data() {
       return {
@@ -81,19 +83,19 @@ export default {
             <div class="calendar-visit-type">
                 <ul>
                     <li>
-                        <p>Appointment</p>
+                        <p>Initial NaviWell Visit</p>
                         <span></span>
                     </li>
                     <li>
-                        <p>New Patient Visit</p>
+                        <p>Wellness Coach Visit</p>
                         <span></span>
                     </li>
                     <li>
-                        <p>Telehealth Visit</p>
+                        <p>Dietitian Visit</p>
                         <span></span>
                     </li>
                     <li>
-                        <p>Personal</p>
+                        <p>Follow-Up Visit</p>
                         <span></span>
                     </li>
                 </ul>
@@ -114,14 +116,37 @@ export default {
                             <div class="type-select-item">Personal</div>
                         </div>
                         <form>
+                            <div class="popup-content-item visit-type">
+                                <label class="checkbox path">
+                                    <input type="checkbox">
+                                    <CheckIcon />
+                                    <div class="label-bg">Initial NaviWell Visit</div>
+                                </label>
+                                <label class="checkbox path">
+                                    <input type="checkbox">
+                                    <CheckIcon />
+                                    <div class="label-bg">Wellness Coach Visit</div>
+                                </label>
+                                <label class="checkbox path">
+                                    <input type="checkbox">
+                                    <CheckIcon />
+                                    <div class="label-bg">Dietitian Visit</div>
+                                </label>
+                                <label class="checkbox path">
+                                    <input type="checkbox">
+                                    <CheckIcon />
+                                    <div class="label-bg">Follow-Up Visit</div>
+                                </label>
+                            </div>
+
                             <div class="popup-content-item">
                                 <label>Patient Name</label>
-                                <input type="text" />
+                                <input type="text" class="popup-content-item-input" />
                             </div>
 
                             <div class="popup-content-item">
                                 <label class="label-w-icon">Date
-                                    <input type="text" />
+                                    <input type="text" class="popup-content-item-input" />
                                     <CalendarIcon />
                                 </label>
                             </div>
