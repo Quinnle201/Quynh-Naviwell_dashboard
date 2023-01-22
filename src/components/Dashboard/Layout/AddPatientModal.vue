@@ -1,10 +1,12 @@
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as Yup from 'yup';
-import PatientInputGenerator  from '@/components/PatientInputGenerator.vue'
+import PatientInputGenerator from '@/components/PatientInputGenerator.vue'
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
+import _get from 'lodash/get';
+import _find from 'lodash/find';
 
 export default {
     components: {
@@ -13,7 +15,53 @@ export default {
         ErrorMessage,
         PatientInputGenerator,
     },
-    setup() {
+    props: {
+        patient: Object
+    },
+    watch: {
+        patient: {
+            handler(value) {
+                if (value != null) {
+                    const pt = Object.assign({}, value);;
+                    pt.dob = new Date(pt.dob).format("YYYY/MM/DD");
+                    this.generalInfo.fields.forEach((item) => {
+                        if (item.model) {
+                            this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                        }
+                    })
+                    this.contactInfo.fields.forEach((item) => {
+                        if (item.model) {
+                            this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                        }
+                        if (item.name == 'user.email') {
+                            item.disabled = "true"
+                        }
+
+                    })
+                    this.emergencyContactInfo.fields.forEach((item) => {
+                        if (item.model) {
+                            this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                        }
+                    })
+                    this.insuranceInfo.fields.forEach((item) => {
+                        if (item.model) {
+                            this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                        }
+                    })
+                    this.patientInfo.fields.forEach((item) => {
+                        if (item.model) {
+                            this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                        }
+                    })
+                } else {
+                    _find(this.contactInfo.fields, ['name', 'user.email']).disabled = undefined;
+                }
+
+            },
+            deep: true,
+        }
+    },
+    data() {
 
         const generalInfo = {
             fields: [
@@ -21,24 +69,28 @@ export default {
                     label: 'First name',
                     name: 'user.first-name',
                     as: 'input',
+                    model: 'user.first_name',
                     rules: Yup.string().required('Name is required'),
                 },
                 {
                     label: 'Last name',
                     name: 'user.last-name',
                     as: 'input',
+                    model: 'user.last_name',
                     rules: Yup.string().required('Last name is required'),
                 },
                 {
                     label: 'DOB',
                     name: 'profile.dob',
                     as: 'input',
-                    rules: Yup.date(),
+                    model: 'dob',
+                    rules: Yup.date().nullable(),
                 },
                 {
                     label: 'Gender',
                     name: 'profile.gender',
                     as: 'select',
+                    model: 'gender',
                     class: 'form-select',
                     children: [
                         {
@@ -59,43 +111,49 @@ export default {
                         },
 
                     ],
-                    rules: Yup.string(),
+                    rules: Yup.string().nullable(),
                 },
                 {
                     label: 'Race',
                     name: 'profile.race',
                     as: 'input',
-                    rules: Yup.string(),
+                    model: 'race',
+                    rules: Yup.string().nullable(),
                 },
                 {
                     label: 'Ethnicity',
                     name: 'profile.ethnicity',
                     as: 'input',
-                    rules: Yup.string(),
+                    model: 'ethnicity',
+                    rules: Yup.string().nullable(),
                 },
                 {
                     label: 'Sexual orientation',
                     name: 'profile.sex-orientation',
                     as: 'input',
-                    rules: Yup.string(),
+                    model: 'sex_orientation',
+                    rules: Yup.string().nullable(),
                 },
                 {
                     label: 'Language',
                     name: 'profile.language',
                     as: 'input',
-                    rules: Yup.string(),
+                    model: 'language',
+                    rules: Yup.string().nullable(),
                 },
                 {
                     label: 'Religion',
                     name: 'profile.religion',
                     as: 'input',
-                    rules: Yup.string(),
+                    model: 'religion',
+                    rules: Yup.string().nullable(),
                 },
                 {
                     label: '',
                     name: 'profile.notes',
                     as: 'textarea',
-                    rules: Yup.string()
+                    model: 'notes',
+                    rules: Yup.string().nullable()
                 }
             ],
         };
@@ -106,40 +164,46 @@ export default {
                     label: 'Street Address',
                     name: 'contact.address',
                     as: 'input',
+                    model: 'contact_info.address',
                     classattr: 'fullw-input',
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: 'Street Address cont’d',
                     name: 'contact.current-address',
                     as: 'input',
+                    model: 'contact_info.current-address',
                     classattr: 'fullw-input',
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: 'City, State',
                     name: 'contact.city',
                     as: 'input',
+                    model: 'contact_info.city',
                     classattr: 'fullw-input',
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: 'Zip code',
                     name: 'contact.zip',
                     as: 'input',
+                    model: 'contact_info.zip',
                     classattr: 'fullw-input',
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: 'Email *',
                     name: 'user.email',
                     as: 'input',
+                    model: 'user.email',
                     rules: Yup.string().required('Email is required'),
                 },
                 {
                     label: 'Phone *',
                     name: 'user.phone',
                     as: 'input',
+                    model: 'user.phone',
                     rules: Yup.string().required('Phone is required'),
                 },
             ]
@@ -151,22 +215,25 @@ export default {
                     label: 'Emergency Contact Name',
                     name: 'emergency.contact',
                     as: 'input',
+                    model: 'emergency_contact.contact',
                     classattr: 'fullw-input',
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: 'Phone Number',
                     name: 'emergency.phone',
                     as: 'input',
+                    model: 'emergency_contact.phone',
                     classattr: 'fullw-input',
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: 'Relation to patient',
                     name: 'emergency.relation',
                     as: 'input',
+                    model: 'emergency_contact.relation',
                     classattr: 'fullw-input',
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 }
             ]
         }
@@ -177,15 +244,17 @@ export default {
                     label: 'Insurance company',
                     name: 'insurance.name',
                     as: 'input',
+                    model: 'insurance_info.name',
                     classattr: 'fullw-input',
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: 'Subscriber/Member Number',
                     name: 'insurance.number',
                     as: 'input',
+                    model: 'insurance_info.number',
                     classattr: 'fullw-input',
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 }
             ]
         }
@@ -196,25 +265,29 @@ export default {
                     label: 'Weight',
                     name: 'additional-data.weight',
                     as: 'input',
-                    rules: Yup.string()
+                    model: 'additional_data.weight',
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: 'Height',
                     name: 'additional-data.height',
                     as: 'input',
-                    rules: Yup.string()
+                    model: 'additional_data.height',
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: 'BMI',
                     name: 'additional-data.bmi',
                     as: 'input',
-                    rules: Yup.string()
+                    model: 'additional_data.bmi',
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: 'Allergies',
                     name: 'additional-data.allergies',
                     as: 'input',
-                    rules: Yup.string()
+                    model: 'additional_data.allergies',
+                    rules: Yup.string().nullable()
                 },
             ]
         }
@@ -227,7 +300,7 @@ export default {
                     as: 'input',
                     classattr: 'fullw-input',
                     placeholder: "Medication Name, Dosage, Frequency",
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: '',
@@ -235,7 +308,7 @@ export default {
                     as: 'input',
                     classattr: 'fullw-input',
                     placeholder: "Medication Name, Dosage, Frequency",
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 },
                 {
                     label: '',
@@ -243,29 +316,40 @@ export default {
                     as: 'input',
                     classattr: 'fullw-input',
                     placeholder: "Medication Name, Dosage, Frequency",
-                    rules: Yup.string()
+                    rules: Yup.string().nullable()
                 },
-                
+
             ]
         }
 
         const alertStore = useAlertStore();
-        return { generalInfo, contactInfo, emergencyContactInfo, insuranceInfo, patientInfo,  currentMeds, alertStore }
+        return { generalInfo, contactInfo, emergencyContactInfo, insuranceInfo, patientInfo, currentMeds, alertStore }
     },
     methods: {
         close() {
             this.$emit('close');
         },
         onSubmit(values) {
-            axiosInstance.post('/patients', values )
-            .then(response => {
-                this.close()
-                this.alertStore.success('Patient created.');
-            })
-            .catch(error => {
-                this.alertStore.error(error.response.data.message)
-            });
-
+            if (this.patient != null) {
+                axiosInstance.put(`/patients/${this.patient.id}`, values)
+                .then(response => {
+                    this.$emit('update:patient', response.data.patient)
+                    this.alertStore.success('Patient updated.');
+                    this.close()
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                });
+            } else {
+            axiosInstance.post('/patients', values)
+                .then(response => {
+                    this.close()
+                    this.alertStore.success('Patient created.');
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                });
+            }
         },
     },
 };
@@ -274,11 +358,12 @@ export default {
 <template>
     <Transition>
         <div class="addpatient-wrapper">
-            <Form @submit="onSubmit">
+            <Form @submit="onSubmit" ref="populatedForm">
                 <div class="addpatient-head">
-                    <h4>Create New Patient</h4>
+                    <h4>{{ patient == null ? 'Create New Patient' : "Edit patient information" }}</h4>
                     <div>
-                        <button type="submit" class="w-btn w-btn-save">Save</button>
+                        <button type="submit" class="w-btn w-btn-save">{{ patient == null ? 'Save' : "Update"
+                        }}</button>
                         <button type="reset" class="w-btn w-btn-close" @click="close">Cancel</button>
                     </div>
                 </div>
@@ -347,21 +432,21 @@ export default {
     opacity: 0;
 }
 
-    .addpatient-wrapper {
-        background-color: #FFFFFF;
-        width: 100%;
-        height: 100%;
-        padding: 28px 32px;
-        position: absolute;
-        top: -8px;
-    }
+.addpatient-wrapper {
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    padding: 28px 32px;
+    position: absolute;
+    top: -8px;
+}
 
-    .addpatient-head {
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+.addpatient-head {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 .addpatient-head h4 {
     font-size: 24px;
@@ -370,9 +455,9 @@ export default {
     color: #000000;
 }
 
-    .addpatient-head button.w-btn.w-btn-close {
-        margin-left: 36px;
-    }
+.addpatient-head button.w-btn.w-btn-close {
+    margin-left: 36px;
+}
 
 .add-patient-inner {
     height: 98%;

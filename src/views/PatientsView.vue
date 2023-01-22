@@ -5,6 +5,8 @@ import AddIcon from '../components/icons/IconAdd.vue'
 import PatientDetails from '../components/Dashboard/Layout/PatientDetails.vue'
 import { ref } from 'vue';
 import { axiosInstance } from '@/helpers';
+import _findIndex from 'lodash/findIndex';
+
 
 export default {
     components: {
@@ -16,6 +18,7 @@ export default {
     data() {
         return {
             patients: [],
+            selectedPatient: null,
             isModalVisible: false,
             selected: '',
             options: [
@@ -58,10 +61,13 @@ export default {
         }
     },
     methods: {
-        showModal() {
+        showModal(patient) {
+            this.show = null
+            this.selectedPatient = patient;
             this.isModalVisible = true;
         },
         closeModal() {
+            this.selectedPatient = null;
             this.isModalVisible = false;
         },
         getPatients() {
@@ -72,6 +78,10 @@ export default {
                 .catch(error => {
                     this.alertStore.error(error.response.data.message)
                 });
+        },
+        updatePatientInfo(patient) {
+            const index = _findIndex(this.patients, ['id', patient.id])
+            this.patients.splice(index, 1, patient)
         }
     },
 };
@@ -101,7 +111,7 @@ export default {
                     </select>
                 </div>
                 
-                <div class="add-button" @click="showModal">
+                <div class="add-button" @click="showModal(null)">
                     <AddIcon />
                     <button type="button">Add New Patient</button>
                 </div>
@@ -133,7 +143,7 @@ export default {
                             <td class="patients-details">
                                 <img @click="showDetails(index)" src="@/assets/img/details-icon.png" alt="Details Icon" />
                                 <Transition>
-                                    <PatientDetails v-if="show === index" />
+                                    <PatientDetails v-if="show === index" @update="showModal(patient)" />
                                 </Transition>
                             </td>
                         </tr>
@@ -142,6 +152,6 @@ export default {
             </div>
         </div>
 
-        <AddPatientModal v-show="isModalVisible" @close="closeModal"></AddPatientModal>
+        <AddPatientModal v-show="isModalVisible" :patient="selectedPatient" v-on:update:patient="updatePatientInfo($event)" @close="closeModal"></AddPatientModal>
     </div>
 </template>

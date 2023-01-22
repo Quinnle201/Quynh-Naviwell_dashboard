@@ -26,7 +26,7 @@ export default {
             </template>
             <template #btn-name>Chat</template>
         </RoundBtn>
-        <RoundBtn>
+        <RoundBtn @click="$emit('update')">
             <template #btn-icon>
                 <EditIcon width="30" height="30" />
             </template>
