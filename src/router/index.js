@@ -12,6 +12,10 @@ import SetPassword from '../views/SetPassword.vue'
 
 import { useAuthStore, useAlertStore } from '@/stores';
 
+import { h } from 'vue'
+import { RouterView } from 'vue-router'
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -49,20 +53,27 @@ const router = createRouter({
           name: "about",
           component: AboutView
         },
+
         {
-          path: "patients",
-          name: "patients",
-          component: PatientsView
+          path: '/patients',
+          component: { render: () => h(RouterView) },
+          children: [
+            { 
+              path: '',
+              name: 'patients',
+              component: PatientsView
+            },
+            { 
+              path: "patients/:id",
+          name: "patient",
+          component: PatientDetailView
+            }
+          ]
         },
         {
           path: "calendar",
           name: "calendar",
           component: CalendarView
-        },
-        {
-          path: "patient",
-          name: "patient",
-          component: PatientDetailView
         }
       ]
     },

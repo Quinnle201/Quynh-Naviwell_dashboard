@@ -132,7 +132,8 @@ export default {
                         <tr v-for="(patient, index) in patients" :key="patient.id">
                             <td class="patients-img">
                                 <img src="@/assets/img/image.png" alt="">
-                                <span>{{ name(patient) }}</span>
+                                <RouterLink :to="{ name: 'patient', params: { id: patient.id}}"><span>{{ name(patient) }}</span></RouterLink>
+                                
                             </td>
                             <td>{{ age(patient) }}</td>
                             <td>December 22, 2022</td>

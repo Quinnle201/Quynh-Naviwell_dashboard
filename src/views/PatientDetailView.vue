@@ -5,6 +5,10 @@ import MessagesIcon from '../components/icons/IconMessages.vue'
 import CalendarIcon from '../components/icons/IconCalendar.vue'
 import RoundBtn from '../components/Dashboard/Layout/RoundBtn.vue'
 import LineChart from '../components/Dashboard/Layout/LineChart.vue'
+import { RouterLink } from 'vue-router'
+
+import { axiosInstance } from '@/helpers';
+import { useAlertStore } from '@/stores';
 
 export default {
     components: {
@@ -15,18 +19,63 @@ export default {
         RoundBtn,
         LineChart
     },
+    data() {
+        const patient = null
+        const alertStore = useAlertStore();
+        return {patient, alertStore}
+    },
+    mounted() {
+        const id = this.$route.params.id;
+        
+        this.getPatientById(id)
+    },
+    methods: {
+        getPatientById(id) {
+            axiosInstance.get(`/patients/${id}`)
+            .then(response => {
+                this.patient = response.data.patient;
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        }
+    },
+    computed: {
+        isLoaded() {
+            return this.patient == null ? false : true
+        },
+        user() {
+            return this.patient.user
+        },
+        name() {
+            return this.user.first_name + ' ' + this.user.last_name
+        },
+        age() {
+            return Math.floor((new Date() - new Date(this.patient.dob).getTime()) / 3.15576e+10)
+        },
+        dob() {
+            return new Date(this.patient.dob).format("YYYY/MM/DD");
+        },
+        gender() {
+            return this.patient.gender == 'm' ? 'Male' : 'Female'
+        },
+        since() {
+            return new Date(this.patient.createdAt).format("YYYY/MM/DD");
+        }
+    },
 }
 </script>
 
 <template>
-    <div class="page-wrapper">
+    <div class="page-wrapper" v-if="isLoaded">
         <div class="layout-wrapper">
             <div  class="layout-wrapper-nav">
                 <h3>My Patients</h3>
                 <div class="pagination-wrapper">
                     <ul>
                         <li>></li>
-                        <li>Howard Aarons</li>
+                        <li>{{ name }}</li>
                     </ul>
                 </div>
             </div>
@@ -34,7 +83,7 @@ export default {
             <div class="patient-btns">
                 <button type="button" class="w-btn">Edit Patient Info</button>
                 <button type="button" class="w-btn w-btn-delete">Delete Patient</button>
-                <a href="/patients">Return to My Patients</a>
+                <RouterLink to="/patients">Return to My Patients</RouterLink>
             </div>
         </div>
         
@@ -44,8 +93,8 @@ export default {
                     <div class="patient-profile-left-info">
                         <img src="@/assets/img/image.png" alt="">
                         <div>
-                            <h6>Howard Aarons</h6>
-                            <span>howardaarons@gmail.com</span>
+                            <h6>{{ name }}</h6>
+                            <span>{{ user.email }}</span>
                         </div>
                     </div>
 
@@ -86,11 +135,11 @@ export default {
             <div class="patient-info light-bg">
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Date of Birth</div>
-                    <div>02/09/1986</div>
+                    <div>{{ dob }}</div>
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Age</div>
-                    <div>36</div>
+                    <div>{{ age }}</div>
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Marital Status</div>
@@ -98,11 +147,11 @@ export default {
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Race</div>
-                    <div>African-American</div>
+                    <div>{{ patient.race ?? '-' }}</div>
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Sexual Orientation</div>
-                    <div>Heterosexual</div>
+                    <div>{{ patient.sex_orientation ?? '-' }}</div>
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Social Security Number</div>
@@ -110,19 +159,19 @@ export default {
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Phone Number</div>
-                    <div>(972)011-0111</div>
+                    <div>{{ user.phone }}</div>
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Gender</div>
-                    <div>Male</div>
+                    <div>{{ gender }}</div>
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Ethnicity</div>
-                    <div>Hispanic</div>
+                    <div>{{ patient.ethnicity ?? '-' }}</div>
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Patient Since</div>
-                    <div>06/05/2021</div>
+                    <div>{{ since }}</div>
                 </div>
             </div>
 
@@ -229,7 +278,7 @@ export default {
                     <ul>
                         <li>
                             Height
-                            <span>5’11”</span>
+                            <span>{{patient.additional_data.height ?? '-'}}</span>
                         </li>
                         <li>
                             Body Fat
@@ -237,7 +286,7 @@ export default {
                         </li>
                         <li>
                             Weight
-                            <span>180</span>
+                            <span>{{patient.additional_data.weight ?? '-'}}</span>
                         </li>
                         <li>
                             BP
@@ -245,7 +294,7 @@ export default {
                         </li>
                         <li>
                             BMI
-                            <span>25.1</span>
+                            <span>{{patient.additional_data.bmi ?? '-'}}</span>
                         </li>
                         <li>
                             Resting HR
