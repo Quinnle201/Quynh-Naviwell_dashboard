@@ -77,7 +77,7 @@ export const useAuthStore = defineStore({
             var refresh_token = this.claim.RefreshToken;
             const response = await axiosInstance.post('/refresh', { email, refresh_token });
             const data = response.data
-            this.claim = data.data.auth;
+            this.claim = data.data;
             localStorage.setItem('claim', JSON.stringify(this.claim));
         }
     }
