@@ -34,7 +34,7 @@ body {
   font-size: .875rem;
   font-family: "Metropolis";
   background: #FFF;
-  padding: 4.5rem 0.5rem 0.5rem 7.5rem;
+  padding: 4rem 0.5rem 0.5rem 7rem;
 }
 
 /*
@@ -136,7 +136,7 @@ body {
   display: block;
 }
 
-.header-datetime {
+.pg-header .header-datetime {
   display: flex;
   position: absolute;
   bottom: -8px;
@@ -181,11 +181,11 @@ body {
 
 /* homepage */
 .wrapper {
-  padding: 30px 40px;
+  padding: 22px 40px;
 }
 
 .page-wrapper {
-  padding: 30px 8px;
+  padding: 22px 8px;
 }
 
 .layout-wrapper {

@@ -142,6 +142,7 @@ async function onSubmit() {
         height: 40px;
         font-size: 18px;
         color: #FFFFFF;
+        line-height: 40px;
         border-radius: 20px;
     }
 
