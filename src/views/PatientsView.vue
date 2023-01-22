@@ -4,6 +4,7 @@ import AddPatientModal from '../components/Dashboard/Layout/AddPatientModal.vue'
 import AddIcon from '../components/icons/IconAdd.vue'
 import PatientDetails from '../components/Dashboard/Layout/PatientDetails.vue'
 import { ref } from 'vue';
+import { axiosInstance } from '@/helpers';
 
 export default {
     components: {
@@ -14,6 +15,7 @@ export default {
     },
     data() {
         return {
+            patients: [],
             isModalVisible: false,
             selected: '',
             options: [
@@ -38,11 +40,22 @@ export default {
         const showDetails = (idx) => {
             show.value === idx ? (show.value = null) : (show.value = idx);
         };
-
+        
         return {
             show, 
             showDetails
         };
+    },
+    mounted() {
+        this.getPatients();
+    },
+    computed: {
+        name() {
+            return (patient) => patient.user.first_name + ' ' + patient.user.last_name
+        },
+        age() {
+            return (patient) => Math.floor((new Date() - new Date(patient.dob).getTime()) / 3.15576e+10)
+        }
     },
     methods: {
         showModal() {
@@ -51,6 +64,15 @@ export default {
         closeModal() {
             this.isModalVisible = false;
         },
+        getPatients() {
+            axiosInstance.get('/patients')
+                .then(response => {
+                    this.patients = response.data.patients;
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                });
+        }
     },
 };
 </script>
@@ -91,18 +113,18 @@ export default {
                         <tr>
                             <th>Patient Name</th>
                             <th>Age</th>
-                            <th>Next Appointment</th>
-                            <th>Quiz Status</th>
+                            <th>Next Appointment(incomplete)</th>
+                            <th>Quiz Status(incomplete)</th>
                             <th>Details</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(index) in 6" :key="index">
+                        <tr v-for="(patient, index) in patients" :key="patient.id">
                             <td class="patients-img">
                                 <img src="@/assets/img/image.png" alt="">
-                                <span>Howard Aarons</span>
+                                <span>{{ name(patient) }}</span>
                             </td>
-                            <td>36</td>
+                            <td>{{ age(patient) }}</td>
                             <td>December 22, 2022</td>
                             <td>
                                 <div class="patients-status incomplete">Incomplete</div>
