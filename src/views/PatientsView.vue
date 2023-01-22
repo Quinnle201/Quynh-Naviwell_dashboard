@@ -137,8 +137,8 @@ export default {
                             <td>{{ age(patient) }}</td>
                             <td>December 22, 2022</td>
                             <td>
-                                <div class="patients-status incomplete">Incomplete</div>
-                                <!-- <div class="patients-status complete">Complete</div> -->
+                                <div class="label-status incomplete">Incomplete</div>
+                                <!-- <div class="label-status complete">Complete</div> -->
                             </td>
                             <td class="patients-details">
                                 <img @click="showDetails(index)" src="@/assets/img/details-icon.png" alt="Details Icon" />

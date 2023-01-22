@@ -1,5 +1,13 @@
 @font-face {
   font-family: 'Metropolis';
+  src: url('@/assets/fonts/Metropolis/Metropolis-Thin.otf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Metropolis';
   src: url('@/assets/fonts/Metropolis/Metropolis-Regular.otf') format('truetype');
   font-weight: 400;
   font-style: normal;

@@ -4,6 +4,7 @@ import VideoIcon from '../components/icons/IconVideo.vue'
 import MessagesIcon from '../components/icons/IconMessages.vue'
 import CalendarIcon from '../components/icons/IconCalendar.vue'
 import RoundBtn from '../components/Dashboard/Layout/RoundBtn.vue'
+import LineChart from '../components/Dashboard/Layout/LineChart.vue'
 
 export default {
     components: {
@@ -11,7 +12,8 @@ export default {
         VideoIcon,
         MessagesIcon,
         CalendarIcon,
-        RoundBtn
+        RoundBtn,
+        LineChart
     },
 }
 </script>
@@ -75,7 +77,7 @@ export default {
                     </div>
                 </div>
                 <div class="patient-profile-right light-bg">
-                    <p>Next Appointment Scheduled</p>
+                    <h4 class="patient-heading">Next Appointment Scheduled</h4>
                     <span>January 22, 2022  at  10:00 AM</span>
                     <button>Open in Calendar</button>
                 </div>
@@ -124,15 +126,137 @@ export default {
                 </div>
             </div>
 
-            <div>
-                <div class="light-bg"></div>
+            <div class="patient-grid">
+                <div class="light-bg patient-card border-cntr">
+                    <h4 class="patient-heading">Quizzes and Questionnaires</h4>
 
-                <div>
-                    <div class="light-bg"></div>
-                    <div class="light-bg"></div>
+                    <div class="patient-status">
+                        <div class="patient-status-item">
+                            <div class="patient-status-item-date">
+                                <div>Quiz Assigned:</div>
+                                <div>11/08/2022</div>  
+                            </div>
+                            
+                            <div class="label-status incomplete">Incomplete</div>
+                            <div class="patient-status-item-btn">Send Email or Text Reminder</div>
+                            <div class="patient-status-item-btn">View Quiz Report</div>
+                        </div>
+
+                        <div class="patient-status-item">
+                            <div class="patient-status-item-date">
+                                <div>Quarterly Questionnaire Assigned:</div>
+                                <div>11/08/2022</div>
+                            </div>
+                            
+                            <div class="label-status complete">Complete</div>
+
+                            <div class="patient-status-item-duration">
+                                <div>Completed <span>11/11/2022</span></div>
+                                <div>Duration: <span>Approximately 26 minutes</span></div>
+                            </div>
+                            
+                            <div class="patient-status-item-btn">View Questionnaire Report</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="light-bg"></div>
+                <div>
+                    <div class="patient-lab light-bg patient-card">
+                        <h4 class="patient-heading">Lab Results & Suggested ing</h4>
+
+                        <ul>
+                            <li>
+                                Sodium
+                                <span>150</span>
+                            </li>
+                            <li>
+                                Glucose
+                                <span>90 mg/dL</span>
+                            </li>
+                            <li>
+                                Potassium
+                                <span>3.5</span>
+                            </li>
+                            <li>
+                                BUN
+                                <span>12 mg/dL</span>
+                            </li>
+                        </ul>
+
+                        <ul>
+                            <li>
+                                Cholesterol
+                                <span>160 mg/dL</span>
+                            </li>
+                            <li>
+                                Triglycerides
+                                <span>62 mg/dL</span>
+                            </li>
+                            <li>
+                                HDL
+                                <span>48 mg/dL</span>
+                            </li>
+                            <li>
+                                LDL
+                                <span>115 mg/dL</span>
+                            </li>
+                        </ul>
+
+                        <div>
+                            <div class="patient-status-item-btn active-btn">New Lipid Panel Results to Review</div>
+                        </div>
+                    </div>
+                    <div class="patient-meds light-bg patient-card">
+                        <h4 class="patient-heading">Medications and Supplements</h4>
+
+                        <div>
+                            <ul>
+                                <li>budesonide-formoterol 160-4.5 mcg/actuation inhaler</li>
+                                <li>coenzyme Q10 100 mg capsule</li>
+                                <li>cyanocobalamin 1,000 mcg tablet</li>
+                                <li>diclofenac sodium 1 % gel</li>
+                                <li>ipratropium-albuteroL 20-100 mcg/actuation inhaler</li>
+                            </ul>
+
+                            <div class="patient-status-item-btn">View and Edit Medications and Supplements</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="patient-data light-bg patient-card">
+                    <h4 class="patient-heading">Patient Health Data</h4>
+
+                    <ul>
+                        <li>
+                            Height
+                            <span>5’11”</span>
+                        </li>
+                        <li>
+                            Body Fat
+                            <span>22.3%</span>
+                        </li>
+                        <li>
+                            Weight
+                            <span>180</span>
+                        </li>
+                        <li>
+                            BP
+                            <span>130/80</span>
+                        </li>
+                        <li>
+                            BMI
+                            <span>25.1</span>
+                        </li>
+                        <li>
+                            Resting HR
+                            <span>62</span>
+                        </li>
+                    </ul>
+
+                    <div>
+                        <LineChart />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
