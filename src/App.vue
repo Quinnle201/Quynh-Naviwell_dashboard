@@ -1,10 +1,33 @@
 <script setup>
+import { ref, onMounted, watch } from 'vue'
+
 import { RouterView } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 import { useAuthStore } from '@/stores';
 import Alert from '@/components/Alert.vue'
 
 const authStore = useAuthStore();
+const route = useRoute()
+const currentRoute = ref('')
+
+onMounted(() => {
+  if (authStore.user && authStore.claim) {
+    authStore.getUser()
+  }
+
+})
+
+watch(route, (to) => {
+  console.log('route', to.path)
+  currentRoute.value = to.path;
+});
+
+function checkPath(path) {
+  if (currentRoute.value === path) {
+    return true;
+  }
+}
 
 </script>
 
@@ -14,28 +37,3 @@ const authStore = useAuthStore();
     <Alert />
   </div>  
 </template>
-
-<script>
-  export default {
-    data() {
-      return {
-          currentRoute: ''
-      };
-    },
-    watch: {
-      $route (to, from) {
-        this.currentRoute = to.path;
-      }
-    },
-    mounted() {
-      this.currentRoute = this.$route.path;
-    },
-    methods: {
-      checkPath(path) {
-        if(this.currentRoute === path) {
-            return true;
-        }
-      }
-    }
-  }
-</script>

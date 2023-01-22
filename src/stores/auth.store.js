@@ -39,6 +39,20 @@ export const useAuthStore = defineStore({
                 alertStore.error(error.response.data.message);
             }
         },
+
+        async getUser() {
+            try {
+                const response = await axiosInstance.get('/user');
+                
+                const data = response.data;
+                this.user = data.data;
+                localStorage.setItem('user', JSON.stringify(this.user));
+            } catch (error) {
+                const alertStore = useAlertStore();
+                alertStore.error(error.response.data.message);
+            }
+        },
+
         async logout() {
             await axiosInstance.get('/logout')
                 .catch(function (error) {});
