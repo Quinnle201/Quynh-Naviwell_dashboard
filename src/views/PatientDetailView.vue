@@ -10,6 +10,9 @@ import { RouterLink } from 'vue-router'
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
 
+import _find from 'lodash/find'
+
+
 export default {
     components: {
         ChatIcon,
@@ -22,23 +25,111 @@ export default {
     data() {
         const patient = null
         const alertStore = useAlertStore();
-        return {patient, alertStore}
+
+        const dataChart = {
+            data: {
+                datasets: [{
+                    type: 'line',
+                    label: "Weight",
+                    id: 'weight',
+                    data: [],
+                    borderColor: "#4766FF",
+                    borderWidth: 2,
+                    fill: false,
+                }, 
+                {
+                    type: 'scatter',
+                    showLine: true,
+                    label: "Blood Presure",
+                    id: 'bp',
+                    data: [],
+                    borderColor: "#73D44D",
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    type: 'line',
+                    label: "Resting Heart Rate",
+                    id: 'resting_hr',
+                    data: [],
+                    borderColor: "#FF4D4D",
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    type: 'line',
+                    label: "Body Fat",
+                    id: 'bodyfat',
+                    data: [],
+                    borderColor: "#FFB54F",
+                    borderWidth: 2,
+                    fill: false,
+                },
+            ],
+            labels: []
+            },
+            options: {
+                responsive: true,
+                lineTension: 1,
+                scales: {
+                    xAxes: [{
+                        // display: false
+                    }],
+                    yAxes: [{
+                        // display: false
+                    }],
+                },
+            },
+        }
+        const dataLoaded = false;
+
+        return { patient, alertStore, dataChart, dataLoaded }
     },
     mounted() {
         const id = this.$route.params.id;
-        
+
         this.getPatientById(id)
+        this.getPatientHealthData(id)
     },
     methods: {
         getPatientById(id) {
             axiosInstance.get(`/patients/${id}`)
-            .then(response => {
-                this.patient = response.data.patient;
+                .then(response => {
+                    this.patient = response.data.patient;
                 })
                 .catch(error => {
                     console.log(error)
                     this.alertStore.error(error.response.data.message)
                 });
+        },
+        getPatientHealthData(id) {
+            axiosInstance.get(`/patients/${id}/health-data`)
+                .then(response => {
+                    console.log(response.data)
+                    this.buildChart(response.data['health-data'])
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        buildChart(healthData) {
+            healthData.forEach(data => {
+                var dataCreated = new Date(data.created_at).format('MM/DD/YY')
+                this.dataChart.data.labels.push(dataCreated)
+                for (const [key, value] of Object.entries(data)) {
+                    var chart = _find(this.dataChart.data.datasets, ['id', key]);
+                    var finalValue = value
+                    if(key == 'bp') {
+                        const pressure = value.split('/')
+                        finalValue = {'x': pressure[0], 'y': pressure[1]}
+                    }
+                    if(chart){
+                        chart.data.push(finalValue)
+                    } 
+                }
+            });
+            this.dataLoaded = true
         }
     },
     computed: {
@@ -70,8 +161,10 @@ export default {
 <template>
     <div class="page-wrapper" v-if="isLoaded">
         <div class="layout-wrapper">
-            <div  class="layout-wrapper-nav">
-                <h3>My Patients</h3>
+            <div class="layout-wrapper-nav">
+                <RouterLink to="/patients">
+                    <h3>My Patients</h3>
+                </RouterLink>
                 <div class="pagination-wrapper">
                     <ul>
                         <li>></li>
@@ -86,7 +179,7 @@ export default {
                 <RouterLink to="/patients">Return to My Patients</RouterLink>
             </div>
         </div>
-        
+
         <div class="patients-wrapper">
             <div class="patient-top">
                 <div class="patient-profile-left light-bg">
@@ -126,8 +219,8 @@ export default {
                     </div>
                 </div>
                 <div class="patient-profile-right light-bg">
-                    <h4 class="patient-heading">Next Appointment Scheduled</h4>
-                    <span>January 22, 2022  at  10:00 AM</span>
+                    <h4 class="patient-heading">Next Appointment Scheduled (WIP)</h4>
+                    <span>January 22, 2022 at 10:00 AM</span>
                     <button>Open in Calendar</button>
                 </div>
             </div>
@@ -142,8 +235,8 @@ export default {
                     <div>{{ age }}</div>
                 </div>
                 <div class="patient-info-item">
-                    <div class="patient-info-item-label">Marital Status</div>
-                    <div>Married</div>
+                    <div class="patient-info-item-label">Language</div>
+                    <div>{{ patient.language ?? '-' }}</div>
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Race</div>
@@ -154,8 +247,8 @@ export default {
                     <div>{{ patient.sex_orientation ?? '-' }}</div>
                 </div>
                 <div class="patient-info-item">
-                    <div class="patient-info-item-label">Social Security Number</div>
-                    <div>000-01-001</div>
+                    <div class="patient-info-item-label">Insurance number</div>
+                    <div>{{ patient.insurance_info?.number ?? '-' }}</div>
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Phone Number</div>
@@ -177,15 +270,15 @@ export default {
 
             <div class="patient-grid">
                 <div class="light-bg patient-card border-cntr">
-                    <h4 class="patient-heading">Quizzes and Questionnaires</h4>
+                    <h4 class="patient-heading">Quizzes and Questionnaires(WIP)</h4>
 
                     <div class="patient-status">
                         <div class="patient-status-item">
                             <div class="patient-status-item-date">
                                 <div>Quiz Assigned:</div>
-                                <div>11/08/2022</div>  
+                                <div>11/08/2022</div>
                             </div>
-                            
+
                             <div class="label-status incomplete">Incomplete</div>
                             <div class="patient-status-item-btn">Send Email or Text Reminder</div>
                             <div class="patient-status-item-btn">View Quiz Report</div>
@@ -196,14 +289,14 @@ export default {
                                 <div>Quarterly Questionnaire Assigned:</div>
                                 <div>11/08/2022</div>
                             </div>
-                            
+
                             <div class="label-status complete">Complete</div>
 
                             <div class="patient-status-item-duration">
                                 <div>Completed <span>11/11/2022</span></div>
                                 <div>Duration: <span>Approximately 26 minutes</span></div>
                             </div>
-                            
+
                             <div class="patient-status-item-btn">View Questionnaire Report</div>
                         </div>
                     </div>
@@ -211,7 +304,7 @@ export default {
 
                 <div>
                     <div class="patient-lab light-bg patient-card">
-                        <h4 class="patient-heading">Lab Results & Suggested ing</h4>
+                        <h4 class="patient-heading">Lab Results & Suggested ing(WIP)</h4>
 
                         <ul>
                             <li>
@@ -260,11 +353,7 @@ export default {
 
                         <div>
                             <ul>
-                                <li>budesonide-formoterol 160-4.5 mcg/actuation inhaler</li>
-                                <li>coenzyme Q10 100 mg capsule</li>
-                                <li>cyanocobalamin 1,000 mcg tablet</li>
-                                <li>diclofenac sodium 1 % gel</li>
-                                <li>ipratropium-albuteroL 20-100 mcg/actuation inhaler</li>
+                                <li v-for="med in patient.meds">{{ med }}</li>
                             </ul>
 
                             <div class="patient-status-item-btn">View and Edit Medications and Supplements</div>
@@ -273,37 +362,37 @@ export default {
                 </div>
 
                 <div class="patient-data light-bg patient-card">
-                    <h4 class="patient-heading">Patient Health Data</h4>
+                    <h4 class="patient-heading">Patient Health Data(WIP)</h4>
 
                     <ul>
                         <li>
                             Height
-                            <span>{{patient.additional_data.height ?? '-'}}</span>
+                            <span>{{ patient.current_health_data.height ?? '-' }}</span>
                         </li>
                         <li>
                             Body Fat
-                            <span>22.3%</span>
+                            <span>{{ patient.current_health_data.bodyfat ?? '-' }}</span>
                         </li>
                         <li>
                             Weight
-                            <span>{{patient.additional_data.weight ?? '-'}}</span>
+                            <span>{{ patient.current_health_data.weight ?? '-' }}</span>
                         </li>
                         <li>
                             BP
-                            <span>130/80</span>
+                            <span>{{ patient.current_health_data.bp ?? '-' }}</span>
                         </li>
                         <li>
                             BMI
-                            <span>{{patient.additional_data.bmi ?? '-'}}</span>
+                            <span>{{ patient.current_health_data.bmi ?? '-' }}</span>
                         </li>
                         <li>
                             Resting HR
-                            <span>62</span>
+                            <span>{{ patient.current_health_data.resting_hr ?? '-' }}</span>
                         </li>
                     </ul>
 
                     <div>
-                        <LineChart />
+                        <LineChart v-if="dataLoaded" :data="dataChart"/>
                     </div>
                 </div>
             </div>

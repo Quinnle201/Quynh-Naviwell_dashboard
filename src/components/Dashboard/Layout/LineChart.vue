@@ -1,17 +1,14 @@
 <script>
   import { Chart } from 'chart.js'
-  import LineChartData from '../../../line-data.js'
   
   export default {
     name: 'LineChart',
-    data() {
-      return {
-        LineChartData: LineChartData
-      }
+    props: {
+      'data': Object
     },
     mounted() {
       const ctx = document.getElementById('Line-chart');
-      new Chart(ctx, this.LineChartData);
+      new Chart(ctx, this.data);
     }
   }
 </script>
