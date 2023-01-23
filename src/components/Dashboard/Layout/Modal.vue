@@ -13,27 +13,19 @@
   <Transition>
     <div class="popup-overlay" @click="$emit('close')">
         <div class="popup" @click.stop>
-        <header class="popup-header">
-            <h4>
-                <slot name="header"></slot>
-            </h4>
-            <button type="button" class="popup-btn-close" @click="close">x</button>
-        </header>
+          <header class="popup-header">
+              <h4>
+                  <slot name="header"></slot>
+              </h4>
+              <button type="button" class="popup-btn-close" @click="close">x</button>
+          </header>
 
-        <section class="popup-content">
-            <slot name="content"></slot>
-        </section>
-
-        <footer class="popup-footer">
-            <button type="button" class="w-btn w-btn-close" @click="close">
-                Cancel
-            </button>
-            <button type="button" class="w-btn">
-                Save Event
-            </button>
-        </footer>
+          <section class="popup-content">
+              <slot name="content"></slot>
+          </section>
         </div>
-    </div></Transition>
+    </div>
+  </Transition>
 </template>
 
 <style>

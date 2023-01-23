@@ -171,9 +171,17 @@ export default {
                                 <label for="textarea">Notes</label>
                                 <textarea id="textarea"></textarea>
                             </div>
+
+                            <div class="popup-footer">
+                                <button type="button" class="w-btn w-btn-close" @click="closeModal">
+                                    Cancel
+                                </button>
+                                <button type="button" class="w-btn">
+                                    Save Event
+                                </button>
+                            </div>
                         </form>
                     </template>
-                    <template #footer></template>
                 </Modal>
             </div>
         </div>
