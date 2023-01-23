@@ -6,23 +6,33 @@ import CheckIcon from '../components/icons/IconCheck.vue'
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 
+import { axiosInstance } from '@/helpers';
+import { useAlertStore } from '@/stores';
+
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import * as Yup from 'yup';
+
+import moment from 'moment'
+
 export default {
     components: {
-        Modal, 
+        Modal,
         AddIcon,
-        VueCal, 
+        VueCal,
         CalendarIcon,
-        CheckIcon
+        CheckIcon,
+        Form,
+        Field
     },
     data() {
-      return {
-        isModalVisible: false,
-        selectedEvent: {},
-        showDialog: false,
-        events: [
+        return {
+            isModalVisible: false,
+            selectedEvent: {},
+            showDialog: false,
+            events: [
             {
                 start: '2023-01-23 11:00',
-                end: '2023-01-23 14:30',
+                end: '2023-01-23 11:30',
                 title: 'Initial NaviWell Visit',
                 content: 'Thomas Edison',
                 class: 'box_blue',
@@ -30,7 +40,7 @@ export default {
             },
             {
                 start: '2023-01-23 17:00',
-                end: '2023-01-23 19:30',
+                end: '2023-01-23 17:30',
                 title: 'Wellness Coach Visit',
                 content: 'Thomas Edison',
                 class: 'box_green',
@@ -38,14 +48,14 @@ export default {
             },
             {
                 start: '2023-01-24 10:00',
-                end: '2023-01-24 13:30',
+                end: '2023-01-24 11:30',
                 title: 'Initial NaviWell Visit',
                 content: 'Thomas Edison',
                 class: 'box_blue',
                 label: 'Initial NaviWell Visit'
             },
             {
-                start: '2023-01-24 16:00',
+                start: '2023-01-24 17:00',
                 end: '2023-01-24 18:30',
                 title: 'Wellness Coach Visit',
                 content: 'Thomas Edison',
@@ -53,7 +63,7 @@ export default {
                 label: 'Wellness Coach Visit'
             },
             {
-                start: '2023-01-25 12:00',
+                start: '2023-01-25 13:30',
                 end: '2023-01-25 14:30',
                 title: 'Dietitian Visit',
                 content: 'Thomas Edison',
@@ -61,7 +71,7 @@ export default {
                 label: 'Dietitian Visit'
             },
             {
-                start: '2023-01-25 17:30',
+                start: '2023-01-25 18:30',
                 end: '2023-01-25 19:30',
                 title: 'Follow-Up Visit',
                 content: 'Thomas Edison',
@@ -69,7 +79,7 @@ export default {
                 label: 'Follow-Up Visit'
             },
             {
-                start: '2023-01-26 14:00',
+                start: '2023-01-26 17:00',
                 end: '2023-01-26 17:30',
                 title: 'Initial NaviWell Visit',
                 content: 'Thomas Edison',
@@ -77,7 +87,7 @@ export default {
                 label: 'Initial NaviWell Visit'
             },
             {
-                start: '2023-01-26 9:00',
+                start: '2023-01-26 10:00',
                 end: '2023-01-26 11:30',
                 title: 'Dietitian Visit',
                 content: 'Thomas Edison',
@@ -85,15 +95,61 @@ export default {
                 label: 'Dietitian Visit'
             },
             {
-                start: '2023-01-27 17:00',
+                start: '2023-01-27 20:00',
                 end: '2023-01-27 20:30',
                 title: 'Initial NaviWell Visit',
                 content: 'Thomas Edison',
                 class: 'box_blue',
                 label: 'Initial NaviWell Visit'
             },
-        ]
-      };
+            ]
+        };
+    },
+    computed: {
+        hoursSelect() {
+            const array = []
+            var min = ['00', '15', '30', '45'];
+            for (var h = 8; h < 18; h++) {
+                for (var m = 0; m < min.length; m++) {
+                    var hour = h;
+                    if (hour < 10) {
+                        hour = `0${h}`
+                    }
+                    array.push({ 'label': `${hour}:${min[m]}`, 'value': `${hour}:${min[m]}` })
+                }
+            }
+            return array
+        },
+        name() {
+            return (patient) => patient.user.first_name + ' ' + patient.user.last_name
+        },
+        localDate() {
+            return (time) => new Date(time).toLocaleString()
+        },
+        calendarEventClass() {
+            return (appt) => {
+                var evtType = { class: 'box_blue', label: 'Initial NaviWell Visit' }
+                switch (appt.visit_type) {
+                    case 'initial':
+                        evtType = { class: 'box_blue', label: 'Initial NaviWell Visit' }
+                        break;
+                    case 'wellness':
+                        evtType = { class: 'box_green', label: 'Wellness Coach Visit' }
+                        break;
+                    case 'dietitian':
+                        evtType = { class: 'box_pink', label: 'Dietitian Visit' }
+                        break;
+                    case 'followup':
+                        evtType = { class: 'box_yellow', label: 'Follow-Up Visit' }
+                        break;
+
+                }
+                return evtType
+            }
+        }
+    },
+    mounted() {
+        this.getEvents();
     },
     methods: {
         showModal() {
@@ -102,7 +158,7 @@ export default {
         closeModal() {
             this.isModalVisible = false;
         },
-        onEventClick (event, e) {
+        onEventClick(event, e) {
             this.selectedEvent = event;
             this.showDialog = true;
             e.stopPropagation()
@@ -110,6 +166,42 @@ export default {
         closeDialog() {
             this.showDialog = false;
         },
+        submitNewVisit(values) {
+
+            const selectedDay = values.date
+            values.start_time = new Date(`${selectedDay}T${values.from}`);
+            values.finish_time = new Date(`${selectedDay}T${values.to}`);
+            axiosInstance.post('/appointments', values)
+                .then(response => {
+                    this.closeModal()
+                    this.alertStore.success('Appointment set')
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        getEvents() {
+            axiosInstance.get('/appointments')
+                .then(response => {
+                    console.log(response.data.appointments)
+                    response.data.appointments.forEach(appt => {
+                        this.events.push({
+                            start: this.localDate(appt.start_time),
+                            end: this.localDate(appt.finish_time),
+                            title: this.calendarEventClass(appt).label,
+                            content: this.name(appt.patient),
+                            class: this.calendarEventClass(appt).class,
+                            label: this.calendarEventClass(appt).label
+                        });
+                    });
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        }
     },
 }
 </script>
@@ -145,7 +237,7 @@ export default {
                     <AddIcon />
                     <button type="button" class="calendar-btn-text">Add New Visit</button>
                 </div>
-                
+
                 <Modal v-show="isModalVisible" @close="closeModal">
                     <template #header>Add New Visit</template>
                     <template #content>
@@ -154,25 +246,25 @@ export default {
                             <div class="type-select-item">Telehealth</div>
                             <div class="type-select-item">Personal</div>
                         </div>
-                        <form>
+                        <Form @submit="submitNewVisit">
                             <div class="popup-content-item visit-type">
                                 <label class="checkbox path">
-                                    <input type="checkbox">
+                                    <Field type="radio" name="visit_type" value="initial"></Field>
                                     <CheckIcon />
                                     <div class="label-bg">Initial NaviWell Visit</div>
                                 </label>
                                 <label class="checkbox path">
-                                    <input type="checkbox">
+                                    <Field type="radio" name="visit_type" value="wellness"></Field>
                                     <CheckIcon />
                                     <div class="label-bg">Wellness Coach Visit</div>
                                 </label>
                                 <label class="checkbox path">
-                                    <input type="checkbox">
+                                    <Field type="radio" name="visit_type" value="dietitian"></Field>
                                     <CheckIcon />
                                     <div class="label-bg">Dietitian Visit</div>
                                 </label>
                                 <label class="checkbox path">
-                                    <input type="checkbox">
+                                    <Field type="radio" name="visit_type" value="followup"></Field>
                                     <CheckIcon />
                                     <div class="label-bg">Follow-Up Visit</div>
                                 </label>
@@ -180,11 +272,12 @@ export default {
 
                             <div class="popup-content-item">
                                 <label>Patient Name</label>
-                                <input type="text" class="popup-content-item-input" />
+                                <Field name="patient_id" class="popup-content-item-input"></Field>
                             </div>
 
                             <div class="popup-content-item">
                                 <label class="label-w-icon">Date
+                                    <Field name="date" type="date" class="popup-content-item-input"></Field>
                                     <input type="text" class="popup-content-item-input" />
                                     <CalendarIcon />
                                 </label>
@@ -193,29 +286,31 @@ export default {
                             <div class="popup-content-item-wrapper">
                                 <div class="popup-content-item">
                                     <label>From</label>
-                                    <select>
-                                        <option value="">09:00</option>
-                                    </select>
+                                    <Field as="select" name="from">
+                                        <option v-for="item in hoursSelect" :value="item.value">{{ item.label }}
+                                        </option>
+                                    </Field>
                                 </div>
 
                                 <div class="popup-content-item">
                                     <label>To</label>
-                                    <select>
-                                        <option value="">09:30</option>
-                                    </select>
+                                    <Field as="select" name="to">
+                                        <option v-for="item in hoursSelect" :value="item.value">{{ item.label }}
+                                        </option>
+                                    </Field>
                                 </div>
                             </div>
 
                             <div class="popup-content-item">
                                 <label for="textarea">Notes</label>
-                                <textarea id="textarea"></textarea>
+                                <Field as="textarea" name="notes"></Field>
                             </div>
 
                             <div class="popup-footer">
-                                <button type="button" class="w-btn w-btn-close" @click="closeModal">
+                                <button type="reset" class="w-btn w-btn-close" @click="closeModal">
                                     Cancel
                                 </button>
-                                <button type="button" class="w-btn">
+                                <button type="submit" class="w-btn">
                                     Save Event
                                 </button>
                             </div>
@@ -226,16 +321,12 @@ export default {
         </div>
 
         <div class="calendar-wrapper">
-            <vue-cal selected-date="2023-01-24"
-                :time-from="8 * 60"
-                :time-to="23 * 60"
-                :disable-views="['years', 'year']"
-                hide-view-selector
+            <vue-cal selected-date="2023-01-24" :time-from="8 * 60" :time-to="18 * 60" :time-step="15"
+                :disable-views="['years', 'year']" hide-view-selector
                 :editable-events="{ title: false, drag: false, resize: false, delete: false, create: false }"
-                :events="events" 
-                :on-event-click="onEventClick">
+                :events="events" :on-event-click="onEventClick">
             </vue-cal>
-            
+
             <Modal v-show="showDialog" @close="closeDialog">
                 <template #header>Edit Visit</template>
                 <template #content>
@@ -275,7 +366,8 @@ export default {
 
                         <div class="popup-content-item">
                             <label class="label-w-icon">Date
-                                <input type="text" class="popup-content-item-input" :value="selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY')" />
+                                <input type="text" class="popup-content-item-input"
+                                    :value="selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY')" />
                                 <CalendarIcon />
                             </label>
                         </div>
@@ -284,14 +376,18 @@ export default {
                             <div class="popup-content-item">
                                 <label>From</label>
                                 <select>
-                                    <option value="selectedEvent.start && selectedEvent.start.formatTime()">{{ selectedEvent.start && selectedEvent.start.formatTime() }}</option>
+                                    <option value="selectedEvent.start && selectedEvent.start.formatTime()">{{
+                                        selectedEvent.start && selectedEvent.start.formatTime()
+                                    }}</option>
                                 </select>
                             </div>
 
                             <div class="popup-content-item">
                                 <label>To</label>
                                 <select>
-                                    <option value="selectedEvent.end && selectedEvent.end.formatTime()">{{ selectedEvent.end && selectedEvent.end.formatTime() }}</option>
+                                    <option value="selectedEvent.end && selectedEvent.end.formatTime()">{{
+                                        selectedEvent.end && selectedEvent.end.formatTime()
+                                    }}</option>
                                 </select>
                             </div>
                         </div>
