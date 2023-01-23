@@ -961,6 +961,7 @@ body {
 .popup-content-item select {
   margin-bottom: 14px;
   padding-left: 16px;
+  font-size: 16px;
   border: 1px solid var(--border-color);
   border-radius: 16px;
   outline: none;
@@ -1007,9 +1008,13 @@ body {
 
 .calendar-wrapper .vuecal__bg {
   background: #FFFEFE;
-  border: 0.8px solid #737373;
+  border: 1px solid rgba(196, 196, 196, .45);
   border-radius: 20px;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-wrapper .vuecal__flex {
+  border: none;
 }
 
 .calendar-wrapper .vuecal__title-bar {
@@ -1017,7 +1022,7 @@ body {
   height: 55px;
   margin-bottom: 20px;
   justify-content: flex-start;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 16px;
 }
 
@@ -1041,16 +1046,23 @@ body {
   color: var(--text-color);
 }
 
+.calendar-wrapper .edit-btn {
+  font-size: 14px;
+  color: #464646;
+}
 
-.calendar-wrapper .vuecal__special-hours {
-  width: 94%;
+.calendar-wrapper .vuecal__event {
+  max-width: 95%;
   margin: 0 auto;
-  padding: 4px;
+  padding: 6px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  transform: translateX(3%);
   color: #727272;
   border-radius: 20px;
+  cursor: pointer;
 }
 
 .calendar-wrapper .vuecal__special-hours em {
@@ -1059,36 +1071,116 @@ body {
 }
 
 .calendar-wrapper .vuecal__time-column {
-  width: 90px;
+  width: 56px;
 }
 
 .calendar-wrapper .vuecal__time-cell {
-  height: 100px!important;
+  /* height: 100px!important; */
   font-size: 14px;
   font-weight: 600;
   color: #8E8E8E;
   text-align: center;
 }
 
-.appointment {
+.calendar-wrapper .vuecal__event-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #464646
+}
+
+.calendar-wrapper .vuecal__event-time {
+  font-size: 14px;
+  font-weight: 600;
+  color: #727272;
+}
+
+.calendar-wrapper .vuecal__event-content {
+  font-size: 14px;
+  font-weight: 600;
+  color: #727272;
+}
+
+.box_blue {
   background-color: #B2C4E7;
 }
 
-.new-patient-visit {
+.box_green {
   background-color: #CCEED0;
 }
 
-.telehealth-visit {
+.box_pink {
   background-color: #FED9FF;
 }
 
-.personal {
+.box_yellow {
   background-color: #FFFCBC;
 }
 
 .closed {
   background:#fff7f0 repeating-linear-gradient(-45deg, rgba(255, 162, 87, 0.25), rgba(255, 162, 87, 0.25) 5px, rgba(255, 255, 255, 0) 5px, rgba(255, 255, 255, 0) 15px);
   color: #f6984c;
+}
+
+.calendar-modal {
+  background-color: #FFFFFF;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 16px;
+  font-size: 18px;
+  text-align: center;
+  z-index: 99;
+}
+
+.calendar-modal-btn-close {
+  background: #E4E4E4;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #FFFFFF;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.calendar-modal-title {
+  font-size: 20px;
+}
+
+.calendar-modal-date {
+  font-weight: 500;
+}
+
+.calendar-modal ul {
+  margin-top: 16px;
+  list-style: none;
+}
+
+.calendar-modal ul li {
+  flex: 48%;
+}
+
+.calendar-modal ul li span, 
+.calendar-modal ul li input {
+  height: 50px;
+  margin-bottom: 14px;
+  padding-left: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  outline: none;
+  font-weight: 500;
+  line-height: 50px;
+  text-align: left;
 }
 
 /* pagination */
