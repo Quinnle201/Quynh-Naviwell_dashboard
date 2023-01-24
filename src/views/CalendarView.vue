@@ -169,9 +169,6 @@ export default {
 
                 })
         },
-        selectedPt(patient) {
-
-        },
         showModal() {
             this.isModalVisible = true;
         },
@@ -195,25 +192,28 @@ export default {
                 .then(response => {
                     this.closeModal()
                     this.alertStore.success('Appointment set')
+                    this.addVisit(response.data.appointment)
                 })
                 .catch(error => {
-                    console.log(error)
                     this.alertStore.error(error.response.data.message)
                 });
+        },
+        addVisit(data) {
+            this.events.push({
+                start: this.localDate(data.start_time),
+                end: this.localDate(data.finish_time),
+                title: this.calendarEventClass(data).label,
+                content: this.name(data.patient),
+                class: this.calendarEventClass(data).class,
+                label: this.calendarEventClass(data).label
+            })
         },
         getEvents() {
             axiosInstance.get('/appointments')
                 .then(response => {
                     console.log(response.data.appointments)
                     response.data.appointments.forEach(appt => {
-                        this.events.push({
-                            start: this.localDate(appt.start_time),
-                            end: this.localDate(appt.finish_time),
-                            title: this.calendarEventClass(appt).label,
-                            content: this.name(appt.patient),
-                            class: this.calendarEventClass(appt).class,
-                            label: this.calendarEventClass(appt).label
-                        });
+                        this.addVisit(appt)
                     });
 
                 })
@@ -292,9 +292,8 @@ export default {
 
                             <div class="popup-content-item">
                                 <label>Patient Name</label>
-                                <PatientAutocomplete :patients="searchList" @selectedPt="selectedPt"
+                                <PatientAutocomplete :patients="searchList"
                                     @search="searchPatient" />
-                                <!-- <Field name="patient_id" class="popup-content-item-input"></Field> -->
                             </div>
 
                             <div class="popup-content-item">
