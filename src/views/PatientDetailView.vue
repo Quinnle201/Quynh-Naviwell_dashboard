@@ -367,27 +367,27 @@ export default {
                     <ul>
                         <li>
                             Height
-                            <span>{{ patient.current_health_data.height ?? '-' }}</span>
+                            <span>{{ patient.current_health_data?.height ?? '-' }}</span>
                         </li>
                         <li>
                             Body Fat
-                            <span>{{ patient.current_health_data.bodyfat ?? '-' }}</span>
+                            <span>{{ patient.current_health_data?.bodyfat ?? '-' }}</span>
                         </li>
                         <li>
                             Weight
-                            <span>{{ patient.current_health_data.weight ?? '-' }}</span>
+                            <span>{{ patient.current_health_data?.weight ?? '-' }}</span>
                         </li>
                         <li>
                             BP
-                            <span>{{ patient.current_health_data.bp ?? '-' }}</span>
+                            <span>{{ patient.current_health_data?.bp ?? '-' }}</span>
                         </li>
                         <li>
                             BMI
-                            <span>{{ patient.current_health_data.bmi ?? '-' }}</span>
+                            <span>{{ patient.current_health_data?.bmi ?? '-' }}</span>
                         </li>
                         <li>
                             Resting HR
-                            <span>{{ patient.current_health_data.resting_hr ?? '-' }}</span>
+                            <span>{{ patient.current_health_data?.resting_hr ?? '-' }}</span>
                         </li>
                     </ul>
 
