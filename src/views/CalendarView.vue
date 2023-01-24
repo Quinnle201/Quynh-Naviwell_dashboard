@@ -278,7 +278,6 @@ export default {
                             <div class="popup-content-item">
                                 <label class="label-w-icon">Date
                                     <Field name="date" type="date" class="popup-content-item-input"></Field>
-                                    <input type="text" class="popup-content-item-input" />
                                     <CalendarIcon />
                                 </label>
                             </div>
@@ -321,7 +320,8 @@ export default {
         </div>
 
         <div class="calendar-wrapper">
-            <vue-cal selected-date="2023-01-24" :time-from="8 * 60" :time-to="18 * 60" :time-step="15"
+            <vue-cal selected-date="2023-01-24" :time-from="8 * 60" :time-to="18 * 60" :time-step="15" 
+                today-button 
                 :disable-views="['years', 'year']" hide-view-selector
                 :editable-events="{ title: false, drag: false, resize: false, delete: false, create: false }"
                 :events="events" :on-event-click="onEventClick">
