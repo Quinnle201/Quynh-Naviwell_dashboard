@@ -541,6 +541,12 @@ body {
   outline: none;
 }
 
+.patients-search input[type="search"]::-webkit-search-cancel-button,
+.patients-search input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 .patients-search-icon {
   position: absolute;
   top: 50%;
