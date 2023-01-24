@@ -639,8 +639,10 @@ body {
   border-radius: 16px;
 }
 
-.patients-table tbody tr td {
+.patients-table tbody tr td, 
+.patients-table tbody tr td a {
   font-size: 16px;
+  font-weight: 500;
   line-height: 16px;
   color: #000000;
 }
