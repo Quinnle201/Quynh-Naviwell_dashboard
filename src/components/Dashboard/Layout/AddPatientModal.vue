@@ -507,6 +507,30 @@ export default {
     margin-bottom: 0;
 }
 
+.addpatient-card-content ul li input + span[role="alert"] {
+    background-color: #FF0000;
+    width: 65%;
+    padding: 3px 6px;
+    position: absolute;
+    right: 0;
+    bottom: -34px;
+    color: #FFFFFF;
+    border-radius: 3px;
+    z-index: 9;
+}
+
+.addpatient-card-content ul li input + span[role="alert"]:before{
+  content: '';  
+  width: 0;  
+  height: 0;  
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #FF0000;
+  position: absolute;  
+  top: -7px;
+  left: 7px;
+}
+
 .addpatient-card-content ul li.fullw-input {
     grid-template-columns: 1fr;
     gap: 0;
