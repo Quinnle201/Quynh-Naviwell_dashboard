@@ -180,7 +180,7 @@ export default {
             </div>
         </div>
 
-        <div class="patients-wrapper">
+        <div class="patients-wrapper page-bg">
             <div class="patient-top">
                 <div class="patient-profile-left light-bg">
                     <div class="patient-profile-left-info">

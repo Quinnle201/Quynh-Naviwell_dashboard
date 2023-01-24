@@ -504,15 +504,15 @@ body {
   display: flex;
 }
 
-
-/* my patients */
-.patients-wrapper {
+/* page */
+.page-bg {
   background-color: #F3F3F3;
   height: 80vh;
   padding: 30px 20px;
   border-radius: 16px;
 }
 
+/* my patients */
 .patients-top-wrapper {
   display: flex;
   justify-content: space-between;
@@ -1585,7 +1585,6 @@ button.vuecal__arrow {
   color: #000000;
   border-radius: 10px;
 }
-
 
 /* hover */
 @media (hover: hover) and (pointer: fine) {

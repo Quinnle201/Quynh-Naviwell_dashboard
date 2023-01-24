@@ -93,7 +93,7 @@ export default {
             <h3>My Patients</h3>
         </div>
         
-        <div class="patients-wrapper">
+        <div class="patients-wrapper page-bg">
             <div class="patients-top-wrapper">
                 <div class="patient-search-wrapper">
                     <form class="" method="get">
