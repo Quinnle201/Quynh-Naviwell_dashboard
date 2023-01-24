@@ -26,7 +26,7 @@ const authStore = useAuthStore();
             <div class="d-flex flex-row gap-1 user-block">
                 <img src="https://github.com/mdo.png" alt="mdo" width="48" height="48" class="rounded-circle">
                 <div class="text-center">
-                    <a href="#" class="nav-link link-dark px-2 active" aria-current="page">{{authStore.user?.name}}</a>
+                    <a href="#" class="nav-link link-dark px-2 active" aria-current="page">{{authStore.user?.first_name }} {{authStore.user?.last_name }}</a>
                     <a href="#" @click="authStore.logout()" class="link-secondary text-decoration-none">Log Out</a>
                 </div>
             </div>

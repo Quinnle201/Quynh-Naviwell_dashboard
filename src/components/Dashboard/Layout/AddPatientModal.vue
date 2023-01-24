@@ -67,14 +67,14 @@ export default {
             fields: [
                 {
                     label: 'First name',
-                    name: 'user.first-name',
+                    name: 'user.first_name',
                     as: 'input',
                     model: 'user.first_name',
                     rules: Yup.string().required('Name is required'),
                 },
                 {
                     label: 'Last name',
-                    name: 'user.last-name',
+                    name: 'user.last_name',
                     as: 'input',
                     model: 'user.last_name',
                     rules: Yup.string().required('Last name is required'),
