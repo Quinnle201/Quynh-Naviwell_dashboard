@@ -6,7 +6,7 @@ import PatientDetails from '../components/Dashboard/Layout/PatientDetails.vue'
 import { ref } from 'vue';
 import { axiosInstance } from '@/helpers';
 import _findIndex from 'lodash/findIndex';
-
+import userMixin from '@/mixins/user.js'
 
 export default {
     components: {
@@ -15,6 +15,9 @@ export default {
         AddIcon,
         PatientDetails
     },
+    mixins: [
+        userMixin
+    ],
     data() {
         return {
             patients: [],
@@ -53,9 +56,6 @@ export default {
         this.getPatients();
     },
     computed: {
-        name() {
-            return (patient) => patient.user.first_name + ' ' + patient.user.last_name
-        },
         age() {
             return (patient) => Math.floor((new Date() - new Date(patient.dob).getTime()) / 3.15576e+10)
         }
@@ -132,7 +132,7 @@ export default {
                         <tr v-for="(patient, index) in patients" :key="patient.id">
                             <td class="patients-img">
                                 <img src="@/assets/img/image.png" alt="">
-                                <RouterLink :to="{ name: 'patient', params: { id: patient.id}}"><span>{{ name(patient) }}</span></RouterLink>
+                                <RouterLink :to="{ name: 'patient', params: { id: patient.id}}"><span>{{ userName(patient.user) }}</span></RouterLink>
                                 
                             </td>
                             <td>{{ age(patient) }}</td>

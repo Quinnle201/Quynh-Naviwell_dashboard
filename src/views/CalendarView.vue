@@ -12,11 +12,13 @@ import { useAlertStore } from '@/stores';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as Yup from 'yup';
 
-import moment from 'moment'
-
 import PatientAutocomplete from '@/components/PatientAutocomplete.vue'
+import userMixin from '@/mixins/user.js'
 
 export default {
+    mixins: [
+        userMixin
+    ],
     components: {
         Modal,
         AddIcon,
@@ -126,9 +128,6 @@ export default {
             }
             return array
         },
-        name() {
-            return (patient) => patient.user.first_name + ' ' + patient.user.last_name
-        },
         localDate() {
             return (time) => new Date(time).toLocaleString()
         },
@@ -184,7 +183,6 @@ export default {
             this.showDialog = false;
         },
         submitNewVisit(values) {
-            console.log(values)
             const selectedDay = values.date
             values.start_time = new Date(`${selectedDay}T${values.from}`);
             values.finish_time = new Date(`${selectedDay}T${values.to}`);
@@ -203,7 +201,7 @@ export default {
                 start: this.localDate(data.start_time),
                 end: this.localDate(data.finish_time),
                 title: this.calendarEventClass(data).label,
-                content: this.name(data.patient),
+                content: this.userName(data.patient.user),
                 class: this.calendarEventClass(data).class,
                 label: this.calendarEventClass(data).label
             })
@@ -211,7 +209,6 @@ export default {
         getEvents() {
             axiosInstance.get('/appointments')
                 .then(response => {
-                    console.log(response.data.appointments)
                     response.data.appointments.forEach(appt => {
                         this.addVisit(appt)
                     });

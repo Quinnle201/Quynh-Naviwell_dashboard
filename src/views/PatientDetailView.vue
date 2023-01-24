@@ -11,6 +11,7 @@ import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
 
 import _find from 'lodash/find'
+import userMixin from '../mixins/user.js'
 
 
 export default {
@@ -22,6 +23,9 @@ export default {
         RoundBtn,
         LineChart
     },
+    mixins: [
+        userMixin
+    ],
     data() {
         const patient = null
         const alertStore = useAlertStore();
@@ -139,9 +143,6 @@ export default {
         user() {
             return this.patient.user
         },
-        name() {
-            return this.user.first_name + ' ' + this.user.last_name
-        },
         age() {
             return Math.floor((new Date() - new Date(this.patient.dob).getTime()) / 3.15576e+10)
         },
@@ -168,7 +169,7 @@ export default {
                 <div class="pagination-wrapper">
                     <ul>
                         <li>></li>
-                        <li>{{ name }}</li>
+                        <li>{{ userName(user) }}</li>
                     </ul>
                 </div>
             </div>
@@ -186,7 +187,7 @@ export default {
                     <div class="patient-profile-left-info">
                         <img src="@/assets/img/image.png" alt="">
                         <div>
-                            <h6>{{ name }}</h6>
+                            <h6>{{ userName(user) }}</h6>
                             <span>{{ user.email }}</span>
                         </div>
                     </div>
