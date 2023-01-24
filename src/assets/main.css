@@ -9,6 +9,10 @@
   --border-color: #737373;
 }
 
+a {
+  text-decoration: none;
+}
+
 ul {
   padding: 0;
   margin: 0;
@@ -1328,7 +1332,6 @@ button.vuecal__arrow {
   color: #0467DC;
   border: 1px solid #0467DC;
   border-radius: 20px;
-  text-decoration: none;
   transition: .3s ease;
 }
 
