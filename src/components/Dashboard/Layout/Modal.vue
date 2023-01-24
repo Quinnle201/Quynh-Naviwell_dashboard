@@ -54,6 +54,7 @@
 
   .popup {
     background: #FFFFFF;
+    min-width: 400px;
     width: auto;
     height: auto;
     padding: 32px 30px;

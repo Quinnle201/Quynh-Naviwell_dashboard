@@ -4,6 +4,7 @@ import AboutView from '../views/AboutView.vue'
 import PatientsView from '../views/PatientsView.vue'
 import CalendarView from '../views/CalendarView.vue'
 import PatientDetailView from '../views/PatientDetailView.vue'
+import QuotesView from '../views/QuotesView.vue'
 
 import Dashboard from '../components/Dashboard/Dashboard.vue'
 
@@ -74,6 +75,11 @@ const router = createRouter({
           path: "calendar",
           name: "calendar",
           component: CalendarView
+        },
+        {
+          path: "quotes",
+          name: "quotes",
+          component: QuotesView
         }
       ]
     },
