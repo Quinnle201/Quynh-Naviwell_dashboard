@@ -14,6 +14,8 @@ import * as Yup from 'yup';
 
 import moment from 'moment'
 
+import PatientAutocomplete from '@/components/PatientAutocomplete.vue'
+
 export default {
     components: {
         Modal,
@@ -22,87 +24,91 @@ export default {
         CalendarIcon,
         CheckIcon,
         Form,
-        Field
+        Field,
+        PatientAutocomplete
     },
     data() {
+        const alertStore = useAlertStore();
         return {
+            alertStore,
             isModalVisible: false,
             selectedEvent: {},
             showDialog: false,
             events: [
-            {
-                start: '2023-01-23 11:00',
-                end: '2023-01-23 11:30',
-                title: 'Initial NaviWell Visit',
-                content: 'Thomas Edison',
-                class: 'box_blue',
-                label: 'Initial NaviWell Visit'
-            },
-            {
-                start: '2023-01-23 17:00',
-                end: '2023-01-23 17:30',
-                title: 'Wellness Coach Visit',
-                content: 'Thomas Edison',
-                class: 'box_green',
-                label: 'Wellness Coach Visit'
-            },
-            {
-                start: '2023-01-24 10:00',
-                end: '2023-01-24 11:30',
-                title: 'Initial NaviWell Visit',
-                content: 'Thomas Edison',
-                class: 'box_blue',
-                label: 'Initial NaviWell Visit'
-            },
-            {
-                start: '2023-01-24 17:00',
-                end: '2023-01-24 18:30',
-                title: 'Wellness Coach Visit',
-                content: 'Thomas Edison',
-                class: 'box_green',
-                label: 'Wellness Coach Visit'
-            },
-            {
-                start: '2023-01-25 13:30',
-                end: '2023-01-25 14:30',
-                title: 'Dietitian Visit',
-                content: 'Thomas Edison',
-                class: 'box_pink',
-                label: 'Dietitian Visit'
-            },
-            {
-                start: '2023-01-25 18:30',
-                end: '2023-01-25 19:30',
-                title: 'Follow-Up Visit',
-                content: 'Thomas Edison',
-                class: 'box_yellow',
-                label: 'Follow-Up Visit'
-            },
-            {
-                start: '2023-01-26 17:00',
-                end: '2023-01-26 17:30',
-                title: 'Initial NaviWell Visit',
-                content: 'Thomas Edison',
-                class: 'box_blue',
-                label: 'Initial NaviWell Visit'
-            },
-            {
-                start: '2023-01-26 10:00',
-                end: '2023-01-26 11:30',
-                title: 'Dietitian Visit',
-                content: 'Thomas Edison',
-                class: 'box_pink',
-                label: 'Dietitian Visit'
-            },
-            {
-                start: '2023-01-27 20:00',
-                end: '2023-01-27 20:30',
-                title: 'Initial NaviWell Visit',
-                content: 'Thomas Edison',
-                class: 'box_blue',
-                label: 'Initial NaviWell Visit'
-            },
-            ]
+                {
+                    start: '2023-01-23 11:00',
+                    end: '2023-01-23 11:30',
+                    title: 'Initial NaviWell Visit',
+                    content: 'Thomas Edison',
+                    class: 'box_blue',
+                    label: 'Initial NaviWell Visit'
+                },
+                {
+                    start: '2023-01-23 17:00',
+                    end: '2023-01-23 17:30',
+                    title: 'Wellness Coach Visit',
+                    content: 'Thomas Edison',
+                    class: 'box_green',
+                    label: 'Wellness Coach Visit'
+                },
+                {
+                    start: '2023-01-24 10:00',
+                    end: '2023-01-24 11:30',
+                    title: 'Initial NaviWell Visit',
+                    content: 'Thomas Edison',
+                    class: 'box_blue',
+                    label: 'Initial NaviWell Visit'
+                },
+                {
+                    start: '2023-01-24 17:00',
+                    end: '2023-01-24 18:30',
+                    title: 'Wellness Coach Visit',
+                    content: 'Thomas Edison',
+                    class: 'box_green',
+                    label: 'Wellness Coach Visit'
+                },
+                {
+                    start: '2023-01-25 13:30',
+                    end: '2023-01-25 14:30',
+                    title: 'Dietitian Visit',
+                    content: 'Thomas Edison',
+                    class: 'box_pink',
+                    label: 'Dietitian Visit'
+                },
+                {
+                    start: '2023-01-25 18:30',
+                    end: '2023-01-25 19:30',
+                    title: 'Follow-Up Visit',
+                    content: 'Thomas Edison',
+                    class: 'box_yellow',
+                    label: 'Follow-Up Visit'
+                },
+                {
+                    start: '2023-01-26 17:00',
+                    end: '2023-01-26 17:30',
+                    title: 'Initial NaviWell Visit',
+                    content: 'Thomas Edison',
+                    class: 'box_blue',
+                    label: 'Initial NaviWell Visit'
+                },
+                {
+                    start: '2023-01-26 10:00',
+                    end: '2023-01-26 11:30',
+                    title: 'Dietitian Visit',
+                    content: 'Thomas Edison',
+                    class: 'box_pink',
+                    label: 'Dietitian Visit'
+                },
+                {
+                    start: '2023-01-27 20:00',
+                    end: '2023-01-27 20:30',
+                    title: 'Initial NaviWell Visit',
+                    content: 'Thomas Edison',
+                    class: 'box_blue',
+                    label: 'Initial NaviWell Visit'
+                },
+            ],
+            searchList: []
         };
     },
     computed: {
@@ -152,6 +158,20 @@ export default {
         this.getEvents();
     },
     methods: {
+        searchPatient(term) {
+
+            axiosInstance.post('patients/search', { name: term })
+                .then(res => {
+                    this.searchList = []
+                    res.data.data.forEach(pt => {
+                        this.searchList.push(pt)
+                    });
+
+                })
+        },
+        selectedPt(patient) {
+
+        },
         showModal() {
             this.isModalVisible = true;
         },
@@ -167,7 +187,7 @@ export default {
             this.showDialog = false;
         },
         submitNewVisit(values) {
-
+            console.log(values)
             const selectedDay = values.date
             values.start_time = new Date(`${selectedDay}T${values.from}`);
             values.finish_time = new Date(`${selectedDay}T${values.to}`);
@@ -272,7 +292,9 @@ export default {
 
                             <div class="popup-content-item">
                                 <label>Patient Name</label>
-                                <Field name="patient_id" class="popup-content-item-input"></Field>
+                                <PatientAutocomplete :patients="searchList" @selectedPt="selectedPt"
+                                    @search="searchPatient" />
+                                <!-- <Field name="patient_id" class="popup-content-item-input"></Field> -->
                             </div>
 
                             <div class="popup-content-item">
@@ -320,8 +342,7 @@ export default {
         </div>
 
         <div class="calendar-wrapper">
-            <vue-cal selected-date="2023-01-24" :time-from="8 * 60" :time-to="18 * 60" :time-step="15" 
-                today-button 
+            <vue-cal selected-date="2023-01-24" :time-from="8 * 60" :time-to="18 * 60" :time-step="15" today-button
                 :disable-views="['years', 'year']" hide-view-selector
                 :editable-events="{ title: false, drag: false, resize: false, delete: false, create: false }"
                 :events="events" :on-event-click="onEventClick">
