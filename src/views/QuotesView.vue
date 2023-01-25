@@ -4,43 +4,26 @@ import DeleteModal from '../components/Dashboard/Layout/DeleteModal.vue'
 import AddIcon from '../components/icons/IconAdd.vue'
 import SearchIcon from '../components/icons/IconSearch.vue'
 import EditIcon from '../components/icons/IconEdit.vue'
+import VueMultiselect from 'vue-multiselect'
+
 export default {
     components: {
         Modal,
         DeleteModal,
         AddIcon,
         SearchIcon,
-        EditIcon
+        EditIcon,
+        VueMultiselect
     }, 
     data() {
         return {
-            selectedPatients: '',
             isModalVisible: false,
             isEditModalVisible: false,
             isDeleteModalVisible: false,
-            options: [
-                {
-                    text: 'patient 1', value: 'patient 1'
-                },
-                {
-                    text: 'patient 2', value: 'patient 2'
-                },
-                {
-                    text: 'patient 3', value: 'patient 3'
-                },
-            ],
-            selectedGroups: '',
-            groups: [
-                {
-                    text: 'Group', value: 'group'
-                },
-                {
-                    text: 'group', value: 'group'
-                },
-                {
-                    text: 'Group', value: 'group'
-                },
-            ]
+            selectedPatients: null,
+            optionsPatients: ['Howard Aarons', 'Edward Alvarez', 'Emily Atilla'],
+            selectedGroups: null,
+            optionsGroups: ['Group 1', 'Group 2', 'Group']
         }
     },
     methods: {
@@ -251,21 +234,25 @@ export default {
             <Modal v-show="isModalVisible" @close="closeAddModal">
                 <template #header>Add New Quote</template>
                 <template #content>
-                    <div class="popup-content-item">
-                        <select v-model="selectedPatients" class="" id="patients-select">
-                            <option disabled value="">Select Patients</option>
-                            <option v-for="option in options" :value="option.value">
-                                {{ option.text }}
-                            </option>
-                        </select>
+                    <div class="popup-content-item popup-content-item--select">
+                        <VueMultiselect
+                            v-model="selectedPatients"
+                            :options="optionsPatients"
+                            :multiple="true"
+                            :close-on-select="true"
+                            placeholder="Select patient" 
+                            >
+                        </VueMultiselect>
                     </div>
-                    <div class="popup-content-item">
-                        <select v-model="selectedGroups" class="" id="groups-select">
-                            <option disabled value="">Select Groups</option>
-                            <option v-for="group in groups" :value="group.value">
-                                {{ group.text }}
-                            </option>
-                        </select>
+                    <div class="popup-content-item popup-content-item--select">
+                        <VueMultiselect
+                            v-model="selectedGroups"
+                            :options="optionsGroups"
+                            :multiple="true"
+                            :close-on-select="true" 
+                            placeholder="Select group"
+                            >
+                        </VueMultiselect>
                     </div>
                     <div class="popup-content-item">
                         <textarea id="textarea" placeholder="Write a quote..."></textarea>
@@ -285,61 +272,25 @@ export default {
             <Modal v-show="isEditModalVisible" @close="closeEditModal">
                 <template #header>Edit Quote</template>
                 <template #content>
-                    <div class="popup-content-item">
-                        <select v-model="selectedPatients" class="" id="patients-select">
-                            <option disabled value="">Select Patients</option>
-                            <option v-for="option in options" :value="option.value">
-                                {{ option.text }}
-                            </option>
-                        </select>
+                    <div class="popup-content-item popup-content-item--select">
+                        <VueMultiselect
+                            v-model="selectedPatients"
+                            :options="optionsPatients"
+                            :multiple="true"
+                            :close-on-select="true"
+                            placeholder="Select patient" 
+                            >
+                        </VueMultiselect>
                     </div>
-                    <div class="popup-content-item">
-                        <select v-model="selectedGroups" class="" id="groups-select">
-                            <option disabled value="">Select Groups</option>
-                            <option v-for="group in groups" :value="group.value">
-                                {{ group.text }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="popup-content-item selected-list">
-                        <span>Selected Patients:</span>
-
-                        <ul>
-                            <li>
-                                <span>x</span>
-                                John Doe
-                            </li>
-                            <li>
-                                <span>x</span>
-                                John Doe
-                            </li>
-                            <li>
-                                <span>x</span>
-                                John Doe
-                            </li>
-                            <li>
-                                <span>x</span>
-                                John Doe
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="popup-content-item selected-list">
-                        <span>Selected Groups:</span>
-
-                        <ul>
-                            <li>
-                                <span>x</span>
-                                Group
-                            </li>
-                            <li>
-                                <span>x</span>
-                                Group
-                            </li>
-                            <li>
-                                <span>x</span>
-                                Group
-                            </li>
-                        </ul>
+                    <div class="popup-content-item popup-content-item--select">
+                        <VueMultiselect
+                            v-model="selectedGroups"
+                            :options="optionsGroups"
+                            :multiple="true"
+                            :close-on-select="true"
+                            placeholder="Select group" 
+                            >
+                        </VueMultiselect>
                     </div>
                     <div class="popup-content-item">
                         <textarea id="textarea" placeholder="Write a quote..."></textarea>
@@ -365,3 +316,5 @@ export default {
         </div>
     </div>
 </template>
+
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>

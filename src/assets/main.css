@@ -807,6 +807,10 @@ body {
   color: #000000;
 }
 
+.popup-content-item--select {
+  margin-bottom: 16px;
+}
+
 .popup-content-item.visit-type {
   margin-bottom: 14px;
   display: grid;
@@ -978,7 +982,7 @@ body {
   position: relative;
 }
 
-.popup-content-item ul {
+.popup-content-item > ul {
   background-color: #FFFFFF;
   width: 100%;
   position: absolute;
@@ -993,9 +997,24 @@ body {
   z-index: 9;
 }
 
-.popup-content-item ul li {
+.popup-content-item > ul li {
   padding: 0 16px;
   cursor: pointer;
+}
+
+
+
+.popup-content-item .multiselect__select {
+  position: absolute;
+  z-index: 1;
+}
+
+.popup-content-item .multiselect__tags {
+  border: 1px solid var(--border-color);
+}
+
+.popup-content-item .multiselect__tag {
+  border-radius: 16px;
 }
 
 input[type="date"].popup-content-item-input::-webkit-calendar-picker-indicator {
@@ -1726,40 +1745,6 @@ button.vuecal__arrow {
   font-size: 16px;
   font-weight: 500;
   color: #000000;
-}
-
-.popup-content-item.selected-list ul {
-  list-style: none;
-  background: transparent;
-  margin: 0 0 16px;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px 16px;
-  position: relative;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.popup-content-item.selected-list ul li {
-  background: rgba(92, 144, 241, 0.2);
-  padding: 12px 18px 12px 12px;
-  border-radius: 20px;
-}
-
-.popup-content-item.selected-list ul li span {
-  background-color: #FDD3D3;
-  width: 16px;
-  height: 16px;
-  margin-right: 6px;
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 16px;
-  text-align: center;
-  color: #FF0000;
-  border-radius: 50%;
 }
 
 /* pagination */
