@@ -5,6 +5,8 @@ import CalendarIcon from '../../icons/IconCalendar.vue'
 import RemoveIcon from '../../icons/IconRemove.vue'
 import RoundBtn from '../../Dashboard/Layout/RoundBtn.vue'
 import RoundBtnDelete from '../../Dashboard/Layout/RoundBtnDelete.vue'
+import Modal from '../../Dashboard/Layout/Modal.vue'
+import { Form, Field } from 'vee-validate';
 
 export default {
     components: {
@@ -13,8 +15,29 @@ export default {
         CalendarIcon,
         RemoveIcon,
         RoundBtn,
-        RoundBtnDelete
+        RoundBtnDelete,
+        Modal,
+        Form,
+        Field,
     },
+    data() {
+        return {
+            isModalVisible: false,
+        }
+    },
+    methods: {
+        showModal(event, e) {
+            this.selectedEvent = event
+            this.isModalVisible = true;
+            if (e != null) {
+                e.stopPropagation()
+            }
+        },
+        closeModal() {
+            this.selectedEvent = null
+            this.isModalVisible = false;
+        },
+    }
 }
 </script>
 
@@ -32,7 +55,7 @@ export default {
             </template>
             <template #btn-name>Update</template>
         </RoundBtn>
-        <RoundBtn>
+        <RoundBtn @click="showModal(null, null)">
             <template #btn-icon>
                 <CalendarIcon width="30" height="30" />
             </template>
@@ -45,6 +68,79 @@ export default {
             <template #btn-name>Delete</template>
         </RoundBtnDelete>
     </div>
+    <Modal v-show="isModalVisible" @close="closeModal">
+        <template #header>Schedule</template>
+        <template #content>
+            <div class="type-select">
+                <div class="type-select-item active">Appointment</div>
+                <div class="type-select-item">Telehealth</div>
+                <div class="type-select-item">Personal</div>
+            </div>
+            <Form @submit="submitVisit" ref="visitForm">
+                <div class="popup-content-item visit-type">
+                    <label class="checkbox path">
+                        <Field type="radio" name="visit_type" value="initial"></Field>
+                        <CheckIcon />
+                        <div class="label-bg">Initial NaviWell Visit</div>
+                    </label>
+                    <label class="checkbox path">
+                        <Field type="radio" name="visit_type" value="wellness"></Field>
+                        <CheckIcon />
+                        <div class="label-bg">Wellness Coach Visit</div>
+                    </label>
+                    <label class="checkbox path">
+                        <Field type="radio" name="visit_type" value="dietitian"></Field>
+                        <CheckIcon />
+                        <div class="label-bg">Dietitian Visit</div>
+                    </label>
+                    <label class="checkbox path">
+                        <Field type="radio" name="visit_type" value="followup"></Field>
+                        <CheckIcon />
+                        <div class="label-bg">Follow-Up Visit</div>
+                    </label>
+                </div>
+
+                <div class="popup-content-item">
+                    <label class="label-w-icon">Date
+                        <Field name="date" type="date" class="popup-content-item-input"></Field>
+                        <CalendarIcon />
+                    </label>
+                </div>
+
+                <div class="popup-content-item-wrapper">
+                    <div class="popup-content-item">
+                        <label>From</label>
+                        <Field as="select" name="from">
+                            <option v-for="item in hoursSelect" :value="item.value">{{ item.label }}
+                            </option>
+                        </Field>
+                    </div>
+
+                    <div class="popup-content-item">
+                        <label>To</label>
+                        <Field as="select" name="to">
+                            <option v-for="item in hoursSelect" :value="item.value">{{ item.label }}
+                            </option>
+                        </Field>
+                    </div>
+                </div>
+
+                <div class="popup-content-item">
+                    <label for="textarea">Notes</label>
+                    <Field as="textarea" name="notes"></Field>
+                </div>
+
+                <div class="popup-footer">
+                    <button type="reset" class="w-btn w-btn-close" @click="closeModal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-btn">
+                        {{ selectedEvent? 'Edit Event': 'Save Event' }}
+                    </button>
+                </div>
+            </form>
+        </template>
+    </Modal>
 </template>
 
 <style>
