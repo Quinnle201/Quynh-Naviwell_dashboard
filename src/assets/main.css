@@ -1671,7 +1671,6 @@ button.vuecal__arrow {
 .quotes-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .quotes-search-wrapper {
@@ -1681,6 +1680,7 @@ button.vuecal__arrow {
 }
 
 .quotes-search {
+  margin-bottom: 32px;
   position: relative;
 }
 
@@ -1781,6 +1781,7 @@ button.vuecal__arrow {
 
 /* pagination */
 .pagination-wrapper {
+  margin-top: auto;
   display: flex;
   justify-content: center;
 }
