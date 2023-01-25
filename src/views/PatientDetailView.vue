@@ -192,6 +192,7 @@ export default {
 
             <div class="patient-btns">
                 <button type="button" class="w-btn">Edit Patient Info</button>
+                <button type="button" class="w-btn" @click="showModal(null, null)">Add Health Data</button>
                 <button type="button" class="w-btn w-btn-delete">Delete Patient</button>
                 <RouterLink to="/patients">Return to My Patients</RouterLink>
             </div>
@@ -369,11 +370,10 @@ export default {
                         <h4 class="patient-heading">Medications and Supplements</h4>
 
                         <ul class="patient-meds-list">
-                            <!-- <li v-for="med in patient.meds">{{ med }}</li> -->
-                            <li>Pentalgin</li>
+                            <li v-for="med in patient.meds">{{ med }}</li>
                         </ul>
 
-                        <div class="patient-status-item-btn" @click="showModal(null, null)">View and Edit Medications and Supplements</div>
+                        <div class="patient-status-item-btn">View and Edit Medications and Supplements</div>
                     </div>
                 </div>
 
@@ -417,8 +417,8 @@ export default {
     <Modal v-show="isModalVisible" @close="closeModal">
         <template #header>Medications and Supplements</template>
         <template #content>
-            <Form>
-                <div class="popup-content-item meds-input">
+            <form>
+                <div class="popup-content-item meds-input bl-bg">
                     <input class="popup-content-item-input" type="text" placeholder="Medication Name, Dosage, Frequency" />
 
                     <input class="popup-content-item-input" type="text" placeholder="Medication Name, Dosage, Frequency" />
@@ -426,6 +426,58 @@ export default {
                     <input class="popup-content-item-input" type="text" placeholder="Medication Name, Dosage, Frequency" />
 
                     <button type="button">Add Medication or Supplement</button>
+                </div>
+
+                <div class="popup-footer">
+                    <button type="reset" class="w-btn w-btn-close" @click="closeModal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-btn">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </template>
+    </Modal>
+
+    <Modal v-show="isModalVisible" @close="closeModal">
+        <template #header>Add Health Data</template>
+        <template #content>
+            <form>
+                <div class="popup-content-item bl-bg">
+                    <label class="label-w-icon">Height
+                        <Field name="height" type="height" class="popup-content-item-input"></Field>
+                    </label>
+                </div>
+
+                <div class="popup-content-item bl-bg">
+                    <label class="label-w-icon">Body Fat
+                        <Field name="bodyFat" type="bodyFat" class="popup-content-item-input"></Field>
+                    </label>
+                </div>
+
+                <div class="popup-content-item bl-bg">
+                    <label class="label-w-icon">Weight
+                        <Field name="Weight" type="Weight" class="popup-content-item-input"></Field>
+                    </label>
+                </div>
+
+                <div class="popup-content-item bl-bg">
+                    <label class="label-w-icon">BP
+                        <Field name="bp" type="bp" class="popup-content-item-input"></Field>
+                    </label>
+                </div>
+
+                <div class="popup-content-item bl-bg">
+                    <label class="label-w-icon">BMI
+                        <Field name="bmi" type="bmi" class="popup-content-item-input"></Field>
+                    </label>
+                </div>
+
+                <div class="popup-content-item bl-bg">
+                    <label class="label-w-icon">Resting HR
+                        <Field name="restingHR" type="restingHR" class="popup-content-item-input"></Field>
+                    </label>
                 </div>
 
                 <div class="popup-footer">
