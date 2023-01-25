@@ -1730,10 +1730,16 @@ button.vuecal__arrow {
 
 .popup-content-item.selected-list ul {
   list-style: none;
-  margin-bottom: 16px;
+  background: transparent;
+  margin: 0 0 16px;
+  padding: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px 16px;
+  position: relative;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .popup-content-item.selected-list ul li {
