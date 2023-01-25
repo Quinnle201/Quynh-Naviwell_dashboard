@@ -71,6 +71,7 @@
   }
 
   .popup-header h4 {
+    max-width: 92%;
     margin: 0;
     font-size: 24px;
     font-weight: 600;

@@ -966,6 +966,25 @@ body {
   width: 100%;
 }
 
+.popup-content-item.meds-input .popup-content-item-input {
+  background-color: #F4F4FF;
+  width: 100%;
+  padding-left: 22px;
+  border-radius: 10px;
+  color: #000000;
+  outline: none;
+  border: none;
+}
+
+.popup-content-item.meds-input button {
+  margin-top: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 14px;
+  color: #0258BC;
+}
+
 .popup-content-item .label-w-icon svg {
   width: 24px;
   position: absolute;
@@ -1465,11 +1484,18 @@ button.vuecal__arrow {
 
 .patient-card {
   padding: 16px 26px;
+  display: flex;
+  flex-direction: column;
   font-size: 16px;
   font-weight: 400;
   line-height: 16px;
   color: #000000;
   text-align: center;
+}
+
+.patient-card-two {
+  display: grid;
+  grid-template-rows: 50fr 50fr;
 }
 
 .patient-status {
@@ -1497,8 +1523,10 @@ button.vuecal__arrow {
 
 .patient-status-item-btn {
   margin-bottom: 8px;
+  margin-top: auto;
   text-align: center;
   color: #0258BC;
+  cursor: pointer;
 }
 
 .patient-status-item-btn.active-btn:after, 
@@ -1560,21 +1588,20 @@ button.vuecal__arrow {
   border-radius: 10px;
 }
 
-
 .patient-meds {
   margin-top: 18px;
 }
 
-.patient-meds div {
+.patient-meds .patient-meds-list {
   margin-top: 18px;
 }
 
-.patient-meds div ul {
+.patient-meds ul.patient-meds-list {
   list-style: none;
   margin-bottom: 16px;
 }
 
-.patient-meds div ul li {
+.patient-meds ul.patient-meds-list li {
   position: relative;
   margin: 0 0 12px 16px;
   font-size: 14px;
@@ -1584,7 +1611,11 @@ button.vuecal__arrow {
   text-align: left;
 }
 
-.patient-meds div ul li:before {
+.patient-meds ul.patient-meds-list li:empty {
+  display: none;
+}
+
+.patient-meds ul.patient-meds-list li:before {
   content: '';
   background-color: var(--primary);
   width: 10px;
