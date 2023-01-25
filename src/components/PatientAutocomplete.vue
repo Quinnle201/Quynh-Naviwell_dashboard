@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
 import { Field } from 'vee-validate';
 import userMixin from '@/mixins/user.js'
 
@@ -23,11 +22,16 @@ export default {
         Field
     },
     props: {
-        patients: Object
+        patients: Object,
+        patient: String,
     },
     watch: {
+        patient(value) {
+            this.searchTerm = value
+            
+        },
         searchTerm(newS, oldS) {
-            if (this.searchTerm == this.userName(this.selectedPt.name)) {
+            if (this.searchTerm == this.userName(this.selectedPt.name) || this.patient == this.searchTerm) {
                 return
             }
             this.isSearchShown = true

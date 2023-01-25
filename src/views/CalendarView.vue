@@ -9,11 +9,13 @@ import 'vue-cal/dist/vuecal.css'
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
 
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import * as Yup from 'yup';
+import { Form, Field } from 'vee-validate';
 
 import PatientAutocomplete from '@/components/PatientAutocomplete.vue'
 import userMixin from '@/mixins/user.js'
+
+import _find from 'lodash/find';
+import _findIndex from 'lodash/findIndex';
 
 export default {
     mixins: [
@@ -34,7 +36,7 @@ export default {
         return {
             alertStore,
             isModalVisible: false,
-            selectedEvent: {},
+            selectedEvent: null,
             showDialog: false,
             events: [
                 {
@@ -110,8 +112,33 @@ export default {
                     label: 'Initial NaviWell Visit'
                 },
             ],
-            searchList: []
+            searchList: [],
         };
+    },
+    watch: {
+        selectedEvent: {
+            handler(value) {
+                if (value != null) {
+                    const visitEvent = _find(this.events, ['id', value.id])
+                    const data = Object.assign({}, visitEvent.dataObject);
+                    const startTime = new Date(data.start_time)
+                    const finishTime = new Date(data.finish_time)
+                    console.log(data)
+                    this.$refs.visitForm.setValues({
+                        visit_type: data.visit_type,
+                        date: startTime.toISOString().substring(0, 10),
+                        patient_name: this.userName(data.patient.user),
+                        patient_id: data.patient.id,
+                        from: startTime.format('hh:mm'),
+                        to: finishTime.format('hh:mm'),
+                        notes: data.notes
+                    });
+                } else {
+                    this.$refs.visitForm.setValues({})
+                }
+
+            }
+        }
     },
     computed: {
         hoursSelect() {
@@ -168,36 +195,62 @@ export default {
 
                 })
         },
-        showModal() {
+        showModal(event, e) {
+            this.selectedEvent = event
             this.isModalVisible = true;
+            if (e != null) {
+                e.stopPropagation()
+            }
         },
         closeModal() {
+            this.selectedEvent = null
             this.isModalVisible = false;
         },
-        onEventClick(event, e) {
-            this.selectedEvent = event;
-            this.showDialog = true;
-            e.stopPropagation()
-        },
-        closeDialog() {
-            this.showDialog = false;
-        },
-        submitNewVisit(values) {
+        submitVisit(values) {
             const selectedDay = values.date
             values.start_time = new Date(`${selectedDay}T${values.from}`);
             values.finish_time = new Date(`${selectedDay}T${values.to}`);
-            axiosInstance.post('/appointments', values)
-                .then(response => {
-                    this.closeModal()
-                    this.alertStore.success('Appointment set')
-                    this.addVisit(response.data.appointment)
-                })
-                .catch(error => {
-                    this.alertStore.error(error.response.data.message)
-                });
+
+            if (this.selectedEvent != null) {
+                axiosInstance.put(`/appointments/${this.selectedEvent.id}`, values)
+                    .then(response => {
+                        this.closeModal()
+                        this.alertStore.success('Appointment updated')
+                        this.updateVisit(response.data.appointment)
+                    })
+                    .catch(error => {
+                        this.alertStore.error(error.response.data.message)
+                    });
+            } else {
+                axiosInstance.post('/appointments', values)
+                    .then(response => {
+                        this.closeModal()
+                        this.alertStore.success('Appointment set')
+                        this.addVisit(response.data.appointment)
+                    })
+                    .catch(error => {
+                        this.alertStore.error(error.response.data.message)
+                    });
+            }
+        },
+        updateVisit(data) {
+            const index = _findIndex(this.events, ['id', data.id])
+            const updatedEvent = {
+                dataObject: data,
+                id: data.id,
+                start: this.localDate(data.start_time),
+                end: this.localDate(data.finish_time),
+                title: this.calendarEventClass(data).label,
+                content: this.userName(data.patient.user),
+                class: this.calendarEventClass(data).class,
+                label: this.calendarEventClass(data).label
+            }
+            this.events.splice(index, 1, updatedEvent)
         },
         addVisit(data) {
             this.events.push({
+                dataObject: data,
+                id: data.id,
                 start: this.localDate(data.start_time),
                 end: this.localDate(data.finish_time),
                 title: this.calendarEventClass(data).label,
@@ -250,20 +303,20 @@ export default {
             </div>
 
             <div class="calendar-btn">
-                <div @click="showModal" class="add-button">
+                <div @click="showModal(null, null)" class="add-button">
                     <AddIcon />
                     <button type="button" class="calendar-btn-text">Add New Visit</button>
                 </div>
 
                 <Modal v-show="isModalVisible" @close="closeModal">
-                    <template #header>Add New Visit</template>
+                    <template #header>{{ selectedEvent? 'Edit Visit': 'Add New Visit' }}</template>
                     <template #content>
                         <div class="type-select">
                             <div class="type-select-item active">Appointment</div>
                             <div class="type-select-item">Telehealth</div>
                             <div class="type-select-item">Personal</div>
                         </div>
-                        <Form @submit="submitNewVisit">
+                        <Form @submit="submitVisit" ref="visitForm">
                             <div class="popup-content-item visit-type">
                                 <label class="checkbox path">
                                     <Field type="radio" name="visit_type" value="initial"></Field>
@@ -289,7 +342,7 @@ export default {
 
                             <div class="popup-content-item">
                                 <label>Patient Name</label>
-                                <PatientAutocomplete :patients="searchList"
+                                <PatientAutocomplete :patient="selectedEvent?.content" :patients="searchList"
                                     @search="searchPatient" />
                             </div>
 
@@ -328,7 +381,7 @@ export default {
                                     Cancel
                                 </button>
                                 <button type="submit" class="w-btn">
-                                    Save Event
+                                    {{ selectedEvent? 'Edit Event': 'Save Event' }}
                                 </button>
                             </div>
                         </form>
@@ -341,90 +394,8 @@ export default {
             <vue-cal selected-date="2023-01-24" :time-from="8 * 60" :time-to="18 * 60" :time-step="15" today-button
                 :disable-views="['years', 'year']" hide-view-selector
                 :editable-events="{ title: false, drag: false, resize: false, delete: false, create: false }"
-                :events="events" :on-event-click="onEventClick">
+                :events="events" :on-event-click="showModal">
             </vue-cal>
-
-            <Modal v-show="showDialog" @close="closeDialog">
-                <template #header>Edit Visit</template>
-                <template #content>
-                    <div class="type-select">
-                        <div class="type-select-item active">Appointment</div>
-                        <div class="type-select-item">Telehealth</div>
-                        <div class="type-select-item">Personal</div>
-                    </div>
-                    <form>
-                        <div class="popup-content-item visit-type">
-                            <label class="checkbox path">
-                                <input type="checkbox">
-                                <CheckIcon />
-                                <div class="label-bg">Initial NaviWell Visit</div>
-                            </label>
-                            <label class="checkbox path">
-                                <input type="checkbox">
-                                <CheckIcon />
-                                <div class="label-bg">Wellness Coach Visit</div>
-                            </label>
-                            <label class="checkbox path">
-                                <input type="checkbox">
-                                <CheckIcon />
-                                <div class="label-bg">Dietitian Visit</div>
-                            </label>
-                            <label class="checkbox path">
-                                <input type="checkbox">
-                                <CheckIcon />
-                                <div class="label-bg">Follow-Up Visit</div>
-                            </label>
-                        </div>
-
-                        <div class="popup-content-item">
-                            <label>Patient Name</label>
-                            <input type="text" class="popup-content-item-input" :value="selectedEvent.content" />
-                        </div>
-
-                        <div class="popup-content-item">
-                            <label class="label-w-icon">Date
-                                <input type="text" class="popup-content-item-input"
-                                    :value="selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY')" />
-                                <CalendarIcon />
-                            </label>
-                        </div>
-
-                        <div class="popup-content-item-wrapper">
-                            <div class="popup-content-item">
-                                <label>From</label>
-                                <select>
-                                    <option value="selectedEvent.start && selectedEvent.start.formatTime()">{{
-                                        selectedEvent.start && selectedEvent.start.formatTime()
-                                    }}</option>
-                                </select>
-                            </div>
-
-                            <div class="popup-content-item">
-                                <label>To</label>
-                                <select>
-                                    <option value="selectedEvent.end && selectedEvent.end.formatTime()">{{
-                                        selectedEvent.end && selectedEvent.end.formatTime()
-                                    }}</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="popup-content-item">
-                            <label for="textarea">Notes</label>
-                            <textarea id="textarea"></textarea>
-                        </div>
-
-                        <div class="popup-footer">
-                            <button type="button" class="w-btn w-btn-close" @click="closeDialog">
-                                Cancel
-                            </button>
-                            <button type="button" class="w-btn">
-                                Save Event
-                            </button>
-                        </div>
-                    </form>
-                </template>
-            </Modal>
         </div>
     </div>
 </template>
