@@ -5,6 +5,11 @@ import AddIcon from '../components/icons/IconAdd.vue'
 import SearchIcon from '../components/icons/IconSearch.vue'
 import EditIcon from '../components/icons/IconEdit.vue'
 import VueMultiselect from 'vue-multiselect'
+import { Form, Field } from 'vee-validate';
+
+import { axiosInstance } from '@/helpers';
+import { useAlertStore } from '@/stores';
+import _findIndex from 'lodash/findIndex';
 
 export default {
     components: {
@@ -13,31 +18,45 @@ export default {
         AddIcon,
         SearchIcon,
         EditIcon,
-        VueMultiselect
-    }, 
+        VueMultiselect,
+        Form,
+        Field
+    },
     data() {
+        const alertStore = useAlertStore();
         return {
+            quotes: [],
+            selectedQuote: null,
+            alertStore,
             isModalVisible: false,
             isEditModalVisible: false,
             isDeleteModalVisible: false,
-            selectedPatients: null,
-            optionsPatients: ['Howard Aarons', 'Edward Alvarez', 'Emily Atilla'],
-            selectedGroups: null,
-            optionsGroups: ['Group 1', 'Group 2', 'Group']
         }
     },
+    watch: {
+        selectedQuote: {
+            handler(value) {
+                if (value == null) {
+                    this.$refs.quoteForm.setValues({})
+                } else {
+                    this.$refs.quoteForm.setValues({
+                        text: value.text
+                    })
+                }
+            }
+        }
+    },
+    mounted() {
+        this.getQuotes()
+    },
     methods: {
-        showAddModal() {
+        showModal(quote) {
+            this.selectedQuote = quote
             this.isModalVisible = true;
         },
-        closeAddModal() {
+        closeModal() {
+            this.selectedQuote = null
             this.isModalVisible = false;
-        },
-        showEditModal() {
-            this.isEditModalVisible = true;
-        },
-        closeEditModal() {
-            this.isEditModalVisible = false;
         },
         showDeleteModal() {
             this.isDeleteModalVisible = true;
@@ -45,6 +64,57 @@ export default {
         closeDeleteModal() {
             this.isDeleteModalVisible = false;
         },
+        getQuotes() {
+            axiosInstance.get('/quotes')
+                .then(response => {
+                    console.log(response.data)
+                    this.quotes = response.data.quotes
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        deleteQuote() {
+            axiosInstance.delete(`/quotes/${this.selectedQuote.id}`)
+                .then(response => {
+                    const index = _findIndex(this.quotes, ['id', this.selectedQuote.id])
+                    this.quotes.splice(index, 1); 
+                    this.closeDeleteModal()
+                    this.closeModal()
+                    this.alertStore.success('Quote removed')
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        submitQuote(values) {
+            if (this.selectedQuote != null) {
+                axiosInstance.put(`/quotes/${this.selectedQuote.id}`, values)
+                    .then(response => {
+                        const index = _findIndex(this.quotes, ['id', this.selectedQuote.id])
+                        this.quotes.splice(index, 1, response.data.quote)
+                        this.closeModal()
+                        this.alertStore.success('Quote updated')
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alertStore.error(error.response.data.message)
+                    });
+            } else {
+                axiosInstance.post('/quotes', values)
+                    .then(response => {
+                        this.quotes.push(response.data.quote)
+                        this.closeModal()
+                        this.alertStore.success('Quote added')
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alertStore.error(error.response.data.message)
+                    });
+            }
+        }
     }
 }
 </script>
@@ -55,10 +125,10 @@ export default {
             <h3>Inspirational quotes</h3>
 
             <div>
-                <div class="add-button" @click="showAddModal">
+                <div class="add-button" @click="showModal(null)">
                     <AddIcon />
                     <button type="button">Add New Quote</button>
-                </div> 
+                </div>
             </div>
         </div>
 
@@ -71,146 +141,15 @@ export default {
             </div>
 
             <div class="quotes-grid">
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>A healthy outside starts from the inside.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
 
-                <div class="quotes-grid-item">
+                <div class="quotes-grid-item" v-for="quote in quotes">
                     <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
+                        <div>{{ new Date(quote.created_at).format('MM/DD/YYYY') }}</div>
                     </div>
                     <div class="quotes-grid-item-content">
-                        <p>The first wealth is health.</p>
+                        <p>{{ quote.text }}</p>
                     </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>Wellness is a connection of paths: knowledge and action.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>Take care of your body. It's the only place you have to live.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>The mind and body are not separate. What affects one, affects the other.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>Wellness is a connection of paths: knowledge and action.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>The first wealth is health.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>A healthy outside starts from the inside.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>Take care of your body. It's the only place you have to live.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>The first wealth is health.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>A healthy outside starts from the inside.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quotes-grid-item">
-                    <div class="quotes-grid-item-date">
-                        <div>12.01.2023</div>
-                    </div>
-                    <div class="quotes-grid-item-content">
-                        <p>Wellness is a connection of paths: knowledge and action.</p>
-                    </div>
-                    <div class="quotes-grid-item-btn" @click="showEditModal">
+                    <div class="quotes-grid-item-btn" @click="showModal(quote)">
                         <EditIcon />
                     </div>
                 </div>
@@ -230,11 +169,11 @@ export default {
                 </div>
             </div>
 
-            <!-- add modal -->
-            <Modal v-show="isModalVisible" @close="closeAddModal">
-                <template #header>Add New Quote</template>
+            <Modal v-show="isModalVisible" @close="closeModal">
+                <template #header>{{ selectedQuote? 'Edit Quote': 'Add New Quote' }}</template>
                 <template #content>
-                    <div class="popup-content-item popup-content-item--select">
+                    <Form @submit="submitQuote" ref="quoteForm">
+                        <!-- <div class="popup-content-item popup-content-item--select">
                         <VueMultiselect
                             v-model="selectedPatients"
                             :options="optionsPatients"
@@ -243,8 +182,8 @@ export default {
                             placeholder="Select patient" 
                             >
                         </VueMultiselect>
-                    </div>
-                    <div class="popup-content-item popup-content-item--select">
+                    </div> -->
+                        <!-- <div class="popup-content-item popup-content-item--select">
                         <VueMultiselect
                             v-model="selectedGroups"
                             :options="optionsGroups"
@@ -253,61 +192,26 @@ export default {
                             placeholder="Select group"
                             >
                         </VueMultiselect>
-                    </div>
-                    <div class="popup-content-item">
-                        <textarea id="textarea" placeholder="Write a quote..."></textarea>
-                    </div>
+                    </div> -->
+                        <div class="popup-content-item">
+                            <Field as="textarea" placeholder="Write a quote..." name="text" />
+                        </div>
 
-                    <div class="popup-footer">
-                        <button type="reset" class="w-btn w-btn-close" @click="closeAddModal">
-                            Cancel
-                        </button>
-                        <button type="submit" class="w-btn">
-                            Save
-                        </button>
-                    </div>
-                </template>
-            </Modal>
-            <!-- edit modal -->
-            <Modal v-show="isEditModalVisible" @close="closeEditModal">
-                <template #header>Edit Quote</template>
-                <template #content>
-                    <div class="popup-content-item popup-content-item--select">
-                        <VueMultiselect
-                            v-model="selectedPatients"
-                            :options="optionsPatients"
-                            :multiple="true"
-                            :close-on-select="true"
-                            placeholder="Select patient" 
-                            >
-                        </VueMultiselect>
-                    </div>
-                    <div class="popup-content-item popup-content-item--select">
-                        <VueMultiselect
-                            v-model="selectedGroups"
-                            :options="optionsGroups"
-                            :multiple="true"
-                            :close-on-select="true"
-                            placeholder="Select group" 
-                            >
-                        </VueMultiselect>
-                    </div>
-                    <div class="popup-content-item">
-                        <textarea id="textarea" placeholder="Write a quote..."></textarea>
-                    </div>
-
-                    <div class="popup-footer">
-                        <button class="w-btn w-btn-delete" @click="showDeleteModal">
-                            Delete
-                        </button>
-                        <button type="submit" class="w-btn">
-                            Save
-                        </button>
-                    </div>
+                        <div class="popup-footer">
+                            <button :type="selectedQuote ? 'button' : 'reset'" class="w-btn w-btn-close"
+                                :class="selectedQuote ? 'w-btn-delete' : 'w-btn-close'"
+                                @click="selectedQuote ? showDeleteModal() : closeModal()">
+                                {{ selectedQuote? 'Delete': 'Cancel' }}
+                            </button>
+                            <button type="submit" class="w-btn">
+                                Save
+                            </button>
+                        </div>
+                    </Form>
                 </template>
             </Modal>
             <!-- delete modal -->
-            <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal">
+            <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal" @delete="deleteQuote">
                 <template #content>
                     <h4>Delete this quote?</h4>
                     <p>You will not be able to recover it</p>
@@ -317,4 +221,6 @@ export default {
     </div>
 </template>
 
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.css">
+
+</style>

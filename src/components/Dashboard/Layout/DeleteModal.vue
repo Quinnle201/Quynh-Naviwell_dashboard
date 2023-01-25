@@ -5,6 +5,9 @@
       close() {
         this.$emit('close');
       },
+      deleteAction() {
+        this.$emit('delete')
+      }
     },
   };
 </script>
@@ -20,7 +23,7 @@
                         <button type="button" class="w-btn w-btn-close" @click="close">
                             Cancel
                         </button>
-                        <button type="button" class="w-btn w-btn-delete">
+                        <button type="button" class="w-btn w-btn-delete" @click="deleteAction">
                             Delete
                         </button>
                     </div>
