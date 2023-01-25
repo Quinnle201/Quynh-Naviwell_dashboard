@@ -4,6 +4,8 @@ import Card from '../components/Dashboard/Layout/Card.vue'
 import LabIcon from '../components/icons/IconLab.vue'
 import RecipeIcon from '../components/icons/IconRecipe.vue'
 
+import { useAuthStore } from '@/stores';
+
 export default {
   components: {
     CurrrentTime,
@@ -21,6 +23,12 @@ export default {
       let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
       return currentDate;
     },
+  },
+  data() {
+    const userStore = useAuthStore()
+    return {
+      user: userStore.user
+    }
   }
 };
 </script>
@@ -37,7 +45,7 @@ export default {
       </div>
 
       <div class="top-block-info">
-        <h3>Good Morning Dr. Wendell</h3>
+        <h3>Good Morning Dr. {{ user.last_name }}</h3>
         <div class="top-block-info-date">
           <span>{{currentDate()}}</span>
           <span><CurrrentTime /></span>
