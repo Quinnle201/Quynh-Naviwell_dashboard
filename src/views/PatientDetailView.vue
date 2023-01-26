@@ -92,7 +92,7 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, alertStore, dataChart, dataLoaded, isModalVisible: false }
+        return { patient, alertStore, dataChart, dataLoaded, isModalVisible: false, healthData: false, medsData: false }
     },
     mounted() {
         const id = this.$route.params.id;
@@ -147,9 +147,17 @@ export default {
                 e.stopPropagation()
             }
         },
+        showHealthData() {
+            this.healthData = true;
+        },
+        showMeds() {
+            this.medsData = true;
+        },
         closeModal() {
             this.selectedEvent = null
             this.isModalVisible = false;
+            this.healthData = false;
+            this.medsData = false;
         },
     },
     computed: {
@@ -192,7 +200,7 @@ export default {
 
             <div class="patient-btns">
                 <button type="button" class="w-btn">Edit Patient Info</button>
-                <button type="button" class="w-btn" @click="isModalVisible='healthModal'">Add Health Data</button>
+                <button type="button" class="w-btn" @click=showHealthData()>Add Health Data</button>
                 <button type="button" class="w-btn w-btn-delete">Delete Patient</button>
                 <RouterLink to="/patients">Return to My Patients</RouterLink>
             </div>
@@ -373,7 +381,7 @@ export default {
                             <li v-for="med in patient.meds">{{ med }}</li>
                         </ul>
 
-                        <div class="patient-status-item-btn" @click="isModalVisible='medsModal'">View and Edit Medications and Supplements</div>
+                        <div class="patient-status-item-btn" @click=showMeds()>View and Edit Medications and Supplements</div>
                     </div>
                 </div>
 
@@ -415,7 +423,7 @@ export default {
         </div>
     </div>
     <!-- meds modal -->
-    <Modal v-show="isModalVisible === 'medsModal'" @close="closeModal">
+    <Modal v-show="medsData" @close="closeModal">
         <template #header>Medications and Supplements</template>
         <template #content>
             <form>
@@ -441,7 +449,7 @@ export default {
         </template>
     </Modal>
     <!-- health data modal -->
-    <Modal v-show="isModalVisible === 'healthModal'" @close="closeModal">
+    <Modal v-show="healthData" @close="closeModal">
         <template #header>Add Health Data</template>
         <template #content>
             <form>
