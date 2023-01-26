@@ -1027,6 +1027,11 @@ body {
   line-height: 16px;
 }
 
+.popup-content-item textarea::placeholder,
+.popup-content-item.popup-content-item--select .multiselect__placeholder {
+  color: var(--text-color);
+}
+
 .popup-content-item.popup-content-item--select .multiselect__content-wrapper {
   box-shadow: 2px 10px 12px rgba(0, 0, 0, 0.1);
 }
@@ -1038,10 +1043,28 @@ body {
 
 .popup-content-item.popup-content-item--select .multiselect__tags {
   border: 1px solid var(--border-color);
+  border-radius: 16px;
 }
 
 .popup-content-item.popup-content-item--select .multiselect__tag {
+  margin-bottom: 0;
+  background: #CCEED0;
+  color: #00B733;
   border-radius: 16px;
+}
+
+.popup-content-item.popup-content-item--select .multiselect__tag-icon:after {
+  font-size: 20px;
+}
+
+.popup-content-item.popup-content-item--select .multiselect__strong {
+  margin-bottom: 0;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.multiselect__element#null-0 .multiselect__option--group {
+  font-weight: 500;
 }
 
 input[type="date"].popup-content-item-input::-webkit-calendar-picker-indicator {
@@ -1053,11 +1076,19 @@ input[type="date"].popup-content-item-input::-webkit-calendar-picker-indicator {
   z-index: 1;
 }
 
+.add-quote-btn {
+  margin-top: auto;
+  font-size: 16px;
+  text-align: center;
+  color: #0258BC;
+  cursor: pointer;
+}
+
 .popup-content-item .popup-content-item-input, 
 .popup-content-item textarea, 
 .popup-content-item select {
   margin-bottom: 14px;
-  padding: 12px 16px;
+  padding: 4px 10px;
   font-size: 16px;
   border: 1px solid var(--border-color);
   border-radius: 16px;
@@ -1071,7 +1102,7 @@ input[type="date"].popup-content-item-input::-webkit-calendar-picker-indicator {
 }
 
 .popup-content-item textarea {
-  height: 104px;
+  height: auto;
   resize: none;
 }
 
@@ -1778,6 +1809,10 @@ button.vuecal__arrow {
   align-items: center;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.quotes-modal .popup {
+  overflow-x: visible;
 }
 
 .popup-content-item.selected-list span {
