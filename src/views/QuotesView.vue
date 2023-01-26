@@ -31,6 +31,16 @@ export default {
             isModalVisible: false,
             isEditModalVisible: false,
             isDeleteModalVisible: false,
+            selectedPatients: null,
+            optionsPatients: [{
+                label: 'Select All',
+                patients: ['Howard Aarons', 'Edward Alvarez', 'Emily Atilla', 'Monkey D. Luffy', 'God Usopp', 'Roronoa Zoro']
+            }],
+            selectedGroups: null,
+            optionsGroups: [{
+                label: 'Select All',
+                groups: ['Group 1', 'Group 2', 'Group 3', 'Group 4']
+            }],
         }
     },
     watch: {
@@ -169,34 +179,58 @@ export default {
                 </div>
             </div>
 
-            <Modal v-show="isModalVisible" @close="closeModal">
+            <Modal v-show="isModalVisible" @close="closeModal" class="quotes-modal">
                 <template #header>{{ selectedQuote? 'Edit Quote': 'Add New Quote' }}</template>
                 <template #content>
                     <Form @submit="submitQuote" ref="quoteForm">
-                        <!-- <div class="popup-content-item popup-content-item--select">
+                        <div class="popup-content-item popup-content-item--select">
+                            <label>Select Patients</label>
                             <VueMultiselect
                                 v-model="selectedPatients"
                                 :options="optionsPatients"
                                 :multiple="true"
                                 :close-on-select="false" 
                                 search="false"
-                                placeholder="Select patient" 
+                                placeholder="Choose Patients" 
+                                select-label="Select" 
+                                deselect-label="Remove" 
+                                :limit="3" 
+                                group-values="patients" 
+                                group-label="label" 
+                                :group-select="true" 
+                                select-group-label="Select All" 
+                                deselect-group-label="Clear All" 
                                 >
                             </VueMultiselect>
-                        </div> -->
-                        <!-- <div class="popup-content-item popup-content-item--select">
+                        </div>
+
+                        <div class="popup-content-item popup-content-item--select">
+                            <label>Select Patients</label>
                             <VueMultiselect
                                 v-model="selectedGroups"
                                 :options="optionsGroups"
                                 :multiple="true"
                                 :close-on-select="false" 
-                                placeholder="Select group"
+                                search="false"
+                                placeholder="Choose Groups" 
+                                select-label="Select" 
+                                deselect-label="Remove" 
+                                :limit="3" 
+                                group-values="groups" 
+                                group-label="label" 
+                                :group-select="true" 
+                                select-group-label="Select All" 
+                                deselect-group-label="Clear All"  
                                 >
+                                <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
                             </VueMultiselect>
-                        </div> -->
+                        </div>
+
                         <div class="popup-content-item">
                             <Field as="textarea" placeholder="Write a quote..." name="text" />
                         </div>
+
+                        <button class="add-quote-btn" v-if="!selectedQuote">Add New Quote</button>
 
                         <div class="popup-footer">
                             <button :type="selectedQuote ? 'button' : 'reset'" class="w-btn w-btn-close"
