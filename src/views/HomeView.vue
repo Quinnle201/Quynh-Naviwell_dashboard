@@ -5,29 +5,69 @@ import LabIcon from '../components/icons/IconLab.vue'
 import RecipeIcon from '../components/icons/IconRecipe.vue'
 
 import { useAuthStore } from '@/stores';
+import { axiosInstance } from '@/helpers';
+import userMixin from '@/mixins/user.js'
 
 export default {
+  mixins: [
+    userMixin
+  ],
   components: {
     CurrrentTime,
-    Card, 
-    LabIcon, 
+    Card,
+    LabIcon,
     RecipeIcon
+  },
+  computed: {
+    localDate() {
+      return (time) => new Date(time).format('HH:mm')
+    },
+    inTime() {
+      return (date) => {
+        const visitDate = new Date(date);
+        const d = new Date()
+        let startTimeMilli = d.setMinutes(d.getMinutes() - 90);
+        let endTimeMilli = d.setMinutes(d.getMinutes() + 180);
+        let timeToCheckMilli = visitDate.getTime();
+        console.log(timeToCheckMilli, startTimeMilli, endTimeMilli)
+        if (timeToCheckMilli >= startTimeMilli && timeToCheckMilli <= endTimeMilli) {
+          return true
+        }
+      }
+    }
+  },
+  mounted() {
+    this.getTodayVisits()
   },
   methods: {
     currentDate() {
       let date = new Date();
-      let currentWeekday = date.toLocaleString('en-us', {weekday: 'short'});
-      let currentMonth = date.toLocaleString('en-us', {month: 'short'});
-      let currentDay = date.toLocaleString('en-us', {day: 'numeric'});
-      let currentYear = date.toLocaleString('en-us', {year: 'numeric'});
+      let currentWeekday = date.toLocaleString('en-us', { weekday: 'short' });
+      let currentMonth = date.toLocaleString('en-us', { month: 'short' });
+      let currentDay = date.toLocaleString('en-us', { day: 'numeric' });
+      let currentYear = date.toLocaleString('en-us', { year: 'numeric' });
       let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
       return currentDate;
     },
+    getTodayVisits() {
+      axiosInstance.get('/appointments/today')
+        .then(response => {
+          response.data.appointments.forEach(appt => {
+            this.todayVisits.push(appt)
+          });
+
+        })
+        .catch(error => {
+          console.log(error)
+          this.alertStore.error(error.response.data.message)
+        });
+    }
   },
   data() {
     const userStore = useAuthStore()
     return {
-      user: userStore.user
+      user: userStore.user,
+      todayVisits: [],
     }
   }
 };
@@ -47,8 +87,10 @@ export default {
       <div class="top-block-info">
         <h3>Good Morning Dr. {{ user.last_name }}</h3>
         <div class="top-block-info-date">
-          <span>{{currentDate()}}</span>
-          <span><CurrrentTime /></span>
+          <span>{{ currentDate() }}</span>
+          <span>
+            <CurrrentTime />
+          </span>
         </div>
       </div>
     </div>
@@ -59,24 +101,12 @@ export default {
           <h4>Calendar for Monday, November 28</h4>
 
           <div class="calendar-card-list">
-            <h4>Today</h4>
+            <h4>Visits today</h4>
 
             <ul>
-              <li class="active">
-                <div class="calendar-list-time">9:00 AM</div>
-                <div>Appointment - Denis S.</div>
-              </li>
-              <li class="active">
-                <div class="calendar-list-time">10:00 AM</div>
-                <div>Appointment - Jordan M.</div>
-              </li>
-              <li>
-                <div class="calendar-list-time">11:15 AM</div>
-                <div>Follow-Up Call - Alex P.</div>
-              </li>
-              <li>
-                <div class="calendar-list-time">11:45 AM</div>
-                <div>Lunch with Stakeholders</div>
+              <li :class="inTime(visit.start_time) ? 'active' : ''" v-for="visit in todayVisits">
+                <div class="calendar-list-time">{{ localDate(visit.start_time) }}</div>
+                <div>{{ userName(visit.patient.user) }}</div>
               </li>
             </ul>
           </div>
@@ -121,28 +151,28 @@ export default {
 
         <Card class="patients-card">
           <template #card-title>Patients</template>
-            <ul>
-              <li>
-                <img src="@/assets/img/image.png" alt="Patient Photo" />
-                <div>Howard Aarons</div>
-              </li>
-              <li>
-                <img src="@/assets/img/image.png" alt="Patient Photo" />
-                <div>Edward Alvarez</div>
-              </li>
-              <li>
-                <img src="@/assets/img/image.png" alt="Patient Photo" />
-                <div>Emily Atilla</div>
-              </li>
-              <li>
-                <img src="@/assets/img/image.png" alt="Patient Photo" />
-                <div>Courtney Bailey</div>
-              </li>
-              <li>
-                <img src="@/assets/img/image.png" alt="Patient Photo" />
-                <div>Karen Bartley</div>
-              </li>
-            </ul>
+          <ul>
+            <li>
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
+              <div>Howard Aarons</div>
+            </li>
+            <li>
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
+              <div>Edward Alvarez</div>
+            </li>
+            <li>
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
+              <div>Emily Atilla</div>
+            </li>
+            <li>
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
+              <div>Courtney Bailey</div>
+            </li>
+            <li>
+              <img src="@/assets/img/image.png" alt="Patient Photo" />
+              <div>Karen Bartley</div>
+            </li>
+          </ul>
           <template #card-btn>Add New Patient</template>
         </Card>
       </div>
@@ -163,7 +193,7 @@ export default {
             </li>
           </ul>
         </div>
-        
+
         <div class="dashboard-card quotes-card">
           <span class="dashboard-card-btn">Manage Quote of the Day</span>
         </div>
