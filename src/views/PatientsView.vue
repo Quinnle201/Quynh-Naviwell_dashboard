@@ -7,6 +7,8 @@ import CheckIcon from '../components/icons/IconCheck.vue'
 import CalendarIcon from '../components/icons/IconCalendar.vue'
 
 import { axiosInstance } from '@/helpers';
+import { useAlertStore } from '@/stores';
+
 import _findIndex from 'lodash/findIndex';
 import userMixin from '@/mixins/user.js'
 import Modal from '../components/Dashboard/Layout/Modal.vue'
@@ -28,8 +30,9 @@ export default {
         userMixin
     ],
     data() {
+        const alertStore = useAlertStore();
         return {
-            selectedEvent: null,
+            alertStore,
             show: null,
             patients: [],
             selectedPatient: null,
@@ -76,14 +79,26 @@ export default {
     },
     methods: {
         submitVisit(values) {
-
+            const selectedDay = values.date
+            values.start_time = new Date(`${selectedDay}T${values.from}`);
+            values.finish_time = new Date(`${selectedDay}T${values.to}`);
+            axiosInstance.post('/appointments', values)
+                    .then(response => {
+                        this.closeScheduleModal()
+                        this.alertStore.success('Appointment set')
+                    })
+                    .catch(error => {
+                        this.alertStore.error(error.response.data.message)
+                    });
         },
-        showScheduleModal() {
+        showScheduleModal(patient) {
             this.show = null
             this.isScheduleModalVisible = true
+            this.$refs.visitForm.setFieldValue('patient_id', patient.id)
         },
         closeScheduleModal(){
             this.isScheduleModalVisible = false
+            this.$refs.visitForm.setValues({})
         },
         showDetails(idx) {
             this.show === idx ? (this.show = null) : (this.show = idx);
@@ -171,7 +186,7 @@ export default {
                             <td class="patients-details">
                                 <img @click="showDetails(index)" src="@/assets/img/details-icon.png" alt="Details Icon" />
                                 <Transition>
-                                    <PatientDetails v-if="show === index" @update="showModal(patient)" @calendar="showScheduleModal" />
+                                    <PatientDetails v-if="show === index" @update="showModal(patient)" @calendar="showScheduleModal(patient)" />
                                 </Transition>
                             </td>
                         </tr>
@@ -191,6 +206,7 @@ export default {
                 <div class="type-select-item">Personal</div>
             </div>
             <Form @submit="submitVisit" ref="visitForm">
+                <Field type="hidden" name="patient_id"/>
                 <div class="popup-content-item visit-type">
                     <label class="checkbox path">
                         <Field type="radio" name="visit_type" value="initial"></Field>
@@ -249,7 +265,7 @@ export default {
                         Cancel
                     </button>
                     <button type="submit" class="w-btn">
-                        {{ selectedEvent? 'Edit Event': 'Save Event' }}
+                        Save Event
                     </button>
                 </div>
             </form>
