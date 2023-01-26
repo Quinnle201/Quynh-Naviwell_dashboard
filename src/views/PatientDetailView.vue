@@ -192,7 +192,7 @@ export default {
 
             <div class="patient-btns">
                 <button type="button" class="w-btn">Edit Patient Info</button>
-                <button type="button" class="w-btn" @click="showModal(null, null)">Add Health Data</button>
+                <button type="button" class="w-btn" @click="isModalVisible='healthModal'">Add Health Data</button>
                 <button type="button" class="w-btn w-btn-delete">Delete Patient</button>
                 <RouterLink to="/patients">Return to My Patients</RouterLink>
             </div>
@@ -373,7 +373,7 @@ export default {
                             <li v-for="med in patient.meds">{{ med }}</li>
                         </ul>
 
-                        <div class="patient-status-item-btn">View and Edit Medications and Supplements</div>
+                        <div class="patient-status-item-btn" @click="isModalVisible='medsModal'">View and Edit Medications and Supplements</div>
                     </div>
                 </div>
 
@@ -414,7 +414,8 @@ export default {
             </div>
         </div>
     </div>
-    <Modal v-show="isModalVisible" @close="closeModal">
+    <!-- meds modal -->
+    <Modal v-show="isModalVisible === 'medsModal'" @close="closeModal">
         <template #header>Medications and Supplements</template>
         <template #content>
             <form>
@@ -439,8 +440,8 @@ export default {
             </form>
         </template>
     </Modal>
-
-    <Modal v-show="isModalVisible" @close="closeModal">
+    <!-- health data modal -->
+    <Modal v-show="isModalVisible === 'healthModal'" @close="closeModal">
         <template #header>Add Health Data</template>
         <template #content>
             <form>
