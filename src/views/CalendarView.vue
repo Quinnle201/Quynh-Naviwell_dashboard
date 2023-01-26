@@ -129,8 +129,8 @@ export default {
                         date: startTime.toISOString().substring(0, 10),
                         patient_name: this.userName(data.patient.user),
                         patient_id: data.patient.id,
-                        from: startTime.format('hh:mm'),
-                        to: finishTime.format('hh:mm'),
+                        from: startTime.format('HH:mm'),
+                        to: finishTime.format('HH:mm'),
                         notes: data.notes
                     });
                 } else {
@@ -210,6 +210,7 @@ export default {
             const selectedDay = values.date
             values.start_time = new Date(`${selectedDay}T${values.from}`);
             values.finish_time = new Date(`${selectedDay}T${values.to}`);
+            console.log(values)
 
             if (this.selectedEvent != null) {
                 axiosInstance.put(`/appointments/${this.selectedEvent.id}`, values)
@@ -232,6 +233,9 @@ export default {
                         this.alertStore.error(error.response.data.message)
                     });
             }
+
+            this.$refs.visitForm.setValues({})
+
         },
         updateVisit(data) {
             const index = _findIndex(this.events, ['id', data.id])
