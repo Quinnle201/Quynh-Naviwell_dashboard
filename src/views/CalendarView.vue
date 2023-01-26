@@ -340,7 +340,7 @@ export default {
                                 </label>
                             </div>
 
-                            <div class="popup-content-item">
+                            <div class="popup-content-item popup-content-item--search">
                                 <label>Patient Name</label>
                                 <PatientAutocomplete :patient="selectedEvent?.content" :patients="searchList"
                                     @search="searchPatient" />

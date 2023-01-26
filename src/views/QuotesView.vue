@@ -174,25 +174,26 @@ export default {
                 <template #content>
                     <Form @submit="submitQuote" ref="quoteForm">
                         <!-- <div class="popup-content-item popup-content-item--select">
-                        <VueMultiselect
-                            v-model="selectedPatients"
-                            :options="optionsPatients"
-                            :multiple="true"
-                            :close-on-select="true"
-                            placeholder="Select patient" 
-                            >
-                        </VueMultiselect>
-                    </div> -->
+                            <VueMultiselect
+                                v-model="selectedPatients"
+                                :options="optionsPatients"
+                                :multiple="true"
+                                :close-on-select="false" 
+                                search="false"
+                                placeholder="Select patient" 
+                                >
+                            </VueMultiselect>
+                        </div> -->
                         <!-- <div class="popup-content-item popup-content-item--select">
-                        <VueMultiselect
-                            v-model="selectedGroups"
-                            :options="optionsGroups"
-                            :multiple="true"
-                            :close-on-select="true" 
-                            placeholder="Select group"
-                            >
-                        </VueMultiselect>
-                    </div> -->
+                            <VueMultiselect
+                                v-model="selectedGroups"
+                                :options="optionsGroups"
+                                :multiple="true"
+                                :close-on-select="false" 
+                                placeholder="Select group"
+                                >
+                            </VueMultiselect>
+                        </div> -->
                         <div class="popup-content-item">
                             <Field as="textarea" placeholder="Write a quote..." name="text" />
                         </div>
