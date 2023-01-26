@@ -135,10 +135,10 @@ export default {
             <h3>Inspirational quotes</h3>
 
             <div>
-                <div class="add-button" @click="showModal(null)">
+                <a href="addquote" class="add-button">
                     <AddIcon />
                     <button type="button">Add New Quote</button>
-                </div>
+                </a>
             </div>
         </div>
 

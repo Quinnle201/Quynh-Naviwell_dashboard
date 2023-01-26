@@ -1064,7 +1064,9 @@ body {
 }
 
 .multiselect__element#null-0 .multiselect__option--group {
+  background-color: #8E8E8E;
   font-weight: 500;
+  color: #FFFFFF;
 }
 
 input[type="date"].popup-content-item-input::-webkit-calendar-picker-indicator {
@@ -1074,14 +1076,6 @@ input[type="date"].popup-content-item-input::-webkit-calendar-picker-indicator {
   padding-right: 10px;
   cursor: pointer;
   z-index: 1;
-}
-
-.add-quote-btn {
-  margin-top: auto;
-  font-size: 16px;
-  text-align: center;
-  color: #0258BC;
-  cursor: pointer;
 }
 
 .popup-content-item .popup-content-item-input, 
@@ -1821,6 +1815,77 @@ button.vuecal__arrow {
   font-weight: 500;
   color: #000000;
 }
+
+/* add quote */
+.addquote-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.addquote-selects {
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.addquote-wrapper .popup-content-item textarea {
+  width: calc(100%);
+  padding: 12px 16px;
+}
+
+.addquote-wrapper .popup-content-item.popup-content-item--select .multiselect__tags {
+  padding: 12px 40px 0 12px;
+}
+
+.addquote-wrapper .popup-content-item.popup-content-item--select .multiselect__tags, 
+.addquote-wrapper .popup-content-item textarea {
+  height: 50px;
+  margin-bottom: 0;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.01);
+}
+
+.addquote-wrapper .popup-content-item textarea {
+  height: 70px;
+}
+
+.addquote-wrapper .addquote-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.addquote-wrapper .add-quote-btn {
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.addquote-wrapper .add-quote-btn button {
+  font-size: 16px;
+  font-weight: 500;
+  color: #0258BC;
+}
+
+
+.addquote-btns {
+  margin-top: auto;
+}
+
+.addquote-btns .w-btn-close {
+  background-color: transparent;
+  margin-right: 16px;
+  border: 1px solid var(--primary);
+}
+
+
+
 
 /* pagination */
 .pagination-wrapper {

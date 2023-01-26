@@ -5,6 +5,7 @@ import PatientsView from '../views/PatientsView.vue'
 import CalendarView from '../views/CalendarView.vue'
 import PatientDetailView from '../views/PatientDetailView.vue'
 import QuotesView from '../views/QuotesView.vue'
+import AddQuoteView from '../views/AddQuoteView.vue'
 
 import Dashboard from '../components/Dashboard/Dashboard.vue'
 
@@ -79,7 +80,12 @@ const router = createRouter({
         {
           path: "quotes",
           name: "quotes",
-          component: QuotesView
+          component: QuotesView,
+        },
+        { 
+          path: 'addquote',
+          name: 'addquote',
+          component: AddQuoteView
         }
       ]
     },
