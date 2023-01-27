@@ -1,20 +1,18 @@
 <script>
-import ChatIcon from '../components/icons/IconChat.vue'
-import VideoIcon from '../components/icons/IconVideo.vue'
-import MessagesIcon from '../components/icons/IconMessages.vue'
-import CalendarIcon from '../components/icons/IconCalendar.vue'
-import RoundBtn from '../components/Dashboard/Layout/RoundBtn.vue'
-import LineChart from '../components/Dashboard/Layout/LineChart.vue'
-import { RouterLink } from 'vue-router'
-import Modal from '../components/Dashboard/Layout/Modal.vue'
-import { Form, Field } from 'vee-validate';
+import ChatIcon from '@/components/icons/IconChat.vue'
+import VideoIcon from '@/components/icons/IconVideo.vue'
+import MessagesIcon from '@/components/icons/IconMessages.vue'
+import CalendarIcon from '@/components/icons/IconCalendar.vue'
+import RoundBtn from '@/components/Buttons/RoundBtn.vue'
+import LineChart from '@/components/LineChart.vue'
+import Modal from '@/components/Modals/Modal.vue'
 
+import { Form, Field } from 'vee-validate';
+import { RouterLink } from 'vue-router'
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
-
 import _find from 'lodash/find'
-import userMixin from '../mixins/user.js'
-
+import userMixin from '@/mixins/user.js'
 
 export default {
     components: {

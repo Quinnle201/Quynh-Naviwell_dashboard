@@ -1,9 +1,9 @@
 <script>
-import Modal from '../components/Dashboard/Layout/Modal.vue'
-import DeleteModal from '../components/Dashboard/Layout/DeleteModal.vue'
-import AddIcon from '../components/icons/IconAdd.vue'
-import SearchIcon from '../components/icons/IconSearch.vue'
-import EditIcon from '../components/icons/IconEdit.vue'
+import Modal from '@/components/Modals/Modal.vue'
+import DeleteModal from '@/components/Modals/DeleteModal.vue'
+import AddIcon from '@/components/icons/IconAdd.vue'
+import SearchIcon from '@/components/icons/IconSearch.vue'
+import EditIcon from '@/components/icons/IconEdit.vue'
 import VueMultiselect from 'vue-multiselect'
 import { Form, Field } from 'vee-validate';
 import { RouterLink } from 'vue-router'

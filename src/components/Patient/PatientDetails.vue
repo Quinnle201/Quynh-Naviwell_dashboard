@@ -1,10 +1,10 @@
 <script>
-import ChatIcon from '../../icons/IconChat.vue'
-import EditIcon from '../../icons/IconEdit.vue'
-import RemoveIcon from '../../icons/IconRemove.vue'
-import RoundBtn from '../../Dashboard/Layout/RoundBtn.vue'
-import RoundBtnDelete from '../../Dashboard/Layout/RoundBtnDelete.vue'
-import CalendarIcon from '../../icons/IconCalendar.vue'
+import ChatIcon from '../icons/IconChat.vue'
+import EditIcon from '../icons/IconEdit.vue'
+import RemoveIcon from '../icons/IconRemove.vue'
+import RoundBtn from '../Buttons/RoundBtn.vue'
+import RoundBtnDelete from '../Buttons/RoundBtnDelete.vue'
+import CalendarIcon from '../icons/IconCalendar.vue'
 
 export default {
     components: {

@@ -1,9 +1,3 @@
-<script setup>
-import { useAuthStore } from '@/stores';
-
-const authStore = useAuthStore();
-</script>
-
 <template>
     <header class="navbar ms-auto fixed-top flex-md-nowrap">
         <div class="container-fluid">
@@ -35,8 +29,9 @@ const authStore = useAuthStore();
 </template>
 
 <script>
-    import CurrentTime from '../Layout/CurrentTime.vue';
+    import CurrentTime from '@/components/CurrentTime.vue';
     import userMixin from '@/mixins/user.js'
+    import { useAuthStore } from '@/stores';
 
     export default {
         mixins: [
@@ -55,6 +50,10 @@ const authStore = useAuthStore();
                 let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
                 return currentDate;
             },
+        },
+        data() {
+            const authStore = useAuthStore();
+            return {authStore}
         }
     };
 </script>

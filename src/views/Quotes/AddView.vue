@@ -1,5 +1,5 @@
 <script>
-import AddIcon from '../components/icons/IconAdd.vue'
+import AddIcon from '@/components/icons/IconAdd.vue'
 import VueMultiselect from 'vue-multiselect'
 import { Form, Field } from 'vee-validate';
 

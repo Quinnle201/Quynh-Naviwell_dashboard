@@ -1,10 +1,10 @@
 <script>
-import SearchIcon from '../components/icons/IconSearch.vue'
-import AttachIcon from '../components/icons/IconAttach.vue'
-import UserIcon from '../components/icons/IconUser.vue'
-import FileIcon from '../components/icons/IconFile.vue'
-import DownloadIcon from '../components/icons/IconDownload.vue'
-import PatientDetails from '../components/Dashboard/Layout/PatientDetails.vue'
+import SearchIcon from '@/components/icons/IconSearch.vue'
+import AttachIcon from '@/components/icons/IconAttach.vue'
+import UserIcon from '@/components/icons/IconUser.vue'
+import FileIcon from '@/components/icons/IconFile.vue'
+import DownloadIcon from '@/components/icons/IconDownload.vue'
+import PatientDetails from '@/components/Patient/PatientDetails.vue'
 
 export default {
     components: {

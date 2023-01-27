@@ -1,19 +1,16 @@
 <script>
-import Modal from '../components/Dashboard/Layout/Modal.vue'
-import AddIcon from '../components/icons/IconAdd.vue'
-import CalendarIcon from '../components/icons/IconCalendar.vue'
-import CheckIcon from '../components/icons/IconCheck.vue'
+import Modal from '@/components/Modals/Modal.vue'
+import AddIcon from '@/components/icons/IconAdd.vue'
+import CalendarIcon from '@/components/icons/IconCalendar.vue'
+import CheckIcon from '@/components/icons/IconCheck.vue'
+import PatientAutocomplete from '@/components/Patient/PatientAutocomplete.vue'
+
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
-
 import { Form, Field } from 'vee-validate';
-
-import PatientAutocomplete from '@/components/PatientAutocomplete.vue'
 import userMixin from '@/mixins/user.js'
-
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 

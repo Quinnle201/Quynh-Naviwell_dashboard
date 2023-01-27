@@ -1,8 +1,8 @@
 <script>
-import CurrrentTime from '../components/Dashboard/Layout/CurrentTime.vue'
-import Card from '../components/Dashboard/Layout/Card.vue'
-import LabIcon from '../components/icons/IconLab.vue'
-import RecipeIcon from '../components/icons/IconRecipe.vue'
+import CurrrentTime from '@/components/CurrentTime.vue'
+import Card from '@/components/Card.vue'
+import LabIcon from '@/components/icons/IconLab.vue'
+import RecipeIcon from '@/components/icons/IconRecipe.vue'
 
 import { useAuthStore } from '@/stores';
 import { axiosInstance } from '@/helpers';

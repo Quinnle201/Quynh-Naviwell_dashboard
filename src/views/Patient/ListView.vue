@@ -1,17 +1,16 @@
 <script>
-import SearchIcon from '../components/icons/IconSearch.vue'
-import AddPatientModal from '../components/Dashboard/Layout/AddPatientModal.vue'
-import AddIcon from '../components/icons/IconAdd.vue'
-import PatientDetails from '../components/Dashboard/Layout/PatientDetails.vue'
-import CheckIcon from '../components/icons/IconCheck.vue'
-import CalendarIcon from '../components/icons/IconCalendar.vue'
+import SearchIcon from '@/components/icons/IconSearch.vue'
+import AddPatientModal from './AddModal.vue'
+import AddIcon from '@/components/icons/IconAdd.vue'
+import PatientDetails from '@/components/Patient/PatientDetails.vue'
+import CheckIcon from '@/components/icons/IconCheck.vue'
+import CalendarIcon from '@/components/icons/IconCalendar.vue'
+import Modal from '@/components/Modals/Modal.vue'
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
-
 import _findIndex from 'lodash/findIndex';
 import userMixin from '@/mixins/user.js'
-import Modal from '../components/Dashboard/Layout/Modal.vue'
 import { Form, Field } from 'vee-validate';
 
 export default {

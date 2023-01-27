@@ -1,22 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import AboutView from '../views/AboutView.vue'
-import PatientsView from '../views/PatientsView.vue'
-import CalendarView from '../views/CalendarView.vue'
-import PatientDetailView from '../views/PatientDetailView.vue'
-import QuotesView from '../views/QuotesView.vue'
-import AddQuoteView from '../views/AddQuoteView.vue'
-import MessagesView from '../views/MessagesView.vue'
-
-import Dashboard from '../components/Dashboard/Dashboard.vue'
-
-import Login from '../views/Login.vue'
-import SetPassword from '../views/SetPassword.vue'
-
 import { useAuthStore, useAlertStore } from '@/stores';
-
 import { h } from 'vue'
 import { RouterView } from 'vue-router'
+
+import Dashboard from '@/components/Dashboard/Dashboard.vue'
+
+import Login from '@/views/Auth/Login.vue'
+import SetPassword from '@/views/Auth/SetPassword.vue'
+
+import HomeView from '@/views/HomeView.vue'
+import PatientsView from '@/views/Patient/ListView.vue'
+import PatientDetailView from '@/views/Patient/DetailView.vue'
+import CalendarView from '@/views/CalendarView.vue'
+import QuotesView from '@/views/Quotes/QuotesView.vue'
+import AddQuoteView from '@/views/Quotes/AddView.vue'
+import MessagesView from '@/views/MessagesView.vue'
 
 
 const router = createRouter({
@@ -36,8 +34,6 @@ const router = createRouter({
         if(!authStore.user || authStore.claim != null){
           return from
         }
-        // reject the navigation
-        
       },
     },
     {
@@ -50,11 +46,6 @@ const router = createRouter({
           path: "home",
           name: "home",
           component: HomeView
-        },
-        {
-          path: "about",
-          name: "about",
-          component: AboutView
         },
         {
           path: '/patients',

@@ -1,7 +1,7 @@
 <script>
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as Yup from 'yup';
-import PatientInputGenerator from '@/components/PatientInputGenerator.vue'
+import PatientInputGenerator from '@/components/Patient/PatientInputGenerator.vue'
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
