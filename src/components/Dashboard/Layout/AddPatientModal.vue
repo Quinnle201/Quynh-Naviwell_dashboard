@@ -263,21 +263,21 @@ export default {
             fields: [
                 {
                     label: 'Weight',
-                    name: 'additional-data.weight',
+                    name: 'health-data.weight',
                     as: 'input',
                     model: 'additional_data.weight',
                     rules: Yup.string().nullable()
                 },
                 {
                     label: 'Height',
-                    name: 'additional-data.height',
+                    name: 'health-data.height',
                     as: 'input',
                     model: 'additional_data.height',
                     rules: Yup.string().nullable()
                 },
                 {
                     label: 'BMI',
-                    name: 'additional-data.bmi',
+                    name: 'health-data.bmi',
                     as: 'input',
                     model: 'additional_data.bmi',
                     rules: Yup.string().nullable()
