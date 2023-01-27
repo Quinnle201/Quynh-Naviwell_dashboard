@@ -2,12 +2,36 @@
 import SearchIcon from '../components/icons/IconSearch.vue'
 import AttachIcon from '../components/icons/IconAttach.vue'
 import UserIcon from '../components/icons/IconUser.vue'
+import FileIcon from '../components/icons/IconFile.vue'
+import DownloadIcon from '../components/icons/IconDownload.vue'
+import PatientDetails from '../components/Dashboard/Layout/PatientDetails.vue'
 
 export default {
     components: {
         SearchIcon,
         AttachIcon,
-        UserIcon
+        UserIcon,
+        FileIcon,
+        DownloadIcon,
+        PatientDetails
+    },
+    data() {
+        return {
+            isModalVisible: false,
+        }
+    },
+    methods: {
+        showModal(event, e) {
+            this.selectedEvent = event
+            this.isModalVisible = !this.isModalVisible;
+            if (e != null) {
+                e.stopPropagation()
+            }
+        },
+    },
+    mounted() {
+        const container = this.$refs.chat;
+        container.scrollTop = container.scrollHeight;
     }
 }
 </script>
@@ -122,8 +146,12 @@ export default {
                         <div class="chat-right-head-info-name">Howard Aarons</div>
                     </div>
 
-                    <div class="chat-right-head-details">
+                    <div class="chat-right-head-details" @click="showModal()">
                         <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+
+                        <Transition>
+                            <PatientDetails v-show="isModalVisible" />
+                        </Transition>
                     </div>
                 </div>
 
@@ -131,40 +159,36 @@ export default {
                     <div class="chat-content-inner">
                         <div class="chat-main">
                             <div class="messages-inner">
-                                <ul class="messages-list">
+                                <ul class="messages-list" ref="chat">
                                     <li class="physician-message">
                                         <UserIcon />
                                         <div class="message-list-text">
-                                            <div class="message-list-bubble">1 message</div>
+                                            <div class="message-list-bubble">Good Morning, mr. Aarons! How are you feeling today?</div>
                                             <div class="message-list-time">27.01.2023 15:00</div>
                                         </div>
                                     </li>
                                     <li>
                                         <img src="@/assets/img/image.png" alt="Patient photo" />
                                         <div class="message-list-text">
-                                            <div class="message-list-bubble">2 message</div>
+                                            <div class="message-list-bubble">Good afternoon! I'm fine.</div>
                                             <div class="message-list-time">27.01.2023 15:01</div>
                                         </div>
                                     </li>
                                     <li class="physician-message">
                                         <UserIcon />
                                         <div class="message-list-text">
-                                            <div class="message-list-bubble">3 message</div>
-                                            <div class="message-list-time">27.01.2023 15:02</div>
-                                        </div>
-                                    </li>
-                                    <li class="physician-message">
-                                        <UserIcon />
-                                        <div class="message-list-text">
-                                            <div class="message-list-bubble">4 message</div>
+                                            <div class="message-list-bubble">In the attached file you can find information about your prescribed diet. Have a nice day!</div>
+                                            <div class="message-list-bubble attach">
+                                                <div class="download-icon">
+                                                    <FileIcon />
+                                                </div>
+                                                <a href="#">howard-diet.pdf</a>
+
+                                                <a href="#" class="attach-icon">
+                                                   <DownloadIcon /> 
+                                                </a>
+                                            </div>
                                             <div class="message-list-time">27.01.2023 15:03</div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <img src="@/assets/img/image.png" alt="Patient photo" />
-                                        <div class="message-list-text">
-                                            <div class="message-list-bubble">5 message</div>
-                                            <div class="message-list-time">27.01.2023 15:01</div>
                                         </div>
                                     </li>
                                 </ul>

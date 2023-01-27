@@ -2101,14 +2101,11 @@ button.vuecal__arrow {
   cursor: pointer;
 }
 
-
-
-
-
 .chat-main {
+  height: 100%;
+  padding: 0 16px;
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
 .messages-inner {
@@ -2117,12 +2114,28 @@ button.vuecal__arrow {
 }
 
 ul.messages-list {
-  height: 400px;
+  height: 355px;
   display: flex;
+  padding-right: 16px;
   flex-direction: column;
-  justify-content: flex-end;
-  overflow-x: auto;
+  overflow: hidden;
+  overflow-y: scroll;
   list-style: none;
+}
+
+ul.messages-list::-webkit-scrollbar {
+  width: 4px;
+  height: 10px;
+}
+
+ul.messages-list::-webkit-scrollbar-track {
+  background-color: #DBDBDB;
+  border-radius: 8px;
+}
+
+ul.messages-list::-webkit-scrollbar-thumb {
+  background-color: var(--main-color);
+  border-radius: 8px;
 }
 
 ul.messages-list li {
@@ -2160,7 +2173,55 @@ ul.messages-list li .message-list-bubble {
   background-color: #F4F4FF;
   width: 100%;
   padding: 18px 16px 18px 22px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #000000;
   border-radius: 20px 20px 20px 0px;
+}
+
+ul.messages-list li .message-list-bubble.attach, 
+ul.messages-list li.physician-message .message-list-bubble.attach {
+  margin-top: 6px;
+  border-radius: 20px;
+}
+
+ul.messages-list li .message-list-bubble.attach {
+  padding: 9px 22px;
+  display: flex;
+  align-items: center;
+}
+
+ul.messages-list li .message-list-bubble.attach a {
+  margin-left: 16px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #646464;
+}
+
+ul.messages-list li .message-list-bubble.attach svg {
+  min-width: 16px;
+}
+
+ul.messages-list li .message-list-bubble.attach .attach-icon {
+  margin-left: auto;
+}
+
+ul.messages-list li .message-list-bubble.attach .attach-icon svg {
+  border-left: 1px solid #D9D9D9;
+  border-radius: 0;
+  padding-left: 16px;
+  box-sizing: content-box;
+}
+
+ul.messages-list li .message-list-bubble.attach .download-icon {
+  background-color: var(--primary);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
 }
 
 ul.messages-list li.physician-message .message-list-bubble {
@@ -2187,7 +2248,9 @@ ul.messages-list li.physician-message .message-list-time {
   flex-direction: column;
 }
 
-/* .send-inner .send-inner-text {} */
+.send-inner .send-inner-text {
+  margin-bottom: 6px;
+}
 
 .send-inner .send-inner-text textarea {
   width: 100%;
@@ -2195,6 +2258,11 @@ ul.messages-list li.physician-message .message-list-time {
   border: 1px solid #E7E7E7;
   border-radius: 16px;
   resize: none;
+  outline: none;
+}
+
+.send-inner .send-inner-text textarea:placeholder {
+  font-size: 16px;
 }
 
 .send-inner .send-inner-btns {
