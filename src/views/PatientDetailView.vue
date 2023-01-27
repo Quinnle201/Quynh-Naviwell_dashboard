@@ -142,7 +142,7 @@ export default {
                 for (const [key, value] of Object.entries(data)) {
                     var chart = _find(this.dataChart.data.datasets, ['id', key]);
                     var finalValue = value
-                    if(key == 'bp') {
+                    if(key == 'bp' && value != null) {
                         const pressure = value.split('/')
                         finalValue = {'x': pressure[0], 'y': pressure[1]}
                     }
