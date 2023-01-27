@@ -66,7 +66,7 @@ const router = createRouter({
               component: PatientsView
             },
             {
-              path: "patients/:id",
+              path: ":id",
               name: "patient",
               component: PatientDetailView
             }
