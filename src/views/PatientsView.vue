@@ -139,9 +139,9 @@ export default {
             <div class="patients-top-wrapper">
                 <div class="patient-search-wrapper">
                     <form class="" method="get">
-                        <label class="patients-search">
+                        <label class="search-input patients-search">
                             <input placeholder="Search" type="search" autocomplete="off">
-                            <SearchIcon  class="patients-search-icon" />
+                            <SearchIcon />
                         </label>
                     </form>
                     

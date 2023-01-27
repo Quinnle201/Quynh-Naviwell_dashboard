@@ -136,8 +136,9 @@ export default {
         <div class="layout-wrapper">
             <h3>Inspirational quotes</h3>
 
-            <div>
+            <div class="quotes-btns-wrapper">
                 <RouterLink  :to="{ name: 'quotes-mass-add' }" class="add-button">
+                    <AddIcon />
                     <button type="button">Add several quotes</button>
                 </RouterLink>
 

@@ -6,6 +6,7 @@ import CalendarView from '../views/CalendarView.vue'
 import PatientDetailView from '../views/PatientDetailView.vue'
 import QuotesView from '../views/QuotesView.vue'
 import AddQuoteView from '../views/AddQuoteView.vue'
+import MessagesView from '../views/MessagesView.vue'
 
 import Dashboard from '../components/Dashboard/Dashboard.vue'
 
@@ -91,6 +92,11 @@ const router = createRouter({
           path: "calendar",
           name: "calendar",
           component: CalendarView
+        },
+        {
+          path: "messages",
+          name: "messages",
+          component: MessagesView
         }
       ]
     },
