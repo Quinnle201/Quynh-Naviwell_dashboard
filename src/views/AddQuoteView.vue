@@ -3,6 +3,9 @@ import AddIcon from '../components/icons/IconAdd.vue'
 import VueMultiselect from 'vue-multiselect'
 import { Form, Field } from 'vee-validate';
 
+import { axiosInstance } from '@/helpers';
+import { useAlertStore } from '@/stores';
+
 export default {
     components: {
         AddIcon,
@@ -11,24 +14,31 @@ export default {
         Field
     },
     data() {
+        const alertStore = useAlertStore();
         return {
-            selectedPatients: null,
-            optionsPatients: [{
-                label: 'Select All',
-                patients: ['Howard Aarons', 'Edward Alvarez', 'Emily Atilla', 'Monkey D. Luffy', 'God Usopp', 'Roronoa Zoro']
-            }],
-            selectedGroups: null,
-            optionsGroups: [{
-                label: 'Select All',
-                groups: ['Group 1', 'Group 2', 'Group 3', 'Group 4']
-            }],
-            count: 1,
+            alertStore,
+            count: 2,
         }
     },
     methods: {
-        addQuote: function(){
+        addQuote: function () {
             if (this.count < 20) this.count++;
         },
+        submitQuotes(values) {
+            console.log(values)
+            axiosInstance.post('/quotes/mass', values)
+                .then(response => {
+                    this.alertStore.success('Quotes added')
+                    this.$router.back()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        close(){
+            this.$router.back()
+        }
     }
 }
 </script>
@@ -40,7 +50,9 @@ export default {
         </div>
 
         <div class="addquote-wrapper page-bg">
-            <div class="addquote-selects">
+            <Form @submit="submitQuotes">
+                <!-- Locked out until backend has the capability of grouping quotes -->
+                <!-- <div class="addquote-selects">
                 <div class="popup-content-item popup-content-item--select">
                     <label>Select Patients</label>
                     <VueMultiselect
@@ -82,28 +94,30 @@ export default {
                         <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
                     </VueMultiselect>
                 </div>
-            </div>
-            <div class="popup-content-item addquote-grid">
-                <Field as="textarea" placeholder="Write a quote..." name="text" v-for="key in count" :key="key" :id="key" />
-            </div>
+            </div> -->
+                <div class="popup-content-item addquote-grid">
+                    <Field as="textarea" placeholder="Write a quote..." :name="`text[${key - 1}]`" v-for="key in count"
+                        :key="key" :id="key" />
+                </div>
 
-            <div class="add-quote-btn">
-                <AddIcon />
-                <button @click="addQuote">Add New Quote</button>
-            </div>
+                <div class="add-quote-btn">
+                    <AddIcon />
+                    <button type="button" @click="addQuote">Add New Quote</button>
+                </div>
 
-            <div class="addquote-btns">
-                <button :type="selectedQuote ? 'button' : 'reset'" class="w-btn w-btn-close"
-                    :class="selectedQuote ? 'w-btn-delete' : 'w-btn-close'"
-                    @click="selectedQuote ? showDeleteModal() : closeModal()">
-                    {{ selectedQuote? 'Delete': 'Cancel' }}
-                </button>
-                <button type="submit" class="w-btn">
-                    Save
-                </button>
-            </div>
+                <div class="addquote-btns">
+                    <button type="button" class="w-btn w-btn-close" @click="close">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-btn">
+                        Save
+                    </button>
+                </div>
+            </Form>
         </div>
     </div>
 </template>
 
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.css">
+
+</style>

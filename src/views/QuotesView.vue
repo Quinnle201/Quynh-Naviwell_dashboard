@@ -6,6 +6,7 @@ import SearchIcon from '../components/icons/IconSearch.vue'
 import EditIcon from '../components/icons/IconEdit.vue'
 import VueMultiselect from 'vue-multiselect'
 import { Form, Field } from 'vee-validate';
+import { RouterLink } from 'vue-router'
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
@@ -20,7 +21,8 @@ export default {
         EditIcon,
         VueMultiselect,
         Form,
-        Field
+        Field,
+        RouterLink
     },
     data() {
         const alertStore = useAlertStore();
@@ -89,7 +91,7 @@ export default {
             axiosInstance.delete(`/quotes/${this.selectedQuote.id}`)
                 .then(response => {
                     const index = _findIndex(this.quotes, ['id', this.selectedQuote.id])
-                    this.quotes.splice(index, 1); 
+                    this.quotes.splice(index, 1);
                     this.closeDeleteModal()
                     this.closeModal()
                     this.alertStore.success('Quote removed')
@@ -135,10 +137,14 @@ export default {
             <h3>Inspirational quotes</h3>
 
             <div>
-                <a href="addquote" class="add-button">
+                <RouterLink  :to="{ name: 'quotes-mass-add' }" class="add-button">
+                    <button type="button">Add several quotes</button>
+                </RouterLink>
+
+                <div class="add-button" @click="showModal(null)">
                     <AddIcon />
                     <button type="button">Add New Quote</button>
-                </a>
+                </div>
             </div>
         </div>
 

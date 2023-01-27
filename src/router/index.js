@@ -60,15 +60,31 @@ const router = createRouter({
           path: '/patients',
           component: { render: () => h(RouterView) },
           children: [
-            { 
+            {
               path: '',
               name: 'patients',
               component: PatientsView
             },
-            { 
+            {
               path: "patients/:id",
-          name: "patient",
-          component: PatientDetailView
+              name: "patient",
+              component: PatientDetailView
+            }
+          ]
+        },
+        {
+          path: '/quotes',
+          component: { render: () => h(RouterView) },
+          children: [
+            {
+              path: '',
+              name: 'quotes',
+              component: QuotesView
+            },
+            {
+              path: "mass-add",
+              name: "quotes-mass-add",
+              component: AddQuoteView
             }
           ]
         },
@@ -76,16 +92,6 @@ const router = createRouter({
           path: "calendar",
           name: "calendar",
           component: CalendarView
-        },
-        {
-          path: "quotes",
-          name: "quotes",
-          component: QuotesView,
-        },
-        { 
-          path: 'addquote',
-          name: 'addquote',
-          component: AddQuoteView
         }
       ]
     },
