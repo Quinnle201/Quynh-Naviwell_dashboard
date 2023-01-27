@@ -59,12 +59,12 @@ const router = createRouter({
           path: '/patients',
           component: { render: () => h(RouterView) },
           children: [
-            { 
+            {
               path: '',
               name: 'patients',
               component: PatientsView
             },
-            { 
+            {
               path: "patients/:id",
               name: "patient",
               component: PatientDetailView
@@ -72,19 +72,25 @@ const router = createRouter({
           ]
         },
         {
+          path: '/quotes',
+          component: { render: () => h(RouterView) },
+          children: [
+            {
+              path: '',
+              name: 'quotes',
+              component: QuotesView
+            },
+            {
+              path: "mass-add",
+              name: "quotes-mass-add",
+              component: AddQuoteView
+            }
+          ]
+        },
+        {
           path: "calendar",
           name: "calendar",
           component: CalendarView
-        },
-        {
-          path: "quotes",
-          name: "quotes",
-          component: QuotesView,
-        },
-        { 
-          path: 'quotes/addquote',
-          name: 'addquote',
-          component: AddQuoteView
         }
       ]
     },
