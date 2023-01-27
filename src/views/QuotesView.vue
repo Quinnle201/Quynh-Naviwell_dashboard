@@ -135,7 +135,7 @@ export default {
             <h3>Inspirational quotes</h3>
 
             <div>
-                <a href="addquote" class="add-button">
+                <a href="quotes/addquote" class="add-button">
                     <AddIcon />
                     <button type="button">Add New Quote</button>
                 </a>
@@ -151,7 +151,6 @@ export default {
             </div>
 
             <div class="quotes-grid">
-
                 <div class="quotes-grid-item" v-for="quote in quotes">
                     <div class="quotes-grid-item-date">
                         <div>{{ new Date(quote.created_at).format('MM/DD/YYYY') }}</div>

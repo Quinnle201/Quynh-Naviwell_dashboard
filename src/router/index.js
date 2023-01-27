@@ -55,7 +55,6 @@ const router = createRouter({
           name: "about",
           component: AboutView
         },
-
         {
           path: '/patients',
           component: { render: () => h(RouterView) },
@@ -67,8 +66,8 @@ const router = createRouter({
             },
             { 
               path: "patients/:id",
-          name: "patient",
-          component: PatientDetailView
+              name: "patient",
+              component: PatientDetailView
             }
           ]
         },
@@ -83,7 +82,7 @@ const router = createRouter({
           component: QuotesView,
         },
         { 
-          path: 'addquote',
+          path: 'quotes/addquote',
           name: 'addquote',
           component: AddQuoteView
         }

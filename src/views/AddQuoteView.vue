@@ -52,7 +52,7 @@ export default {
                         placeholder="Choose Patients" 
                         select-label="Select" 
                         deselect-label="Remove" 
-                        :limit="3" 
+                        :limit="5" 
                         group-values="patients" 
                         group-label="label" 
                         :group-select="true" 
@@ -72,14 +72,13 @@ export default {
                         placeholder="Choose Groups" 
                         select-label="Select" 
                         deselect-label="Remove" 
-                        :limit="3" 
+                        :limit="5" 
                         group-values="groups" 
                         group-label="label" 
                         :group-select="true" 
                         select-group-label="Select All" 
                         deselect-group-label="Clear All"  
                         >
-                        <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
                     </VueMultiselect>
                 </div>
             </div>
