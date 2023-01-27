@@ -122,6 +122,19 @@ export default {
                     this.alertStore.error(error.response.data.message)
                 });
         },
+        addPatientHealthData(values) {
+            const id = this.patient.id
+            this.closeModal()
+            axiosInstance.post(`/patients/${id}/health-data`, values)
+                .then(response => {
+                    console.log(response.data)
+                    this.alertStore.success("Data added")                    
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
         buildChart(healthData) {
             healthData.forEach(data => {
                 var dataCreated = new Date(data.created_at).format('MM/DD/YY')
@@ -421,7 +434,7 @@ export default {
                 </div>
             </div>
         </div>
-    </div>
+   
     <!-- meds modal -->
     <Modal v-show="medsData" @close="closeModal">
         <template #header>Medications and Supplements</template>
@@ -452,40 +465,40 @@ export default {
     <Modal v-show="healthData" @close="closeModal">
         <template #header>Add Health Data</template>
         <template #content>
-            <form>
+            <Form @submit="addPatientHealthData" ref="healthDataForm">
                 <div class="popup-content-item bl-bg">
                     <label class="label-w-icon">Height
-                        <Field name="height" type="height" class="popup-content-item-input"></Field>
-                    </label>
-                </div>
-
-                <div class="popup-content-item bl-bg">
-                    <label class="label-w-icon">Body Fat
-                        <Field name="bodyFat" type="bodyFat" class="popup-content-item-input"></Field>
+                        <Field name="height" type="text" class="popup-content-item-input"></Field>
                     </label>
                 </div>
 
                 <div class="popup-content-item bl-bg">
                     <label class="label-w-icon">Weight
-                        <Field name="Weight" type="Weight" class="popup-content-item-input"></Field>
+                        <Field name="weight" type="text" class="popup-content-item-input"></Field>
+                    </label>
+                </div>
+
+                <div class="popup-content-item bl-bg">
+                    <label class="label-w-icon">Body Fat
+                        <Field name="bodyfat" type="text" class="popup-content-item-input"></Field>
                     </label>
                 </div>
 
                 <div class="popup-content-item bl-bg">
                     <label class="label-w-icon">BP
-                        <Field name="bp" type="bp" class="popup-content-item-input"></Field>
+                        <Field name="bp" type="text" class="popup-content-item-input"></Field>
                     </label>
                 </div>
 
                 <div class="popup-content-item bl-bg">
                     <label class="label-w-icon">BMI
-                        <Field name="bmi" type="bmi" class="popup-content-item-input"></Field>
+                        <Field name="bmi" type="text" class="popup-content-item-input"></Field>
                     </label>
                 </div>
 
                 <div class="popup-content-item bl-bg">
                     <label class="label-w-icon">Resting HR
-                        <Field name="restingHR" type="restingHR" class="popup-content-item-input"></Field>
+                        <Field name="resting_hr" type="text" class="popup-content-item-input"></Field>
                     </label>
                 </div>
 
@@ -500,4 +513,5 @@ export default {
             </form>
         </template>
     </Modal>
+</div>
 </template>
