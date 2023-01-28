@@ -15,58 +15,51 @@ export default {
         RoundBtn,
         RoundBtnDelete,
     },
-    data() {
-        return {
-            isModalVisible: false,
-        }
-    },
-    methods: {
-        showModal(event, e) {
-            this.selectedEvent = event
-            this.isModalVisible = true;
-            if (e != null) {
-                e.stopPropagation()
-            }
-        },
-        closeModal() {
-            this.selectedEvent = null
-            this.isModalVisible = false;
-        },
-    }
 }
 </script>
 
 <template>
-    <div class="details-inner">
-        <RoundBtn>
-            <template #btn-icon>
-                <ChatIcon width="30" height="30" />
-            </template>
-            <template #btn-name>Chat</template>
-        </RoundBtn>
-        <RoundBtn @click="$emit('update')">
-            <template #btn-icon>
-                <EditIcon width="30" height="30" />
-            </template>
-            <template #btn-name>Update</template>
-        </RoundBtn>
-        <RoundBtn @click="$emit('calendar')">
-            <template #btn-icon>
-                <CalendarIcon width="30" height="30" />
-            </template>
-            <template #btn-name>Schedule</template>
-        </RoundBtn>
-        <RoundBtnDelete>
-            <template #btn-icon>
-                <RemoveIcon width="30" height="30" />
-            </template>
-            <template #btn-name>Delete</template>
-        </RoundBtnDelete>
+    <div>
+        <div class="details-inner">
+            <RoundBtn>
+                <template #btn-icon>
+                    <ChatIcon width="30" height="30" />
+                </template>
+                <template #btn-name>Chat</template>
+            </RoundBtn>
+            <RoundBtn @click="$emit('update')">
+                <template #btn-icon>
+                    <EditIcon width="30" height="30" />
+                </template>
+                <template #btn-name>Update</template>
+            </RoundBtn>
+            <RoundBtn @click="$emit('calendar')">
+                <template #btn-icon>
+                    <CalendarIcon width="30" height="30" />
+                </template>
+                <template #btn-name>Schedule</template>
+            </RoundBtn>
+            <RoundBtnDelete @click="$emit('delete')">
+                <template #btn-icon>
+                    <RemoveIcon width="30" height="30" />
+                </template>
+                <template #btn-name>Delete</template>
+            </RoundBtnDelete>
+        </div>
+        <div class="modal-overlay" @click="$emit('close')"></div>
     </div>
-
 </template>
 
 <style>
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+    }
+
     .v-enter-active,
     .v-leave-active {
         transition: opacity 0.9s ease;
@@ -91,6 +84,6 @@ export default {
         transform: translateX(-72%);
         border-radius: 16px;
         box-shadow: 2px 4px 28px rgba(0, 0, 0, 0.1);
-        z-index: 10;
+        z-index: 10000;
     }
 </style>

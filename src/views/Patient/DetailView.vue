@@ -5,7 +5,9 @@ import MessagesIcon from '@/components/icons/IconMessages.vue'
 import CalendarIcon from '@/components/icons/IconCalendar.vue'
 import RoundBtn from '@/components/Buttons/RoundBtn.vue'
 import LineChart from '@/components/LineChart.vue'
+import AddPatientModal from './AddModal.vue'
 import Modal from '@/components/Modals/Modal.vue'
+import DeleteModal from '@/components/Modals/DeleteModal.vue'
 
 import { Form, Field } from 'vee-validate';
 import { RouterLink } from 'vue-router'
@@ -23,6 +25,8 @@ export default {
         RoundBtn,
         LineChart,
         Modal,
+        AddPatientModal,
+        DeleteModal,
         Form,
         Field
     },
@@ -90,7 +94,7 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, alertStore, dataChart, dataLoaded, isModalVisible: false, healthData: false, medsData: false }
+        return { patient, alertStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, medsData: false, count: 3 }
     },
     mounted() {
         const id = this.$route.params.id;
@@ -151,6 +155,9 @@ export default {
             });
             this.dataLoaded = true
         },
+        showUpdate() {
+            this.updateModal = true;
+        },
         showModal(event, e) {
             this.selectedEvent = event
             this.isModalVisible = true;
@@ -161,6 +168,9 @@ export default {
         showHealthData() {
             this.healthData = true;
         },
+        showDeleteModal() {
+            this.isDeleteModalVisible = true;
+        },
         showMeds() {
             this.medsData = true;
         },
@@ -168,7 +178,12 @@ export default {
             this.selectedEvent = null
             this.isModalVisible = false;
             this.healthData = false;
+            this.isDeleteModalVisible = false;
             this.medsData = false;
+            this.updateModal = false;
+        },
+        addMeds: function () {
+            if (this.count < 50) this.count++;
         },
     },
     computed: {
@@ -210,9 +225,9 @@ export default {
             </div>
 
             <div class="patient-btns">
-                <button type="button" class="w-btn">Edit Patient Info</button>
+                <button type="button" class="w-btn" @click="showUpdate()">Edit Patient Info</button>
                 <button type="button" class="w-btn" @click=showHealthData()>Add Health Data</button>
-                <button type="button" class="w-btn w-btn-delete">Delete Patient</button>
+                <button type="button" class="w-btn w-btn-delete" @click="showDeleteModal()">Delete Patient</button>
                 <RouterLink to="/patients">Return to My Patients</RouterLink>
             </div>
         </div>
@@ -439,15 +454,12 @@ export default {
         <template #content>
             <form>
                 <div class="popup-content-item meds-input bl-bg">
-                    <input class="popup-content-item-input" type="text" placeholder="Medication Name, Dosage, Frequency" />
-
-                    <input class="popup-content-item-input" type="text" placeholder="Medication Name, Dosage, Frequency" />
-
-                    <input class="popup-content-item-input" type="text" placeholder="Medication Name, Dosage, Frequency" />
-
-                    <button type="button">Add Medication or Supplement</button>
+                    <input class="popup-content-item-input" type="text" placeholder="Medication Name, Dosage, Frequency" :name="`text[${key - 1}]`" v-for="key in count"
+                        :key="key" :id="key" />
                 </div>
 
+                <button type="button" class="meds-button" @click="addMeds">Add Medication or Supplement</button>
+                
                 <div class="popup-footer">
                     <button type="reset" class="w-btn w-btn-close" @click="closeModal">
                         Cancel
@@ -511,5 +523,14 @@ export default {
             </form>
         </template>
     </Modal>
+    <!-- update parient info modal -->
+    <AddPatientModal v-show="updateModal" @close="closeModal"></AddPatientModal>
+    <!-- delete modal -->
+    <DeleteModal v-show="isDeleteModalVisible" @close="closeModal">
+        <template #content>
+            <h4>Delete this patient?</h4>
+            <p>You will not be able to recover it</p>
+        </template>
+    </DeleteModal>
 </div>
 </template>

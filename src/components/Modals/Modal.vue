@@ -15,7 +15,7 @@
         <div class="popup" @click.stop>
           <header class="popup-header">
               <h4>
-                  <slot name="header"></slot>
+                <slot name="header"></slot>
               </h4>
               <button type="button" class="popup-btn-close" @click="close">x</button>
           </header>
@@ -111,5 +111,27 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .meds-input {
+    max-height: 230px;
+    overflow-y: auto;
+  }
+
+  .meds-input::-webkit-scrollbar {
+    width: 8px;
+    height: 16px;
+    padding: 20px;
+    margin: 20px;
+  }
+
+  .meds-input::-webkit-scrollbar-track {
+    background-color: #DBDBDB;
+    border-radius: 8px;
+  }
+
+  .meds-input::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 8px;
   }
 </style>

@@ -969,8 +969,8 @@ body {
   border: none;
 }
 
-.popup-content-item.meds-input button {
-  margin-top: 4px;
+button.meds-button {
+  margin-top: 16px;
   margin-bottom: 16px;
   font-size: 14px;
   font-weight: 400;
@@ -1085,6 +1085,7 @@ input[type="date"].popup-content-item-input::-webkit-calendar-picker-indicator {
 .popup-content-item .popup-content-item-input {
   width: 100%;
   height: 50px;
+  min-height: 50px;
   display: block;
 }
 
@@ -1623,8 +1624,25 @@ button.vuecal__arrow {
 }
 
 .patient-meds ul.patient-meds-list {
-  list-style: none;
+  max-height: 100px;
   margin-bottom: 16px;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.patient-meds ul.patient-meds-list::-webkit-scrollbar {
+  width: 8px;
+  height: 16px;
+}
+
+.patient-meds ul.patient-meds-list::-webkit-scrollbar-track {
+  background-color: #DBDBDB;
+  border-radius: 8px;
+}
+
+.patient-meds ul.patient-meds-list::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 8px;
 }
 
 .patient-meds ul.patient-meds-list li {
