@@ -26,6 +26,7 @@ export async function downloadFile(file, ref, type) {
     a.download = file.name;
     const tempUrl = await getFileUrlFromRef(type, ref);
     a.href = tempUrl;
+    a.target = '_blank'
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
