@@ -5,6 +5,7 @@ import PatientInputGenerator from '@/components/Patient/PatientInputGenerator.vu
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
+import { calculateBMI } from '@/helpers';
 import _get from 'lodash/get';
 import _find from 'lodash/find';
 
@@ -22,43 +23,18 @@ export default {
         patient: {
             handler(value) {
                 if (value != null) {
-                    const pt = Object.assign({}, value);;
-                    pt.dob = new Date(pt.dob).format("YYYY/MM/DD");
-                    this.generalInfo.fields.forEach((item) => {
-                        if (item.model) {
-                            this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
-                        }
-                    })
-                    this.contactInfo.fields.forEach((item) => {
-                        if (item.model) {
-                            this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
-                        }
-                        if (item.name == 'user.email') {
-                            item.disabled = "true"
-                        }
-
-                    })
-                    this.emergencyContactInfo.fields.forEach((item) => {
-                        if (item.model) {
-                            this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
-                        }
-                    })
-                    this.insuranceInfo.fields.forEach((item) => {
-                        if (item.model) {
-                            this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
-                        }
-                    })
-                    this.patientInfo.fields.forEach((item) => {
-                        if (item.model) {
-                            this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
-                        }
-                    })
+                    this.setPatientData(value)
                 } else {
-                    _find(this.contactInfo.fields, ['name', 'user.email']).disabled = undefined;
+                    this.resetPatientData()
                 }
 
             },
             deep: true,
+        }
+    },
+    mounted() {
+        if (this.patient != null) {
+            this.setPatientData(this.patient)
         }
     },
     data() {
@@ -262,24 +238,19 @@ export default {
         const patientInfo = {
             fields: [
                 {
-                    label: 'Weight',
-                    name: 'health-data.weight',
-                    as: 'input',
-                    model: 'additional_data.weight',
-                    rules: Yup.string().nullable()
-                },
-                {
                     label: 'Height',
                     name: 'health-data.height',
                     as: 'input',
-                    model: 'additional_data.height',
+                    model: 'current_health_data.height',
                     rules: Yup.string().nullable()
+                        .matches(/^(\d+)'(\d+)(?:''|")$/, { message: 'Should match following pattern: 5\'7"', excludeEmptyString: true })
+
                 },
                 {
-                    label: 'BMI',
-                    name: 'health-data.bmi',
+                    label: 'Weight',
+                    name: 'health-data.weight',
                     as: 'input',
-                    model: 'additional_data.bmi',
+                    model: 'current_health_data.weight',
                     rules: Yup.string().nullable()
                 },
                 {
@@ -297,6 +268,7 @@ export default {
                 {
                     label: '',
                     name: 'meds[0]',
+                    model: 'meds[0]',
                     as: 'input',
                     classattr: 'fullw-input',
                     placeholder: "Medication Name, Dosage, Frequency",
@@ -305,6 +277,7 @@ export default {
                 {
                     label: '',
                     name: 'meds[1]',
+                    model: 'meds[1]',
                     as: 'input',
                     classattr: 'fullw-input',
                     placeholder: "Medication Name, Dosage, Frequency",
@@ -313,6 +286,7 @@ export default {
                 {
                     label: '',
                     name: 'meds[2]',
+                    model: 'meds[2]',
                     as: 'input',
                     classattr: 'fullw-input',
                     placeholder: "Medication Name, Dosage, Frequency",
@@ -328,29 +302,104 @@ export default {
     methods: {
         close() {
             this.$emit('close');
+            this.resetPatientData()
+        },
+        setPatientData(patient) {
+            const pt = Object.assign({}, patient);;
+            pt.dob = new Date(pt.dob).format("YYYY/MM/DD");
+            this.generalInfo.fields.forEach((item) => {
+                if (item.model) {
+                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                }
+            })
+            this.contactInfo.fields.forEach((item) => {
+                if (item.model) {
+                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                }
+                if (item.name == 'user.email') {
+                    item.disabled = "true"
+                }
+
+            })
+            this.emergencyContactInfo.fields.forEach((item) => {
+                if (item.model) {
+                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                }
+            })
+            this.insuranceInfo.fields.forEach((item) => {
+                if (item.model) {
+                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                }
+            })
+            this.patientInfo.fields.forEach((item) => {
+                if (item.model) {
+                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                }
+            })
+
+
+            this.currentMeds.fields.forEach((item) => {
+                if (item.model) {
+                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                }
+            })
+
+            if (pt.meds.length > this.currentMeds.fields.length) {
+                for (var i = 3; i < pt.meds.length; i++) {
+                    this.addMedRow()
+                    this.$refs.populatedForm.setFieldValue(`meds[${i}]`, pt.meds[i]);
+                }
+
+            }
+
+        },
+        resetPatientData() {
+            _find(this.contactInfo.fields, ['name', 'user.email']).disabled = undefined;
+            this.currentMeds.fields.length = 3;
+            this.$refs.populatedForm.setValues({})
         },
         onSubmit(values) {
+            
+            const healthData = values['health-data'];
+            if(healthData.height && healthData.weight) {
+                healthData.bmi = calculateBMI(healthData.height, healthData.weight)
+            }
             if (this.patient != null) {
                 axiosInstance.put(`/patients/${this.patient.id}`, values)
-                .then(response => {
-                    this.$emit('update:patient', response.data.patient)
-                    this.alertStore.success('Patient updated.');
-                    this.close()
-                })
-                .catch(error => {
-                    this.alertStore.error(error.response.data.message)
-                });
+                    .then(response => {
+                        this.$emit('update:patient', response.data.patient)
+                        this.alertStore.success('Patient updated.');
+                        this.close()
+                    })
+                    .catch(error => {
+                        this.alertStore.error(error.response.data.message)
+                    });
             } else {
-            axiosInstance.post('/patients', values)
-                .then(response => {
-                    this.close()
-                    this.alertStore.success('Patient created.');
-                })
-                .catch(error => {
-                    this.alertStore.error(error.response.data.message)
-                });
+                axiosInstance.post('/patients', values)
+                    .then(response => {
+                        this.close()
+                        this.alertStore.success('Patient created.');
+                    })
+                    .catch(error => {
+                        this.alertStore.error(error.response.data.message)
+                    });
             }
         },
+        addMedRow() {
+            this.currentMeds.fields.push({
+                label: '',
+                name: `meds[${this.currentMeds.fields.length}]`,
+                model: `meds[${this.currentMeds.fields.length}]`,
+                as: 'input',
+                classattr: 'fullw-input',
+                placeholder: "Medication Name, Dosage, Frequency",
+                rules: Yup.string().nullable()
+            })
+            const medsContainer = this.$refs.medsContainer.$refs.list;
+            this.$nextTick(() => {
+                medsContainer.scrollTop = medsContainer.scrollHeight;
+            });
+        }
     },
 };
 </script>
@@ -408,9 +457,10 @@ export default {
                                 <div class="addpatient-card-content-title">Current Medications and Supplements</div>
 
                                 <div class="medication-block">
-                                    <PatientInputGenerator :schema="currentMeds" />
+                                    <PatientInputGenerator :schema="currentMeds" ref="medsContainer"/>
 
-                                    <button type="button" @click="$emit('showMeds')">Add Medication or Supplement</button>
+                                    <button type="button" @click="addMedRow">Add Medication or
+                                        Supplement</button>
                                 </div>
                             </div>
                         </div>
@@ -422,201 +472,201 @@ export default {
 </template>
 
 <style>
-    .v-enter-active,
-    .v-leave-active {
-        transition: opacity 0.4s ease;
-    }
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.4s ease;
+}
 
-    .v-enter-from,
-    .v-leave-to {
-        opacity: 0;
-    }
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
 
-    .addpatient-wrapper {
-        background-color: #FFFFFF;
-        width: 100%;
-        height: 100%;
-        padding: 28px 32px;
-        position: absolute;
-        top: -8px;
-    }
+.addpatient-wrapper {
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    padding: 28px 32px;
+    position: absolute;
+    top: -8px;
+}
 
-    .addpatient-head {
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+.addpatient-head {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    .addpatient-head h4 {
-        font-size: 24px;
-        font-weight: 400;
-        line-height: 24px;
-        color: #000000;
-    }
+.addpatient-head h4 {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #000000;
+}
 
-    .addpatient-head button.w-btn.w-btn-close {
-        margin-left: 36px;
-    }
+.addpatient-head button.w-btn.w-btn-close {
+    margin-left: 36px;
+}
 
-    .add-patient-inner {
-        height: 98%;
-        padding-bottom: 30px;
-        display: grid;
-        grid-template-columns: 35fr 30fr 35fr;
-        gap: 26px;
-    }
+.add-patient-inner {
+    height: 98%;
+    padding-bottom: 30px;
+    display: grid;
+    grid-template-columns: 35fr 30fr 35fr;
+    gap: 26px;
+}
 
-    .add-patient-card {
-        background-color: #FFFEFE;
-        padding: 0 30px 24px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        border-radius: 16px;
-        box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
-    }
+.add-patient-card {
+    background-color: #FFFEFE;
+    padding: 0 30px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 16px;
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-    .addpatient-card-two .add-patient-card:first-child {
-        margin-bottom: 26px;
-    }
+.addpatient-card-two .add-patient-card:first-child {
+    margin-bottom: 26px;
+}
 
-    .add-patient-card-title {
-        margin-top: 24px;
-        margin-bottom: 18px;
-        font-size: 20px;
-        font-weight: 400;
-        line-height: 20px;
-        color: #000000;
-        text-align: center;
-    }
+.add-patient-card-title {
+    margin-top: 24px;
+    margin-bottom: 18px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #000000;
+    text-align: center;
+}
 
-    .addpatient-card-content ul {
-        list-style: none;
-    }
+.addpatient-card-content ul {
+    list-style: none;
+}
 
-    .addpatient-card-content ul li {
-        margin-bottom: 16px;
-        display: grid;
-        grid-template-columns: 30fr 70fr;
-        align-items: center;
-        gap: 26px;
-    }
+.addpatient-card-content ul li {
+    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: 30fr 70fr;
+    align-items: center;
+    gap: 26px;
+}
 
-    .addpatient-card-content ul li:last-child {
-        margin-bottom: 0;
-    }
+.addpatient-card-content ul li:last-child {
+    margin-bottom: 0;
+}
 
-    .addpatient-card-content ul li input + span[role="alert"] {
-        background-color: #FF0000;
-        width: 65%;
-        padding: 3px 6px;
-        position: absolute;
-        right: 0;
-        bottom: -34px;
-        color: #FFFFFF;
-        border-radius: 3px;
-        z-index: 9;
-    }
+.addpatient-card-content ul li input+span[role="alert"] {
+    background-color: #FF0000;
+    width: 65%;
+    padding: 3px 6px;
+    position: absolute;
+    right: 0;
+    bottom: -34px;
+    color: #FFFFFF;
+    border-radius: 3px;
+    z-index: 9;
+}
 
-    .addpatient-card-content ul li input + span[role="alert"]:before{
-    content: '';  
-    width: 0;  
-    height: 0;  
+.addpatient-card-content ul li input+span[role="alert"]:before {
+    content: '';
+    width: 0;
+    height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-bottom: 8px solid #FF0000;
-    position: absolute;  
+    position: absolute;
     top: -7px;
     left: 7px;
-    }
+}
 
-    .addpatient-card-content ul li.fullw-input {
-        grid-template-columns: 1fr;
-        gap: 0;
-        text-align: center;
-    }
+.addpatient-card-content ul li.fullw-input {
+    grid-template-columns: 1fr;
+    gap: 0;
+    text-align: center;
+}
 
-    .addpatient-card-content ul li.fullw-input label {
-        margin-bottom: 3px;
-    }
+.addpatient-card-content ul li.fullw-input label {
+    margin-bottom: 3px;
+}
 
-    .addpatient-card-content ul li label {
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 16px;
-        color: #000000;
-        white-space: nowrap;
-    }
+.addpatient-card-content ul li label {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #000000;
+    white-space: nowrap;
+}
 
-    .addpatient-card-content ul li input,
-    .addpatient-card-content ul li textarea {
-        background-color: #F4F4FF;
-        width: 100%;
-        padding-left: 22px;
-        border-radius: 10px;
-        color: #000000;
-        outline: none;
-        border: none;
-    }
+.addpatient-card-content ul li input,
+.addpatient-card-content ul li textarea {
+    background-color: #F4F4FF;
+    width: 100%;
+    padding-left: 22px;
+    border-radius: 10px;
+    color: #000000;
+    outline: none;
+    border: none;
+}
 
-    .addpatient-card-content ul li input {
-        height: 40px;
-    }
+.addpatient-card-content ul li input {
+    height: 40px;
+}
 
-    .addpatient-card-content ul li textarea {
-        height: 100%;
-        grid-row: span 6;
-        grid-column: span 2;
-        padding-top: 16px;
-        resize: none;
-    }
+.addpatient-card-content ul li textarea {
+    height: 100%;
+    grid-row: span 6;
+    grid-column: span 2;
+    padding-top: 16px;
+    resize: none;
+}
 
-    .addpatient-card-content ul li textarea::placeholder {
-        color: #000000;
-    }
+.addpatient-card-content ul li textarea::placeholder {
+    color: #000000;
+}
 
-    .addpatient-card-content-title {
-        margin: 8px 0;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 16px;
-        color: #000000;
-        text-align: center;
-    }
+.addpatient-card-content-title {
+    margin: 8px 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #000000;
+    text-align: center;
+}
 
-    .addpatient-card-content .medication-block {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.addpatient-card-content .medication-block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-    .addpatient-card-content .medication-block ul {
-        width: 100%;
-        max-height: 180px;
-        overflow-y: auto;
-    }
+.addpatient-card-content .medication-block ul {
+    width: 100%;
+    max-height: 180px;
+    overflow-y: auto;
+}
 
-    .addpatient-card-content .medication-block ul::-webkit-scrollbar {
-        width: 8px;
-    }
+.addpatient-card-content .medication-block ul::-webkit-scrollbar {
+    width: 8px;
+}
 
-    .addpatient-card-content .medication-block ul::-webkit-scrollbar-track {
-        background-color: #E7E7E7;
-        border-radius: 8px;
-    }
+.addpatient-card-content .medication-block ul::-webkit-scrollbar-track {
+    background-color: #E7E7E7;
+    border-radius: 8px;
+}
 
-    .addpatient-card-content .medication-block ul::-webkit-scrollbar-thumb {
-        background-color: #5C90F1;
-        border-radius: 8px;
-    }
+.addpatient-card-content .medication-block ul::-webkit-scrollbar-thumb {
+    background-color: #5C90F1;
+    border-radius: 8px;
+}
 
-    .addpatient-card-content .medication-block button {
-        margin-top: 16px;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 14px;
-        color: #0258BC;
-    }
+.addpatient-card-content .medication-block button {
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 14px;
+    color: #0258BC;
+}
 </style>
