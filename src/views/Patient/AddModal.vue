@@ -5,6 +5,7 @@ import PatientInputGenerator from '@/components/Patient/PatientInputGenerator.vu
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
+import { calculateBMI } from '@/helpers';
 import _get from 'lodash/get';
 import _find from 'lodash/find';
 
@@ -237,24 +238,19 @@ export default {
         const patientInfo = {
             fields: [
                 {
-                    label: 'Weight',
-                    name: 'health-data.weight',
-                    as: 'input',
-                    model: 'additional_data.weight',
-                    rules: Yup.string().nullable()
-                },
-                {
                     label: 'Height',
                     name: 'health-data.height',
                     as: 'input',
-                    model: 'additional_data.height',
+                    model: 'current_health_data.height',
                     rules: Yup.string().nullable()
+                        .matches(/^(\d+)'(\d+)(?:''|")$/, { message: 'Should match following pattern: 5\'7"', excludeEmptyString: true })
+
                 },
                 {
-                    label: 'BMI',
-                    name: 'health-data.bmi',
+                    label: 'Weight',
+                    name: 'health-data.weight',
                     as: 'input',
-                    model: 'additional_data.bmi',
+                    model: 'current_health_data.weight',
                     rules: Yup.string().nullable()
                 },
                 {
@@ -341,6 +337,7 @@ export default {
                 }
             })
 
+
             this.currentMeds.fields.forEach((item) => {
                 if (item.model) {
                     this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
@@ -362,6 +359,11 @@ export default {
             this.$refs.populatedForm.setValues({})
         },
         onSubmit(values) {
+            
+            const healthData = values['health-data'];
+            if(healthData.height && healthData.weight) {
+                healthData.bmi = calculateBMI(healthData.height, healthData.weight)
+            }
             if (this.patient != null) {
                 axiosInstance.put(`/patients/${this.patient.id}`, values)
                     .then(response => {

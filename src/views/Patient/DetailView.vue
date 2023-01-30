@@ -16,6 +16,8 @@ import { useAlertStore } from '@/stores';
 import _find from 'lodash/find'
 import userMixin from '@/mixins/user.js'
 
+import { calculateBMI } from '@/helpers';
+
 export default {
     components: {
         ChatIcon,
@@ -126,6 +128,9 @@ export default {
         addPatientHealthData(values) {
             const id = this.patient.id
             this.closeModal()
+            
+            values.height = values.height_ft + "'" + (values.height_in ? values.height_in : '0') + '"'
+            values.bmi = this.bmi(values)
             axiosInstance.post(`/patients/${id}/health-data`, values)
                 .then(response => {
                     console.log(response.data)
@@ -221,8 +226,32 @@ export default {
         },
         since() {
             return new Date(this.patient.createdAt).format("YYYY/MM/DD");
+        },
+        bmi() {
+            return (values) => {
+                var bmi = ''
+                if (values.height_ft && values.weight) {
+                    const height = values.height_ft + "'" + (values.height_in ? values.height_in : '0') + '"'
+                    bmi = calculateBMI(height, values.weight)
+                }
+                return bmi
+            }
+        },
+        height() {
+            var height = this.patient.current_health_data?.height
+            if(!height) {
+                return ['', '']
+            }
+            height = height.split("'")
+            return height
+        },
+        heightft(){
+            return this.height[0].replace(/[^0-9.]/g, '');
+        },
+        heightin(){
+            return this.height[1].replace(/[^0-9.]/g, '');
         }
-    },
+    }
 }
 </script>
 
@@ -475,8 +504,7 @@ export default {
                         <Field v-for="(med, index) in patient.meds" :key="index" :name="`meds[${index}]`" :value="med"
                             v-slot="{ field }">
                             <input class="popup-content-item-input" type="text"
-                                placeholder="Medication Name, Dosage, Frequency" 
-                                v-bind="field" />
+                                placeholder="Medication Name, Dosage, Frequency" v-bind="field" />
                         </Field>
                     </div>
 
@@ -497,21 +525,25 @@ export default {
         <Modal v-show="healthData" @close="closeModal">
             <template #header>Add Health Data</template>
             <template #content>
-                <Form @submit="addPatientHealthData" ref="healthDataForm">
-                    <div class="popup-content-item bl-bg">
-                        <label class="label-w-icon">Height
-                            <Field name="height" type="text" class="popup-content-item-input"></Field>
-                        </label>
+                <Form @submit="addPatientHealthData" ref="healthDataForm" v-slot="{ values }">
+                    <div v-show="!patient.current_health_data?.height" class="popup-content-item bl-bg">
+                        <label class="label-w-icon">Height (5'9")</label>
+                        <div style="display:inline-flex">
+                            <Field name="height_ft" type="text" class="popup-content-item-input" :value="heightft"></Field>
+                            <label style="margin: 0 10px 0 0;">ft</label>
+                            <Field name="height_in" type="text" class="popup-content-item-input" :value="heightin"></Field>
+                            <label style="margin: 0 10px 0 0;">in</label>
+                        </div>
                     </div>
 
                     <div class="popup-content-item bl-bg">
-                        <label class="label-w-icon">Weight
+                        <label class="label-w-icon">Weight (lbs)
                             <Field name="weight" type="text" class="popup-content-item-input"></Field>
                         </label>
                     </div>
 
                     <div class="popup-content-item bl-bg">
-                        <label class="label-w-icon">Body Fat
+                        <label class="label-w-icon">Body Fat (%)
                             <Field name="bodyfat" type="text" class="popup-content-item-input"></Field>
                         </label>
                     </div>
@@ -524,7 +556,7 @@ export default {
 
                     <div class="popup-content-item bl-bg">
                         <label class="label-w-icon">BMI
-                            <Field name="bmi" type="text" class="popup-content-item-input"></Field>
+                            <input name="bmi" type="text" class="popup-content-item-input" :value="bmi(values)" disabled/>
                         </label>
                     </div>
 
