@@ -15,6 +15,9 @@ import CalendarView from '@/views/CalendarView.vue'
 import QuotesView from '@/views/Quotes/QuotesView.vue'
 import AddQuoteView from '@/views/Quotes/AddView.vue'
 import MessagesView from '@/views/MessagesView.vue'
+import DietView from '@/views/Diet/DietView.vue'
+import AddDietView from '@/views/Diet/AddDietView.vue'
+import AddRecipeView from '@/views/Diet/AddRecipeView.vue'
 
 
 const router = createRouter({
@@ -60,6 +63,27 @@ const router = createRouter({
               path: ":id",
               name: "patient",
               component: PatientDetailView
+            }
+          ]
+        },
+        {
+          path: '/diet',
+          component: { render: () => h(RouterView) },
+          children: [
+            {
+              path: '',
+              name: 'diet',
+              component: DietView
+            },
+            {
+              path: "add-diet",
+              name: "add-diet",
+              component: AddDietView
+            },
+            {
+              path: "add-recipe",
+              name: "add-recipe",
+              component: AddRecipeView
             }
           ]
         },

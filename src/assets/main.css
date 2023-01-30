@@ -35,6 +35,7 @@ button {
 }
 
 body {
+  height: 100vh;
   font-size: .875rem;
   font-family: "Metropolis";
   background: #FFF;
@@ -1474,10 +1475,6 @@ button.vuecal__arrow {
   text-align: center;
 }
 
-/* .patient-profile-right span {
-  margin-bottom: 8px;
-} */
-
 .patient-profile-right button {
   /* color: #0258BC; */
   color: #000000;
@@ -1750,7 +1747,6 @@ button.vuecal__arrow {
 }
 
 .quotes-grid {
-  /* margin-top: 32px; */
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px 28px;
@@ -1957,7 +1953,6 @@ button.vuecal__arrow {
   display: flex;
   margin-bottom: 8px;
   padding: 12px 16px;
-  /* border-bottom: 2px solid #F4F4FF; */
   border-radius: 16px;
   cursor: pointer;
   position: relative;
@@ -2258,8 +2253,6 @@ ul.messages-list li.physician-message .message-list-time {
   text-align: right;
 }
 
-
-
 .send-inner {
   margin-top: auto;
   display: flex;
@@ -2306,6 +2299,212 @@ ul.messages-list li.physician-message .message-list-time {
 .send-inner .send-inner-btns .send-btn {
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
 }
+
+
+
+/* diet & recipes */
+.diet-wrapper {
+  height: 82vh;
+}
+
+.diet-tabs {
+  height: calc(100% - 42px);
+}
+
+.diet-search-wrapper {
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.diet-search-wrapper .add-button {
+  grid-column: 4/4;
+  justify-content: flex-end;
+}
+
+.diet-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.diet-grid.recipe-grid {
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.diet-grid-item {
+  background-color: #FFFFFF;
+  padding: 12px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 16px;
+}
+
+.diet-grid-item-content h6 {
+  max-width: 310px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 18px;
+}
+
+ul.diet-grid-item-content-list {
+  list-style: none;
+  max-width: 310px;
+  margin-bottom: 3px;
+  display: flex;
+}
+
+ul.diet-grid-item-content-list li {
+  margin-right: 12px;
+  padding-left: 8px;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+ul.diet-grid-item-content-list li:before {
+  content: '';
+  background-color: var(--primary);
+  width: 6px;
+  height: 6px;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  border-radius: 50%;
+}
+
+.diet-grid-item-content-icon {
+  display: flex;
+  align-items: flex-end;
+}
+
+.diet-grid-item-content-icon svg {
+  width: 28px;
+  height: 28px;
+  margin-right: 6px;
+  margin-left: -4px;
+  display: inline-block;
+}
+
+.recipe-grid .diet-grid-item-content-icon svg {
+  width: 22px;
+}
+
+.diet-grid-item-content-icon span {
+  font-size: 14px;
+  font-weight: 400;
+  color: #737373;
+}
+
+.add-diet-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-diet {
+  /* max-width: 30%; */
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.add-diet-inner {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.add-diet label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  color: #000000;
+}
+
+.add-diet input, 
+.add-diet textarea {
+  height: 42px;
+  margin-bottom: 0;
+  padding: 4px 10px;
+  display: block;
+  font-size: 16px;
+  border-radius: 16px;
+  border: none;
+  outline: none;
+  box-shadow: 2px 4px 10px rgb(0 0 0 / 1%);
+}
+
+.add-diet textarea {
+  height: 72px;
+  resize: none;
+}
+
+/* .add-diet-head {} */
+
+.add-diet-head .upload-photo > div {
+  background-color: var(--primary);
+  width: 50px;
+  height: 50px;
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.add-diet-head .add-diet input{
+  max-width: 324px;
+}
+
+.add-diet-day-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+/* .add-diet-day-grid-item {} */
+
+.add-diet-day-grid-item.title {
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.add-diet-wrapper .add-button {
+  /* margin-top: auto; */
+  margin-bottom: 16px;
+  justify-content: flex-start;
+}
+
+.add-diet.description {
+  margin-top: 16px;
+}
+
+.add-diet.description textarea {
+  width: 40%;
+  height: 124px;
+}
+
+.add-diet-btns {
+  margin-top: auto;
+}
+
+.add-diet-btns .w-btn-close {
+  background-color: transparent;
+  margin-right: 16px;
+  border: 1px solid var(--primary);
+}
+
 
 
 

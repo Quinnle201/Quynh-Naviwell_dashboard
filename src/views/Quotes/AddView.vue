@@ -95,8 +95,7 @@ export default {
                 </div>
             </div> -->
                 <div class="popup-content-item addquote-grid">
-                    <Field as="textarea" placeholder="Write a quote..." :name="`text[${key - 1}]`" v-for="key in count"
-                        :key="key" :id="key" />
+                    <Field as="textarea" placeholder="Write a quote..." :name="`text[${key - 1}]`" v-for="key in count" :key="key" :id="key" />
                 </div>
 
                 <div class="add-quote-btn">

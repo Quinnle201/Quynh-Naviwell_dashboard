@@ -236,8 +236,6 @@ export default {
                             <Field as="textarea" placeholder="Write a quote..." name="text" />
                         </div>
 
-                        <button class="add-quote-btn" v-if="!selectedQuote">Add New Quote</button>
-
                         <div class="popup-footer">
                             <button :type="selectedQuote ? 'button' : 'reset'" class="w-btn w-btn-close"
                                 :class="selectedQuote ? 'w-btn-delete' : 'w-btn-close'"
