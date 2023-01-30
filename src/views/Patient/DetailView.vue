@@ -527,7 +527,7 @@ export default {
             <template #content>
                 <Form @submit="addPatientHealthData" ref="healthDataForm" v-slot="{ values }">
                     <div v-show="!patient.current_health_data?.height" class="popup-content-item bl-bg">
-                        <label class="label-w-icon">Height (5'9")</label>
+                        <label class="label-w-icon">Height</label>
                         <div style="display:inline-flex">
                             <Field name="height_ft" type="text" class="popup-content-item-input" :value="heightft"></Field>
                             <label style="margin: 0 10px 0 0;">ft</label>
