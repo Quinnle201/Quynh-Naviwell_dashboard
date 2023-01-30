@@ -47,7 +47,7 @@ export default {
                     borderColor: "#4766FF",
                     borderWidth: 2,
                     fill: false,
-                }, 
+                },
                 {
                     type: 'scatter',
                     showLine: true,
@@ -76,8 +76,8 @@ export default {
                     borderWidth: 2,
                     fill: false,
                 },
-            ],
-            labels: []
+                ],
+                labels: []
             },
             options: {
                 responsive: true,
@@ -94,11 +94,10 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, alertStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, medsData: false, count: 3 }
+        return { patient, alertStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, medsData: false }
     },
     mounted() {
         const id = this.$route.params.id;
-
         this.getPatientById(id)
         this.getPatientHealthData(id)
     },
@@ -130,7 +129,7 @@ export default {
             axiosInstance.post(`/patients/${id}/health-data`, values)
                 .then(response => {
                     console.log(response.data)
-                    this.alertStore.success("Data added")                    
+                    this.alertStore.success("Data added")
                 })
                 .catch(error => {
                     console.log(error)
@@ -144,13 +143,13 @@ export default {
                 for (const [key, value] of Object.entries(data)) {
                     var chart = _find(this.dataChart.data.datasets, ['id', key]);
                     var finalValue = value
-                    if(key == 'bp' && value != null) {
+                    if (key == 'bp' && value != null) {
                         const pressure = value.split('/')
-                        finalValue = {'x': pressure[0], 'y': pressure[1]}
+                        finalValue = { 'x': pressure[0], 'y': pressure[1] }
                     }
-                    if(chart){
+                    if (chart) {
                         chart.data.push(finalValue)
-                    } 
+                    }
                 }
             });
             this.dataLoaded = true
@@ -183,7 +182,25 @@ export default {
             this.updateModal = false;
         },
         addMeds: function () {
-            if (this.count < 50) this.count++;
+            if (this.patient.meds.length < 50) this.patient.meds.push(undefined);
+            const medsContainer = this.$refs.medsContainer;
+            this.$nextTick(() => {
+                medsContainer.scrollTop = medsContainer.scrollHeight;
+            });
+        },
+        updatePatientInfo(patient) {
+            this.patient = patient
+        },
+        addMedsData(values) {
+            axiosInstance.put(`/patients/${this.patient.id}`, values)
+                .then(response => {
+                    this.updatePatientInfo(response.data.patient)
+                    this.alertStore.success('Patient updated.');
+                    this.closeModal()
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                });
         },
     },
     computed: {
@@ -407,7 +424,8 @@ export default {
                             <li v-for="med in patient.meds">{{ med }}</li>
                         </ul>
 
-                        <div class="patient-status-item-btn" @click=showMeds()>View and Edit Medications and Supplements</div>
+                        <div class="patient-status-item-btn" @click=showMeds()>View and Edit Medications and Supplements
+                        </div>
                     </div>
                 </div>
 
@@ -442,95 +460,100 @@ export default {
                     </ul>
 
                     <div>
-                        <LineChart v-if="dataLoaded" :data="dataChart"/>
+                        <LineChart v-if="dataLoaded" :data="dataChart" />
                     </div>
                 </div>
             </div>
         </div>
-   
-    <!-- meds modal -->
-    <Modal v-show="medsData" @close="closeModal">
-        <template #header>Medications and Supplements</template>
-        <template #content>
-            <form>
-                <div class="popup-content-item meds-input bl-bg">
-                    <input class="popup-content-item-input" type="text" placeholder="Medication Name, Dosage, Frequency" :name="`text[${key - 1}]`" v-for="key in count"
-                        :key="key" :id="key" />
-                </div>
 
-                <button type="button" class="meds-button" @click="addMeds">Add Medication or Supplement</button>
-                
-                <div class="popup-footer">
-                    <button type="reset" class="w-btn w-btn-close" @click="closeModal">
-                        Cancel
-                    </button>
-                    <button type="submit" class="w-btn">
-                        Save
-                    </button>
-                </div>
-            </form>
-        </template>
-    </Modal>
-    <!-- health data modal -->
-    <Modal v-show="healthData" @close="closeModal">
-        <template #header>Add Health Data</template>
-        <template #content>
-            <Form @submit="addPatientHealthData" ref="healthDataForm">
-                <div class="popup-content-item bl-bg">
-                    <label class="label-w-icon">Height
-                        <Field name="height" type="text" class="popup-content-item-input"></Field>
-                    </label>
-                </div>
+        <!-- meds modal -->
+        <Modal v-show="medsData" @close="closeModal">
+            <template #header>Medications and Supplements</template>
+            <template #content>
+                <Form @submit="addMedsData">
+                    <div class="popup-content-item meds-input bl-bg" ref="medsContainer">
+                        <Field v-for="(med, index) in patient.meds" :key="index" :name="`meds[${index}]`" :value="med"
+                            v-slot="{ field }">
+                            <input class="popup-content-item-input" type="text"
+                                placeholder="Medication Name, Dosage, Frequency" 
+                                v-bind="field" />
+                        </Field>
+                    </div>
 
-                <div class="popup-content-item bl-bg">
-                    <label class="label-w-icon">Weight
-                        <Field name="weight" type="text" class="popup-content-item-input"></Field>
-                    </label>
-                </div>
+                    <button type="button" class="meds-button" @click="addMeds">Add Medication or Supplement</button>
 
-                <div class="popup-content-item bl-bg">
-                    <label class="label-w-icon">Body Fat
-                        <Field name="bodyfat" type="text" class="popup-content-item-input"></Field>
-                    </label>
-                </div>
+                    <div class="popup-footer">
+                        <button type="reset" class="w-btn w-btn-close" @click="closeModal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="w-btn">
+                            Save
+                        </button>
+                    </div>
+                </Form>
+            </template>
+        </Modal>
+        <!-- health data modal -->
+        <Modal v-show="healthData" @close="closeModal">
+            <template #header>Add Health Data</template>
+            <template #content>
+                <Form @submit="addPatientHealthData" ref="healthDataForm">
+                    <div class="popup-content-item bl-bg">
+                        <label class="label-w-icon">Height
+                            <Field name="height" type="text" class="popup-content-item-input"></Field>
+                        </label>
+                    </div>
 
-                <div class="popup-content-item bl-bg">
-                    <label class="label-w-icon">BP
-                        <Field name="bp" type="text" class="popup-content-item-input"></Field>
-                    </label>
-                </div>
+                    <div class="popup-content-item bl-bg">
+                        <label class="label-w-icon">Weight
+                            <Field name="weight" type="text" class="popup-content-item-input"></Field>
+                        </label>
+                    </div>
 
-                <div class="popup-content-item bl-bg">
-                    <label class="label-w-icon">BMI
-                        <Field name="bmi" type="text" class="popup-content-item-input"></Field>
-                    </label>
-                </div>
+                    <div class="popup-content-item bl-bg">
+                        <label class="label-w-icon">Body Fat
+                            <Field name="bodyfat" type="text" class="popup-content-item-input"></Field>
+                        </label>
+                    </div>
 
-                <div class="popup-content-item bl-bg">
-                    <label class="label-w-icon">Resting HR
-                        <Field name="resting_hr" type="text" class="popup-content-item-input"></Field>
-                    </label>
-                </div>
+                    <div class="popup-content-item bl-bg">
+                        <label class="label-w-icon">BP
+                            <Field name="bp" type="text" class="popup-content-item-input"></Field>
+                        </label>
+                    </div>
 
-                <div class="popup-footer">
-                    <button type="reset" class="w-btn w-btn-close" @click="closeModal">
-                        Cancel
-                    </button>
-                    <button type="submit" class="w-btn">
-                        Save
-                    </button>
-                </div>
-            </form>
-        </template>
-    </Modal>
-    <!-- update parient info modal -->
-    <AddPatientModal v-show="updateModal" @close="closeModal"></AddPatientModal>
-    <!-- delete modal -->
-    <DeleteModal v-show="isDeleteModalVisible" @close="closeModal">
-        <template #content>
-            <h4>Delete this patient?</h4>
-            <p>You will not be able to recover it</p>
-        </template>
-    </DeleteModal>
-</div>
+                    <div class="popup-content-item bl-bg">
+                        <label class="label-w-icon">BMI
+                            <Field name="bmi" type="text" class="popup-content-item-input"></Field>
+                        </label>
+                    </div>
+
+                    <div class="popup-content-item bl-bg">
+                        <label class="label-w-icon">Resting HR
+                            <Field name="resting_hr" type="text" class="popup-content-item-input"></Field>
+                        </label>
+                    </div>
+
+                    <div class="popup-footer">
+                        <button type="reset" class="w-btn w-btn-close" @click="closeModal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="w-btn">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </template>
+        </Modal>
+        <!-- update parient info modal -->
+        <AddPatientModal v-show="updateModal" :patient="patient" v-on:update:patient="updatePatientInfo($event)"
+            @close="closeModal" @showMeds="showMeds()"></AddPatientModal>
+        <!-- delete modal -->
+        <DeleteModal v-show="isDeleteModalVisible" @close="closeModal">
+            <template #content>
+                <h4>Delete this patient?</h4>
+                <p>This will delete all data regarding this patient.</p>
+            </template>
+        </DeleteModal>
+    </div>
 </template>

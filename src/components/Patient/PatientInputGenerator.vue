@@ -1,5 +1,5 @@
 <template>
-    <ul>
+    <ul ref="list">
         <li v-bind:class="classattr ?? ''" v-for="{ as, name, label, classattr, children, ...attrs } in schema.fields"
             :key="name">
             <label :for="name">{{ label }}</label>

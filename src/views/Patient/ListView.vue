@@ -40,7 +40,6 @@ export default {
             isModalVisible: false,
             isScheduleModalVisible: false,
             isDeleteModalVisible: false,
-            medsData: false,
             count: 3,
             selected: '',
             options: [
@@ -127,15 +126,6 @@ export default {
             this.show = null;
             this.isDeleteModalVisible = false;
         },
-        showMedsModal() {
-            this.medsData = true;
-        },
-        closeMedsModal() {
-            this.medsData = false;
-        },
-        addMeds: function () {
-            if (this.count < 50) this.count++;
-        },
         getPatients() {
             axiosInstance.get('/patients')
                 .then(response => {
@@ -219,30 +209,7 @@ export default {
             </div>
         </div>
 
-        <AddPatientModal v-show="isModalVisible" :patient="selectedPatient" v-on:update:patient="updatePatientInfo($event)" @close="closeModal" @showMeds="showMedsModal()"></AddPatientModal>
-
-        <Modal v-show="medsData" @close="closeMedsModal">
-            <template #header>Medications and Supplements</template>
-            <template #content>
-                <form>
-                    <div class="popup-content-item meds-input bl-bg">
-                        <input class="popup-content-item-input" type="text" placeholder="Medication Name, Dosage, Frequency" :name="`text[${key - 1}]`" v-for="key in count"
-                            :key="key" :id="key" />
-                    </div>
-
-                    <button type="button" class="meds-button" @click="addMeds">Add Medication or Supplement</button>
-                    
-                    <div class="popup-footer">
-                        <button type="reset" class="w-btn w-btn-close" @click="closeMedsModal">
-                            Cancel
-                        </button>
-                        <button type="submit" class="w-btn">
-                            Save
-                        </button>
-                    </div>
-                </form>
-            </template>
-        </Modal>
+        <AddPatientModal v-show="isModalVisible" :patient="selectedPatient" v-on:update:patient="updatePatientInfo($event)" @close="closeModal"></AddPatientModal>
 
         <Modal v-show="isScheduleModalVisible" @close="closeScheduleModal">
             <template #header>Schedule</template>
