@@ -280,8 +280,9 @@ export default {
                                                     <FileIcon />
                                                 </div>
                                                 {{ att.name }}
-                                                <DownloadIcon />
+                                                <DownloadIcon class="attach-icon" />
                                             </div>
+
                                             <div class="message-list-time">{{ time(message.time) }}</div>
                                         </div>
                                     </li>

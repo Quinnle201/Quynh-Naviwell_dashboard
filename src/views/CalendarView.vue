@@ -182,7 +182,6 @@ export default {
     },
     methods: {
         searchPatient(term) {
-
             axiosInstance.post('patients/search', { name: term })
                 .then(res => {
                     this.searchList = []

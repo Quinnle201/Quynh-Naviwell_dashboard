@@ -96,7 +96,7 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, alertStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, medsData: false }
+        return { patient, alertStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, medsData: false, isChatModalVisible: false }
     },
     mounted() {
         const id = this.$route.params.id;
@@ -178,6 +178,9 @@ export default {
         showMeds() {
             this.medsData = true;
         },
+        showChatModal() {
+            this.isChatModalVisible = true;
+        },
         closeModal() {
             this.selectedEvent = null
             this.isModalVisible = false;
@@ -185,6 +188,7 @@ export default {
             this.isDeleteModalVisible = false;
             this.medsData = false;
             this.updateModal = false;
+            this.isChatModalVisible = false;
         },
         addMeds: function () {
             if (this.patient.meds.length < 50) this.patient.meds.push(undefined);
@@ -290,7 +294,7 @@ export default {
                     </div>
 
                     <div class="patient-profile-left-btn">
-                        <RoundBtn>
+                        <RoundBtn @click="showChatModal()">
                             <template #btn-icon>
                                 <ChatIcon width="30" height="30" />
                             </template>
@@ -579,7 +583,8 @@ export default {
         </Modal>
         <!-- update parient info modal -->
         <AddPatientModal v-show="updateModal" :patient="patient" v-on:update:patient="updatePatientInfo($event)"
-            @close="closeModal" @showMeds="showMeds()"></AddPatientModal>
+            @close="closeModal" @showMeds="showMeds()">
+        </AddPatientModal>
         <!-- delete modal -->
         <DeleteModal v-show="isDeleteModalVisible" @close="closeModal">
             <template #content>
@@ -587,5 +592,23 @@ export default {
                 <p>This will delete all data regarding this patient.</p>
             </template>
         </DeleteModal>
+        <!-- chat modal -->
+        <Modal v-show="isChatModalVisible" @close="closeModal">
+            <template #header>Send Message</template>
+            <template #content>
+                <div class="popup-content-item popup-content-item-textarea">
+                    <Field as="textarea" name="notes" placeholder="Type a message..."></Field>
+                </div>
+
+                <div class="popup-footer">
+                    <button type="reset" class="w-btn w-btn-close" @click="closeScheduleModal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-btn">
+                        Send
+                    </button>
+                </div>
+            </template>
+        </Modal>
     </div>
 </template>

@@ -7,6 +7,7 @@ import CheckIcon from '@/components/icons/IconCheck.vue'
 import CalendarIcon from '@/components/icons/IconCalendar.vue'
 import Modal from '@/components/Modals/Modal.vue'
 import DeleteModal from '@/components/Modals/DeleteModal.vue'
+import PatientAutocomplete from '@/components/Patient/PatientAutocomplete.vue'
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
@@ -25,7 +26,8 @@ export default {
         Field,
         CheckIcon,
         CalendarIcon,
-        DeleteModal
+        DeleteModal, 
+        PatientAutocomplete
     },
     mixins: [
         userMixin
@@ -40,8 +42,10 @@ export default {
             isModalVisible: false,
             isScheduleModalVisible: false,
             isDeleteModalVisible: false,
+            isChatModalVisible: false, 
             count: 3,
             selected: '',
+            searchList: [], 
             options: [
                 {
                     text: 'Last visit', value: 'Last visit'
@@ -126,6 +130,14 @@ export default {
             this.show = null;
             this.isDeleteModalVisible = false;
         },
+        showChatModal() {
+            this.show = null;
+            this.isChatModalVisible = true;
+        },
+        closeChatModal() {
+            this.show = null;
+            this.isChatModalVisible = false;
+        },
         getPatients() {
             axiosInstance.get('/patients')
                 .then(response => {
@@ -138,7 +150,17 @@ export default {
         updatePatientInfo(patient) {
             const index = _findIndex(this.patients, ['id', patient.id])
             this.patients.splice(index, 1, patient)
-        }
+        }, 
+        searchPatient(term) {
+            axiosInstance.post('patients/search', { name: term })
+                .then(res => {
+                    this.searchList = []
+                    res.data.data.forEach(pt => {
+                        this.searchList.push(pt)
+                    });
+
+                })
+        },
     },
 };
 </script>
@@ -200,7 +222,7 @@ export default {
                             <td class="patients-details">
                                 <img @click="showDetails(index)" src="@/assets/img/details-icon.png" alt="Details Icon" />
                                 <Transition>
-                                    <PatientDetails v-if="show === index" @update="showModal(patient)" @calendar="showScheduleModal(patient)" @close="closeDetails" @delete="showDeleteModal" />
+                                    <PatientDetails v-if="show === index" @update="showModal(patient)" @chat="showChatModal(patient)" @calendar="showScheduleModal(patient)" @close="closeDetails" @delete="showDeleteModal" />
                                 </Transition>
                             </td>
                         </tr>
@@ -210,6 +232,31 @@ export default {
         </div>
 
         <AddPatientModal v-show="isModalVisible" :patient="selectedPatient" v-on:update:patient="updatePatientInfo($event)" @close="closeModal"></AddPatientModal>
+
+        <Modal v-show="isChatModalVisible" @close="closeChatModal">
+            <template #header>Send Message</template>
+            <template #content>
+                <div class="popup-content-item popup-content-item--search">
+                    <label>Patient Name</label>
+                    <PatientAutocomplete :patient="selectedEvent?.content" :patients="searchList"
+                        @search="searchPatient" />
+                </div>
+
+                <div class="popup-content-item popup-content-item-textarea">
+                    <label for="textarea">Message</label>
+                    <Field as="textarea" name="notes" placeholder="Type a message..."></Field>
+                </div>
+
+                <div class="popup-footer">
+                    <button type="reset" class="w-btn w-btn-close" @click="closeScheduleModal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-btn">
+                        Send
+                    </button>
+                </div>
+            </template>
+        </Modal>
 
         <Modal v-show="isScheduleModalVisible" @close="closeScheduleModal">
             <template #header>Schedule</template>

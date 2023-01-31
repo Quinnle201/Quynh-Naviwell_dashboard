@@ -801,6 +801,10 @@ body {
   color: #000000;
 }
 
+.popup-content-item.popup-content-item-textarea textarea {
+  height: 110px;
+}
+
 .popup-content-item--select {
   margin-bottom: 16px;
 }
@@ -2132,7 +2136,7 @@ ul.messages-list {
   padding-right: 16px;
   flex-direction: column;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   list-style: none;
 }
 
@@ -2176,6 +2180,7 @@ ul.messages-list li .message-list-text {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  align-items: end;
 }
 
 ul.messages-list li.physician-message .message-list-text {
@@ -2200,16 +2205,14 @@ ul.messages-list li.physician-message .message-list-bubble.attach {
 }
 
 ul.messages-list li .message-list-bubble.attach {
+  width: max-content;
   padding: 9px 22px;
   display: flex;
   align-items: center;
-}
-
-ul.messages-list li .message-list-bubble.attach a {
-  margin-left: 16px;
   font-size: 16px;
   font-weight: 400;
   color: #646464;
+  cursor: pointer;
 }
 
 ul.messages-list li .message-list-bubble.attach svg {
@@ -2217,10 +2220,7 @@ ul.messages-list li .message-list-bubble.attach svg {
 }
 
 ul.messages-list li .message-list-bubble.attach .attach-icon {
-  margin-left: auto;
-}
-
-ul.messages-list li .message-list-bubble.attach .attach-icon svg {
+  margin-left: 16px;
   border-left: 1px solid #D9D9D9;
   border-radius: 0;
   padding-left: 16px;
@@ -2231,6 +2231,7 @@ ul.messages-list li .message-list-bubble.attach .download-icon {
   background-color: var(--primary);
   width: 30px;
   height: 30px;
+  margin-right: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2514,7 +2515,7 @@ ul.diet-grid-item-content-list li:before {
 }
 
 .add-diet-wrapper .add-button {
-  /* margin-top: auto; */
+  width: fit-content;
   margin-bottom: 16px;
   justify-content: flex-start;
 }

@@ -21,7 +21,7 @@ export default {
 <template>
     <div>
         <div class="details-inner">
-            <RoundBtn>
+            <RoundBtn @click="$emit('chat')">
                 <template #btn-icon>
                     <ChatIcon width="30" height="30" />
                 </template>
