@@ -2344,28 +2344,35 @@ ul.messages-list li.physician-message .message-list-time {
   border-radius: 16px;
 }
 
-.diet-grid-item-content h6 {
+.diet-grid-item-content {
   max-width: 310px;
+}
+
+.diet-grid-item-content h6 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
   text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
   font-size: 18px;
 }
 
 ul.diet-grid-item-content-list {
   list-style: none;
-  max-width: 310px;
   margin-bottom: 3px;
-  display: flex;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 ul.diet-grid-item-content-list li {
-  margin-right: 12px;
+  display: inline-flex;
+  margin-right: 10px;
   padding-left: 8px;
   position: relative;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+  font-size: 12px;
 }
 
 ul.diet-grid-item-content-list li:before {
@@ -2411,7 +2418,6 @@ ul.diet-grid-item-content-list li:before {
 }
 
 .add-diet {
-  /* max-width: 30%; */
   display: flex;
   flex-direction: column;
   margin-bottom: 16px;
