@@ -2441,7 +2441,7 @@ ul.diet-grid-item-content-list li:before {
 .add-diet textarea {
   height: 42px;
   margin-bottom: 0;
-  padding: 4px 10px;
+  padding: 10px 16px;
   display: block;
   font-size: 16px;
   border-radius: 16px;
@@ -2450,9 +2450,32 @@ ul.diet-grid-item-content-list li:before {
   box-shadow: 2px 4px 10px rgb(0 0 0 / 1%);
 }
 
+.add-diet input::placeholder, 
+.add-diet textarea::placeholder {
+  font-size: 14px;
+  opacity: .6;
+}
+
 .add-diet textarea {
-  height: 72px;
+  height: 90px;
   resize: none;
+}
+
+.add-diet textarea::-webkit-scrollbar {
+  width: 8px;
+  height: 16px;
+  padding: 20px;
+  margin: 20px;
+}
+
+.add-diet textarea::-webkit-scrollbar-track {
+  background-color: #DBDBDB;
+  border-radius: 8px;
+}
+
+.add-diet textarea::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: 8px;
 }
 
 /* .add-diet-head {} */
@@ -2471,6 +2494,10 @@ ul.diet-grid-item-content-list li:before {
 
 .add-diet-head .add-diet input{
   max-width: 324px;
+}
+
+.steps-wrapper .add-diet-day-grid {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .add-diet-day-grid {

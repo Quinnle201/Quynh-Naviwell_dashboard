@@ -6,6 +6,20 @@ export default {
     components: {
         AddIcon, 
         CameraIcon
+    },
+    data() {
+        return {
+            ingredients: 3, 
+            steps: 3,
+        }
+    },
+    methods: {
+        addIngredient: function () {
+            if (this.ingredients < 10) this.ingredients++;
+        }, 
+        addStep: function () {
+            if (this.steps < 6) this.steps++;
+        }
     }
 }
 </script>
@@ -29,17 +43,17 @@ export default {
             <div class="add-diet-inner">
                 <div class="add-diet">
                     <label for="diet">Recipe Title</label>
-                    <input name="diet" type="text" />
+                    <input name="diet" type="text" placeholder="e.g. Lemon chicken" />
                 </div>
                 
                 <div class="add-diet">
-                    <label for="diet">Portions</label>
-                    <input name="diet" type="text" />
+                    <label for="diet">Servings</label>
+                    <input name="diet" type="text" placeholder="e.g. 6" />
                 </div>
                 
                 <div class="add-diet">
-                    <label for="duration">Cooking Time</label>
-                    <input name="duration" type="text" />
+                    <label for="duration">Cook Time</label>
+                    <input name="duration" type="text" placeholder="e.g. 20 min." />
                 </div>
             </div>
         </div>
@@ -47,56 +61,32 @@ export default {
         <div>
             <div class="add-diet-day-grid-item title">Add Ingredients</div>
             <div class="add-diet-day-grid">
-                <div class="add-diet-day-grid-item">
+                <div class="add-diet-day-grid-item" v-for="ingredient in ingredients" :key="ingredient" :id="ingredient">
                     <div class="add-diet">
                         <label>Ingredient</label>
-                        <input type="text" />
-                    </div>
-                </div>
-                <div class="add-diet-day-grid-item">
-                    <div class="add-diet">
-                        <label>Ingredient</label>
-                        <input type="text" />
-                    </div>
-                </div>
-                <div class="add-diet-day-grid-item">
-                    <div class="add-diet">
-                        <label>Ingredient</label>
-                        <input type="text" />
+                        <input type="text" placeholder="e.g. 200gr quinoa" />
                     </div>
                 </div>
             </div>
             <div class="add-button">
                 <AddIcon />
-                <button type="button">Add Ingredient</button>
+                <button type="button" @click="addIngredient">Add Ingredient</button>
             </div>
         </div>
 
-        <div>
+        <div class="steps-wrapper">
             <div class="add-diet-day-grid-item title">How to cook</div>
             <div class="add-diet-day-grid">
-                <div class="add-diet-day-grid-item">
+                <div class="add-diet-day-grid-item" v-for="(step, index) in steps" :key="step" :id="step">
                     <div class="add-diet">
-                        <label>Step 1</label>
-                        <textarea></textarea>
-                    </div>
-                </div>
-                <div class="add-diet-day-grid-item">
-                    <div class="add-diet">
-                        <label>Step 2</label>
-                        <textarea></textarea>
-                    </div>
-                </div>
-                <div class="add-diet-day-grid-item">
-                    <div class="add-diet">
-                        <label>Step 3</label>
-                        <textarea></textarea>
+                        <label>Step {{ index + 1 }}</label>
+                        <textarea placeholder="e.g. Bring 1 cup water to a boil in a pot, then add the quinoa. Cook for 15 minutes, until water is absorbed. Take off the heat and let cool."></textarea>
                     </div>
                 </div>
             </div>
             <div class="add-button">
                 <AddIcon />
-                <button type="button">Add Step</button>
+                <button type="button" @click="addStep">Add Step</button>
             </div>
         </div>
 
