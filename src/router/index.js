@@ -18,6 +18,7 @@ import MessagesView from '@/views/MessagesView.vue'
 import DietView from '@/views/Diet/DietView.vue'
 import AddDietView from '@/views/Diet/AddDietView.vue'
 import AddRecipeView from '@/views/Diet/AddRecipeView.vue'
+import SettingsView from '@/views/SettingsView.vue'
 
 
 const router = createRouter({
@@ -112,6 +113,11 @@ const router = createRouter({
           path: "messages",
           name: "messages",
           component: MessagesView
+        },
+        {
+          path: "settings",
+          name: "settings",
+          component: SettingsView
         }
       ]
     },
