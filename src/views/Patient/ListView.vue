@@ -256,31 +256,6 @@ export default {
 
         <AddPatientModal v-show="isModalVisible" :patient="selectedPatient"
             v-on:update:patient="updatePatientInfo($event)" @close="closeModal"></AddPatientModal>
-        <!-- 
-        <Modal v-show="isChatModalVisible" @close="closeChatModal">
-            <template #header>Send Message</template>
-            <template #content>
-                <div class="popup-content-item popup-content-item--search">
-                    <label>Patient Name</label>
-                    <PatientAutocomplete :patient="selectedEvent?.content" :patients="searchList"
-                        @search="searchPatient" />
-                </div>
-
-                <div class="popup-content-item popup-content-item-textarea">
-                    <label for="textarea">Message</label>
-                    <Field as="textarea" name="notes" placeholder="Type a message..."></Field>
-                </div>
-
-                <div class="popup-footer">
-                    <button type="reset" class="w-btn w-btn-close" @click="closeScheduleModal">
-                        Cancel
-                    </button>
-                    <button type="submit" class="w-btn">
-                        Send
-                    </button>
-                </div>
-            </template>
-        </Modal> -->
 
         <Modal v-show="isChatModalVisible" @close="closeChatModal">
             <template #header>Send Message  {{ selectedPatient ? 'to ' + userName(selectedPatient.user) : '' }}</template>
