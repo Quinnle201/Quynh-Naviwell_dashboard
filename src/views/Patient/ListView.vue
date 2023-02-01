@@ -26,7 +26,7 @@ export default {
         Field,
         CheckIcon,
         CalendarIcon,
-        DeleteModal, 
+        DeleteModal,
         PatientAutocomplete
     },
     mixins: [
@@ -42,10 +42,10 @@ export default {
             isModalVisible: false,
             isScheduleModalVisible: false,
             isDeleteModalVisible: false,
-            isChatModalVisible: false, 
+            isChatModalVisible: false,
             count: 3,
             selected: '',
-            searchList: [], 
+            searchList: [],
             options: [
                 {
                     text: 'Last visit', value: 'Last visit'
@@ -90,20 +90,20 @@ export default {
             values.start_time = new Date(`${selectedDay}T${values.from}`);
             values.finish_time = new Date(`${selectedDay}T${values.to}`);
             axiosInstance.post('/appointments', values)
-                    .then(response => {
-                        this.closeScheduleModal()
-                        this.alertStore.success('Appointment set')
-                    })
-                    .catch(error => {
-                        this.alertStore.error(error.response.data.message)
-                    });
+                .then(response => {
+                    this.closeScheduleModal()
+                    this.alertStore.success('Appointment set')
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                });
         },
         showScheduleModal(patient) {
             this.show = null
             this.isScheduleModalVisible = true
             this.$refs.visitForm.setFieldValue('patient_id', patient.id)
         },
-        closeScheduleModal(){
+        closeScheduleModal() {
             this.isScheduleModalVisible = false
             this.$refs.visitForm.setValues({})
         },
@@ -130,13 +130,15 @@ export default {
             this.show = null;
             this.isDeleteModalVisible = false;
         },
-        showChatModal() {
+        showChatModal(patient) {
             this.show = null;
             this.isChatModalVisible = true;
+            this.selectedPatient = patient
         },
         closeChatModal() {
             this.show = null;
             this.isChatModalVisible = false;
+            this.selectedPatient = null
         },
         getPatients() {
             axiosInstance.get('/patients')
@@ -150,7 +152,7 @@ export default {
         updatePatientInfo(patient) {
             const index = _findIndex(this.patients, ['id', patient.id])
             this.patients.splice(index, 1, patient)
-        }, 
+        },
         searchPatient(term) {
             axiosInstance.post('patients/search', { name: term })
                 .then(res => {
@@ -161,6 +163,22 @@ export default {
 
                 })
         },
+        sendMessage(values) {
+            const formBody = {
+                attachments: [],
+                message: values.message
+            }
+            axiosInstance.post("/messages", { body: formBody, patient_id: this.selectedPatient.id })
+                .then(response => {
+                    this.$refs.messageForm.setValues({})
+                    this.alertStore.success('Message sent.');
+                    this.closeChatModal()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        }
     },
 };
 </script>
@@ -170,7 +188,7 @@ export default {
         <div class="layout-wrapper">
             <h3>My Patients</h3>
         </div>
-        
+
         <div class="patients-wrapper page-bg">
             <div class="patients-top-wrapper">
                 <div class="patient-search-wrapper">
@@ -180,7 +198,7 @@ export default {
                             <SearchIcon />
                         </label>
                     </form>
-                    
+
                     <select v-model="selected" class="patient-select">
                         <option disabled value="">Sort</option>
                         <option v-for="option in options" :value="option.value">
@@ -188,7 +206,7 @@ export default {
                         </option>
                     </select>
                 </div>
-                
+
                 <div class="add-button" @click="showModal(null)">
                     <AddIcon />
                     <button type="button">Add New Patient</button>
@@ -210,8 +228,10 @@ export default {
                         <tr v-for="(patient, index) in patients" :key="patient.id">
                             <td class="patients-img">
                                 <img src="@/assets/img/image.png" alt="">
-                                <RouterLink :to="{ name: 'patient', params: { id: patient.id}}"><span>{{ userName(patient.user) }}</span></RouterLink>
-                                
+                                <RouterLink :to="{ name: 'patient', params: { id: patient.id } }"><span>{{
+                                    userName(patient.user)
+                                }}</span></RouterLink>
+
                             </td>
                             <td>{{ age(patient) }}</td>
                             <td>December 22, 2022</td>
@@ -220,9 +240,12 @@ export default {
                                 <!-- <div class="label-status complete">Complete</div> -->
                             </td>
                             <td class="patients-details">
-                                <img @click="showDetails(index)" src="@/assets/img/details-icon.png" alt="Details Icon" />
+                                <img @click="showDetails(index)" src="@/assets/img/details-icon.png"
+                                    alt="Details Icon" />
                                 <Transition>
-                                    <PatientDetails v-if="show === index" @update="showModal(patient)" @chat="showChatModal(patient)" @calendar="showScheduleModal(patient)" @close="closeDetails" @delete="showDeleteModal" />
+                                    <PatientDetails v-if="show === index" @update="showModal(patient)"
+                                        @chat="showChatModal(patient)" @calendar="showScheduleModal(patient)"
+                                        @close="closeDetails" @delete="showDeleteModal" />
                                 </Transition>
                             </td>
                         </tr>
@@ -231,8 +254,9 @@ export default {
             </div>
         </div>
 
-        <AddPatientModal v-show="isModalVisible" :patient="selectedPatient" v-on:update:patient="updatePatientInfo($event)" @close="closeModal"></AddPatientModal>
-
+        <AddPatientModal v-show="isModalVisible" :patient="selectedPatient"
+            v-on:update:patient="updatePatientInfo($event)" @close="closeModal"></AddPatientModal>
+        <!-- 
         <Modal v-show="isChatModalVisible" @close="closeChatModal">
             <template #header>Send Message</template>
             <template #content>
@@ -256,6 +280,26 @@ export default {
                     </button>
                 </div>
             </template>
+        </Modal> -->
+
+        <Modal v-show="isChatModalVisible" @close="closeChatModal">
+            <template #header>Send Message  {{ selectedPatient ? 'to ' + userName(selectedPatient.user) : '' }}</template>
+            <template #content>
+                <Form @submit="sendMessage" ref="messageForm">
+                    <div class="popup-content-item popup-content-item-textarea">
+                        <Field as="textarea" name="message" placeholder="Type a message..."></Field>
+                    </div>
+
+                    <div class="popup-footer">
+                        <button type="reset" class="w-btn w-btn-close" @click="closeScheduleModal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="w-btn">
+                            Send
+                        </button>
+                    </div>
+                </Form>
+            </template>
         </Modal>
 
         <Modal v-show="isScheduleModalVisible" @close="closeScheduleModal">
@@ -267,7 +311,7 @@ export default {
                     <div class="type-select-item">Personal</div>
                 </div>
                 <Form @submit="submitVisit" ref="visitForm">
-                    <Field type="hidden" name="patient_id"/>
+                    <Field type="hidden" name="patient_id" />
                     <div class="popup-content-item visit-type">
                         <label class="checkbox path">
                             <Field type="radio" name="visit_type" value="initial"></Field>

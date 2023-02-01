@@ -6,6 +6,9 @@ import FileIcon from '@/components/icons/IconFile.vue'
 import DownloadIcon from '@/components/icons/IconDownload.vue'
 import PatientDetails from '@/components/Patient/PatientDetails.vue'
 import { Form, Field } from 'vee-validate';
+import Modal from '@/components/Modals/Modal.vue'
+import AddIcon from '@/components/icons/IconAdd.vue'
+import PatientAutocomplete from '@/components/Patient/PatientAutocomplete.vue'
 
 import { axiosInstance, downloadFile, uploadFile } from '@/helpers';
 import { useAlertStore } from '@/stores';
@@ -23,7 +26,10 @@ export default {
         DownloadIcon,
         PatientDetails,
         Form,
-        Field
+        Field,
+        AddIcon,
+        PatientAutocomplete,
+        Modal
     },
     mixins: [
         userMixin,
@@ -33,9 +39,11 @@ export default {
         return {
             alertStore,
             isModalVisible: false,
+            isChatModalVisible: false,
             list: [],
             selectedPatient: null,
             messages: [],
+            searchList: [],
         }
     },
     computed: {
@@ -95,6 +103,23 @@ export default {
                 e.stopPropagation()
             }
         },
+        showChatModal() {
+            this.isChatModalVisible = true;
+        },
+        closeChatModal() {
+            this.isChatModalVisible = false;
+            this.$refs.messageForm.setValues({})
+        },
+        searchPatient(term) {
+            axiosInstance.post('patients/search', { name: term })
+                .then(res => {
+                    this.searchList = []
+                    res.data.data.forEach(pt => {
+                        this.searchList.push(pt)
+                    });
+
+                })
+        },
         populateMessages(responseMessage) {
             this.messages.push({
                 id: responseMessage.id,
@@ -152,6 +177,22 @@ export default {
             this.alertStore.success(`Downloading ${file.name}`)
             downloadFile(file, `${this.selectedPatient.id}/${file.ref}`, 'messages')
         },
+        sendNewMessage(values) {
+            const formBody = {
+                attachments: [],
+                message: values.message
+            }
+            axiosInstance.post("/messages", { body: formBody, patient_id: values.patient_id })
+                .then(response => {
+                    console.log(response.data)
+                    this.alertStore.success('Message sent.');
+                    this.closeChatModal()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
         submitMessage(values) {
 
             // No values specified
@@ -199,6 +240,11 @@ export default {
     <div class="page-wrapper">
         <div class="layout-wrapper">
             <h3>Messages</h3>
+        </div>
+
+        <div class="add-button" @click="showChatModal">
+            <AddIcon />
+            <button type="button">Start a conversation</button>
         </div>
 
         <div class="chat-wrapper page-bg">
@@ -312,5 +358,31 @@ export default {
                 </div>
             </div>
         </div>
+
+        <Modal v-show="isChatModalVisible" @close="closeChatModal">
+            <template #header>Send Message</template>
+            <template #content>
+                <Form @submit="sendNewMessage" ref="messageForm">
+                    <div class="popup-content-item popup-content-item--search">
+                        <label>Patient Name</label>
+                        <PatientAutocomplete :patients="searchList" @search="searchPatient" />
+                    </div>
+
+                    <div class="popup-content-item popup-content-item-textarea">
+                        <label for="textarea">Message</label>
+                        <Field as="textarea" name="message" placeholder="Type a message..."></Field>
+                    </div>
+
+                    <div class="popup-footer">
+                        <button type="reset" class="w-btn w-btn-close" @click="closeScheduleModal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="w-btn">
+                            Send
+                        </button>
+                    </div>
+                </Form>
+            </template>
+        </Modal>
     </div>
 </template>

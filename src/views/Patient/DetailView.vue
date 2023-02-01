@@ -128,7 +128,7 @@ export default {
         addPatientHealthData(values) {
             const id = this.patient.id
             this.closeModal()
-            
+
             values.height = values.height_ft + "'" + (values.height_in ? values.height_in : '0') + '"'
             values.bmi = this.bmi(values)
             axiosInstance.post(`/patients/${id}/health-data`, values)
@@ -211,6 +211,22 @@ export default {
                     this.alertStore.error(error.response.data.message)
                 });
         },
+        sendMessage(values) {
+            const formBody = {
+                attachments: [],
+                message: values.message
+            }
+            axiosInstance.post("/messages", { body: formBody, patient_id: this.patient.id })
+                .then(response => {
+                    this.$refs.messageForm.setValues({})
+                    this.alertStore.success('Message sent.');
+                    this.closeModal()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                }); 
+        }
     },
     computed: {
         isLoaded() {
@@ -243,16 +259,16 @@ export default {
         },
         height() {
             var height = this.patient.current_health_data?.height
-            if(!height) {
+            if (!height) {
                 return ['', '']
             }
             height = height.split("'")
             return height
         },
-        heightft(){
+        heightft() {
             return this.height[0].replace(/[^0-9.]/g, '');
         },
-        heightin(){
+        heightin() {
             return this.height[1].replace(/[^0-9.]/g, '');
         }
     }
@@ -533,9 +549,11 @@ export default {
                     <div v-show="!patient.current_health_data?.height" class="popup-content-item bl-bg">
                         <label class="label-w-icon">Height</label>
                         <div style="display:inline-flex">
-                            <Field name="height_ft" type="text" class="popup-content-item-input" :value="heightft"></Field>
+                            <Field name="height_ft" type="text" class="popup-content-item-input" :value="heightft">
+                            </Field>
                             <label style="margin: 0 10px 0 0;">ft</label>
-                            <Field name="height_in" type="text" class="popup-content-item-input" :value="heightin"></Field>
+                            <Field name="height_in" type="text" class="popup-content-item-input" :value="heightin">
+                            </Field>
                             <label style="margin: 0 10px 0 0;">in</label>
                         </div>
                     </div>
@@ -560,7 +578,8 @@ export default {
 
                     <div class="popup-content-item bl-bg">
                         <label class="label-w-icon">BMI
-                            <input name="bmi" type="text" class="popup-content-item-input" :value="bmi(values)" disabled/>
+                            <input name="bmi" type="text" class="popup-content-item-input" :value="bmi(values)"
+                                disabled />
                         </label>
                     </div>
 
@@ -596,18 +615,20 @@ export default {
         <Modal v-show="isChatModalVisible" @close="closeModal">
             <template #header>Send Message</template>
             <template #content>
-                <div class="popup-content-item popup-content-item-textarea">
-                    <Field as="textarea" name="notes" placeholder="Type a message..."></Field>
-                </div>
+                <Form @submit="sendMessage" ref="messageForm">
+                    <div class="popup-content-item popup-content-item-textarea">
+                        <Field as="textarea" name="message" placeholder="Type a message..."></Field>
+                    </div>
 
-                <div class="popup-footer">
-                    <button type="reset" class="w-btn w-btn-close" @click="closeScheduleModal">
-                        Cancel
-                    </button>
-                    <button type="submit" class="w-btn">
-                        Send
-                    </button>
-                </div>
+                    <div class="popup-footer">
+                        <button type="reset" class="w-btn w-btn-close" @click="closeScheduleModal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="w-btn">
+                            Send
+                        </button>
+                    </div>
+                </Form>
             </template>
         </Modal>
     </div>
