@@ -240,11 +240,11 @@ export default {
     <div class="page-wrapper">
         <div class="layout-wrapper">
             <h3>Messages</h3>
-        </div>
 
-        <div class="add-button" @click="showChatModal">
-            <AddIcon />
-            <button type="button">Start a conversation</button>
+            <div class="add-button" @click="showChatModal">
+                <AddIcon />
+                <button type="button">Start a conversation</button>
+            </div>
         </div>
 
         <div class="chat-wrapper page-bg">
