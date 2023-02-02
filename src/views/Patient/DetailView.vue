@@ -548,13 +548,13 @@ export default {
                 <Form @submit="addPatientHealthData" ref="healthDataForm" v-slot="{ values }">
                     <div v-show="!patient.current_health_data?.height" class="popup-content-item bl-bg">
                         <label class="label-w-icon">Height</label>
-                        <div style="display:inline-flex">
-                            <Field name="height_ft" type="text" class="popup-content-item-input" :value="heightft">
+                        <div style="display:inline-flex; margin-top: 6px;">
+                            <Field name="height_ft" type="number" class="popup-content-item-input" :value="heightft">
                             </Field>
-                            <label style="margin: 0 10px 0 0;">ft</label>
-                            <Field name="height_in" type="text" class="popup-content-item-input" :value="heightin">
+                            <label style="margin: auto 0 auto 3px;">ft</label>
+                            <Field name="height_in" type="number" class="popup-content-item-input" :value="heightin" style="margin-left: 16px;">
                             </Field>
-                            <label style="margin: 0 10px 0 0;">in</label>
+                            <label style="margin: auto 0 auto 3px;">in</label>
                         </div>
                     </div>
 

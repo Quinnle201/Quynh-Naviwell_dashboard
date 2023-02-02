@@ -114,7 +114,10 @@ export default {
 
                         <div class="add-diet">
                             <label for="duration">Cook Time</label>
-                            <Field name="cook_time" type="text" placeholder="e.g. 20 min." />
+                            <div class="add-diet-fl">
+                                <Field name="cook_time" type="number" placeholder="e.g. 20" />
+                                <span>min.</span>
+                            </div>
                         </div>
                     </div>
                 </div>

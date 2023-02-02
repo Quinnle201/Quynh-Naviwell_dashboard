@@ -105,7 +105,7 @@ export default {
 
                         <div class="add-diet">
                             <label for="duration">Diet Duration</label>
-                            <input disabled type="text" :value="days + ' days'" />
+                            <input disabled type="text" :value="days + ' days'" size="5" />
                         </div>
                     </div>
                 </div>

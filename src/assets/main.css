@@ -2424,6 +2424,43 @@ ul.diet-grid-item-content-list li:before {
   margin-bottom: 16px;
 }
 
+.add-diet-head .add-diet input[disabled] {
+  background-color: #FFFFFF;
+  max-width: fit-content;
+  width: 100%;
+  font-weight: 500;
+}
+
+.add-diet-head .add-diet input[type="number"] {
+  max-width: fit-content;
+  width: 80px;
+  position: relative;
+  text-align: center;
+}
+
+.add-diet-head .add-diet .add-diet-fl {
+  display: flex;
+  align-items: center;
+  align-items: flex-end;
+}
+
+.add-diet-head .add-diet .add-diet-fl span {
+  margin-left: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 .add-diet-inner {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

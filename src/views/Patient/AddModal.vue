@@ -238,13 +238,35 @@ export default {
         const patientInfo = {
             fields: [
                 {
-                    label: 'Height',
+                    label: 'Health',
                     name: 'health-data.height',
-                    as: 'input',
+                    as: 'div',
+                    classattr: 'heightInput',
                     model: 'current_health_data.height',
                     rules: Yup.string().nullable()
-                        .matches(/^(\d+)'(\d+)(?:''|")$/, { message: 'Should match following pattern: 5\'7"', excludeEmptyString: true })
-
+                        .matches(/^(\d+)'(\d+)(?:''|")$/, { message: 'Should match following pattern: 5\'7"', excludeEmptyString: true }),
+                        children: [
+                        {
+                            name: 'health-data.height_ft',
+                            type: 'number',
+                            tag: 'input',
+                        },
+                        {
+                            text: 'ft',
+                            for: 'health-data.height_ft',
+                            tag: 'label',
+                        },
+                        {
+                            name: 'health-data.height_in',
+                            type: 'number',
+                            tag: 'input',
+                        },
+                        {
+                            text: 'in',
+                            for: 'health-data.height_in',
+                            tag: 'label',
+                        },
+                    ],
                 },
                 {
                     label: 'Weight',
@@ -452,7 +474,7 @@ export default {
                             <div class="add-patient-card-title">Patient Information</div>
 
                             <div class="addpatient-card-content">
-                                <PatientInputGenerator :schema="patientInfo" />
+                                <PatientInputGenerator :schema="patientInfo" class="patientInfo" />
 
                                 <div class="addpatient-card-content-title">Current Medications and Supplements</div>
 
@@ -668,5 +690,18 @@ export default {
     font-weight: 400;
     line-height: 14px;
     color: #0258BC;
+}
+
+.heightInput div {
+    display: flex;
+    margin-right: -16px;
+}
+
+.heightInput div input {
+    margin-right: 3px;
+}
+
+.heightInput div label {
+    margin: auto 16px auto 0;
 }
 </style>
