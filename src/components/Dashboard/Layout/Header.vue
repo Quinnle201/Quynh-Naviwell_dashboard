@@ -18,7 +18,7 @@
                     </div>
                 </div>
             <div class="d-flex flex-row gap-1 user-block">
-                <img src="https://github.com/mdo.png" alt="mdo" width="48" height="48" class="rounded-circle">
+                <img :src="photo_src" alt="profile_photo" width="48" height="48" class="rounded-circle">
                 <div class="text-center">
                     <a href="#" class="nav-link link-dark px-2 active" aria-current="page">{{ userName(authStore.user) }}</a>
                     <a href="#" @click="authStore.logout()" class="link-secondary text-decoration-none">Log Out</a>
@@ -32,6 +32,7 @@
     import CurrentTime from '@/components/CurrentTime.vue';
     import userMixin from '@/mixins/user.js'
     import { useAuthStore } from '@/stores';
+    import { getFileUrlFromRef } from '@/helpers';
 
     export default {
         mixins: [
@@ -50,10 +51,21 @@
                 let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
                 return currentDate;
             },
+            async getPhotoLink() {
+                if(this.authStore.user.image == null) {
+                    this.photo_src = (await import('@/assets/img/avatar.webp')).default;
+                    return
+                }
+                this.photo_src = await getFileUrlFromRef(`users/${this.authStore.user.id}/photos`, this.authStore.user.image);
+            },
         },
         data() {
             const authStore = useAuthStore();
-            return {authStore}
+            const photo_src = null
+            return {authStore, photo_src}
+        },
+        mounted() {
+            this.getPhotoLink()
         }
     };
 </script>

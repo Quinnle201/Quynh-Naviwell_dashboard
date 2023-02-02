@@ -16,7 +16,7 @@ axiosFileInstance.interceptors.request.use((request) => {
     return request
 })
 
-async function getFileUrlFromRef(type, ref) {
+export async function getFileUrlFromRef(type, ref) {
     const result = await axiosFileInstance.get(`/${type}/${ref}`)
     return result.data.body
 }
