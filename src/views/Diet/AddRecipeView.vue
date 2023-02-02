@@ -1,25 +1,55 @@
 <script>
 import AddIcon from '@/components/icons/IconAdd.vue'
 import CameraIcon from '@/components/icons/IconCamera.vue'
+import { Form, Field } from 'vee-validate';
+import { axiosInstance } from '@/helpers';
+import { useAlertStore } from '@/stores';
 
 export default {
     components: {
         AddIcon,
-        CameraIcon
+        CameraIcon,
+        Form,
+        Field
     },
     data() {
+        const alertStore = useAlertStore()
         return {
-            ingredients: 3,
+            alertStore,
+            ingredients: 2,
             steps: 3,
         }
     },
     methods: {
+        close(){ 
+            this.$router.back()
+        },
         addIngredient: function () {
-            if (this.ingredients < 10) this.ingredients++;
+            if (this.ingredients < 15) this.ingredients++;
         },
         addStep: function () {
-            if (this.steps < 6) this.steps++;
-        }
+            if (this.steps < 20) this.steps++;
+        },
+        addRecipe(values) {
+            //upload a photo   
+            var formData = {
+                title: values.title,
+                servings: values.servings,
+                cook_time: values.cook_time,
+                image: 'imgrefhere',
+                ingredients: values.ingredient,
+                steps: values.step
+            }
+            axiosInstance.post('/recipes', formData)
+                .then(response => {
+                    this.alertStore.success("Recipe created!")
+                    this.$router.back()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
     }
 }
 </script>
@@ -32,74 +62,76 @@ export default {
 
 
         <div class="add-diet-wrapper page-bg">
-            <div class="add-diet-head">
-                <div class="add-diet upload-photo">
-                    <label>Upload Photo</label>
-                    <div>
-                        <CameraIcon />
-                    </div>
-                </div>
-
-                <div class="add-diet-inner">
-                    <div class="add-diet">
-                        <label for="diet">Recipe Title</label>
-                        <input name="diet" type="text" placeholder="e.g. Lemon chicken" />
+            <Form @submit="addRecipe">
+                <div class="add-diet-head">
+                    <div class="add-diet upload-photo">
+                        <label>Upload Photo</label>
+                        <div>
+                            <CameraIcon />
+                        </div>
                     </div>
 
-                    <div class="add-diet">
-                        <label for="diet">Servings</label>
-                        <input name="diet" type="text" placeholder="e.g. 6" />
-                    </div>
-
-                    <div class="add-diet">
-                        <label for="duration">Cook Time</label>
-                        <input name="duration" type="text" placeholder="e.g. 20 min." />
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="add-diet-day-grid-item title">Add Ingredients</div>
-                <div class="add-diet-day-grid">
-                    <div class="add-diet-day-grid-item" v-for="ingredient in ingredients" :key="ingredient"
-                        :id="ingredient">
+                    <div class="add-diet-inner">
                         <div class="add-diet">
-                            <label>Ingredient</label>
-                            <input type="text" placeholder="e.g. 200gr quinoa" />
+                            <label for="diet">Recipe Title</label>
+                            <Field name="title" type="text" placeholder="e.g. Lemon chicken" />
+                        </div>
+
+                        <div class="add-diet">
+                            <label for="diet">Servings</label>
+                            <Field name="servings" type="text" placeholder="e.g. 6" />
+                        </div>
+
+                        <div class="add-diet">
+                            <label for="duration">Cook Time</label>
+                            <Field name="cook_time" type="text" placeholder="e.g. 20 min." />
                         </div>
                     </div>
                 </div>
-                <div class="add-button">
-                    <AddIcon />
-                    <button type="button" @click="addIngredient">Add Ingredient</button>
-                </div>
-            </div>
 
-            <div class="steps-wrapper">
-                <div class="add-diet-day-grid-item title">How to cook</div>
-                <div class="add-diet-day-grid">
-                    <div class="add-diet-day-grid-item" v-for="(step, index) in steps" :key="step" :id="step">
-                        <div class="add-diet">
-                            <label>Step {{ index + 1 }}</label>
-                            <textarea
-                                placeholder="e.g. Bring 1 cup water to a boil in a pot, then add the quinoa. Cook for 15 minutes, until water is absorbed. Take off the heat and let cool."></textarea>
+                <div>
+                    <div class="add-diet-day-grid-item title">Add Ingredients</div>
+                    <div class="add-diet-day-grid">
+                        <div class="add-diet-day-grid-item" v-for="(ingredient, index) in ingredients" :key="ingredient"
+                            :id="ingredient">
+                            <div class="add-diet">
+                                <label>Ingredient</label>
+                                <Field type="text" :name="'ingredient['+index+']'"  placeholder="e.g. 200gr quinoa" />
+                            </div>
                         </div>
                     </div>
+                    <div class="add-button">
+                        <AddIcon />
+                        <button type="button" @click="addIngredient">Add Ingredient</button>
+                    </div>
                 </div>
-                <div class="add-button">
-                    <AddIcon />
-                    <button type="button" @click="addStep">Add Step</button>
-                </div>
-            </div>
 
-            <div class="add-diet-btns">
-                <button type="button" class="w-btn w-btn-close" @click="close">
-                    Cancel
-                </button>
-                <button type="submit" class="w-btn">
-                    Save
-                </button>
-            </div>
+                <div class="steps-wrapper">
+                    <div class="add-diet-day-grid-item title">How to cook</div>
+                    <div class="add-diet-day-grid">
+                        <div class="add-diet-day-grid-item" v-for="(step, index) in steps" :key="step" :id="step">
+                            <div class="add-diet">
+                                <label>Step {{ index + 1 }}</label>
+                                <Field as="textarea" :name="'step['+index+']'" 
+                                    placeholder="e.g. Bring 1 cup water to a boil in a pot, then add the quinoa. Cook for 15 minutes, until water is absorbed. Take off the heat and let cool."></Field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-button">
+                        <AddIcon />
+                        <button type="button" @click="addStep">Add Step</button>
+                    </div>
+                </div>
+
+                <div class="add-diet-btns">
+                    <button type="button" class="w-btn w-btn-close" @click="close">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-btn">
+                        Save
+                    </button>
+                </div>
+            </Form>
         </div>
     </div>
 </template>

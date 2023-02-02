@@ -6,20 +6,60 @@ import EditIcon from '@/components/icons/IconEdit.vue'
 import TimeIcon from '@/components/icons/IconTime.vue'
 import WeeklyIcon from '@/components/icons/IconWeekly.vue'
 
+import { axiosInstance } from '@/helpers';
+import { useAlertStore } from '@/stores';
+
 export default {
     components: {
-        AddIcon, 
-        Tabs, 
-        SearchIcon, 
+        AddIcon,
+        Tabs,
+        SearchIcon,
         EditIcon,
-        TimeIcon, 
+        TimeIcon,
         WeeklyIcon
     },
     data() {
+        const alertStore = useAlertStore()
         return {
-            tabList: ["Diets", "Recipes"], 
+            alertStore,
+            tabList: ["Diets", "Recipes"],
+            dietList: [],
+            recipeList: []
         };
     },
+    methods: {
+        getDiets() {
+            axiosInstance.get('/diet')
+                .then(response => {
+                    this.dietList = response.data.diets
+                    console.log(response.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        getRecipes() {
+            axiosInstance.get('/recipes')
+                .then(response => {
+                    this.recipeList = response.data.recipes
+                    console.log(response.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        }
+    },
+    computed: {
+        ingredientList() {
+            return (recipe) => recipe.ingredients.slice(0, 3)
+        }
+    },
+    mounted() {
+        this.getDiets()
+        this.getRecipes()
+    }
 }
 </script>
 <template>
@@ -46,13 +86,13 @@ export default {
                     </div>
 
                     <div class="diet-grid">
-                        <div class="diet-grid-item">
+                        <div class="diet-grid-item" v-for="diet in dietList">
                             <div class="diet-grid-item-content">
-                                <h6>Atkins Diet</h6>
+                                <h6>{{diet.title}}</h6>
 
                                 <div class="diet-grid-item-content-icon">
                                     <WeeklyIcon />
-                                    <span>7 days</span>
+                                    <span>{{ diet.duration }} days</span>
                                 </div>
                             </div>
 
@@ -61,290 +101,6 @@ export default {
                             </div>
                         </div>
 
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Dukan Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>10 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Paleo Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>5 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Mediterranean Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>14 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Cardiac diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>5 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Keto Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>3 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Renal Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>7 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Diet "Table number 5"</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>14 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Atkins Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>7 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Dukan Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>10 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Paleo Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>5 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Mediterranean Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>14 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Cardiac diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>5 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Keto Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>3 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Renal Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>7 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Diet "Table number 5"</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>14 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Atkins Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>7 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Dukan Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>10 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Paleo Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>5 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Mediterranean Diet</h6>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <WeeklyIcon />
-                                    <span>14 days</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
                     </div>
 
                     <div class="pagination-wrapper">
@@ -378,334 +134,17 @@ export default {
                     </div>
 
                     <div class="diet-grid recipe-grid">
-                        <div class="diet-grid-item">
+                        <div class="diet-grid-item" v-for="recipe in recipeList">
                             <div class="diet-grid-item-content">
-                                <h6>Lemon chicken</h6>
+                                <h6>{{ recipe.title }}</h6>
 
                                 <ul class="diet-grid-item-content-list">
-                                    <li>lemon</li>
-                                    <li>chicken</li>
-                                    <li>dark soy sauce</li>
+                                    <li v-for="ingredient in ingredientList(recipe)">{{ ingredient }}</li>
                                 </ul>
 
                                 <div class="diet-grid-item-content-icon">
                                     <TimeIcon />
-                                    <span>10 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Sesame beef with gochujang udon noodles</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>beef steak</li>
-                                    <li>udon noodles</li>
-                                    <li>mixed mushrooms</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>7-10 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Garlicky fried rice with crisp pork</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>peanut oil</li>
-                                    <li>garlic cloves</li>
-                                    <li>minced pork</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>10-12 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Tofu scramble with shredded cabbage and chilli sambal</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>ginger</li>
-                                    <li>silken tofu</li>
-                                    <li>cabbage</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>14-16 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Garlic and spinach gnocchi with lemon and pecorino</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>King Edward potatoes</li>
-                                    <li>baby spinach</li>
-                                    <li>butter</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>20 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Lemon chicken</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>lemon</li>
-                                    <li>chicken</li>
-                                    <li>dark soy sauce</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>10 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Sesame beef with gochujang udon noodles</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>beef steak</li>
-                                    <li>udon noodles</li>
-                                    <li>mixed mushrooms</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>7-10 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Garlicky fried rice with crisp pork</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>peanut oil</li>
-                                    <li>garlic cloves</li>
-                                    <li>minced pork</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>10-12 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Tofu scramble with shredded cabbage and chilli sambal</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>ginger</li>
-                                    <li>silken tofu</li>
-                                    <li>cabbage</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>14-16 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Garlic and spinach gnocchi with lemon and pecorino</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>King Edward potatoes</li>
-                                    <li>baby spinach</li>
-                                    <li>butter</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>20 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Lemon chicken</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>lemon</li>
-                                    <li>chicken</li>
-                                    <li>dark soy sauce</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>10 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Sesame beef with gochujang udon noodles</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>beef steak</li>
-                                    <li>udon noodles</li>
-                                    <li>mixed mushrooms</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>7-10 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Garlicky fried rice with crisp pork</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>peanut oil</li>
-                                    <li>garlic cloves</li>
-                                    <li>minced pork</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>10-12 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Tofu scramble with shredded cabbage and chilli sambal</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>ginger</li>
-                                    <li>silken tofu</li>
-                                    <li>cabbage</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>14-16 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Garlic and spinach gnocchi with lemon and pecorino</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>King Edward potatoes</li>
-                                    <li>baby spinach</li>
-                                    <li>butter</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>20 min</span>
-                                </div>
-                            </div>
-
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
-                            </div>
-                        </div>
-
-                        <div class="diet-grid-item">
-                            <div class="diet-grid-item-content">
-                                <h6>Lemon chicken</h6>
-
-                                <ul class="diet-grid-item-content-list">
-                                    <li>lemon</li>
-                                    <li>chicken</li>
-                                    <li>dark soy sauce</li>
-                                </ul>
-
-                                <div class="diet-grid-item-content-icon">
-                                    <TimeIcon />
-                                    <span>10 min</span>
+                                    <span>{{ recipe.cook_time }}min</span>
                                 </div>
                             </div>
 
