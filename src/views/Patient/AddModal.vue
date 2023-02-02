@@ -8,6 +8,7 @@ import { useAlertStore } from '@/stores';
 import { calculateBMI } from '@/helpers';
 import _get from 'lodash/get';
 import _find from 'lodash/find';
+import he from 'vue-cal/dist/i18n/he.cjs';
 
 export default {
     components: {
@@ -238,37 +239,6 @@ export default {
         const patientInfo = {
             fields: [
                 {
-                    label: 'Health',
-                    name: 'health-data.height',
-                    as: 'div',
-                    classattr: 'heightInput',
-                    model: 'current_health_data.height',
-                    rules: Yup.string().nullable()
-                        .matches(/^(\d+)'(\d+)(?:''|")$/, { message: 'Should match following pattern: 5\'7"', excludeEmptyString: true }),
-                        children: [
-                        {
-                            name: 'health-data.height_ft',
-                            type: 'number',
-                            tag: 'input',
-                        },
-                        {
-                            text: 'ft',
-                            for: 'health-data.height_ft',
-                            tag: 'label',
-                        },
-                        {
-                            name: 'health-data.height_in',
-                            type: 'number',
-                            tag: 'input',
-                        },
-                        {
-                            text: 'in',
-                            for: 'health-data.height_in',
-                            tag: 'label',
-                        },
-                    ],
-                },
-                {
                     label: 'Weight',
                     name: 'health-data.weight',
                     as: 'input',
@@ -381,10 +351,12 @@ export default {
             this.$refs.populatedForm.setValues({})
         },
         onSubmit(values) {
-            
+
             const healthData = values['health-data'];
-            if(healthData.height && healthData.weight) {
-                healthData.bmi = calculateBMI(healthData.height, healthData.weight)
+            const height = `${healthData.height_ft}'${healthData.height_in}"`
+            if (healthData.height_ft && healthData.height_ft && healthData.weight) {
+                healthData.bmi = calculateBMI(height, healthData.weight)
+                values['health-data']['height'] = height
             }
             if (this.patient != null) {
                 axiosInstance.put(`/patients/${this.patient.id}`, values)
@@ -474,12 +446,24 @@ export default {
                             <div class="add-patient-card-title">Patient Information</div>
 
                             <div class="addpatient-card-content">
+
+                                <ul class="patientInfo">
+                                    <li class="heightInput">
+                                        <label for="health-data.height">Height</label>
+                                        <div>
+                                            <Field name="health-data.height_ft" type="number" />
+                                            <label for="health-data.height_ft">ft</label>
+                                            <Field name="health-data.height_in" type="number" />
+                                            <label for="health-data.height_in">in</label>
+                                        </div>
+                                    </li>
+                                </ul>
                                 <PatientInputGenerator :schema="patientInfo" class="patientInfo" />
 
                                 <div class="addpatient-card-content-title">Current Medications and Supplements</div>
 
                                 <div class="medication-block">
-                                    <PatientInputGenerator :schema="currentMeds" ref="medsContainer"/>
+                                    <PatientInputGenerator :schema="currentMeds" ref="medsContainer" />
 
                                     <button type="button" @click="addMedRow">Add Medication or
                                         Supplement</button>
