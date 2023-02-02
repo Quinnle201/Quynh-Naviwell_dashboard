@@ -3,7 +3,7 @@ import AddIcon from '@/components/icons/IconAdd.vue'
 import CameraIcon from '@/components/icons/IconCamera.vue'
 import { Form, Field } from 'vee-validate';
 
-import { axiosInstance } from '@/helpers';
+import { axiosInstance, uploadFile, generateFileName } from '@/helpers';
 import { useAlertStore } from '@/stores';
 
 export default {
@@ -18,28 +18,56 @@ export default {
         return {
             alertStore,
             days: 3,
+            file: null,
         }
     },
     methods: {
-        close(){ 
+        close() {
             this.$router.back()
         },
         addDay: function () {
             if (this.days < 20) this.days++;
         },
-        addDiet(values) {
+        selectFile() {
+            const r = this.$refs.fileUpload;
+            r.click();
+        },
+        addFile(event) {
+            const files = event.target.files
+            if (files) {
+                this.file = files[0]
+            }
 
-            //upload a photo   
+        },
+        addDiet(values) {
+            var filename = null
+            if (this.file != null) {
+                filename = generateFileName(this.file)
+            }
             var formData = {
                 title: values.title,
                 description: values.description,
-                image: 'imgrefhere',
+                image: filename,
                 days: values.day,
             }
             axiosInstance.post('/diet', formData)
                 .then(response => {
-                    this.alertStore.success("Diet created!")
-                    this.$router.back()
+                    if (this.file != null) {
+                        const dietid = response.data.diet.id;
+                        const uploader = uploadFile(this.file, 'diets', dietid, filename)
+                        uploader.axios
+                            .then(response => {
+                                this.alertStore.success("Diet created!")
+                                this.$router.back()
+                            }).catch(error => {
+                                console.log(error)
+                                this.alertStore.error(error.response.data.message)
+                            });
+                    } else {
+                        this.alertStore.success("Diet created!")
+                        this.$router.back()
+                    }
+
                 })
                 .catch(error => {
                     console.log(error)
@@ -61,7 +89,8 @@ export default {
         <div class="add-diet-wrapper page-bg">
             <Form @submit="addDiet">
                 <div class="add-diet-head">
-                    <div class="add-diet upload-photo">
+                    <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" />
+                    <div class="add-diet upload-photo" @click="selectFile()">
                         <label>Upload Photo</label>
                         <div>
                             <CameraIcon />
@@ -87,18 +116,22 @@ export default {
 
                         <div class="add-diet">
                             <label>Breakfast</label>
-                            
-                            <Field as="textarea" :name="'day['+index+'].breakfast'"  placeholder="e.g. Greek yogurt with strawberries and chia seeds"></Field>
+
+                            <Field as="textarea" :name="'day[' + index + '].breakfast'"
+                                placeholder="e.g. Greek yogurt with strawberries and chia seeds"></Field>
                         </div>
 
                         <div class="add-diet">
                             <label>Lunch</label>
-                            <Field as="textarea" :name="'day['+index+'].lunch'"  placeholder="e.g. A whole grain sandwich with hummus and vegetables"></Field>
+                            <Field as="textarea" :name="'day[' + index + '].lunch'"
+                                placeholder="e.g. A whole grain sandwich with hummus and vegetables"></Field>
                         </div>
 
                         <div class="add-diet">
                             <label>Dinner</label>
-                            <Field as="textarea" :name="'day['+index+'].dinner'"  placeholder="e.g. A tuna salad with greens and olive oil, as well as a fruit salad"></Field>
+                            <Field as="textarea" :name="'day[' + index + '].dinner'"
+                                placeholder="e.g. A tuna salad with greens and olive oil, as well as a fruit salad">
+                            </Field>
                         </div>
                     </div>
                 </div>
@@ -110,7 +143,9 @@ export default {
 
                 <div class="add-diet description">
                     <label for="description">Description</label>
-                    <Field as="textarea" name="description" placeholder="e.g. The Mediterranean diet is a way of eating that's based on the traditional cuisines of Greece, Italy and other countries that border the Mediterranean Sea."></Field>
+                    <Field as="textarea" name="description"
+                        placeholder="e.g. The Mediterranean diet is a way of eating that's based on the traditional cuisines of Greece, Italy and other countries that border the Mediterranean Sea.">
+                    </Field>
                 </div>
 
                 <div class="add-diet-btns">

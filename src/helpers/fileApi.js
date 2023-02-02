@@ -32,9 +32,16 @@ export async function downloadFile(file, ref, type) {
     document.body.removeChild(a);
 }
 
-export function uploadFile(file, type, path) {
+export function generateFileName(file) {
     const originalname = file.name;
-    const filename = generateUUID() + '.' + getFileExt(originalname);
+    return generateUUID() + '.' + getFileExt(originalname);;
+}
+
+export function uploadFile(file, type, path, filename) {
+    const originalname = file.name;
+    if(filename == null) {
+        filename = generateFileName(file);
+    }
     const uploader = axiosFileInstance.put(`/${type}/${path}/${filename}`, file, {
         headers: {
             'Content-Type': file.type ? file.type : 'application/octet-stream'

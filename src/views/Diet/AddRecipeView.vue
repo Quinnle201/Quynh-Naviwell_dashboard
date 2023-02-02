@@ -2,7 +2,7 @@
 import AddIcon from '@/components/icons/IconAdd.vue'
 import CameraIcon from '@/components/icons/IconCamera.vue'
 import { Form, Field } from 'vee-validate';
-import { axiosInstance } from '@/helpers';
+import { axiosInstance, uploadFile, generateFileName } from '@/helpers';
 import { useAlertStore } from '@/stores';
 
 export default {
@@ -18,11 +18,23 @@ export default {
             alertStore,
             ingredients: 2,
             steps: 3,
+            file: null,
         }
     },
     methods: {
-        close(){ 
+        close() {
             this.$router.back()
+        },
+        selectFile() {
+            const r = this.$refs.fileUpload;
+            r.click();
+        },
+        addFile(event) {
+            const files = event.target.files
+            if (files) {
+                this.file = files[0]
+            }
+
         },
         addIngredient: function () {
             if (this.ingredients < 15) this.ingredients++;
@@ -31,19 +43,36 @@ export default {
             if (this.steps < 20) this.steps++;
         },
         addRecipe(values) {
-            //upload a photo   
+            var filename = null
+            if (this.file != null) {
+                filename = generateFileName(this.file)
+            }
+
             var formData = {
                 title: values.title,
                 servings: values.servings,
                 cook_time: values.cook_time,
-                image: 'imgrefhere',
+                image: filename,
                 ingredients: values.ingredient,
                 steps: values.step
             }
             axiosInstance.post('/recipes', formData)
                 .then(response => {
-                    this.alertStore.success("Recipe created!")
-                    this.$router.back()
+                    if (this.file != null) {
+                        const recipeId = response.data.recipe.id;
+                        const uploader = uploadFile(this.file, 'recipes', recipeId, filename)
+                        uploader.axios
+                            .then(response => {
+                                this.alertStore.success("Recipe created!")
+                                this.$router.back()
+                            }).catch(error => {
+                                console.log(error)
+                                this.alertStore.error(error.response.data.message)
+                            });
+                    } else {
+                        this.alertStore.success("Recipe created!")
+                        this.$router.back()
+                    }
                 })
                 .catch(error => {
                     console.log(error)
@@ -64,7 +93,8 @@ export default {
         <div class="add-diet-wrapper page-bg">
             <Form @submit="addRecipe">
                 <div class="add-diet-head">
-                    <div class="add-diet upload-photo">
+                    <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" />
+                    <div class="add-diet upload-photo" @click="selectFile()">
                         <label>Upload Photo</label>
                         <div>
                             <CameraIcon />
@@ -96,7 +126,8 @@ export default {
                             :id="ingredient">
                             <div class="add-diet">
                                 <label>Ingredient</label>
-                                <Field type="text" :name="'ingredient['+index+']'"  placeholder="e.g. 200gr quinoa" />
+                                <Field type="text" :name="'ingredient[' + index + ']'"
+                                    placeholder="e.g. 200gr quinoa" />
                             </div>
                         </div>
                     </div>
@@ -112,8 +143,9 @@ export default {
                         <div class="add-diet-day-grid-item" v-for="(step, index) in steps" :key="step" :id="step">
                             <div class="add-diet">
                                 <label>Step {{ index + 1 }}</label>
-                                <Field as="textarea" :name="'step['+index+']'" 
-                                    placeholder="e.g. Bring 1 cup water to a boil in a pot, then add the quinoa. Cook for 15 minutes, until water is absorbed. Take off the heat and let cool."></Field>
+                                <Field as="textarea" :name="'step[' + index + ']'"
+                                    placeholder="e.g. Bring 1 cup water to a boil in a pot, then add the quinoa. Cook for 15 minutes, until water is absorbed. Take off the heat and let cool.">
+                                </Field>
                             </div>
                         </div>
                     </div>
