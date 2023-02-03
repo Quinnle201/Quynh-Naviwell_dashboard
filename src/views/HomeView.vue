@@ -27,7 +27,7 @@ export default {
       let currentMonth = date.toLocaleString('en-us', { month: 'short' });
       let currentDay = date.toLocaleString('en-us', { day: 'numeric' });
       let currentYear = date.toLocaleString('en-us', { year: 'numeric' });
-      return {currentWeekdayShort, currentWeekday, currentDay, currentMonth, currentYear};
+      return { currentWeekdayShort, currentWeekday, currentDay, currentMonth, currentYear };
     },
     dateBanner() {
       const date = this.currentDate
@@ -70,7 +70,7 @@ export default {
         });
     },
     getLatestChats() {
-      axiosInstance.get('/messages', { params:{"limit": 3} })
+      axiosInstance.get('/messages', { params: { "limit": 3 } })
         .then(response => {
           response.data.messages.forEach(msg => {
             this.latestChats.push(msg)
@@ -83,7 +83,7 @@ export default {
         });
     },
     getLatestPatients() {
-      axiosInstance.get('/patients', { params:{"limit": 5} })
+      axiosInstance.get('/patients', { params: { "limit": 5 } })
         .then(response => {
           response.data.patients.forEach(pt => {
             this.patients.push(pt)
@@ -136,7 +136,8 @@ export default {
     <div class="main-grid">
       <div class="cards-wrapper">
         <div class="dashboard-card calendar-card">
-          <h4>Calendar for {{currentDate.currentWeekday}}, {{currentDate.currentMonth}} {{currentDate.currentDay}}</h4>
+          <h4>Calendar for {{ currentDate.currentWeekday }}, {{ currentDate.currentMonth }} {{ currentDate.currentDay }}
+          </h4>
 
           <div class="calendar-card-list">
             <h4 v-if="todayVisits.length > 0">Visits today</h4>
@@ -160,7 +161,9 @@ export default {
           <Card>
             <template #card-title>Diet & Recipes</template>
             <RecipeIcon />
-            <template #card-btn>Add New Diet/Recipes</template>
+            <template #card-btn>
+              <RouterLink :to="{ name: 'add-diet' }">Add New Diet/Recipes</RouterLink>
+            </template>
           </Card>
         </div>
       </div>
@@ -171,8 +174,8 @@ export default {
 
           <ul>
             <li v-for="message in latestChats">
-              <div class="messages-card-name">{{userName(message.patient.user)}}</div>
-              <div>{{message.body.message}}</div>
+              <div class="messages-card-name">{{ userName(message.patient.user) }}</div>
+              <div>{{ message.body.message }}</div>
             </li>
           </ul>
 
@@ -186,10 +189,14 @@ export default {
           <ul>
             <li v-for="patient in patients">
               <img :src="fileStore.profileAvatars(patient.user)" alt="Patient Photo" />
-              <div>{{userName(patient.user)}}</div>
+              <RouterLink :to="{ name: 'patient', params: { id: patient.id } }">
+                <div>{{ userName(patient.user) }}</div>
+              </RouterLink>
             </li>
           </ul>
-          <template #card-btn>Add New Patient</template>
+          <template #card-btn>
+            Add New Patient(wip)
+          </template>
         </Card>
       </div>
 
@@ -211,7 +218,9 @@ export default {
         </div>
 
         <div class="dashboard-card quotes-card">
-          <span class="dashboard-card-btn">Manage Quote of the Day</span>
+          <RouterLink :to="{ name: 'quotes' }">
+            <span class="dashboard-card-btn">Manage Quote of the Day</span>
+          </RouterLink>
         </div>
       </div>
     </div>
