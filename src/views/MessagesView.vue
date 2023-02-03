@@ -52,7 +52,7 @@ export default {
             return (time) => new Date(time).format('DD.MM')
         },
         time() {
-            return (time) => new Date(time).format('DD.MM.YYYY hh:mm')
+            return (time) => new Date(time).format('hh:mm')
         },
         getMessageType() {
             return (msgObject) => {
@@ -372,7 +372,8 @@ export default {
                                                 <DownloadIcon class="attach-icon" />
                                             </div>
 
-                                            <div class="message-list-time">{{ time(message.time) }}</div>
+                                            <div v-if="message.from.profile.id == selectedPatient.id" class="message-list-time">{{ time(message.time) }}</div>
+                                            <div v-else class="message-list-time">Dr. {{ message.from.last_name }} • {{ time(message.time) }}</div>
                                         </div>
                                     </li>
 
