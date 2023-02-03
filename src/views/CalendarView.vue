@@ -214,6 +214,7 @@ export default {
                         this.closeModal()
                         this.alertStore.success('Appointment updated')
                         this.updateVisit(response.data.appointment)
+                        this.$refs.visitForm.setValues({})
                     })
                     .catch(error => {
                         this.alertStore.error(error.response.data.message)
@@ -224,13 +225,13 @@ export default {
                         this.closeModal()
                         this.alertStore.success('Appointment set')
                         this.addVisit(response.data.appointment)
+                        this.$refs.visitForm.setValues({})
                     })
                     .catch(error => {
                         this.alertStore.error(error.response.data.message)
                     });
             }
-
-            this.$refs.visitForm.setValues({})
+         
 
         },
         updateVisit(data) {

@@ -10,7 +10,7 @@ import DeleteModal from '@/components/Modals/DeleteModal.vue'
 import PatientAutocomplete from '@/components/Patient/PatientAutocomplete.vue'
 
 import { axiosInstance } from '@/helpers';
-import { useAlertStore } from '@/stores';
+import { useAlertStore, useFileStore } from '@/stores';
 import _findIndex from 'lodash/findIndex';
 import userMixin from '@/mixins/user.js'
 import { Form, Field } from 'vee-validate';
@@ -34,8 +34,10 @@ export default {
     ],
     data() {
         const alertStore = useAlertStore();
+        const fileStore = useFileStore();
         return {
             alertStore,
+            fileStore,
             show: null,
             patients: [],
             selectedPatient: null,
@@ -144,6 +146,9 @@ export default {
             axiosInstance.get('/patients')
                 .then(response => {
                     this.patients = response.data.patients;
+                    this.patients.forEach(pt => {
+                        this.fileStore.getPhotoLinkForUser(pt.user)
+                    });
                 })
                 .catch(error => {
                     this.alertStore.error(error.response.data.message)
@@ -227,7 +232,7 @@ export default {
                     <tbody>
                         <tr v-for="(patient, index) in patients" :key="patient.id">
                             <td class="patients-img">
-                                <img src="@/assets/img/image.png" alt="">
+                                <img :src="fileStore.profileAvatars(patient.user)" alt="">
                                 <RouterLink :to="{ name: 'patient', params: { id: patient.id } }"><span>{{
                                     userName(patient.user)
                                 }}</span></RouterLink>

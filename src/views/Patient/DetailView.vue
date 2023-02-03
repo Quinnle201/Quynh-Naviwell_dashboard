@@ -12,7 +12,7 @@ import DeleteModal from '@/components/Modals/DeleteModal.vue'
 import { Form, Field } from 'vee-validate';
 import { RouterLink } from 'vue-router'
 import { axiosInstance } from '@/helpers';
-import { useAlertStore } from '@/stores';
+import { useAlertStore, useFileStore } from '@/stores';
 import _find from 'lodash/find'
 import userMixin from '@/mixins/user.js'
 
@@ -37,6 +37,7 @@ export default {
     ],
     data() {
         const patient = null
+        const fileStore = useFileStore()
         const alertStore = useAlertStore();
 
         const dataChart = {
@@ -96,7 +97,7 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, alertStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, medsData: false, isChatModalVisible: false }
+        return { patient, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, medsData: false, isChatModalVisible: false }
     },
     mounted() {
         const id = this.$route.params.id;
@@ -108,6 +109,7 @@ export default {
             axiosInstance.get(`/patients/${id}`)
                 .then(response => {
                     this.patient = response.data.patient;
+                    this.fileStore.getPhotoLinkForUser(this.patient.user)
                 })
                 .catch(error => {
                     console.log(error)
@@ -302,7 +304,7 @@ export default {
             <div class="patient-top">
                 <div class="patient-profile-left light-bg">
                     <div class="patient-profile-left-info">
-                        <img src="@/assets/img/image.png" alt="">
+                        <img :src="fileStore.profileAvatars(patient.user)" alt="">
                         <div>
                             <h6>{{ userName(user) }}</h6>
                             <span>{{ user.email }}</span>

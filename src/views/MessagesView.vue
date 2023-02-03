@@ -11,7 +11,7 @@ import AddIcon from '@/components/icons/IconAdd.vue'
 import PatientAutocomplete from '@/components/Patient/PatientAutocomplete.vue'
 
 import { axiosInstance, downloadFile, uploadFile, getFileUrlFromRef } from '@/helpers';
-import { useAlertStore } from '@/stores';
+import { useAlertStore, useFileStore } from '@/stores';
 import userMixin from '@/mixins/user.js'
 
 import _forEach from 'lodash/forEach';
@@ -36,15 +36,16 @@ export default {
     ],
     data() {
         const alertStore = useAlertStore()
+        const fileStore = useFileStore()
         return {
             alertStore,
+            fileStore,
             isModalVisible: false,
             isChatModalVisible: false,
             list: [],
             selectedPatient: null,
             messages: [],
             searchList: [],
-            profilePhotos: [],
         }
     },
     computed: {
@@ -62,19 +63,6 @@ export default {
                 return 'message'
             }
         },
-        profileAvatars() {
-            return (user) => {
-                if(user == null) {
-                    return ''
-                }
-                var index = _findIndex(this.profilePhotos, ['userid', user.id]);
-                if (index != -1) {
-                    return this.profilePhotos[index].link
-                }
-                return ''
-                
-            }
-        }
     },
     watch: {
         selectedPatient: {
@@ -96,31 +84,6 @@ export default {
         },
     },
     methods: {
-        async getPhotoLinkForUser(user) {
-            var index = _findIndex(this.profilePhotos, ['userid', user.id]);
-            if(index != -1){
-                return
-            }
-
-            //create initial object so we refer to it only once.
-            this.profilePhotos.push({
-               userid: user.id,
-               link: '/src/assets/img/usericon.png'
-            })
-
-            if (user.image == null) {
-                return
-            }
-
-            const link = await getFileUrlFromRef(`users/${user.id}/photos`, user.image);
-            index = _findIndex(this.profilePhotos, ['userid', user.id]);
-            this.profilePhotos[index] = {
-                userid: user.id,
-                link: link
-            }
-
-
-        },
         timeAgo(value) {
             const seconds = Math.floor((new Date().getTime() - new Date(value).getTime()) / 1000)
             let interval = seconds / 31536000
@@ -168,14 +131,15 @@ export default {
                 time: responseMessage.created_at,
                 pic: '/src/assets/img/usericon.png'
             })
-            this.getPhotoLinkForUser(responseMessage.from)
+            this.fileStore.getPhotoLinkForUser(responseMessage.from)
+            
         },
         getMessagesList() {
             axiosInstance.get('/messages')
                 .then(response => {
                     console.log(response.data)
                     response.data.messages.forEach(element => {
-                        this.getPhotoLinkForUser(element.patient.user)
+                        this.fileStore.getPhotoLinkForUser(element.patient.user)
                         this.list.push({
                             patient: element.patient,
                             patient_id: element.patient_id,
@@ -313,7 +277,7 @@ export default {
                             <li :class="msg.patient_id == selectedPatient?.id ? 'active-chat' : ''"
                                 class="chat-list-item" v-for="msg in list" @click="selectChat(msg.patient)">
                                 <div class="chat-list-item-img">
-                                    <img :src="profileAvatars(msg.patient.user)" alt="User photo" />
+                                    <img :src="fileStore.profileAvatars(msg.patient.user)" alt="User photo" />
                                 </div>
                                 <div class="chat-list-item-content">
                                     <div class="chat-list-item-content-name">{{ msg.name }}</div>
@@ -338,7 +302,7 @@ export default {
             <div v-show="selectedPatient" class="chat-right">
                 <div class="chat-right-head">
                     <div class="chat-right-head-info">
-                        <img :src="profileAvatars(selectedPatient?.user)" alt="Patient photo" loading="lazy" />
+                        <img :src="fileStore.profileAvatars(selectedPatient?.user)" alt="Patient photo" loading="lazy" />
                         <div class="chat-right-head-info-name">{{ userName(selectedPatient?.user) }}</div>
                     </div>
 
@@ -358,7 +322,7 @@ export default {
                                 <ul class="messages-list" ref="chat">
                                     <li :class="message.from.profile.id == selectedPatient.id ? '' : 'physician-message'"
                                         v-for="message in messages">
-                                        <img :src="profileAvatars(message.from)" alt="User photo" loading="lazy" />
+                                        <img :src="fileStore.profileAvatars(message.from)" alt="User photo" loading="lazy" />
                                         <div class="message-list-text">
                                             <div v-if="message.body.message != null" class="message-list-bubble">{{
                                                 message.body.message

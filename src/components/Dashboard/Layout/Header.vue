@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="d-flex flex-row gap-1 user-block">
-                <img v-if="photo_src" :src="photo_src" alt="profile_photo" width="48" height="48" class="rounded-circle">
+                <img :src="fileStore.profileAvatars(authStore.user)" alt="profile_photo" width="48" height="48" class="rounded-circle">
                 <div class="text-center">
                     <a href="#" class="nav-link link-dark px-2 active" aria-current="page">{{
                         userName(authStore.user)
@@ -35,9 +35,7 @@
 <script>
 import CurrentTime from '@/components/CurrentTime.vue';
 import userMixin from '@/mixins/user.js'
-import { useAuthStore } from '@/stores';
-import { getFileUrlFromRef } from '@/helpers';
-import { handleError } from 'vue';
+import { useAuthStore, useFileStore } from '@/stores';
 
 export default {
     mixins: [
@@ -60,11 +58,7 @@ export default {
     watch: {
         authStore: {
             async handler(value) {
-                if (value.user?.image == null) {
-                    this.photo_src = (await import('@/assets/img/avatar.webp')).default;
-                    return
-                }
-                this.photo_src = await getFileUrlFromRef(`users/${value.user.id}/photos`, value.user.image);
+                this.fileStore.getPhotoLinkForUser(value.user)                
             },
             immediate: true,
             deep: true,
@@ -72,8 +66,8 @@ export default {
     },
     data() {
         const authStore = useAuthStore();
-        const photo_src = null
-        return { authStore, photo_src }
+        const fileStore = useFileStore()
+        return { authStore, fileStore }
     }
 };
 </script>

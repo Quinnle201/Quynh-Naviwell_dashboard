@@ -4,9 +4,10 @@ import Card from '@/components/Card.vue'
 import LabIcon from '@/components/icons/IconLab.vue'
 import RecipeIcon from '@/components/icons/IconRecipe.vue'
 
-import { useAuthStore } from '@/stores';
+import { useAuthStore, useFileStore } from '@/stores';
 import { axiosInstance } from '@/helpers';
 import userMixin from '@/mixins/user.js'
+import { RouterLink } from 'vue-router'
 
 export default {
   mixins: [
@@ -19,6 +20,19 @@ export default {
     RecipeIcon
   },
   computed: {
+    currentDate() {
+      let date = new Date();
+      let currentWeekdayShort = date.toLocaleString('en-us', { weekday: 'short' });
+      let currentWeekday = date.toLocaleString('en-us', { weekday: 'long' });
+      let currentMonth = date.toLocaleString('en-us', { month: 'short' });
+      let currentDay = date.toLocaleString('en-us', { day: 'numeric' });
+      let currentYear = date.toLocaleString('en-us', { year: 'numeric' });
+      return {currentWeekdayShort, currentWeekday, currentDay, currentMonth, currentYear};
+    },
+    dateBanner() {
+      const date = this.currentDate
+      return date.currentWeekdayShort + ' ' + date.currentDay + ' ' + date.currentMonth + ' ' + date.currentYear;
+    },
     localDate() {
       return (time) => new Date(time).format('HH:mm')
     },
@@ -38,17 +52,10 @@ export default {
   },
   mounted() {
     this.getTodayVisits()
+    this.getLatestChats()
+    this.getLatestPatients();
   },
   methods: {
-    currentDate() {
-      let date = new Date();
-      let currentWeekday = date.toLocaleString('en-us', { weekday: 'short' });
-      let currentMonth = date.toLocaleString('en-us', { month: 'short' });
-      let currentDay = date.toLocaleString('en-us', { day: 'numeric' });
-      let currentYear = date.toLocaleString('en-us', { year: 'numeric' });
-      let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
-      return currentDate;
-    },
     getTodayVisits() {
       axiosInstance.get('/appointments/today')
         .then(response => {
@@ -61,13 +68,44 @@ export default {
           console.log(error)
           this.alertStore.error(error.response.data.message)
         });
+    },
+    getLatestChats() {
+      axiosInstance.get('/messages', { params:{"limit": 3} })
+        .then(response => {
+          response.data.messages.forEach(msg => {
+            this.latestChats.push(msg)
+          });
+
+        })
+        .catch(error => {
+          console.log(error)
+          this.alertStore.error(error.response.data.message)
+        });
+    },
+    getLatestPatients() {
+      axiosInstance.get('/patients', { params:{"limit": 5} })
+        .then(response => {
+          response.data.patients.forEach(pt => {
+            this.patients.push(pt)
+            this.fileStore.getPhotoLinkForUser(pt.user)
+          });
+
+        })
+        .catch(error => {
+          console.log(error)
+          this.alertStore.error(error.response.data.message)
+        });
     }
   },
   data() {
     const userStore = useAuthStore()
+    const fileStore = useFileStore()
     return {
+      fileStore,
       user: userStore.user,
       todayVisits: [],
+      latestChats: [],
+      patients: []
     }
   }
 };
@@ -87,7 +125,7 @@ export default {
       <div class="top-block-info">
         <h3>Good Morning Dr. {{ user.last_name }}</h3>
         <div class="top-block-info-date">
-          <span>{{ currentDate() }}</span>
+          <span>{{ dateBanner }}</span>
           <span>
             <CurrrentTime />
           </span>
@@ -98,11 +136,11 @@ export default {
     <div class="main-grid">
       <div class="cards-wrapper">
         <div class="dashboard-card calendar-card">
-          <h4>Calendar for Monday, November 28</h4>
+          <h4>Calendar for {{currentDate.currentWeekday}}, {{currentDate.currentMonth}} {{currentDate.currentDay}}</h4>
 
           <div class="calendar-card-list">
-            <h4>Visits today</h4>
-
+            <h4 v-if="todayVisits.length > 0">Visits today</h4>
+            <h4 v-else>No visits for today</h4>
             <ul>
               <li :class="inTime(visit.start_time) ? 'active' : ''" v-for="visit in todayVisits">
                 <div class="calendar-list-time">{{ localDate(visit.start_time) }}</div>
@@ -132,45 +170,23 @@ export default {
           <template #card-title>Messages</template>
 
           <ul>
-            <li>
-              <div class="messages-card-name">Tony B.</div>
-              <div>Question about results</div>
-            </li>
-            <li>
-              <div class="messages-card-name">Sandy B.</div>
-              <div>Diabetes recipes</div>
-            </li>
-            <li>
-              <div class="messages-card-name">Howard B.</div>
-              <div>Reschedule Appt.</div>
+            <li v-for="message in latestChats">
+              <div class="messages-card-name">{{userName(message.patient.user)}}</div>
+              <div>{{message.body.message}}</div>
             </li>
           </ul>
 
-          <span class="dashboard-card-btn active-btn">3 New Messages</span>
+          <RouterLink to="/messages" class="dashboard-card-btn active-btn">
+            <span>3 New Messages(wip)</span>
+          </RouterLink>
         </Card>
 
         <Card class="patients-card">
           <template #card-title>Patients</template>
           <ul>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Howard Aarons</div>
-            </li>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Edward Alvarez</div>
-            </li>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Emily Atilla</div>
-            </li>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Courtney Bailey</div>
-            </li>
-            <li>
-              <img src="@/assets/img/image.png" alt="Patient Photo" />
-              <div>Karen Bartley</div>
+            <li v-for="patient in patients">
+              <img :src="fileStore.profileAvatars(patient.user)" alt="Patient Photo" />
+              <div>{{userName(patient.user)}}</div>
             </li>
           </ul>
           <template #card-btn>Add New Patient</template>

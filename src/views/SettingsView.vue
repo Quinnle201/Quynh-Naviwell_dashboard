@@ -3,7 +3,7 @@ import CalendarIcon from '@/components/icons/IconCalendar.vue'
 import { Form, Field } from 'vee-validate';
 
 import { axiosInstance, uploadFile, getFileUrlFromRef } from '@/helpers';
-import { useAlertStore } from '@/stores';
+import { useAlertStore, useFileStore } from '@/stores';
 
 export default {
     components: {
@@ -13,11 +13,12 @@ export default {
     },
     data() {
         const alertStore = useAlertStore()
+        const fileStore = useFileStore()
         return {
             alertStore,
+            fileStore,
             file: null,
             user: null,
-            photo_src: null
         }
     },
     methods: {
@@ -32,13 +33,6 @@ export default {
             }
 
         },
-        async getPhotoLink() {
-            if (this.user.image == null) {
-                this.photo_src = (await import('@/assets/img/avatar.webp')).default;
-                return
-            }
-            this.photo_src = await getFileUrlFromRef(`users/${this.user.id}/photos`, this.user.image);
-        },
         getUser() {
             axiosInstance.get('/user')
                 .then(response => {
@@ -49,8 +43,7 @@ export default {
                         'last_name': this.user.last_name,
                         'dob': new Date(this.user.profile.dob).toISOString().substring(0, 10)
                     })
-
-                    this.getPhotoLink()
+                    this.fileStore.getPhotoLinkForUser(this.user)                
 
                 })
                 .catch(error => {
@@ -74,12 +67,13 @@ export default {
 
             }
 
-            console.log(formData)
-
             axiosInstance.put('/user', formData)
                 .then(response => {
                     console.log(response.data)
                     this.alertStore.success("Information has been updated")
+                    this.user = response.data.data
+                    setTimeout(() => this.fileStore.getPhotoLinkForUser(this.user, true), 2000)
+                    
                 })
                 .catch(error => {
                     console.log(error)
@@ -104,7 +98,7 @@ export default {
                 <div class="settings-inner">
                     <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" />
                     <div class="settings-inner-img">
-                        <img :src="photo_src" />
+                        <img :src="fileStore.profileAvatars(user)" />
                         <button type="button" @click="selectFile()">Change Image</button>
                     </div>
 
