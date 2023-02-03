@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from '@/stores';
-
+import createAuthRefreshInterceptor from 'axios-auth-refresh';
 
 export const axiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}`,
@@ -19,41 +19,20 @@ axiosInstance.interceptors.request.use((request) => {
   return request
 })
 
-axiosInstance.interceptors.response.use(
-  (res) => {
-    return res;
-  },
-  async (err) => {
+// Function that will be called to refresh authorization
+const refreshAuthLogic = (failedRequest) => {
+  return new Promise((resolve, reject) => {
     const authStore = useAuthStore();
-    const originalConfig = err.config;
+    authStore.refreshToken().then(() => {
+      const { claim } = useAuthStore();
+      failedRequest.response.config.headers['Authorization'] = `Bearer ${claim.AccessToken}`
+      resolve()
+    }).catch(error => {
+      authStore.logout()
+      reject(error)
+    });
+  })
+}
 
-    if(!authStore.user) {
-      return Promise.reject(err);
-    }
-
-    if (err.response) {
-      // Access Token was expired
-      if (err.response.status === 401 && !originalConfig._retry) {
-        originalConfig._retry = true;
-
-        try {
-          const rs = await authStore.refreshToken();
-          axiosInstance.defaults.headers.Authorization = `Bearer ${authStore.claim.AccessToken}`
-          return axiosInstance(originalConfig);
-        } catch (_error) {
-          authStore.logout()
-          if (_error.response && _error.response.data) {
-            return Promise.reject(_error.response.data);
-          }
-          return Promise.reject(_error);
-        }
-      }
-
-      if (err.response.status === 403 && err.response.data) {
-        return Promise.reject(err.response.data);
-      }
-    }
-
-    return Promise.reject(err);
-  }
-);
+// Instantiate the interceptor
+createAuthRefreshInterceptor(axiosInstance, refreshAuthLogic);

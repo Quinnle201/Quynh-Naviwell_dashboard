@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="d-flex flex-row gap-1 user-block">
-                <img :src="photo_src" alt="profile_photo" width="48" height="48" class="rounded-circle">
+                <img v-if="photo_src" :src="photo_src" alt="profile_photo" width="48" height="48" class="rounded-circle">
                 <div class="text-center">
                     <a href="#" class="nav-link link-dark px-2 active" aria-current="page">{{
                         userName(authStore.user)
@@ -63,7 +63,6 @@ export default {
                 if (value.user?.image == null) {
                     this.photo_src = (await import('@/assets/img/avatar.webp')).default;
                     return
-                    
                 }
                 this.photo_src = await getFileUrlFromRef(`users/${value.user.id}/photos`, value.user.image);
             },

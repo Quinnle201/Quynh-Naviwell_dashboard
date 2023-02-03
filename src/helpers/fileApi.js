@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from '@/stores';
-import {generateUUID, getFileExt} from './file.js'
+import { generateUUID, getFileExt } from './file.js'
 
 export const axiosFileInstance = axios.create({
     baseURL: `${import.meta.env.VITE_FILEAPI_URL}`
@@ -17,8 +17,12 @@ axiosFileInstance.interceptors.request.use((request) => {
 })
 
 export async function getFileUrlFromRef(type, ref) {
-    const result = await axiosFileInstance.get(`/${type}/${ref}`)
-    return result.data.body
+    try {
+        const result = await axiosFileInstance.get(`/${type}/${ref}`)
+        return result.data.body
+    } catch (error) {
+        return null
+    }
 }
 
 export async function downloadFile(file, ref, type) {
@@ -39,7 +43,7 @@ export function generateFileName(file) {
 
 export function uploadFile(file, type, path, filename) {
     const originalname = file.name;
-    if(filename == null) {
+    if (filename == null) {
         filename = generateFileName(file);
     }
     const uploader = axiosFileInstance.put(`/${type}/${path}/${filename}`, file, {
