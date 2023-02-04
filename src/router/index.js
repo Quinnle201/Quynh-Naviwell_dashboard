@@ -27,7 +27,13 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      beforeEnter: (to, from) => {
+        const authStore = useAuthStore();
+        if(authStore.user || authStore.claim != null){
+          return from
+        }
+      },
     },
     {
       path: '/set-password',
