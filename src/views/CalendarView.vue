@@ -4,6 +4,7 @@ import AddIcon from '@/components/icons/IconAdd.vue'
 import CalendarIcon from '@/components/icons/IconCalendar.vue'
 import CheckIcon from '@/components/icons/IconCheck.vue'
 import PatientAutocomplete from '@/components/Patient/PatientAutocomplete.vue'
+import DeleteModal from '@/components/Modals/DeleteModal.vue'
 
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
@@ -26,7 +27,8 @@ export default {
         CheckIcon,
         Form,
         Field,
-        PatientAutocomplete
+        PatientAutocomplete,
+        DeleteModal
     },
     data() {
         const alertStore = useAlertStore();
@@ -35,6 +37,7 @@ export default {
             isModalVisible: false,
             selectedEvent: null,
             showDialog: false,
+            isDeleteModalVisible: false,
             events: [
                 {
                     start: '2023-01-23 11:00',
@@ -201,6 +204,12 @@ export default {
         closeModal() {
             this.selectedEvent = null
             this.isModalVisible = false;
+        },
+        showDeleteModal() {
+            this.isDeleteModalVisible = true;
+        },
+        closeDeleteModal() {
+            this.isDeleteModalVisible = false;
         },
         submitVisit(values) {
             const selectedDay = values.date
@@ -378,8 +387,8 @@ export default {
                             </div>
 
                             <div class="popup-footer">
-                                <button type="reset" class="w-btn w-btn-close" @click="closeModal">
-                                    Cancel
+                                <button type="reset" :class='selectedEvent ? "w-btn w-btn-delete" : "w-btn w-btn-close"' @click="selectedEvent? showDeleteModal() : closeModal()">
+                                    {{ selectedEvent? 'Delete': 'Cancel' }}
                                 </button>
                                 <button type="submit" class="w-btn">
                                     {{ selectedEvent? 'Edit Event': 'Save Event' }}
@@ -390,6 +399,13 @@ export default {
                 </Modal>
             </div>
         </div>
+
+        <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal">
+            <template #content>
+                <h4>Delete this event?</h4>
+                <p>This will delete all data regarding this event.</p>
+            </template>
+        </DeleteModal>
 
         <div class="calendar-wrapper">
             <vue-cal :time-from="8 * 60" :time-to="18 * 60" :time-step="15" today-button

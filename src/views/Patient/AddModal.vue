@@ -676,6 +676,10 @@ export default {
     color: #0258BC;
 }
 
+.patientInfo {
+    margin-bottom: 16px;
+}
+
 .heightInput div {
     display: flex;
     margin-right: -16px;

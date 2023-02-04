@@ -8,6 +8,7 @@ import LineChart from '@/components/LineChart.vue'
 import AddPatientModal from './AddModal.vue'
 import Modal from '@/components/Modals/Modal.vue'
 import DeleteModal from '@/components/Modals/DeleteModal.vue'
+import EditIcon from '@/components/icons/IconEdit.vue'
 
 import { Form, Field } from 'vee-validate';
 import { RouterLink } from 'vue-router'
@@ -30,7 +31,8 @@ export default {
         AddPatientModal,
         DeleteModal,
         Form,
-        Field
+        Field,
+        EditIcon
     },
     mixins: [
         userMixin
@@ -304,7 +306,10 @@ export default {
             <div class="patient-top">
                 <div class="patient-profile-left light-bg">
                     <div class="patient-profile-left-info">
-                        <img :src="fileStore.profileAvatars(patient.user)" alt="">
+                        <div class="patient-profile-left-info-img">
+                            <img :src="fileStore.profileAvatars(patient.user)" alt="">
+                            <EditIcon />
+                        </div>
                         <div>
                             <h6>{{ userName(user) }}</h6>
                             <span>{{ user.email }}</span>

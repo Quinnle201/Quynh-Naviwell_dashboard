@@ -408,6 +408,14 @@ body {
   margin: 0 auto 40px;
 }
 
+.messages-card {
+  justify-content: flex-start;
+}
+
+.messages-card ul {
+  margin-bottom: 12px;
+ }
+
 .messages-card ul li {
   background-color: #F4F4FF;
   margin-bottom: 14px;
@@ -423,7 +431,7 @@ body {
 }
 
 .messages-card .dashboard-card-btn {
-  margin-top: 12px;
+  margin-top: auto;
 }
 
 .messages-card ul li div {
@@ -439,6 +447,10 @@ body {
   text-align: right;
 }
 
+.dashboard-card.patients-card {
+  justify-content: flex-start;
+}
+
 .patients-card ul {
   list-style: none;
 }
@@ -447,6 +459,9 @@ body {
   margin-bottom: 14px;
   display: flex;
   align-items: center;
+}
+
+.patients-card ul li a {
   font-size: 14px;
   font-weight: 500;
   line-height: 14px;
@@ -458,6 +473,10 @@ body {
   max-height: 40px;
   margin-right: 20px;
   border-radius: 50%;
+}
+
+.dashboard-card.patients-card .dashboard-card-btn {
+  margin-top: auto;
 }
 
 .education-card {
@@ -495,8 +514,8 @@ body {
 }
 
 .quotes-card {
-  padding: 0;
   justify-content: center;
+  align-items: center;
 }
 
 .quotes-card p {
@@ -1425,11 +1444,27 @@ button.vuecal__arrow {
   align-items: center;
 }
 
-.patient-profile-left-info img {
+.patient-profile-left-info-img {
+  margin-right: 36px;
+  position: relative;
+  border-radius: 50%;
+  transition: .4s ease;
+  cursor: pointer;
+}
+
+.patient-profile-left-info-img img {
   width: 75px;
   height: 75px;
-  margin-right: 36px;
   border-radius: 50%;
+}
+
+.patient-profile-left-info-img svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: .4s ease;
 }
 
 .patient-profile-left-info h6 {
@@ -2248,10 +2283,12 @@ ul.messages-list li .message-list-time {
   font-size: 16px;
   font-weight: 400;
   color: #646464;
+  align-self: flex-start;
 }
 
 ul.messages-list li.physician-message .message-list-time {
   text-align: right;
+  align-self: flex-end;
 }
 
 .send-inner {
@@ -2281,6 +2318,26 @@ ul.messages-list li.physician-message .message-list-time {
   display: flex;
   justify-content: space-between;
   align-items: end;
+}
+
+.send-inner .send-inner-btns-file {
+  display: flex;
+  align-items: center;
+}
+
+.send-inner .send-inner-btns-file div {
+  background-color: var(--primary);
+  height: 100%;
+  margin-left: 16px;
+  padding: 4px 16px;
+  color: #FFFFFF;
+  border-radius: 16px;
+  cursor: default;
+}
+
+.send-inner .send-inner-btns-file div > span {
+  margin-left: 3px;
+  cursor: pointer;
 }
 
 .send-inner .send-inner-btns .attach-btn {
@@ -2720,5 +2777,13 @@ input[type=number] {
   .popup-content-item ul li:hover {
     background-color: #5C90F1;
     color: #FFFFFF;
+  }
+
+  .patient-profile-left-info-img:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .patient-profile-left-info-img:hover > svg {
+    opacity: 1;
   }
 }

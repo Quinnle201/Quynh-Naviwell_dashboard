@@ -351,11 +351,16 @@ export default {
                                     </div>
 
                                     <div class="send-inner-btns">
-                                        <input hidden type="file" name="attachment" @change="addFile"
-                                            ref="fileUpload" />
-                                        <button type="button" @click="selectFile()" class="attach-btn">
-                                            <AttachIcon />
-                                        </button>
+                                        <div class="send-inner-btns-file">
+                                            <input hidden type="file" name="attachment" @change="addFile"
+                                                ref="fileUpload" />
+                                            <button type="button" @click="selectFile()" class="attach-btn">
+                                                <AttachIcon />
+                                            </button>
+                                            <div>file.txt
+                                                <span>x</span>
+                                            </div>
+                                        </div>
 
                                         <button type="submit" class="w-btn send-btn">Send</button>
                                     </div>
