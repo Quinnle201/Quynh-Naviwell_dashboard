@@ -269,6 +269,23 @@ export default {
                 label: this.calendarEventClass(data).label
             })
         },
+        deleteVisit() {
+            if (this.selectedEvent != null) {
+                axiosInstance.delete(`/appointments/${this.selectedEvent.id}`)
+                    .then(response => {
+                        this.alertStore.success('Appointment cancelled')
+                        const index = _findIndex(this.events, ['id', this.selectedEvent.id])
+                        this.events.splice(index, 1)
+                        this.closeModal()
+                        this.closeDeleteModal()
+                    })
+                    .catch(error => {
+                        this.alertStore.error(error.response.data.message)
+                    });
+            } else {
+                this.alertStore.error('Unexpected error')
+            }
+        },
         getEvents() {
             axiosInstance.get('/appointments')
                 .then(response => {
@@ -387,7 +404,7 @@ export default {
                             </div>
 
                             <div class="popup-footer">
-                                <button type="reset" :class='selectedEvent ? "w-btn w-btn-delete" : "w-btn w-btn-close"' @click="selectedEvent? showDeleteModal() : closeModal()">
+                                <button :type="selectedEvent? 'button': 'reset'" :class='selectedEvent ? "w-btn w-btn-delete" : "w-btn w-btn-close"' @click="selectedEvent? showDeleteModal() : closeModal()">
                                     {{ selectedEvent? 'Delete': 'Cancel' }}
                                 </button>
                                 <button type="submit" class="w-btn">
@@ -400,9 +417,9 @@ export default {
             </div>
         </div>
 
-        <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal">
+        <DeleteModal v-show="isDeleteModalVisible" @delete="deleteVisit" @close="closeDeleteModal">
             <template #content>
-                <h4>Delete this event?</h4>
+                <h4>Cancel this event?</h4>
                 <p>This will delete all data regarding this event.</p>
             </template>
         </DeleteModal>
