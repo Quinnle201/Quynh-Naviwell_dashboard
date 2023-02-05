@@ -23,6 +23,7 @@ export default {
                 </template>
                 <template #btn-name>Update</template>
             </RoundBtn>
+            <slot name="btn"></slot>
             <RoundBtnDelete @click="$emit('delete')">
                 <template #btn-icon>
                     <RemoveIcon width="30" height="30" />
@@ -36,7 +37,8 @@ export default {
 
 <style>
     .details-inner.grid-two {
-        grid-template-columns: repeat(2, 1fr);
+        display: flex;
+        align-items: center;
         transform: translateX(-50%);
     }
 </style>

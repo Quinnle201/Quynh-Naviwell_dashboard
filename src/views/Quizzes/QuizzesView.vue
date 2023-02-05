@@ -74,16 +74,6 @@ export default {
                         </Transition>
                     </div>
                 </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <img src="@/assets/img/details-icon.png" alt="Details Icon" />
-                    </div>
-                </div>
             </div>
 
             <div class="pagination-wrapper">

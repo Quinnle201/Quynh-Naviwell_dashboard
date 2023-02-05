@@ -5,6 +5,12 @@ import SearchIcon from '@/components/icons/IconSearch.vue'
 import EditIcon from '@/components/icons/IconEdit.vue'
 import TimeIcon from '@/components/icons/IconTime.vue'
 import WeeklyIcon from '@/components/icons/IconWeekly.vue'
+import DetailModal from '@/components/Modals/DetailModal.vue'
+import Modal from '@/components/Modals/Modal.vue'
+import DeleteModal from '@/components/Modals/DeleteModal.vue'
+import RoundBtn from '@/components/Buttons/RoundBtn.vue'
+import VueMultiselect from 'vue-multiselect'
+import PatientsIcon from '@/components/icons/IconPatients.vue'
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
@@ -16,7 +22,13 @@ export default {
         SearchIcon,
         EditIcon,
         TimeIcon,
-        WeeklyIcon
+        WeeklyIcon,
+        DetailModal,
+        Modal,
+        DeleteModal,
+        RoundBtn,
+        VueMultiselect,
+        PatientsIcon
     },
     data() {
         const alertStore = useAlertStore()
@@ -24,7 +36,21 @@ export default {
             alertStore,
             tabList: ["Diets", "Recipes"],
             dietList: [],
-            recipeList: []
+            recipeList: [],
+            isDetailModalVisible: false,
+            isModalVisible: false,
+            isAssignModalVisible: false,
+            isDeleteModalVisible: false,
+            selectedPatients: null,
+            optionsPatients: [{
+                label: 'Select All',
+                patients: ['Howard Aarons', 'Edward Alvarez', 'Emily Atilla', 'Monkey D. Luffy', 'God Usopp', 'Roronoa Zoro']
+            }],
+            selectedGroups: null,
+            optionsGroups: [{
+                label: 'Select All',
+                groups: ['Group 1', 'Group 2', 'Group 3', 'Group 4']
+            }],
         };
     },
     methods: {
@@ -49,7 +75,36 @@ export default {
                     console.log(error)
                     this.alertStore.error(error.response.data.message)
                 });
-        }
+        },
+        showDetailModal(diet) {
+            this.isDetailModalVisible === diet ? (this.isDetailModalVisible = true) : (this.isDetailModalVisible = diet);
+        },
+        closeDetails() {
+            this.isDetailModalVisible = false;
+        },
+        showModal() {
+            this.isModalVisible = true;
+        },
+        closeModal() {
+            this.selectedEvent = null
+            this.isModalVisible = false;
+        },
+        showAssignModal() {
+            this.isDetailModalVisible = null;
+            this.isAssignModalVisible = true;
+        },
+        closeAssignModal() {
+            this.isDetailModalVisible = null;
+            this.isAssignModalVisible = false;
+        },
+        showDeleteModal() {
+            this.isDetailModalVisible = null;
+            this.isDeleteModalVisible = true;
+        },
+        closeDeleteModal() {
+            this.isDetailModalVisible = null;
+            this.isDeleteModalVisible = false;
+        },
     },
     computed: {
         ingredientList() {
@@ -96,8 +151,21 @@ export default {
                                 </div>
                             </div>
 
-                            <div class="quotes-grid-item-btn">
-                                <EditIcon />
+                            <div class="diet-grid-item-btn">
+                                <img src="@/assets/img/details-icon.png" alt="Details Icon" @click="showDetailModal(diet)" />
+
+                                <Transition>
+                                    <DetailModal v-if="isDetailModalVisible === diet" @update="showModal()" @close="closeDetails" @delete="showDeleteModal">
+                                        <template #btn>
+                                            <RoundBtn @click="showAssignModal()">
+                                                <template #btn-icon>
+                                                    <PatientsIcon width="30" height="30" />
+                                                </template>
+                                                <template #btn-name>Assign</template>
+                                            </RoundBtn>
+                                        </template>
+                                    </DetailModal>
+                                </Transition>
                             </div>
                         </div>
 
@@ -170,5 +238,67 @@ export default {
                 </template>
             </tabs>
         </div>
+
+        <Modal v-show="isAssignModalVisible" @close="closeAssignModal" class="overflow">
+            <template #header>Test Diet</template>
+            <template #content>
+                <div class="popup-content-item popup-content-item--select">
+                    <label>Select Patients</label>
+                    <VueMultiselect
+                        v-model="selectedPatients"
+                        :options="optionsPatients"
+                        :multiple="true"
+                        :close-on-select="false" 
+                        search="false"
+                        placeholder="Choose Patients" 
+                        select-label="Select" 
+                        deselect-label="Remove" 
+                        :limit="3" 
+                        group-values="patients" 
+                        group-label="label" 
+                        :group-select="true" 
+                        select-group-label="Select All" 
+                        deselect-group-label="Clear All" 
+                        >
+                    </VueMultiselect>
+                </div>
+                <div class="popup-content-item popup-content-item--select">
+                    <label>Select Patients</label>
+                    <VueMultiselect
+                        v-model="selectedGroups"
+                        :options="optionsGroups"
+                        :multiple="true"
+                        :close-on-select="false" 
+                        search="false"
+                        placeholder="Choose Groups" 
+                        select-label="Select" 
+                        deselect-label="Remove" 
+                        :limit="3" 
+                        group-values="groups" 
+                        group-label="label" 
+                        :group-select="true" 
+                        select-group-label="Select All" 
+                        deselect-group-label="Clear All"  
+                        >
+                        <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+                    </VueMultiselect>
+                </div>
+                <div class="popup-footer">
+                    <button type="submit" class="w-btn w-btn-close">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-btn">
+                        Save Changes
+                    </button>
+                </div>
+            </template>
+        </Modal>
+
+        <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal">
+            <template #content>
+                <h4>Delete this diet?</h4>
+                <p>You will not be able to recover it</p>
+            </template>
+        </DeleteModal>
     </div>
 </template>

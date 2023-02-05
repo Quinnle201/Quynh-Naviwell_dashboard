@@ -66,6 +66,10 @@
     overflow-x: auto;
   }
 
+  .popup-overlay.overflow .popup {
+    overflow: visible;
+  }
+
   .popup-header {
     position: relative;
   }
