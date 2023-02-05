@@ -12,7 +12,7 @@ import EditIcon from '@/components/icons/IconEdit.vue'
 
 import { Form, Field } from 'vee-validate';
 import { RouterLink } from 'vue-router'
-import { axiosInstance } from '@/helpers';
+import { axiosInstance, uploadFile } from '@/helpers';
 import { useAlertStore, useFileStore } from '@/stores';
 import _find from 'lodash/find'
 import userMixin from '@/mixins/user.js'
@@ -229,8 +229,29 @@ export default {
                 .catch(error => {
                     console.log(error)
                     this.alertStore.error(error.response.data.message)
-                }); 
-        }
+                });
+        },
+        selectFile() {
+            const r = this.$refs.fileUpload;
+            r.click();
+        },
+        addFile(event) {
+            const file = event.target.files[0]
+            if (!file) { return }
+            //upload profile photo
+            this.alertStore.success('Uploading photo');
+            const uploader = uploadFile(file, 'users', this.patient.user.id + '/photos')
+            const imageRef = uploader.ref;
+            axiosInstance.put(`/patients/${this.patient.id}`, { user: { image: imageRef } })
+                .then(response => {
+                    this.updatePatientInfo(response.data.patient)
+                    this.alertStore.success('Patient updated.');
+                    setTimeout(() => this.fileStore.getPhotoLinkForUser(this.patient.user, true), 2000)
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
     },
     computed: {
         isLoaded() {
@@ -306,8 +327,9 @@ export default {
             <div class="patient-top">
                 <div class="patient-profile-left light-bg">
                     <div class="patient-profile-left-info">
-                        <div class="patient-profile-left-info-img">
+                        <div class="patient-profile-left-info-img" @click="selectFile">
                             <img :src="fileStore.profileAvatars(patient.user)" alt="">
+                            <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" />
                             <EditIcon />
                         </div>
                         <div>
@@ -559,7 +581,8 @@ export default {
                             <Field name="height_ft" type="number" class="popup-content-item-input" :value="heightft">
                             </Field>
                             <label style="margin: auto 0 auto 3px;">ft</label>
-                            <Field name="height_in" type="number" class="popup-content-item-input" :value="heightin" style="margin-left: 16px;">
+                            <Field name="height_in" type="number" class="popup-content-item-input" :value="heightin"
+                                style="margin-left: 16px;">
                             </Field>
                             <label style="margin: auto 0 auto 3px;">in</label>
                         </div>
