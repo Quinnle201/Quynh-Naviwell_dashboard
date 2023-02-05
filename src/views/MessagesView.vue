@@ -46,6 +46,7 @@ export default {
             selectedPatient: null,
             messages: [],
             searchList: [],
+            files: null,
         }
     },
     computed: {
@@ -111,7 +112,7 @@ export default {
         },
         closeChatModal() {
             this.isChatModalVisible = false;
-            this.$refs.messageForm.setValues({})
+            this.$refs.newMessageForm.setValues({})
         },
         searchPatient(term) {
             axiosInstance.post('patients/search', { name: term })
@@ -178,7 +179,10 @@ export default {
         },
         addFile(event) {
             const files = event.target.files
-            this.$refs.messageForm.setFieldValue('files', files)
+            this.files = files
+        },
+        deleteFile() {
+            this.files = null
         },
         async clickedDownload(file) {
             this.alertStore.success(`Downloading ${file.name}`)
@@ -203,7 +207,7 @@ export default {
         submitMessage(values) {
 
             // No values specified
-            if (!values.message && !values.files) {
+            if (!values.message && !this.files) {
                 return
             }
 
@@ -212,7 +216,7 @@ export default {
                 message: values.message
             }
 
-            _forEach(values.files, (element => {
+            _forEach(this.files, (element => {
                 const fileData = uploadFile(element, 'messages', this.selectedPatient.id)
                 formBody.attachments.push({
                     name: fileData.name,
@@ -231,6 +235,7 @@ export default {
                     this.alertStore.error(error.response.data.message)
                 });
 
+            this.files = null
             this.$refs.messageForm.setValues({})
 
 
@@ -357,8 +362,8 @@ export default {
                                             <button type="button" @click="selectFile()" class="attach-btn">
                                                 <AttachIcon />
                                             </button>
-                                            <div>file.txt
-                                                <span>x</span>
+                                            <div v-if="files">{{ files[0].name }}
+                                                <span @click="deleteFile">x</span>
                                             </div>
                                         </div>
 
@@ -375,7 +380,7 @@ export default {
         <Modal v-show="isChatModalVisible" @close="closeChatModal">
             <template #header>Send Message</template>
             <template #content>
-                <Form @submit="sendNewMessage" ref="messageForm">
+                <Form @submit="sendNewMessage" ref="newMessageForm">
                     <div class="popup-content-item popup-content-item--search">
                         <label>Patient Name</label>
                         <PatientAutocomplete :patients="searchList" @search="searchPatient" />
