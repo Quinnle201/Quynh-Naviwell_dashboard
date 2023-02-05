@@ -2,12 +2,39 @@
 import AddIcon from '@/components/icons/IconAdd.vue'
 import SearchIcon from '@/components/icons/IconSearch.vue'
 import EditIcon from '@/components/icons/IconEdit.vue'
+import DetailModal from '@/components/Modals/DetailModal.vue'
+import DeleteModal from '@/components/Modals/DeleteModal.vue'
 
 export default {
     components: {
         AddIcon,
         SearchIcon,
-        EditIcon
+        EditIcon,
+        DetailModal,
+        DeleteModal
+    },
+    data() {
+        return {
+            quizzes: 16,
+            isDetailModalVisible: false,
+            isDeleteModalVisible: false,
+        }
+    },
+    methods: {
+        showDetailModal(idx) {
+            this.isDetailModalVisible === idx ? (this.isDetailModalVisible = true) : (this.isDetailModalVisible = idx);
+        },
+        closeDetails() {
+            this.isDetailModalVisible = false;
+        },
+        showDeleteModal() {
+            this.isDetailModalVisible = null;
+            this.isDeleteModalVisible = true;
+        },
+        closeDeleteModal() {
+            this.isDetailModalVisible = null;
+            this.isDeleteModalVisible = false;
+        },
     }
 }
 </script>
@@ -32,13 +59,19 @@ export default {
             </div>
 
             <div class="quizzes-grid">
-                <div class="quizzes-grid-item">
+                <div class="quizzes-grid-item" v-for="(quiz, index) in quizzes" :key="quiz.id">
                     <div class="quizzes-grid-item-content">
                         <h6>Quiz title</h6>
                         <div class="quizzes-grid-item-date">04/02/2023</div>
                     </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
+                    <div class="quizzes-grid-item-btn">
+                        <div class="quizzes-grid-item-btn-img" @click="showDetailModal(index)">
+                            <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+                        </div>
+
+                        <Transition>
+                            <DetailModal v-if="isDetailModalVisible === index" @update="showModal()" @close="closeDetails" @delete="showDeleteModal" />
+                        </Transition>
                     </div>
                 </div>
 
@@ -48,187 +81,7 @@ export default {
                         <div class="quizzes-grid-item-date">04/02/2023</div>
                     </div>
                     <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
-                    </div>
-                </div>
-
-                <div class="quizzes-grid-item">
-                    <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn" @click="">
-                        <EditIcon />
+                        <img src="@/assets/img/details-icon.png" alt="Details Icon" />
                     </div>
                 </div>
             </div>
@@ -247,5 +100,12 @@ export default {
                 </div>
             </div>
         </div>
+
+        <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal">
+            <template #content>
+                <h4>Delete this quiz?</h4>
+                <p>You will not be able to recover it</p>
+            </template>
+        </DeleteModal>
     </div>
 </template>

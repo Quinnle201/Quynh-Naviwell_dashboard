@@ -83,7 +83,6 @@ export default {
                     
                     <div class="addquiz-inner-input" v-for="(question, index) in questions" :key="question" :id="question">
                         <div>Question {{ index + 1 }}</div>
-                        <!-- <input type="text" placeholder="Write a question..." /> -->
                         <textarea name="" placeholder="Write a question..."></textarea>
                     </div>
                 </div>
