@@ -15,6 +15,8 @@ import CalendarView from '@/views/CalendarView.vue'
 import QuotesView from '@/views/Quotes/QuotesView.vue'
 import AddQuoteView from '@/views/Quotes/AddView.vue'
 import MessagesView from '@/views/MessagesView.vue'
+import QuizzesView from '@/views/Quizzes/QuizzesView.vue'
+import AddQuizView from '@/views/Quizzes/AddQuizView.vue'
 import DietView from '@/views/Diet/DietView.vue'
 import AddDietView from '@/views/Diet/AddDietView.vue'
 import AddRecipeView from '@/views/Diet/AddRecipeView.vue'
@@ -124,6 +126,22 @@ const router = createRouter({
           path: "settings",
           name: "settings",
           component: SettingsView
+        },
+        {
+          path: '/quizzes',
+          component: { render: () => h(RouterView) },
+          children: [
+            {
+              path: '',
+              name: 'quizzes',
+              component: QuizzesView
+            },
+            {
+              path: "add-quiz",
+              name: "add-quiz",
+              component: AddQuizView
+            }
+          ]
         }
       ]
     },
