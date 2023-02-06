@@ -4,7 +4,7 @@ import Card from '@/components/Card.vue'
 import LabIcon from '@/components/icons/IconLab.vue'
 import RecipeIcon from '@/components/icons/IconRecipe.vue'
 
-import { useAuthStore, useFileStore } from '@/stores';
+import { useAuthStore, useFileStore, useAlertStore } from '@/stores';
 import { axiosInstance } from '@/helpers';
 import userMixin from '@/mixins/user.js'
 import { RouterLink } from 'vue-router'
@@ -100,8 +100,10 @@ export default {
   data() {
     const userStore = useAuthStore()
     const fileStore = useFileStore()
+    const alertStore = useAlertStore()
     return {
       fileStore,
+      alertStore,
       user: userStore.user,
       todayVisits: [],
       latestChats: [],

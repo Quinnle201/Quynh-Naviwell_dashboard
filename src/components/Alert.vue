@@ -3,14 +3,32 @@ import { storeToRefs } from 'pinia';
 import { useAlertStore } from '@/stores';
 
 const alertStore = useAlertStore();
-const { alert } = storeToRefs(alertStore);
+const { alerts } = storeToRefs(alertStore);
 </script>
 
 <template>
-    <div v-if="alert" class="position-absolute bottom-0 end-0">
-        <div class="alert alert-dismissible fade show" :class="alert.type" role="alert">
-            {{alert.message}}
-            <button @click="alertStore.clear()" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <TransitionGroup tag="div" name="slide-fade" class="position-absolute bottom-0 end-0">
+        <div v-for="alert in alerts" class="alert alert-dismissible" :class="alert.type" role="alert" :key="alert.uid"
+            @click="alertStore.cancelTimer(alert.uid)">
+            {{ alert.message }}
+            <button @click="alertStore.remove(alert.uid)" type="button" class="btn-close" aria-label="Close"></button>
         </div>
-    </div>
+    </TransitionGroup>
 </template>
+
+<style>
+.slide-fade-move,
+.slide-fade-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.7s ease;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    opacity: 0;
+    transform: translateX(30px) !important;
+}
+</style>
