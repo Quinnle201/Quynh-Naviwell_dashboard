@@ -149,9 +149,6 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
-  // clear alert on route change
-  const alertStore = useAlertStore();
-  alertStore.clear();
 
   // redirect to login page if not logged in and trying to access a restricted page 
   const publicPages = ['/login', '/set-password'];
