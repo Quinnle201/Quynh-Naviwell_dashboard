@@ -19,7 +19,6 @@ onMounted(() => {
 })
 
 watch(route, (to) => {
-  console.log('route', to.path)
   currentRoute.value = to.path;
 });
 
