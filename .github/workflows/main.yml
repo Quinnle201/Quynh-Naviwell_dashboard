@@ -1,0 +1,37 @@
+name: naviwell-dashboard
+
+env:
+  "S3_BUCKET_NAME": "naviwell-frontend"
+  "AWS_REGION": "us-east-2"
+  
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Create env file
+        run: |
+          touch .env
+          echo VITE_API_URL="http://naviwell-dev.eba-sijwcvyv.us-east-2.elasticbeanstalk.com/api/testclinic" >> .env
+          echo VITE_FILEAPI_URL="https://waii0kvk8e.execute-api.us-east-2.amazonaws.com/Stage" >> .env
+          cat .env
+
+      - name: Amazon S3 deployment
+        uses: lewandy/vue-s3-deployer@main
+        with:
+          AWS_ACCESS_KEY_ID: ${{secrets.ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.SECRET_ACCESS_KEY}}
+          AWS_DEFAULT_REGION: ${{env.AWS_REGION}}
+          AWS_BUCKET_NAME: ${{env.S3_BUCKET_NAME}}
+          APP_SOURCE_CODE: ./
+          BUILD_COMMAND: "npm run build"
