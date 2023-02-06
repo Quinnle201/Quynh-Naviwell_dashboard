@@ -20,34 +20,76 @@ export default {
     data() {
         const alertStore = useAlertStore();
         return {
+            quizId: null,
             alertStore,
-            formData: {
-                questions: [
-                    {
-                        text: '',
-                        answers: ['', '', '']
-                    }
-                ]
-            },
+            quizData: null,
             editor: ClassicEditor,
             editorConfig: {
                 // The configuration of the editor.
             }
         }
     },
-    mounted() {
+    watch: {
+        '$route.params': {
+            handler(toParams, previousParams) {
+                const id = toParams.id;
+                if (id) {
+                    this.getQuiz(id)
+                } else {
+                    this.initialQuiz()
+                }
+            },
+            immediate: true
+        }
     },
     methods: {
+        initialQuiz() {
+            this.quizId = null
+            this.quizData = {
+                title: '',
+                article: '',
+                questions: [
+                    {
+                        text: '',
+                        answers: ['', '', '']
+                    }
+                ]
+            }
+        },
         submitQuiz(values) {
-            console.log(values)
-            axiosInstance.post('/quizzes', values)
+            if (this.quizId) {
+                axiosInstance.put(`/quizzes/${this.quizId}`, values)
+                    .then(response => {
+                        this.alertStore.success('Quiz updated')
+                        this.$router.back()
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alertStore.error(error.response.data.message)
+                    });
+            } else {
+                axiosInstance.post('/quizzes', values)
+                    .then(response => {
+                        this.alertStore.success('Quiz added')
+                        this.$router.back()
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alertStore.error(error.response.data.message)
+                    });
+            }
+
+        },
+        getQuiz(id) {
+            axiosInstance.get(`/quizzes/${id}`)
                 .then(response => {
-                    this.alertStore.success('Quotes added')
-                    this.$router.back()
+                    this.quizData = response.data.quiz;
+                    this.quizId = this.quizData.id
                 })
                 .catch(error => {
-                    console.log(error)
                     this.alertStore.error(error.response.data.message)
+                    this.$router.replace({ name: 'add-quiz' })
+
                 });
         },
         close() {
@@ -64,7 +106,7 @@ export default {
         </div>
 
         <div class="addquiz-wrapper page-bg">
-            <Form @submit="submitQuiz" :initial-values="formData">
+            <Form v-if="quizData" @submit="submitQuiz" :initial-values="quizData">
                 <!-- <div class="addquote-selects">
                     <div class="popup-content-item popup-content-item--select">
                         <label>Select Patients</label>
@@ -115,8 +157,8 @@ export default {
                     </div>
 
                     <div class="editor-container">
-                        <Field name="article" v-slot="{ field }">
-                            <ckeditor :editor="editor" v-bind="field" :config="editorConfig"></ckeditor>
+                        <Field name="article">
+                            <ckeditor :editor="editor" v-model="quizData.article" :config="editorConfig"></ckeditor>
                         </Field>
                     </div>
 

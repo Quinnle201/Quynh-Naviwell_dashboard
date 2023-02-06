@@ -5,6 +5,9 @@ import EditIcon from '@/components/icons/IconEdit.vue'
 import DetailModal from '@/components/Modals/DetailModal.vue'
 import DeleteModal from '@/components/Modals/DeleteModal.vue'
 
+import { axiosInstance } from '@/helpers';
+import { useAlertStore } from '@/stores';
+
 export default {
     components: {
         AddIcon,
@@ -14,11 +17,22 @@ export default {
         DeleteModal
     },
     data() {
+        const alertStore = useAlertStore()
         return {
-            quizzes: 16,
+            alertStore,
+            quizzes: [],
+            selectedQuizId: null,
             isDetailModalVisible: false,
             isDeleteModalVisible: false,
         }
+    },
+    mounted() {
+        this.getQuizList()
+    },
+    computed: {
+        localDate() {
+            return (time) => new Date(time).format('DD.MM.YYYY')
+        },
     },
     methods: {
         showDetailModal(idx) {
@@ -27,14 +41,45 @@ export default {
         closeDetails() {
             this.isDetailModalVisible = false;
         },
-        showDeleteModal() {
+        showDeleteModal(quizId) {
+            this.selectedQuizId = quizId;
             this.isDetailModalVisible = null;
             this.isDeleteModalVisible = true;
         },
         closeDeleteModal() {
+            this.selectedQuizId = null;
             this.isDetailModalVisible = null;
             this.isDeleteModalVisible = false;
         },
+        updateQuiz(id) {
+            this.$router.push({ name: 'add-quiz', params: { id: id } })
+        },
+        deleteQuiz() {
+            if (this.selectedQuizId) {
+                const quizId = this.selectedQuizId
+                this.closeDeleteModal()
+                axiosInstance.delete(`/quizzes/${quizId}`)
+                    .then(response => {
+                        const quizIndex = this.quizzes.findIndex((elem) => elem.id == quizId)
+                        this.quizzes.splice(quizIndex, 1)
+                        this.alertStore.success('Quiz deleted')
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alertStore.error(error.response.data.message)
+                    });
+            }
+        },
+        getQuizList() {
+            axiosInstance.get('/quizzes')
+                .then(response => {
+                    this.quizzes = response.data.quizzes
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        }
     }
 }
 </script>
@@ -61,8 +106,8 @@ export default {
             <div class="quizzes-grid">
                 <div class="quizzes-grid-item" v-for="(quiz, index) in quizzes" :key="quiz.id">
                     <div class="quizzes-grid-item-content">
-                        <h6>Quiz title</h6>
-                        <div class="quizzes-grid-item-date">04/02/2023</div>
+                        <h6>{{ quiz.title }}</h6>
+                        <div class="quizzes-grid-item-date">{{ localDate(quiz.created_at) }}</div>
                     </div>
                     <div class="quizzes-grid-item-btn">
                         <div class="quizzes-grid-item-btn-img" @click="showDetailModal(index)">
@@ -70,7 +115,8 @@ export default {
                         </div>
 
                         <Transition>
-                            <DetailModal v-if="isDetailModalVisible === index" @update="showModal()" @close="closeDetails" @delete="showDeleteModal" />
+                            <DetailModal v-if="isDetailModalVisible === index" @update="updateQuiz(quiz.id)"
+                                @close="closeDetails" @delete="showDeleteModal(quiz.id)" />
                         </Transition>
                     </div>
                 </div>
@@ -91,7 +137,7 @@ export default {
             </div>
         </div>
 
-        <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal">
+        <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal" @delete="deleteQuiz">
             <template #content>
                 <h4>Delete this quiz?</h4>
                 <p>You will not be able to recover it</p>
