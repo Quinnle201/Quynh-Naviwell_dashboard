@@ -43,7 +43,6 @@ export default {
         let startTimeMilli = d.setMinutes(d.getMinutes() - 90);
         let endTimeMilli = d.setMinutes(d.getMinutes() + 180);
         let timeToCheckMilli = visitDate.getTime();
-        console.log(timeToCheckMilli, startTimeMilli, endTimeMilli)
         if (timeToCheckMilli >= startTimeMilli && timeToCheckMilli <= endTimeMilli) {
           return true
         }

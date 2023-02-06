@@ -121,7 +121,6 @@ export default {
         getPatientHealthData(id) {
             axiosInstance.get(`/patients/${id}/health-data`)
                 .then(response => {
-                    console.log(response.data)
                     this.buildChart(response.data['health-data'])
                 })
                 .catch(error => {
@@ -137,7 +136,6 @@ export default {
             values.bmi = this.bmi(values)
             axiosInstance.post(`/patients/${id}/health-data`, values)
                 .then(response => {
-                    console.log(response.data)
                     this.alertStore.success("Data added")
                 })
                 .catch(error => {

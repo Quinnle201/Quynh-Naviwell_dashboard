@@ -138,7 +138,6 @@ export default {
         getMessagesList() {
             axiosInstance.get('/messages')
                 .then(response => {
-                    console.log(response.data)
                     response.data.messages.forEach(element => {
                         this.fileStore.getPhotoLinkForUser(element.patient.user)
                         this.list.push({
@@ -195,7 +194,6 @@ export default {
             }
             axiosInstance.post("/messages", { body: formBody, patient_id: values.patient_id })
                 .then(response => {
-                    console.log(response.data)
                     this.alertStore.success('Message sent.');
                     this.closeChatModal()
                 })

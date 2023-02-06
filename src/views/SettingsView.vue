@@ -36,7 +36,6 @@ export default {
         getUser() {
             axiosInstance.get('/user')
                 .then(response => {
-                    console.log(response.data)
                     this.user = response.data.data
                     this.$refs.userForm.setValues({
                         'first_name': this.user.first_name,
@@ -69,7 +68,6 @@ export default {
 
             axiosInstance.put('/user', formData)
                 .then(response => {
-                    console.log(response.data)
                     this.alertStore.success("Information has been updated")
                     this.user = response.data.data
                     setTimeout(() => this.fileStore.getPhotoLinkForUser(this.user, true), 2000)

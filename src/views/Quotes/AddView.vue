@@ -25,7 +25,6 @@ export default {
             if (this.count < 20) this.count++;
         },
         submitQuotes(values) {
-            console.log(values)
             axiosInstance.post('/quotes/mass', values)
                 .then(response => {
                     this.alertStore.success('Quotes added')

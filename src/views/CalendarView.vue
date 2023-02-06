@@ -123,7 +123,6 @@ export default {
                     const data = Object.assign({}, visitEvent.dataObject);
                     const startTime = new Date(data.start_time)
                     const finishTime = new Date(data.finish_time)
-                    console.log(data)
                     this.$refs.visitForm.setValues({
                         visit_type: data.visit_type,
                         date: startTime.toISOString().substring(0, 10),
@@ -215,7 +214,6 @@ export default {
             const selectedDay = values.date
             values.start_time = new Date(`${selectedDay}T${values.from}`);
             values.finish_time = new Date(`${selectedDay}T${values.to}`);
-            console.log(values)
 
             if (this.selectedEvent != null) {
                 axiosInstance.put(`/appointments/${this.selectedEvent.id}`, values)

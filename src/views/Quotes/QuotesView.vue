@@ -79,7 +79,6 @@ export default {
         getQuotes() {
             axiosInstance.get('/quotes')
                 .then(response => {
-                    console.log(response.data)
                     this.quotes = response.data.quotes
                 })
                 .catch(error => {
