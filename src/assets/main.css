@@ -2782,7 +2782,9 @@ input[type=number] {
   flex-direction: column;
 }
 
-.addquiz-inner {}
+.addquiz-inner .editor-container {
+  margin-bottom: 16px;
+}
 
 .addquiz-inner h4 {
   margin-bottom: 6px;
@@ -2795,7 +2797,7 @@ input[type=number] {
 .addquiz-inner input, 
 .addquiz-inner textarea {
   width: 324px;
-  height: 42px;
+  height: auto;
   margin-bottom: 0;
   padding: 10px 16px;
   display: block;
@@ -2807,8 +2809,8 @@ input[type=number] {
 }
 
 .addquiz-inner textarea {
-  width: 416px;
-  height: 76px;
+  width: 100%;
+  margin-bottom: 16px;
   resize: none;
 }
 
@@ -2824,13 +2826,77 @@ input[type=number] {
   color: #000000;
 }
 
-.addquiz-inner-input {
+.addquiz-inner-grid {
+  margin-right: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(196, 196, 196, .45);
+ }
+
+.addquiz-inner-item {
+  flex: 0 0 48%;
   margin-bottom: 16px;
 }
 
-.addquiz-inner-input > div {
+.addquiz-inner-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.addquiz-inner-item-head button {
+  color: #FF0000;
+}
+
+.addquiz-inner-item > div {
   font-weight: 500;
   color: var(--primary);
+ }
+
+ .addquiz-inner-item-list fieldset {
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+ }
+
+ .addquiz-inner-item-list fieldset input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  z-index: 1;
+ }
+
+ .addquiz-inner-item-list fieldset input[type="radio"]:checked + input[type="text"] {
+  border: 1px solid var(--primary);
+ }
+
+ .addquiz-inner-item-list fieldset input[type="text"] {
+  width: 100%;
+  padding-right: 45px;
+  border: 1px solid transparent;
+ }
+
+ .addquiz-inner-item-list button {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--primary);
+ }
+
+ .addquiz-inner-item-list fieldset button {
+  position: absolute;
+  right: -2%;
+  top: -15px;
+  font-size: 11px;
+  font-weight: 600;
+  /* color: #FF0000; */
+  color: #000000;
  }
 
  .addquiz-wrapper .add-button {
@@ -2846,6 +2912,14 @@ input[type=number] {
   background-color: transparent;
   margin-right: 16px;
   border: 1px solid var(--primary);
+}
+
+/* CKEditor */
+:root {
+  --ck-border-radius: 16px;
+  --ck-color-focus-border: var(--primary);
+  --ck-color-shadow-drop: hsla(0, 0%, 0%, 0);
+  --ck-color-shadow-inner: hsla(0, 0%, 0%, 0);
 }
 
 
