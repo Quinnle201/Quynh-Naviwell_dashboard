@@ -38,7 +38,7 @@ export const useFileStore = defineStore({
             //create initial object so we refer to it only once.
             this.profilePhotos.push({
                 userid: user.id,
-                link: '/src/assets/img/usericon.png'
+                link: '/img/usericon.png'
             })
 
             if (user.image == null) {
