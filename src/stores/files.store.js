@@ -26,6 +26,9 @@ export const useFileStore = defineStore({
     },
     actions: {
         async getPhotoLinkForUser(user, force = false) {
+            if(!user){
+                return
+            }
             var index = _findIndex(this.profilePhotos, ['userid', user.id]);
             if (index != -1 && !force) {
                 return
