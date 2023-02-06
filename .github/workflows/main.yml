@@ -17,7 +17,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Clone the repository
+        uses: actions/checkout@v3
       
       - name: Create env file
         run: |
@@ -25,13 +26,19 @@ jobs:
           echo VITE_API_URL="http://naviwell-dev.eba-sijwcvyv.us-east-2.elasticbeanstalk.com/api/testclinic" >> .env
           echo VITE_FILEAPI_URL="https://waii0kvk8e.execute-api.us-east-2.amazonaws.com/Stage" >> .env
           cat .env
+          
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Build project
+        run: npm run build
 
       - name: Amazon S3 deployment
-        uses: lewandy/vue-s3-deployer@main
+        uses: dvelasquez/deploy-s3-action@main
         with:
           AWS_ACCESS_KEY_ID: ${{secrets.ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.SECRET_ACCESS_KEY}}
           AWS_DEFAULT_REGION: ${{env.AWS_REGION}}
           AWS_BUCKET_NAME: ${{env.S3_BUCKET_NAME}}
-          APP_SOURCE_CODE: ./
-          BUILD_COMMAND: "npm run build"
+          DIST_LOCATION_CODE: ./dist
