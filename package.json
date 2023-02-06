@@ -9,6 +9,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^36.0.0",
+    "@ckeditor/ckeditor5-vue": "^4.0.1",
     "@popperjs/core": "^2.11.6",
     "axios": "^1.2.2",
     "axios-auth-refresh": "^3.3.6",
