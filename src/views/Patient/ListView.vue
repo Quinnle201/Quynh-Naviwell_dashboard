@@ -145,7 +145,7 @@ export default {
         getPatients() {
             axiosInstance.get('/patients')
                 .then(response => {
-                    this.patients = response.data.patients;
+                    this.patients = response.data.data.patients;
                     this.patients.forEach(pt => {
                         this.fileStore.getPhotoLinkForUser(pt.user)
                     });

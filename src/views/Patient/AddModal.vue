@@ -361,7 +361,7 @@ export default {
             if (this.patient != null) {
                 axiosInstance.put(`/patients/${this.patient.id}`, values)
                     .then(response => {
-                        this.$emit('update:patient', response.data.patient)
+                        this.$emit('update:patient', response.data.data)
                         this.alertStore.success('Patient updated.');
                         this.close()
                     })

@@ -110,7 +110,7 @@ export default {
         getPatientById(id) {
             axiosInstance.get(`/patients/${id}`)
                 .then(response => {
-                    this.patient = response.data.patient;
+                    this.patient = response.data.data;
                     this.fileStore.getPhotoLinkForUser(this.patient.user)
                 })
                 .catch(error => {
@@ -205,7 +205,7 @@ export default {
         addMedsData(values) {
             axiosInstance.put(`/patients/${this.patient.id}`, values)
                 .then(response => {
-                    this.updatePatientInfo(response.data.patient)
+                    this.updatePatientInfo(response.data.data)
                     this.alertStore.success('Patient updated.');
                     this.closeModal()
                 })
@@ -242,7 +242,7 @@ export default {
             const imageRef = uploader.ref;
             axiosInstance.put(`/patients/${this.patient.id}`, { user: { image: imageRef } })
                 .then(response => {
-                    this.updatePatientInfo(response.data.patient)
+                    this.updatePatientInfo(response.data.data)
                     this.alertStore.success('Patient updated.');
                     setTimeout(() => this.fileStore.getPhotoLinkForUser(this.patient.user, true), 2000)
                 })

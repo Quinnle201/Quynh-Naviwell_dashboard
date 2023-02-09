@@ -84,7 +84,7 @@ export default {
     getLatestPatients() {
       axiosInstance.get('/patients', { params: { "limit": 5 } })
         .then(response => {
-          response.data.patients.forEach(pt => {
+          response.data.data.patients.forEach(pt => {
             this.patients.push(pt)
             this.fileStore.getPhotoLinkForUser(pt.user)
           });
