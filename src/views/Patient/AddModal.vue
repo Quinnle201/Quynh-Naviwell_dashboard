@@ -105,13 +105,6 @@ export default {
                     rules: Yup.string().nullable(),
                 },
                 {
-                    label: 'Sexual orientation',
-                    name: 'profile.sex-orientation',
-                    as: 'input',
-                    model: 'sex_orientation',
-                    rules: Yup.string().nullable(),
-                },
-                {
                     label: 'Language',
                     name: 'profile.language',
                     as: 'input',
@@ -126,7 +119,7 @@ export default {
                     rules: Yup.string().nullable(),
                 },
                 {
-                    label: '',
+                    label: 'Notes',
                     name: 'profile.notes',
                     as: 'textarea',
                     model: 'notes',
@@ -177,11 +170,11 @@ export default {
                     rules: Yup.string().required('Email is required'),
                 },
                 {
-                    label: 'Phone *',
+                    label: 'Phone',
                     name: 'user.phone',
                     as: 'input',
                     model: 'user.phone',
-                    rules: Yup.string().required('Phone is required'),
+                    rules: Yup.string().nullable(),
                 },
             ]
         }

@@ -388,8 +388,8 @@ export default {
                     <div>{{ patient.race ?? '-' }}</div>
                 </div>
                 <div class="patient-info-item">
-                    <div class="patient-info-item-label">Sexual Orientation</div>
-                    <div>{{ patient.sex_orientation ?? '-' }}</div>
+                    <div class="patient-info-item-label">Address</div>
+                    <div>{{ patient.contact_info?.address ?? '-' }}</div>
                 </div>
                 <div class="patient-info-item">
                     <div class="patient-info-item-label">Insurance number</div>
