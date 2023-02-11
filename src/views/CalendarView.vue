@@ -116,6 +116,15 @@ export default {
         };
     },
     watch: {
+        '$route.params': {
+            handler(toParams, previousParams) {
+                const id = toParams.id;
+                if (id) {
+                    this.getEventById(id)
+                }
+            },
+            immediate: true
+        },
         selectedEvent: {
             handler(value) {
                 if (value != null) {
@@ -256,7 +265,11 @@ export default {
             this.events.splice(index, 1, updatedEvent)
         },
         addVisit(data) {
-            this.events.push({
+            if(this.events.some(event => event.id === data.id)){
+                return null
+            }
+            const visitObject = 
+            {
                 dataObject: data,
                 id: data.id,
                 start: this.localDate(data.start_time),
@@ -265,7 +278,9 @@ export default {
                 content: this.userName(data.patient.user),
                 class: this.calendarEventClass(data).class,
                 label: this.calendarEventClass(data).label
-            })
+            }
+            this.events.push(visitObject)
+            return visitObject
         },
         deleteVisit() {
             if (this.selectedEvent != null) {
@@ -290,6 +305,18 @@ export default {
                     response.data.appointments.forEach(appt => {
                         this.addVisit(appt)
                     });
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        getEventById(id) {
+            axiosInstance.get(`/appointments/${id}`)
+                .then(response => {
+                    const visit = this.addVisit(response.data.appointment)
+                    this.showModal(visit, null)
 
                 })
                 .catch(error => {

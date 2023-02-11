@@ -293,6 +293,27 @@ export default {
         },
         heightin() {
             return this.height[1].replace(/[^0-9.]/g, '');
+        },
+        apptDate(){
+            return (appt) => {
+                if (!appt) {
+                    return ""
+                }
+                const date = this.currentDate(appt.start_time);
+                return `${date.month} ${date.day}, ${date.year} at ${date.time}`
+            }
+        },
+        currentDate() {
+            return (apptDate) => {
+                let date = new Date(apptDate);
+                let weekdayShort = date.toLocaleString('en-us', { weekday: 'short' });
+                let weekday = date.toLocaleString('en-us', { weekday: 'long' });
+                let month = date.toLocaleString('en-us', { month: 'long' });
+                let day = date.toLocaleString('en-us', { day: 'numeric' });
+                let year = date.toLocaleString('en-us', { year: 'numeric' });
+                let time = date.toLocaleTimeString('en-us', { hour: "2-digit", minute: "2-digit" })
+                return { weekdayShort, weekday, month, day, year, time };
+            }
         }
     }
 }
@@ -363,10 +384,12 @@ export default {
                         </RoundBtn>
                     </div>
                 </div>
-                <div class="patient-profile-right light-bg">
-                    <h4 class="patient-heading">Next Appointment Scheduled (WIP)</h4>
-                    <span>January 22, 2022 at 10:00 AM</span>
-                    <button>Open in Calendar</button>
+                <div class="patient-profile-right light-bg" v-if="patient.appointments[0]">
+                    <h4 class="patient-heading">Next Appointment Scheduled</h4>
+                    <span>{{ apptDate(patient.appointments[0]) }}</span>
+                    <RouterLink custom v-slot="{ navigate }" :to="{ name: 'calendar', params: { id: patient.appointments[0].id } }" >
+                        <button @click="navigate" @keypress.enter="navigate">Open in Calendar</button>
+                    </RouterLink>
                 </div>
             </div>
 

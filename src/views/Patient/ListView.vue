@@ -85,6 +85,14 @@ export default {
             }
             return array
         },
+        apptDate(){
+            return (appt) => {
+                if (!appt) {
+                    return ""
+                }
+                return new Date(appt.start_time).toDateString()
+            }
+        }
     },
     methods: {
         submitVisit(values) {
@@ -224,7 +232,7 @@ export default {
                         <tr>
                             <th>Patient Name</th>
                             <th>Age</th>
-                            <th>Next Appointment(incomplete)</th>
+                            <th>Next Appointment</th>
                             <th>Quiz Status(incomplete)</th>
                             <th>Details</th>
                         </tr>
@@ -239,7 +247,7 @@ export default {
 
                             </td>
                             <td>{{ age(patient) }}</td>
-                            <td>December 22, 2022</td>
+                            <td> {{ apptDate(patient.appointments[0]) }}</td>
                             <td>
                                 <div class="label-status incomplete">Incomplete</div>
                                 <!-- <div class="label-status complete">Complete</div> -->

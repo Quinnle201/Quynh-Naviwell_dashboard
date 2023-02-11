@@ -113,7 +113,7 @@ const router = createRouter({
           ]
         },
         {
-          path: "calendar",
+          path: "calendar/:id?",
           name: "calendar",
           component: CalendarView
         },
