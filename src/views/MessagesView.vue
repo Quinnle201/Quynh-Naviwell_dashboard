@@ -64,6 +64,11 @@ export default {
                 return 'message'
             }
         },
+        unreadCount() {
+            return this.list.filter((value) => {
+                return !value.isRead
+            }).length
+        }
     },
     watch: {
         selectedPatient: {
@@ -145,7 +150,8 @@ export default {
                             patient_id: element.patient_id,
                             name: this.userName(element.patient.user),
                             message: element.body,
-                            date: element.created_at
+                            date: element.created_at,
+                            isRead: element.is_read
                         })
                     });
 
@@ -169,8 +175,10 @@ export default {
                     this.alertStore.error(error.response.data.message)
                 });
         },
-        selectChat(patient) {
-            this.selectedPatient = patient
+        selectChat(message) {
+            const idx = _findIndex(this.list, ['patient_id', message.patient_id]);
+            this.list[idx].isRead = true
+            this.selectedPatient = message.patient
         },
         selectFile() {
             const r = this.$refs.fileUpload;
@@ -260,8 +268,8 @@ export default {
         <div class="chat-wrapper page-bg">
             <div class="chat-left">
                 <div class="chat-left-head">
-                    <div class="chat-notifications">
-                        <span>2 new</span>
+                    <div v-if="unreadCount > 0" class="chat-notifications">
+                        <span>{{`${unreadCount} new`}}</span>
                     </div>
 
                     <div>
@@ -278,7 +286,7 @@ export default {
                     <div class="chat-content-inner">
                         <ul class="chat-list">
                             <li :class="msg.patient_id == selectedPatient?.id ? 'active-chat' : ''"
-                                class="chat-list-item" v-for="msg in list" @click="selectChat(msg.patient)">
+                                class="chat-list-item" v-for="msg in list" @click="selectChat(msg)">
                                 <div class="chat-list-item-img">
                                     <img :src="fileStore.profileAvatars(msg.patient.user)" alt="User photo" />
                                 </div>
@@ -290,9 +298,10 @@ export default {
                                 </div>
                                 <div class="chat-list-item-info">
                                     <div class="chat-list-item-info-date">{{ localDate(msg.date) }}</div>
-                                    <div v-if="getMessageType(msg.message) == 'attachment'"
+                                    <div
                                         class="chat-list-item-info-icon">
-                                        <AttachIcon />
+                                        <span v-if="!msg.isRead">1</span>
+                                        <AttachIcon v-if="getMessageType(msg.message) == 'attachment'" />
                                     </div>
                                 </div>
                             </li>
