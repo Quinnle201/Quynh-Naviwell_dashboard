@@ -236,7 +236,7 @@ export default {
                     name: 'health-data.weight',
                     as: 'input',
                     model: 'current_health_data.weight',
-                    rules: Yup.string().nullable()
+                    rules: Yup.string().required('Weight data is required'),
                 },
                 {
                     label: 'Allergies',
