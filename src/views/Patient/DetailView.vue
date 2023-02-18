@@ -314,6 +314,9 @@ export default {
                 let time = date.toLocaleTimeString('en-us', { hour: "2-digit", minute: "2-digit" })
                 return { weekdayShort, weekday, month, day, year, time };
             }
+        },
+        questionnaire() {
+            return this.patient.questionnaire;
         }
     }
 }
@@ -454,18 +457,19 @@ export default {
 
                         <div class="patient-status-item">
                             <div class="patient-status-item-date">
-                                <div>Quarterly Questionnaire Assigned:</div>
-                                <div>11/08/2022</div>
+                                <div>Next Quarterly Questionnaire Assigned:</div>
+                                <div>{{ new Date(patient.questionnaireAssignDate).format("YYYY/MM/DD") }}</div>
                             </div>
 
-                            <div class="label-status complete">Complete</div>
+                            <div :class="questionnaire ? 'complete' : 'incomplete'" class="label-status">{{ questionnaire ? 'Complete' : 'Incomplete' }}</div>
 
                             <div class="patient-status-item-duration">
-                                <div>Completed <span>11/11/2022</span></div>
-                                <div>Duration: <span>Approximately 26 minutes</span></div>
+                                <div v-if="questionnaire">Completed on <span>{{new Date(questionnaire.created_at).format("YYYY/MM/DD") }}</span></div>
                             </div>
 
-                            <div class="patient-status-item-btn">View Questionnaire Report</div>
+                            <RouterLink v-if="questionnaire" :to="{ name: 'report', params: { id: patient.id }}">
+                                <div class="patient-status-item-btn">View Questionnaire Report</div>
+                            </RouterLink>
                         </div>
                     </div>
                 </div>
