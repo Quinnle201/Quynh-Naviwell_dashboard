@@ -38,80 +38,7 @@ export default {
             selectedEvent: null,
             showDialog: false,
             isDeleteModalVisible: false,
-            events: [
-                {
-                    start: '2023-01-23 11:00',
-                    end: '2023-01-23 11:30',
-                    title: 'Initial NaviWell Visit',
-                    content: 'Thomas Edison',
-                    class: 'box_blue',
-                    label: 'Initial NaviWell Visit'
-                },
-                {
-                    start: '2023-01-23 17:00',
-                    end: '2023-01-23 17:30',
-                    title: 'Wellness Coach Visit',
-                    content: 'Thomas Edison',
-                    class: 'box_green',
-                    label: 'Wellness Coach Visit'
-                },
-                {
-                    start: '2023-01-24 10:00',
-                    end: '2023-01-24 11:30',
-                    title: 'Initial NaviWell Visit',
-                    content: 'Thomas Edison',
-                    class: 'box_blue',
-                    label: 'Initial NaviWell Visit'
-                },
-                {
-                    start: '2023-01-24 17:00',
-                    end: '2023-01-24 18:30',
-                    title: 'Wellness Coach Visit',
-                    content: 'Thomas Edison',
-                    class: 'box_green',
-                    label: 'Wellness Coach Visit'
-                },
-                {
-                    start: '2023-01-25 13:30',
-                    end: '2023-01-25 14:30',
-                    title: 'Dietitian Visit',
-                    content: 'Thomas Edison',
-                    class: 'box_pink',
-                    label: 'Dietitian Visit'
-                },
-                {
-                    start: '2023-01-25 18:30',
-                    end: '2023-01-25 19:30',
-                    title: 'Follow-Up Visit',
-                    content: 'Thomas Edison',
-                    class: 'box_yellow',
-                    label: 'Follow-Up Visit'
-                },
-                {
-                    start: '2023-01-26 17:00',
-                    end: '2023-01-26 17:30',
-                    title: 'Initial NaviWell Visit',
-                    content: 'Thomas Edison',
-                    class: 'box_blue',
-                    label: 'Initial NaviWell Visit'
-                },
-                {
-                    start: '2023-01-26 10:00',
-                    end: '2023-01-26 11:30',
-                    title: 'Dietitian Visit',
-                    content: 'Thomas Edison',
-                    class: 'box_pink',
-                    label: 'Dietitian Visit'
-                },
-                {
-                    start: '2023-01-27 20:00',
-                    end: '2023-01-27 20:30',
-                    title: 'Initial NaviWell Visit',
-                    content: 'Thomas Edison',
-                    class: 'box_blue',
-                    label: 'Initial NaviWell Visit'
-                },
-            ],
+            events: [],
             searchList: [],
         };
     },
@@ -223,13 +150,12 @@ export default {
             const selectedDay = values.date
             values.start_time = new Date(`${selectedDay}T${values.from}`);
             values.finish_time = new Date(`${selectedDay}T${values.to}`);
-
             if (this.selectedEvent != null) {
                 axiosInstance.put(`/appointments/${this.selectedEvent.id}`, values)
                     .then(response => {
                         this.closeModal()
                         this.alertStore.success('Appointment updated')
-                        this.updateVisit(response.data.appointment)
+                        this.updateVisit(response.data.data)
                         this.$refs.visitForm.setValues({})
                     })
                     .catch(error => {
@@ -240,7 +166,7 @@ export default {
                     .then(response => {
                         this.closeModal()
                         this.alertStore.success('Appointment set')
-                        this.addVisit(response.data.appointment)
+                        this.addVisit(response.data.data)
                         this.$refs.visitForm.setValues({})
                     })
                     .catch(error => {
@@ -302,7 +228,7 @@ export default {
         getEvents() {
             axiosInstance.get('/appointments')
                 .then(response => {
-                    response.data.appointments.forEach(appt => {
+                    response.data.data.appointments.forEach(appt => {
                         this.addVisit(appt)
                     });
 
@@ -315,7 +241,7 @@ export default {
         getEventById(id) {
             axiosInstance.get(`/appointments/${id}`)
                 .then(response => {
-                    const visit = this.addVisit(response.data.appointment)
+                    const visit = this.addVisit(response.data.data)
                     this.showModal(visit, null)
 
                 })

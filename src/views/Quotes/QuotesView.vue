@@ -79,7 +79,7 @@ export default {
         getQuotes() {
             axiosInstance.get('/quotes')
                 .then(response => {
-                    this.quotes = response.data.quotes
+                    this.quotes = response.data.data.quotes
                 })
                 .catch(error => {
                     console.log(error)
@@ -105,7 +105,7 @@ export default {
                 axiosInstance.put(`/quotes/${this.selectedQuote.id}`, values)
                     .then(response => {
                         const index = _findIndex(this.quotes, ['id', this.selectedQuote.id])
-                        this.quotes.splice(index, 1, response.data.quote)
+                        this.quotes.splice(index, 1, response.data.data)
                         this.closeModal()
                         this.alertStore.success('Quote updated')
                     })
@@ -116,7 +116,7 @@ export default {
             } else {
                 axiosInstance.post('/quotes', values)
                     .then(response => {
-                        this.quotes.push(response.data.quote)
+                        this.quotes.push(response.data.data)
                         this.closeModal()
                         this.alertStore.success('Quote added')
                     })

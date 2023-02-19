@@ -58,7 +58,7 @@ export default {
     getTodayVisits() {
       axiosInstance.get('/appointments/today')
         .then(response => {
-          response.data.appointments.forEach(appt => {
+          response.data.data.appointments.forEach(appt => {
             this.todayVisits.push(appt)
           });
 
