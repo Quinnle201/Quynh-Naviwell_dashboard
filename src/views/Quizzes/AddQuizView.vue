@@ -26,7 +26,9 @@ export default {
             editor: ClassicEditor,
             editorConfig: {
                 // The configuration of the editor.
-            }
+            },
+            selectedDxCodes: [],
+            dxCodes: []
         }
     },
     watch: {
@@ -43,9 +45,28 @@ export default {
         }
     },
     methods: {
+        getDxCodes() {
+            axiosInstance.get('/dx-codes')
+                .then(response => {
+                    console.log(response.data)
+                    this.dxCodes = Object.keys(response.data).map(index => {
+                        return {'name': response.data[index], 'value': index };
+                    });
+
+                    if(this.selectedDxCodes.length > 0) {
+                        this.selectedDxCodes = this.dxCodes.filter(({ value }) => this.selectedDxCodes.includes(value));
+                    }
+
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        },
         initialQuiz() {
+            this.getDxCodes()
             this.quizId = null
             this.quizData = {
+                codes: [],
                 title: '',
                 article: '',
                 questions: [
@@ -57,6 +78,8 @@ export default {
             }
         },
         submitQuiz(values) {
+            values.codes = this.selectedDxCodes.map(v => v.value)
+
             if (this.quizId) {
                 axiosInstance.put(`/quizzes/${this.quizId}`, values)
                     .then(response => {
@@ -83,7 +106,9 @@ export default {
             axiosInstance.get(`/quizzes/${id}`)
                 .then(response => {
                     this.quizData = response.data.quiz;
-                    this.quizId = this.quizData.id
+                    this.quizId = this.quizData.id;
+                    this.selectedDxCodes = this.quizData.codes;
+                    this.getDxCodes()
                 })
                 .catch(error => {
                     this.alertStore.error(error.response.data.message)
@@ -105,48 +130,28 @@ export default {
 
         <div class="addquiz-wrapper page-bg">
             <Form v-if="quizData" @submit="submitQuiz" :initial-values="quizData">
-                <!-- <div class="addquote-selects">
+                <div class="addquote-selects">
                     <div class="popup-content-item popup-content-item--select">
-                        <label>Select Patients</label>
+                        <label>Medical codes</label>
                         <VueMultiselect
-                            v-model="selectedPatients"
-                            :options="optionsPatients"
+                            v-model="selectedDxCodes"
+                            :options="dxCodes"
                             :multiple="true"
                             :close-on-select="false" 
+                            track-by="value"
+                            label="name"
                             search="false"
-                            placeholder="Choose Patients" 
+                            placeholder="Choose Medical codes" 
                             select-label="Select" 
-                            deselect-label="Remove" 
+                            :allow-empty="false"
+                            deselect-label="Remove"
                             :limit="5" 
-                            group-values="patients" 
-                            group-label="label" 
-                            :group-select="true" 
                             select-group-label="Select All" 
                             deselect-group-label="Clear All" 
                             >
                         </VueMultiselect>
                     </div>
-                    <div class="popup-content-item popup-content-item--select">
-                        <label>Select Patients</label>
-                        <VueMultiselect
-                            v-model="selectedGroups"
-                            :options="optionsGroups"
-                            :multiple="true"
-                            :close-on-select="false" 
-                            search="false"
-                            placeholder="Choose Groups" 
-                            select-label="Select" 
-                            deselect-label="Remove" 
-                            :limit="5" 
-                            group-values="groups" 
-                            group-label="label" 
-                            :group-select="true" 
-                            select-group-label="Select All" 
-                            deselect-group-label="Clear All"  
-                            >
-                        </VueMultiselect>
-                    </div>
-                </div> -->
+                </div> 
 
                 <div class="addquiz-inner">
                     <div class="addquiz-inner-title">
