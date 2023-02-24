@@ -71,7 +71,7 @@ export default {
     getLatestChats() {
       axiosInstance.get('/messages', { params: { "limit": 3 } })
         .then(response => {
-          response.data.messages.forEach(msg => {
+          response.data.data.messages.forEach(msg => {
             this.latestChats.push(msg)
           });
 

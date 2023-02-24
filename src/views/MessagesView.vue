@@ -143,7 +143,7 @@ export default {
         getMessagesList() {
             axiosInstance.get('/messages')
                 .then(response => {
-                    response.data.messages.forEach(element => {
+                    response.data.data.messages.forEach(element => {
                         this.fileStore.getPhotoLinkForUser(element.patient.user)
                         this.list.push({
                             patient: element.patient,
@@ -165,7 +165,7 @@ export default {
             axiosInstance.get(`/messages/${id}`)
                 .then(response => {
                     this.messages = []
-                    response.data.messages.forEach(async element => {
+                    response.data.data.messages.forEach(async element => {
                         this.populateMessages(element)
                     });
 
@@ -232,7 +232,7 @@ export default {
 
             axiosInstance.post("/messages", { body: formBody, patient_id: this.selectedPatient.id })
                 .then(response => {
-                    const element = response.data.message;
+                    const element = response.data.data;
                     this.populateMessages(element)
 
                 })
