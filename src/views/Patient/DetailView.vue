@@ -12,7 +12,7 @@ import EditIcon from '@/components/icons/IconEdit.vue'
 
 import { Form, Field } from 'vee-validate';
 import { RouterLink } from 'vue-router'
-import { axiosInstance, uploadFile } from '@/helpers';
+import { axiosInstance, uploadFile, downloadFile } from '@/helpers';
 import { useAlertStore, useFileStore } from '@/stores';
 import _find from 'lodash/find'
 import userMixin from '@/mixins/user.js'
@@ -232,6 +232,11 @@ export default {
         selectFile() {
             const r = this.$refs.fileUpload;
             r.click();
+        },
+        async downloadReport() {
+            let quizReportRef = this.questionnaire.physician_report
+            this.alertStore.success(`Opening patient report`)
+            downloadFile(null, `${this.patient.user.id}/reports/${quizReportRef}`, 'users')
         },
         addFile(event) {
             const file = event.target.files[0]
@@ -467,9 +472,7 @@ export default {
                                 <div v-if="questionnaire">Completed on <span>{{new Date(questionnaire.created_at).format("YYYY/MM/DD") }}</span></div>
                             </div>
 
-                            <RouterLink v-if="questionnaire" :to="{ name: 'report', params: { id: patient.id }}">
-                                <div class="patient-status-item-btn">View Questionnaire Report</div>
-                            </RouterLink>
+                            <div v-if="questionnaire" class="patient-status-item-btn" @click="downloadReport">View Questionnaire Report</div> 
                         </div>
                     </div>
                 </div>
