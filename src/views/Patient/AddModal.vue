@@ -33,7 +33,8 @@ export default {
             deep: true,
         }
     },
-    mounted() {
+    async mounted() {
+        await this.getDxCodes();
         if (this.patient != null) {
             this.setPatientData(this.patient)
         }
@@ -282,12 +283,22 @@ export default {
         }
 
         const alertStore = useAlertStore();
-        return { generalInfo, contactInfo, emergencyContactInfo, insuranceInfo, patientInfo, currentMeds, alertStore }
+        return { generalInfo, contactInfo, emergencyContactInfo, insuranceInfo, patientInfo, currentMeds, alertStore, dxCodes:[] }
     },
     methods: {
         close() {
             this.$emit('close');
             this.resetPatientData()
+        },
+        async getDxCodes() {
+            try {
+                const response = await axiosInstance.get('/dx-codes')
+                this.dxCodes = response.data.map(code => {
+                    return {'name': code.value, 'value': code.id };
+                });
+            }  catch (error) {
+                console.log(error)
+            }
         },
         setPatientData(patient) {
             const pt = Object.assign({}, patient);;
@@ -325,7 +336,15 @@ export default {
 
             this.currentMeds.fields.forEach((item) => {
                 if (item.model) {
-                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                    const med = _get(pt, item.model)
+                    var medValue = ""
+                    var medType = ""
+                    if (med) {
+                        const medArray = med.split(":");
+                        medType = this.dxCodes.find(({ value }) => value === medArray[0]).name;
+                        medValue = medArray[1] + " medications";
+                    }
+                    this.$refs.populatedForm.setFieldValue(item.name, medType + " - " + medValue);
                 }
             })
 

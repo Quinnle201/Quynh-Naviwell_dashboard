@@ -99,14 +99,25 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, medsData: false, isChatModalVisible: false }
+        return { patient, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, medsData: false, isChatModalVisible: false,  dxCodes:[] }
     },
-    mounted() {
+    async mounted() {
+        await this.getDxCodes()
         const id = this.$route.params.id;
         this.getPatientById(id)
         this.getPatientHealthData(id)
     },
     methods: {
+        async getDxCodes() {
+            try {
+                const response = await axiosInstance.get('/dx-codes')
+                this.dxCodes = response.data.map(code => {
+                    return {'name': code.value, 'value': code.id };
+                });
+            }  catch (error) {
+                console.log(error)
+            }
+        },
         getPatientById(id) {
             axiosInstance.get(`/patients/${id}`)
                 .then(response => {
@@ -322,6 +333,16 @@ export default {
         },
         questionnaire() {
             return this.patient.questionnaire;
+        },
+        medicine() {
+            return (med) => {
+                var medValue = ""
+                var medType = ""
+                const medArray = med.split(":");
+                medType = this.dxCodes.find(({ value }) => value === medArray[0]).name;
+                medValue = medArray[1] + " medications";
+                return medType + " - " + medValue
+            }
         }
     }
 }
@@ -527,7 +548,7 @@ export default {
                         <h4 class="patient-heading">Medications and Supplements</h4>
 
                         <ul class="patient-meds-list">
-                            <li v-for="med in patient.meds">{{ med }}</li>
+                            <li v-for="med in patient.meds">{{ medicine(med) }}</li>
                         </ul>
 
                         <div class="patient-status-item-btn" @click=showMeds()>View and Edit Medications and Supplements

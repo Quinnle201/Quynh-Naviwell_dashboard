@@ -49,8 +49,8 @@ export default {
             axiosInstance.get('/dx-codes')
                 .then(response => {
                     console.log(response.data)
-                    this.dxCodes = Object.keys(response.data).map(index => {
-                        return {'name': response.data[index], 'value': index };
+                    this.dxCodes = response.data.map(code => {
+                        return {'name': code.value, 'value': code.id };
                     });
 
                     if(this.selectedDxCodes.length > 0) {
