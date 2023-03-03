@@ -15,31 +15,37 @@ export default {
         RoundBtn,
         RoundBtnDelete,
     },
+    props: {
+        items: {
+            type: Array,
+            default: ["chat", "update", "calendar", "delete"]
+        } 
+    },
 }
 </script>
 
 <template>
     <div>
         <div class="details-inner">
-            <RoundBtn @click="$emit('chat')">
+            <RoundBtn v-if="items.includes('chat')" @click="$emit('chat')">
                 <template #btn-icon>
                     <ChatIcon width="30" height="30" />
                 </template>
                 <template #btn-name>Chat</template>
             </RoundBtn>
-            <RoundBtn @click="$emit('update')">
+            <RoundBtn v-if="items.includes('update')" @click="$emit('update')">
                 <template #btn-icon>
                     <EditIcon width="30" height="30" />
                 </template>
                 <template #btn-name>Update</template>
             </RoundBtn>
-            <RoundBtn @click="$emit('calendar')">
+            <RoundBtn v-if="items.includes('calendar')" @click="$emit('calendar')">
                 <template #btn-icon>
                     <CalendarIcon width="30" height="30" />
                 </template>
                 <template #btn-name>Schedule</template>
             </RoundBtn>
-            <RoundBtnDelete @click="$emit('delete')">
+            <RoundBtnDelete v-if="items.includes('delete')" @click="$emit('delete')">
                 <template #btn-icon>
                     <RemoveIcon width="30" height="30" />
                 </template>

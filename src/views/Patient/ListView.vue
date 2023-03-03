@@ -3,11 +3,9 @@ import SearchIcon from '@/components/icons/IconSearch.vue'
 import AddPatientModal from './AddModal.vue'
 import AddIcon from '@/components/icons/IconAdd.vue'
 import PatientDetails from '@/components/Patient/PatientDetails.vue'
-import CheckIcon from '@/components/icons/IconCheck.vue'
-import CalendarIcon from '@/components/icons/IconCalendar.vue'
 import Modal from '@/components/Modals/Modal.vue'
 import DeleteModal from '@/components/Modals/DeleteModal.vue'
-import PatientAutocomplete from '@/components/Patient/PatientAutocomplete.vue'
+import ScheduleModal from '@/components/Modals/ScheduleModal.vue'
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore, useFileStore } from '@/stores';
@@ -24,10 +22,8 @@ export default {
         Modal,
         Form,
         Field,
-        CheckIcon,
-        CalendarIcon,
         DeleteModal,
-        PatientAutocomplete
+        ScheduleModal
     },
     mixins: [
         userMixin
@@ -47,7 +43,6 @@ export default {
             isChatModalVisible: false,
             count: 3,
             selected: '',
-            searchList: [],
             options: [
                 {
                     text: 'Last visit', value: 'Last visit'
@@ -71,20 +66,6 @@ export default {
         age() {
             return (patient) => Math.floor((new Date() - new Date(patient.dob).getTime()) / 3.15576e+10)
         },
-        hoursSelect() {
-            const array = []
-            var min = ['00', '15', '30', '45'];
-            for (var h = 8; h < 18; h++) {
-                for (var m = 0; m < min.length; m++) {
-                    var hour = h;
-                    if (hour < 10) {
-                        hour = `0${h}`
-                    }
-                    array.push({ 'label': `${hour}:${min[m]}`, 'value': `${hour}:${min[m]}` })
-                }
-            }
-            return array
-        },
         apptDate(){
             return (appt) => {
                 if (!appt) {
@@ -95,27 +76,13 @@ export default {
         }
     },
     methods: {
-        submitVisit(values) {
-            const selectedDay = values.date
-            values.start_time = new Date(`${selectedDay}T${values.from}`);
-            values.finish_time = new Date(`${selectedDay}T${values.to}`);
-            axiosInstance.post('/appointments', values)
-                .then(response => {
-                    this.closeScheduleModal()
-                    this.alertStore.success('Appointment set')
-                })
-                .catch(error => {
-                    this.alertStore.error(error.response.data.message)
-                });
-        },
         showScheduleModal(patient) {
             this.show = null
             this.isScheduleModalVisible = true
-            this.$refs.visitForm.setFieldValue('patient_id', patient.id)
+            this.selectedPatient = patient
         },
         closeScheduleModal() {
             this.isScheduleModalVisible = false
-            this.$refs.visitForm.setValues({})
         },
         showDetails(idx) {
             this.show === idx ? (this.show = true) : (this.show = idx);
@@ -165,16 +132,6 @@ export default {
         updatePatientInfo(patient) {
             const index = _findIndex(this.patients, ['id', patient.id])
             this.patients.splice(index, 1, patient)
-        },
-        searchPatient(term) {
-            axiosInstance.post('patients/search', { name: term })
-                .then(res => {
-                    this.searchList = []
-                    res.data.data.forEach(pt => {
-                        this.searchList.push(pt)
-                    });
-
-                })
         },
         sendMessage(values) {
             const formBody = {
@@ -290,80 +247,7 @@ export default {
             </template>
         </Modal>
 
-        <Modal v-show="isScheduleModalVisible" @close="closeScheduleModal">
-            <template #header>Schedule</template>
-            <template #content>
-                <div class="type-select">
-                    <div class="type-select-item active">Appointment</div>
-                    <div class="type-select-item">Telehealth</div>
-                    <div class="type-select-item">Personal</div>
-                </div>
-                <Form @submit="submitVisit" ref="visitForm">
-                    <Field type="hidden" name="patient_id" />
-                    <div class="popup-content-item visit-type">
-                        <label class="checkbox path">
-                            <Field type="radio" name="visit_type" value="initial"></Field>
-                            <CheckIcon />
-                            <div class="label-bg">Initial NaviWell Visit</div>
-                        </label>
-                        <label class="checkbox path">
-                            <Field type="radio" name="visit_type" value="wellness"></Field>
-                            <CheckIcon />
-                            <div class="label-bg">Wellness Coach Visit</div>
-                        </label>
-                        <label class="checkbox path">
-                            <Field type="radio" name="visit_type" value="dietitian"></Field>
-                            <CheckIcon />
-                            <div class="label-bg">Dietitian Visit</div>
-                        </label>
-                        <label class="checkbox path">
-                            <Field type="radio" name="visit_type" value="followup"></Field>
-                            <CheckIcon />
-                            <div class="label-bg">Follow-Up Visit</div>
-                        </label>
-                    </div>
-
-                    <div class="popup-content-item">
-                        <label class="label-w-icon">Date
-                            <Field name="date" type="date" class="popup-content-item-input"></Field>
-                            <CalendarIcon />
-                        </label>
-                    </div>
-
-                    <div class="popup-content-item-wrapper">
-                        <div class="popup-content-item">
-                            <label>From</label>
-                            <Field as="select" name="from">
-                                <option v-for="item in hoursSelect" :value="item.value">{{ item.label }}
-                                </option>
-                            </Field>
-                        </div>
-
-                        <div class="popup-content-item">
-                            <label>To</label>
-                            <Field as="select" name="to">
-                                <option v-for="item in hoursSelect" :value="item.value">{{ item.label }}
-                                </option>
-                            </Field>
-                        </div>
-                    </div>
-
-                    <div class="popup-content-item">
-                        <label for="textarea">Notes</label>
-                        <Field as="textarea" name="notes"></Field>
-                    </div>
-
-                    <div class="popup-footer">
-                        <button type="reset" class="w-btn w-btn-close" @click="closeScheduleModal">
-                            Cancel
-                        </button>
-                        <button type="submit" class="w-btn">
-                            Save Event
-                        </button>
-                    </div>
-                </form>
-            </template>
-        </Modal>
+        <ScheduleModal v-show="isScheduleModalVisible" @close="closeScheduleModal" :patient_id="selectedPatient?.id" />
 
         <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal">
             <template #content>

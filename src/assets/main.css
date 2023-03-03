@@ -2032,6 +2032,7 @@ button.vuecal__arrow {
   min-width: 60px;
   height: 60px;
   border-radius: 50%;
+  aspect-ratio: 1;
 }
 
 .chat-left ul.chat-list li .chat-list-item-content, 
@@ -2139,6 +2140,7 @@ button.vuecal__arrow {
   height: 60px;
   margin-right: 16px;
   border-radius: 50%;
+  aspect-ratio: 1;
 }
 
 .chat-right .chat-right-head-info .chat-right-head-info-name {
@@ -2208,6 +2210,7 @@ ul.messages-list li svg {
   min-width: 50px;
   height: 50px;
   border-radius: 50%;
+  aspect-ratio: 1;
 }
 
 ul.messages-list li.physician-message {

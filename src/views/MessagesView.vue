@@ -7,6 +7,8 @@ import DownloadIcon from '@/components/icons/IconDownload.vue'
 import PatientDetails from '@/components/Patient/PatientDetails.vue'
 import { Form, Field } from 'vee-validate';
 import Modal from '@/components/Modals/Modal.vue'
+import ScheduleModal from '@/components/Modals/ScheduleModal.vue'
+
 import AddIcon from '@/components/icons/IconAdd.vue'
 import PatientAutocomplete from '@/components/Patient/PatientAutocomplete.vue'
 
@@ -29,7 +31,8 @@ export default {
         Field,
         AddIcon,
         PatientAutocomplete,
-        Modal
+        Modal,
+        ScheduleModal
     },
     mixins: [
         userMixin,
@@ -42,6 +45,7 @@ export default {
             fileStore,
             isModalVisible: false,
             isChatModalVisible: false,
+            isScheduleModalVisible: false,
             list: [],
             selectedPatient: null,
             messages: [],
@@ -118,6 +122,7 @@ export default {
         closeChatModal() {
             this.isChatModalVisible = false;
             this.$refs.newMessageForm.setValues({})
+            this.$refs.patientAutocomplete.searchTerm = ''
         },
         searchPatient(term) {
             axiosInstance.post('patients/search', { name: term })
@@ -138,7 +143,7 @@ export default {
                 pic: '/src/assets/img/usericon.png'
             })
             this.fileStore.getPhotoLinkForUser(responseMessage.from)
-            
+
         },
         getMessagesList() {
             axiosInstance.get('/messages')
@@ -204,6 +209,8 @@ export default {
                 .then(response => {
                     this.alertStore.success('Message sent.');
                     this.closeChatModal()
+                    this.updateLeftChatSide(response.data.data)
+
                 })
                 .catch(error => {
                     console.log(error)
@@ -234,7 +241,7 @@ export default {
                 .then(response => {
                     const element = response.data.data;
                     this.populateMessages(element)
-
+                    this.updateLeftChatSide(response.data.data)
                 })
                 .catch(error => {
                     console.log(error)
@@ -245,6 +252,38 @@ export default {
             this.$refs.messageForm.setValues({})
 
 
+        },
+
+        updateLeftChatSide(element) {
+
+            this.fileStore.getPhotoLinkForUser(element.patient.user)
+            const msgObject = {
+                patient: element.patient,
+                patient_id: element.patient_id,
+                name: this.userName(element.patient.user),
+                message: element.body,
+                date: element.created_at,
+                isRead: true
+            }
+            const index = this.list.findIndex((obj) => obj.patient_id === msgObject.patient_id);
+
+            if (index === -1) {
+                this.list.push(msgObject);
+            } else {
+                this.list[index] = msgObject;
+            }
+
+            this.list.splice(index, 1, this.list.splice(0, 1, this.list[index])[0])
+        },
+
+        gotoPatientDetails() {
+            this.$router.push({ name: 'patient', params: { id: this.selectedPatient.id } })
+        },
+        showScheduleModal() {
+            this.isScheduleModalVisible = true
+        },
+        closeScheduleModal() {
+            this.isScheduleModalVisible = false
         },
 
     },
@@ -269,7 +308,7 @@ export default {
             <div class="chat-left">
                 <div class="chat-left-head">
                     <div v-if="unreadCount > 0" class="chat-notifications">
-                        <span>{{`${unreadCount} new`}}</span>
+                        <span>{{ `${unreadCount} new` }}</span>
                     </div>
 
                     <div>
@@ -285,21 +324,20 @@ export default {
                 <div class="chat-content-wrapper">
                     <div class="chat-content-inner">
                         <ul class="chat-list">
-                            <li :class="msg.patient_id == selectedPatient?.id ? 'active-chat' : ''"
-                                class="chat-list-item" v-for="msg in list" @click="selectChat(msg)">
+                            <li :class="msg.patient_id == selectedPatient?.id ? 'active-chat' : ''" class="chat-list-item"
+                                v-for="msg in list" @click="selectChat(msg)">
                                 <div class="chat-list-item-img">
                                     <img :src="fileStore.profileAvatars(msg.patient.user)" alt="User photo" />
                                 </div>
                                 <div class="chat-list-item-content">
                                     <div class="chat-list-item-content-name">{{ msg.name }}</div>
                                     <div class="chat-list-item-content-message">{{ getMessageType(msg.message) ==
-                                    'attachment' ? msg.message.attachments[0].name : msg.message.message}}
+                                        'attachment' ? msg.message.attachments[0].name : msg.message.message }}
                                     </div>
                                 </div>
                                 <div class="chat-list-item-info">
                                     <div class="chat-list-item-info-date">{{ localDate(msg.date) }}</div>
-                                    <div
-                                        class="chat-list-item-info-icon">
+                                    <div class="chat-list-item-info-icon">
                                         <span v-if="!msg.isRead">1</span>
                                         <AttachIcon v-if="getMessageType(msg.message) == 'attachment'" />
                                     </div>
@@ -322,7 +360,7 @@ export default {
                         <img src="@/assets/img/details-icon.png" alt="Details Icon" />
 
                         <Transition>
-                            <PatientDetails v-show="isModalVisible" />
+                            <PatientDetails v-show="isModalVisible" :items="['update', 'calendar']" @update="gotoPatientDetails" @calendar="showScheduleModal"  />
                         </Transition>
                     </div>
                 </div>
@@ -334,13 +372,14 @@ export default {
                                 <ul class="messages-list" ref="chat">
                                     <li :class="message.from.profile.id == selectedPatient.id ? '' : 'physician-message'"
                                         v-for="message in messages">
-                                        <img :src="fileStore.profileAvatars(message.from)" alt="User photo" loading="lazy" />
+                                        <img :src="fileStore.profileAvatars(message.from)" alt="User photo"
+                                            loading="lazy" />
                                         <div class="message-list-text">
                                             <div v-if="message.body.message != null" class="message-list-bubble">{{
                                                 message.body.message
                                             }}</div>
-                                            <div v-for="att in message.body.attachments"
-                                                class="message-list-bubble attach" @click="clickedDownload(att)">
+                                            <div v-for="att in message.body.attachments" class="message-list-bubble attach"
+                                                @click="clickedDownload(att)">
                                                 <div class="download-icon">
                                                     <FileIcon />
                                                 </div>
@@ -348,8 +387,10 @@ export default {
                                                 <DownloadIcon class="attach-icon" />
                                             </div>
 
-                                            <div v-if="message.from.profile.id == selectedPatient.id" class="message-list-time">{{ time(message.time) }}</div>
-                                            <div v-else class="message-list-time">Dr. {{ message.from.last_name }} • {{ time(message.time) }}</div>
+                                            <div v-if="message.from.profile.id == selectedPatient.id"
+                                                class="message-list-time">{{ time(message.time) }}</div>
+                                            <div v-else class="message-list-time">Dr. {{ message.from.last_name }} • {{
+                                                time(message.time) }}</div>
                                         </div>
                                     </li>
 
@@ -384,13 +425,15 @@ export default {
             </div>
         </div>
 
+        <ScheduleModal v-show="isScheduleModalVisible" @close="closeScheduleModal" :patient_id="selectedPatient?.id"/>
+
         <Modal v-show="isChatModalVisible" @close="closeChatModal">
             <template #header>Send Message</template>
             <template #content>
                 <Form @submit="sendNewMessage" ref="newMessageForm">
                     <div class="popup-content-item popup-content-item--search">
                         <label>Patient Name</label>
-                        <PatientAutocomplete :patients="searchList" @search="searchPatient" />
+                        <PatientAutocomplete :patients="searchList" @search="searchPatient" ref="patientAutocomplete" />
                     </div>
 
                     <div class="popup-content-item popup-content-item-textarea">
@@ -399,7 +442,7 @@ export default {
                     </div>
 
                     <div class="popup-footer">
-                        <button type="reset" class="w-btn w-btn-close" @click="closeScheduleModal">
+                        <button type="reset" class="w-btn w-btn-close" @click="closeChatModal">
                             Cancel
                         </button>
                         <button type="submit" class="w-btn">

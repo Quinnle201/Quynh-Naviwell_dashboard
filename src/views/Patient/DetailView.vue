@@ -9,6 +9,8 @@ import AddPatientModal from './AddModal.vue'
 import Modal from '@/components/Modals/Modal.vue'
 import DeleteModal from '@/components/Modals/DeleteModal.vue'
 import EditIcon from '@/components/icons/IconEdit.vue'
+import ScheduleModal from '@/components/Modals/ScheduleModal.vue'
+
 
 import { Form, Field } from 'vee-validate';
 import { RouterLink } from 'vue-router'
@@ -29,6 +31,7 @@ export default {
         LineChart,
         Modal,
         AddPatientModal,
+        ScheduleModal,
         DeleteModal,
         Form,
         Field,
@@ -99,7 +102,7 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, medsData: false, isChatModalVisible: false,  dxCodes:[] }
+        return { patient, patient_id: null, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, isScheduleModalVisible: false, medsData: false, isChatModalVisible: false,  dxCodes:[] }
     },
     async mounted() {
         await this.getDxCodes()
@@ -202,6 +205,14 @@ export default {
             this.medsData = false;
             this.updateModal = false;
             this.isChatModalVisible = false;
+        },
+        showScheduleModal() {
+            this.isScheduleModalVisible = true
+            this.patient_id = this.patient.id
+        },
+        closeScheduleModal() {
+            this.isScheduleModalVisible = false
+            this.patient_id = null
         },
         addMeds: function () {
             if (this.patient.meds.length < 50) this.patient.meds.push(undefined);
@@ -405,7 +416,7 @@ export default {
                             </template>
                             <template #btn-name>Email</template>
                         </RoundBtn>
-                        <RoundBtn>
+                        <RoundBtn @click="showScheduleModal()">
                             <template #btn-icon>
                                 <CalendarIcon width="30" height="30" />
                             </template>
@@ -679,6 +690,8 @@ export default {
                 </form>
             </template>
         </Modal>
+        <!-- Scheduling modal -->
+        <ScheduleModal v-show="isScheduleModalVisible" @close="closeScheduleModal" :patient_id="patient_id"/>
         <!-- update parient info modal -->
         <AddPatientModal v-show="updateModal" :patient="patient" v-on:update:patient="updatePatientInfo($event)"
             @close="closeModal" @showMeds="showMeds()">

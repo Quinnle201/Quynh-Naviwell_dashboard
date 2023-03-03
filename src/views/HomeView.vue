@@ -47,6 +47,10 @@ export default {
           return true
         }
       }
+    },
+    newMessagesLabel() {
+      //Ideally we add here amount of new messages.
+      return "See all messages"
     }
   },
   mounted() {
@@ -180,8 +184,8 @@ export default {
             </li>
           </ul>
 
-          <RouterLink to="/messages" class="dashboard-card-btn active-btn">
-            <span>3 New Messages(wip)</span>
+          <RouterLink to="/messages" class="dashboard-card-btn">
+            <span>{{newMessagesLabel}}</span>
           </RouterLink>
         </Card>
 
