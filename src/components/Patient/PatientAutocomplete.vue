@@ -34,6 +34,9 @@ export default {
             if (this.searchTerm == this.userName(this.selectedPt.name) || this.patient == this.searchTerm) {
                 return
             }
+            if (this.searchTerm === '') {
+                return
+            }
             this.isSearchShown = true
             this.$emit('search', newS);
         }
@@ -65,7 +68,10 @@ export default {
         selectPt(pt) {
             this.searchTerm = this.userName(pt)
             this.selectedPt = pt
-            this.isSearchShown = false
+            setTimeout(() => {
+                this.isSearchShown = false
+            }, 100);
+            
         }
     },
 }

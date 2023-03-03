@@ -139,6 +139,7 @@ export default {
         closeModal() {
             this.selectedEvent = null
             this.isModalVisible = false;
+            this.$refs.patientAutocomplete.searchTerm = ''
         },
         showDeleteModal() {
             this.isDeleteModalVisible = true;
@@ -168,6 +169,7 @@ export default {
                         this.alertStore.success('Appointment set')
                         this.addVisit(response.data.data)
                         this.$refs.visitForm.setValues({})
+                        this.$refs.patientAutocomplete.searchTerm = ''
                     })
                     .catch(error => {
                         this.alertStore.error(error.response.data.message)
@@ -321,7 +323,7 @@ export default {
                             <div class="popup-content-item popup-content-item--search">
                                 <label>Patient Name</label>
                                 <PatientAutocomplete :patient="selectedEvent?.content" :patients="searchList"
-                                    @search="searchPatient" />
+                                    @search="searchPatient" ref="patientAutocomplete" />
                             </div>
 
                             <div class="popup-content-item">
