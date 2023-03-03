@@ -93,6 +93,11 @@ body {
   fill: #FFF;
 }
 
+.sidebar .static {
+  background-color: unset;
+  fill: unset;
+}
+
 /*
  * Navbar
  */

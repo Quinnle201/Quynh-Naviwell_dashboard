@@ -18,9 +18,9 @@ import { RouterLink } from 'vue-router'
 <template>
 
   <div id="sidebarMenu" class="d-md-flex flex-column flex-shrink-0 overflow-auto sidebar collapse px-3">
-    <a href="/">
-      <img class="logo mx-auto m-2 img-fluid" src="@/assets/naviwell-logo.png"  alt="NaviWell" />
-    </a>
+      <RouterLink to="/home" class="static" >
+        <img class="logo mx-auto m-2 img-fluid" src="@/assets/naviwell-logo.png"  alt="NaviWell" />
+     </RouterLink>
     <ul class="nav nav-pills nav-flush mb-auto text-center d-flex justify-content-center py-3 gap-3">
       <li class="nav-item mx-auto m-2">
         <RouterLink to="/home" class="nav-link p-3 rounded-circle">
