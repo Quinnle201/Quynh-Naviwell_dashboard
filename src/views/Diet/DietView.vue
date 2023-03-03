@@ -57,7 +57,7 @@ export default {
         getDiets() {
             axiosInstance.get('/diet')
                 .then(response => {
-                    this.dietList = response.data.diets
+                    this.dietList = response.data.data.diets
                 })
                 .catch(error => {
                     console.log(error)
@@ -67,7 +67,7 @@ export default {
         getRecipes() {
             axiosInstance.get('/recipes')
                 .then(response => {
-                    this.recipeList = response.data.recipes
+                    this.recipeList = response.data.data.recipes
                 })
                 .catch(error => {
                     console.log(error)

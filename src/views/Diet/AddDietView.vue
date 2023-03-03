@@ -53,7 +53,7 @@ export default {
             axiosInstance.post('/diet', formData)
                 .then(response => {
                     if (this.file != null) {
-                        const dietid = response.data.diet.id;
+                        const dietid = response.data.data.id;
                         const uploader = uploadFile(this.file, 'diets', dietid, filename)
                         uploader.axios
                             .then(response => {

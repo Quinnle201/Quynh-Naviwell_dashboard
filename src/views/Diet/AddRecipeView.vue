@@ -59,7 +59,7 @@ export default {
             axiosInstance.post('/recipes', formData)
                 .then(response => {
                     if (this.file != null) {
-                        const recipeId = response.data.recipe.id;
+                        const recipeId = response.data.data.id;
                         const uploader = uploadFile(this.file, 'recipes', recipeId, filename)
                         uploader.axios
                             .then(response => {
