@@ -92,12 +92,12 @@ const router = createRouter({
               component: DietView
             },
             {
-              path: "add-diet",
+              path: "add-diet/:id?",
               name: "add-diet",
               component: AddDietView
             },
             {
-              path: "add-recipe",
+              path: "add-recipe/:id?",
               name: "add-recipe",
               component: AddRecipeView
             }

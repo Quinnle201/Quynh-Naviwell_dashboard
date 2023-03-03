@@ -87,14 +87,6 @@ export default {
             this.selectedEvent = null
             this.isModalVisible = false;
         },
-        showAssignModal() {
-            this.isDetailModalVisible = null;
-            this.isAssignModalVisible = true;
-        },
-        closeAssignModal() {
-            this.isDetailModalVisible = null;
-            this.isAssignModalVisible = false;
-        },
         showDeleteModal() {
             this.isDetailModalVisible = null;
             this.isDeleteModalVisible = true;
@@ -103,6 +95,12 @@ export default {
             this.isDetailModalVisible = null;
             this.isDeleteModalVisible = false;
         },
+        updateDiet(id) {
+            this.$router.push({ name: 'add-diet', params: { id: id } })
+        },
+        updateRecipe(id) {
+            this.$router.push({ name: 'add-recipe', params: { id: id } })
+        }
     },
     computed: {
         ingredientList() {
@@ -153,15 +151,7 @@ export default {
                                 <img src="@/assets/img/details-icon.png" alt="Details Icon" @click="showDetailModal(diet)" />
 
                                 <Transition>
-                                    <DetailModal v-if="isDetailModalVisible === diet" @update="showModal()" @close="closeDetails" @delete="showDeleteModal">
-                                        <template #btn>
-                                            <RoundBtn @click="showAssignModal()">
-                                                <template #btn-icon>
-                                                    <PatientsIcon width="30" height="30" />
-                                                </template>
-                                                <template #btn-name>Assign</template>
-                                            </RoundBtn>
-                                        </template>
+                                    <DetailModal v-if="isDetailModalVisible === diet" @update="updateDiet(diet.id)" @close="closeDetails" @delete="showDeleteModal">
                                     </DetailModal>
                                 </Transition>
                             </div>
@@ -214,7 +204,7 @@ export default {
                                 </div>
                             </div>
 
-                            <div class="quotes-grid-item-btn">
+                            <div class="quotes-grid-item-btn" @click="updateRecipe(recipe.id)">
                                 <EditIcon />
                             </div>
                         </div>
@@ -236,61 +226,6 @@ export default {
                 </template>
             </tabs>
         </div>
-
-        <Modal v-show="isAssignModalVisible" @close="closeAssignModal" class="overflow">
-            <template #header>Test Diet</template>
-            <template #content>
-                <div class="popup-content-item popup-content-item--select">
-                    <label>Select Patients</label>
-                    <VueMultiselect
-                        v-model="selectedPatients"
-                        :options="optionsPatients"
-                        :multiple="true"
-                        :close-on-select="false" 
-                        search="false"
-                        placeholder="Choose Patients" 
-                        select-label="Select" 
-                        deselect-label="Remove" 
-                        :limit="3" 
-                        group-values="patients" 
-                        group-label="label" 
-                        :group-select="true" 
-                        select-group-label="Select All" 
-                        deselect-group-label="Clear All" 
-                        >
-                    </VueMultiselect>
-                </div>
-                <div class="popup-content-item popup-content-item--select">
-                    <label>Select Patients</label>
-                    <VueMultiselect
-                        v-model="selectedGroups"
-                        :options="optionsGroups"
-                        :multiple="true"
-                        :close-on-select="false" 
-                        search="false"
-                        placeholder="Choose Groups" 
-                        select-label="Select" 
-                        deselect-label="Remove" 
-                        :limit="3" 
-                        group-values="groups" 
-                        group-label="label" 
-                        :group-select="true" 
-                        select-group-label="Select All" 
-                        deselect-group-label="Clear All"  
-                        >
-                        <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
-                    </VueMultiselect>
-                </div>
-                <div class="popup-footer">
-                    <button type="submit" class="w-btn w-btn-close">
-                        Cancel
-                    </button>
-                    <button type="submit" class="w-btn">
-                        Save Changes
-                    </button>
-                </div>
-            </template>
-        </Modal>
 
         <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal">
             <template #content>
