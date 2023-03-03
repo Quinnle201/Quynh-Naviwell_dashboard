@@ -14,6 +14,7 @@ import PatientsIcon from '@/components/icons/IconPatients.vue'
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
+import _findIndex from 'lodash/findIndex';
 
 export default {
     components: {
@@ -36,6 +37,7 @@ export default {
             alertStore,
             tabList: ["Diets", "Recipes"],
             dietList: [],
+            selectedDiet: null,
             recipeList: [],
             isDetailModalVisible: false,
             isModalVisible: false,
@@ -75,9 +77,11 @@ export default {
                 });
         },
         showDetailModal(diet) {
+            this.selectedDiet = diet
             this.isDetailModalVisible === diet ? (this.isDetailModalVisible = true) : (this.isDetailModalVisible = diet);
         },
         closeDetails() {
+            this.selectedDiet = null
             this.isDetailModalVisible = false;
         },
         showModal() {
@@ -94,6 +98,23 @@ export default {
         closeDeleteModal() {
             this.isDetailModalVisible = null;
             this.isDeleteModalVisible = false;
+        },
+        deleteDiet() {
+            if (this.selectedDiet != null) {
+                axiosInstance.delete(`/diet/${this.selectedDiet.id}`)
+                    .then(response => {
+                        this.alertStore.success('Diet deleted')
+                        const index = _findIndex(this.dietList, ['id', this.selectedDiet.id])
+                        this.dietList.splice(index, 1)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alertStore.error(error.response.data.message)
+                    });
+            } else {
+                this.alertStore.error('Unexpected error')
+            }
+            this.closeDeleteModal()
         },
         updateDiet(id) {
             this.$router.push({ name: 'add-diet', params: { id: id } })
@@ -227,7 +248,7 @@ export default {
             </tabs>
         </div>
 
-        <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal">
+        <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal" @delete="deleteDiet">
             <template #content>
                 <h4>Delete this diet?</h4>
                 <p>You will not be able to recover it</p>
