@@ -73,7 +73,7 @@ export default {
         getQuizList() {
             axiosInstance.get('/quizzes')
                 .then(response => {
-                    this.quizzes = response.data.quizzes
+                    this.quizzes = response.data.data.quizzes
                 })
                 .catch(error => {
                     console.log(error)

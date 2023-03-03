@@ -105,7 +105,7 @@ export default {
         getQuiz(id) {
             axiosInstance.get(`/quizzes/${id}`)
                 .then(response => {
-                    this.quizData = response.data.quiz;
+                    this.quizData = response.data.data;
                     this.quizId = this.quizData.id;
                     this.selectedDxCodes = this.quizData.codes;
                     this.getDxCodes()
