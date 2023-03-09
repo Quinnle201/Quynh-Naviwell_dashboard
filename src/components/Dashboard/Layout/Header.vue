@@ -19,6 +19,7 @@
                     </div>
                 </div>
             </div>
+            <div class="quote">Wellness is a connection of paths: knowledge and action.</div>
             <div class="d-flex flex-row gap-1 user-block">
                 <img :src="fileStore.profileAvatars(authStore.user)" alt="profile_photo" width="48" height="48" class="rounded-circle">
                 <div class="text-center">

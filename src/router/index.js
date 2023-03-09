@@ -9,6 +9,7 @@ import Login from '@/views/Auth/Login.vue'
 import SetPassword from '@/views/Auth/SetPassword.vue'
 
 import HomeView from '@/views/HomeView.vue'
+import PatientHomeView from '@/views/patient-HomeView.vue'
 import PatientsView from '@/views/Patient/ListView.vue'
 import PatientDetailView from '@/views/Patient/DetailView.vue'
 import CalendarView from '@/views/CalendarView.vue'
@@ -58,6 +59,11 @@ const router = createRouter({
           path: "home",
           name: "home",
           component: HomeView
+        },
+        {
+          path: "patient-home",
+          name: "patient-home",
+          component: PatientHomeView
         },
         {
           path: '/patients',

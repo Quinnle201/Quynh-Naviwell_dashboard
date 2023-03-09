@@ -138,8 +138,24 @@ body {
 
 /* header */
 .header-datetime, 
-.header-logo {
+.header-logo,
+.quote {
   display: none;
+}
+
+.quote {
+  position: relative;
+  font-size: 20px;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.quote:before {
+  content: '“';
+}
+
+.quote:after {
+  content: '”';
 }
  
 .pg-header .header-logo {
@@ -151,6 +167,10 @@ body {
   position: absolute;
   bottom: -8px;
   left: 125px;
+}
+
+.pt-header .quote {
+  display: block;
 }
 
 .header-datetime span {
@@ -314,6 +334,18 @@ body {
 
 .cards-wrapper:nth-child(3) {
   grid-template-rows: 90fr 10fr;
+}
+
+.pat.cards-wrapper:nth-child(1) {
+  grid-template-rows: auto auto;
+}
+
+.pat.cards-wrapper:nth-child(2) {
+  grid-template-rows: auto auto 1fr;
+}
+
+.pat.cards-wrapper:nth-child(3) {
+  grid-template-rows: 1fr auto;
 }
 
 .dashboard-card.calendar-card {
@@ -540,6 +572,116 @@ body {
 
 .quotes-btns-wrapper .add-button:nth-child(1) {
   margin-right: 16px;
+}
+
+/* patient homepage cards */
+.quiz-card-inner {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 18px;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+}
+
+.quiz-card-inner:nth-child(2) {
+  margin-bottom: 16px;
+}
+
+.quiz-card-content {
+  display: flex;
+}
+
+.quiz-card-content img {
+  max-width: 65px;
+  margin-right: 16px;
+  object-fit: contain;
+}
+
+.quiz-card-content ul {
+  list-style: none;
+}
+
+.quiz-card-content ul li {
+  position: relative;
+  padding-left: 40px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.quiz-card-content ul li:before {
+  content: '';
+  background-image: url('@/assets/img/checkmark.svg');
+  background-size: 24px 24px;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 0;
+}
+
+.quiz-card-content span {
+  max-width: 80%;
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.fullscript-card img {
+  width: 35px;
+  margin: 0 auto 12px;
+}
+
+.list-card ul {
+  list-style: none;
+  margin-bottom: 16px;
+}
+
+.list-card ul li {
+  background-color: #F4F4FF;
+  margin-bottom: 8px;
+  padding: 4px 0 4px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 10px;
+}
+
+.list-card ul li:last-child {
+  margin-bottom: 0;
+}
+
+.visits-card {
+  justify-content: flex-start;
+}
+
+.visits-card .dashboard-card-btn {
+  margin-top: auto;
+}
+
+.visits-content h4 {
+  margin-bottom: 16px;
+}
+
+.visits-content-item {
+  max-width: 100%;
+  margin-bottom: 28px;
+}
+
+.visits-content-item span {
+  display: block;
+  text-align: center;
+}
+
+.visits-content-item.active {
+  background-color: var(--primary);
+  max-width: 80%;
+  margin-left: auto;
+  padding: 16px 18px;
+  border-radius: 10px;
+}
+
+.visits-content-item.active div {
+  font-size: 20px;
+  font-weight: 500;
+  color: #FFFFFF;
 }
 
 /* page */

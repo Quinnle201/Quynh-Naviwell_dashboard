@@ -31,7 +31,7 @@ function checkPath(path) {
 </script>
 
 <template>
-  <div class="app-container" :class="authStore.user, checkPath('/home') ? '' : 'pg-header'">
+  <div class="app-container" :class="authStore.user, checkPath('/home') ? '' : checkPath('/patient-home') ? 'pt-header' : 'pg-header'">
     <RouterView />
     <Alert />
   </div>  
