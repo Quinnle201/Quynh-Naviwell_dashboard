@@ -239,7 +239,7 @@ body {
 }
 
 .top-block {
-  margin-bottom: 36px;
+  margin-bottom: 32px;
   display: flex;
 }
 
@@ -251,13 +251,13 @@ body {
   padding: 14px 25px 14px 14px;
   display: flex;
   align-items: center;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 16px;
 }
 
 .top-block-logo img {
-  max-width: 110px;
-  max-height: 110px;
+  max-width: 90px;
+  max-height: 90px;
   margin-right: 4px;
 }
 
@@ -292,10 +292,10 @@ body {
 }
 
 .top-block-info h3 {
-  margin-bottom: 14px;
-  font-size: 48px;
+  margin-bottom: 8px;
+  font-size: 42px;
   font-weight: 500;
-  line-height: 48px;
+  line-height: 42px;
 }
 
 .top-block-info-date {
@@ -303,7 +303,7 @@ body {
 }
 
 .top-block-info-date span:first-child {
-  margin-right: 54px;
+  margin-right: 32px;
 }
 
 .top-block-info-date span {
@@ -315,13 +315,13 @@ body {
 .main-grid {
   display: grid;
   grid-template-columns: 40fr 30fr 30fr;
-  gap: 26px;
+  gap: 24px;
 }
 
 /* homepage cards */
 .cards-wrapper {
   display: grid;
-  gap: 26px;
+  gap: 24px;
 }
 
 .cards-wrapper:nth-child(1) {
@@ -337,15 +337,15 @@ body {
 }
 
 .pat.cards-wrapper:nth-child(1) {
-  grid-template-rows: auto auto;
+  grid-template-rows: 60fr 40fr;
 }
 
 .pat.cards-wrapper:nth-child(2) {
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: 0.5fr 0.4fr 0.7fr;
 }
 
 .pat.cards-wrapper:nth-child(3) {
-  grid-template-rows: 1fr auto;
+  grid-template-rows: 60fr 40fr;
 }
 
 .dashboard-card.calendar-card {
@@ -355,9 +355,9 @@ body {
 
 .calendar-card h4 {
   margin-bottom: 24px;
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 24px;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 22px;
 }
 
 .calendar-card-list {
@@ -372,9 +372,9 @@ body {
 .calendar-card-list h4 {
   margin-bottom: 0;
   margin-top: 4px;
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 24px;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 22px;
   color: #000000;
 }
 
@@ -456,7 +456,7 @@ body {
 
 .messages-card ul li {
   background-color: #F4F4FF;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
   padding: 12px 12px 12px 30px;
   display: flex;
   align-items: center;
@@ -579,7 +579,7 @@ body {
   display: flex;
   flex-direction: column;
   padding: 12px 18px;
-  border: 2px solid var(--primary);
+  border: 1px solid var(--primary);
   border-radius: 10px;
 }
 
@@ -597,14 +597,19 @@ body {
   object-fit: contain;
 }
 
+.quiz-card-content h4 {
+  font-size: 18px;
+}
+
 .quiz-card-content ul {
+  margin-bottom: 8px;
   list-style: none;
 }
 
 .quiz-card-content ul li {
   position: relative;
   padding-left: 40px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
 }
 
@@ -620,13 +625,14 @@ body {
 
 .quiz-card-content span {
   max-width: 80%;
+  margin-bottom: 8px;
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 }
 
 .fullscript-card img {
-  width: 35px;
+  width: 30px;
   margin: 0 auto 12px;
 }
 
@@ -639,7 +645,7 @@ body {
   background-color: #F4F4FF;
   margin-bottom: 8px;
   padding: 4px 0 4px 24px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   border-radius: 10px;
 }
@@ -658,11 +664,13 @@ body {
 
 .visits-content h4 {
   margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .visits-content-item {
   max-width: 100%;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .visits-content-item span {
@@ -680,8 +688,14 @@ body {
 
 .visits-content-item.active div {
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 700;
   color: #FFFFFF;
+  line-height: 20px;
+}
+
+.visits-content-item.active .physician {
+  margin-top: 8px;
+  font-weight: 400;
 }
 
 /* page */

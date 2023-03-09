@@ -20,16 +20,16 @@
         flex-direction: column;
         justify-content: space-between;
         padding: 18px 20px;
-        border: 0.75px solid #737373;
-        border-radius: 16.7164px;
-        box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+        border: 1px solid #CCCCCC;
+        border-radius: 16px;
+        box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
         overflow: hidden;
     }
 
     .dashboard-card h4 {
-        font-size: 24px;
-        font-weight: 600;
-        line-height: 24px;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 22px;
         color: var(--text-color);
     }
 

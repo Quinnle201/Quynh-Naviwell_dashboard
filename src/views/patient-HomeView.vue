@@ -143,12 +143,12 @@ export default {
 
           <ul>
             <li>
-              <div class="messages-card-name">John Doe</div>
-              <div>roses are red violets are blue</div>
+              <div class="messages-card-name">Dr. Wendell</div>
+              <div>Re: Question about results</div>
             </li>
             <li>
-              <div class="messages-card-name">John Doe</div>
-              <div>roses are red violets are blue</div>
+              <div class="messages-card-name">Dr. Olivier</div>
+              <div>Re: Prescription Refill</div>
             </li>
           </ul>
 
@@ -184,7 +184,7 @@ export default {
             <div class="visits-content-item active">
               <div>9:00 AM</div>
               <div>Appointment</div>
-              <div>Dr. Wendell at VaroHealth</div>
+              <div class="physician">Dr. Wendell at VaroHealth</div>
             </div>
 
             <h4>Upcoming</h4>
