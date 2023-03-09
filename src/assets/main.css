@@ -576,6 +576,7 @@ body {
 
 /* patient homepage cards */
 .quiz-card-inner {
+  background-color: #F4F4FF;
   display: flex;
   flex-direction: column;
   padding: 12px 18px;
@@ -664,7 +665,7 @@ body {
 
 .visits-content h4 {
   margin-bottom: 16px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -687,7 +688,7 @@ body {
 }
 
 .visits-content-item.active div {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: #FFFFFF;
   line-height: 20px;
