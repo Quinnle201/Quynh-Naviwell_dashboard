@@ -336,15 +336,15 @@ body {
   grid-template-rows: 90fr 10fr;
 }
 
-.pat.cards-wrapper:nth-child(1) {
+.pt.cards-wrapper:nth-child(1) {
   grid-template-rows: 60fr 40fr;
 }
 
-.pat.cards-wrapper:nth-child(2) {
+.pt.cards-wrapper:nth-child(2) {
   grid-template-rows: 0.5fr 0.4fr 0.7fr;
 }
 
-.pat.cards-wrapper:nth-child(3) {
+.pt.cards-wrapper:nth-child(3) {
   grid-template-rows: 60fr 40fr;
 }
 
@@ -2106,6 +2106,11 @@ button.vuecal__arrow {
   gap: 16px;
 }
 
+.pt.chat-wrapper {
+  width: 100%;
+  display: flex;
+}
+
 .chat-left {
   height: 100%;
   display: flex;
@@ -2280,6 +2285,10 @@ button.vuecal__arrow {
   justify-content: space-evenly;
 }
 
+.pt .chat-right {
+  width: 100%;
+}
+
 .chat-right .chat-right-head {
   padding: 16px 28px;
   display: flex;
@@ -2316,6 +2325,28 @@ button.vuecal__arrow {
   min-width: 38px;
   height: 38px;
   cursor: pointer;
+}
+
+.chat-right-head.pt .chat-name {
+  font-size: 20px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.chat-right-head.pt .chat-avatars {
+  display: flex;
+}
+
+.chat-right-head.pt .chat-avatars img, 
+.chat-right-head.pt .chat-avatars svg {
+  width: 60px;
+  height: 60px;
+  margin-right: 16px;
+  border-radius: 50%;
+}
+
+.chat-right-head.pt .chat-avatars img:last-child {
+  margin-right: 0;
 }
 
 .chat-main {
@@ -2362,6 +2393,11 @@ ul.messages-list li {
   display: flex;
 }
 
+.pt ul.messages-list li {
+  align-self: self-end;
+  flex-direction: row-reverse;
+}
+
 ul.messages-list li img, 
 ul.messages-list li svg {
   min-width: 50px;
@@ -2375,6 +2411,11 @@ ul.messages-list li.physician-message {
   flex-direction: row-reverse;
 }
 
+.pt ul.messages-list li.physician-message {
+  align-self: start;
+  flex-direction: row;
+}
+
 ul.messages-list li .message-list-text {
   width: 100%;
   margin-left: 22px;
@@ -2384,8 +2425,18 @@ ul.messages-list li .message-list-text {
   align-items: end;
 }
 
+.pt ul.messages-list li .message-list-text {
+  margin-right: 22px;
+  margin-left: 0;
+}
+
 ul.messages-list li.physician-message .message-list-text {
   margin-right: 22px;
+}
+
+.pt ul.messages-list li.physician-message .message-list-text {
+  margin-right: 0;
+  margin-left: 22px;
 }
 
 ul.messages-list li .message-list-bubble {
@@ -2399,8 +2450,14 @@ ul.messages-list li .message-list-bubble {
   border-radius: 20px 20px 20px 0px;
 }
 
+.pt ul.messages-list li .message-list-bubble {
+  border-radius: 20px 20px 0px 20px;
+}
+
 ul.messages-list li .message-list-bubble.attach, 
-ul.messages-list li.physician-message .message-list-bubble.attach {
+ul.messages-list li.physician-message .message-list-bubble.attach,
+.pt ul.messages-list li .message-list-bubble.attach, 
+.pt ul.messages-list li.physician-message .message-list-bubble.attach {
   margin-top: 6px;
   border-radius: 20px;
 }
@@ -2445,6 +2502,10 @@ ul.messages-list li.physician-message .message-list-bubble {
   border-radius: 20px 20px 0px 20px;
 }
 
+.pt ul.messages-list li.physician-message .message-list-bubble {
+  border-radius: 20px 20px 20px 0px;
+}
+
 ul.messages-list li .message-list-time {
   font-size: 16px;
   font-weight: 400;
@@ -2452,9 +2513,19 @@ ul.messages-list li .message-list-time {
   align-self: flex-start;
 }
 
+.pt ul.messages-list li .message-list-time {
+  text-align: right;
+  align-self: flex-end;
+}
+
 ul.messages-list li.physician-message .message-list-time {
   text-align: right;
   align-self: flex-end;
+}
+
+.pt ul.messages-list li.physician-message .message-list-time {
+  text-align: left;
+  align-self: flex-start;
 }
 
 .send-inner {
@@ -3077,6 +3148,55 @@ input[type=number] {
   background-color: transparent;
   margin-right: 16px;
   border: 1px solid var(--primary);
+}
+
+/* quizzes and questionnaires */
+.q-title {
+  margin-bottom: 32px;
+  font-size: 22px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.q-list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 16px;
+  list-style: none;
+}
+
+.q-list li {
+  background-color: var(--primary);
+  padding: 12px 22px 12px 22px;
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  color: #FFFFFF;
+  border-radius: 16px;
+}
+
+.q-list li svg {
+  margin-right: 32px;
+}
+
+.q-list li .q-info div {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.q-list li .q-info span {
+  font-size: 18px;
+}
+
+.q-list li button {
+  margin-left: auto;
+  padding: 8px 32px;
+  font-size: 18px;
+  border: 1px solid #FFFFFF;
+  border-radius: 16px;
+  color: #FFFFFF;
 }
 
 /* CKEditor */

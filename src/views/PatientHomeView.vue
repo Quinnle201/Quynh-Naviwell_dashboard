@@ -85,7 +85,7 @@ export default {
     </div>
 
     <div class="main-grid">
-      <div class="pat cards-wrapper">
+      <div class="pt cards-wrapper">
         <Card class="quiz-card">
           <template #card-title>My Quizzes & Questionnaires</template>
           <div class="quiz-card-inner">
@@ -137,7 +137,7 @@ export default {
         </div>
       </div>
 
-      <div class="pat cards-wrapper">
+      <div class="pt cards-wrapper">
         <Card class="messages-card">
           <template #card-title>Messages</template>
 
@@ -175,7 +175,7 @@ export default {
         </Card>
       </div>
 
-      <div class="pat cards-wrapper">
+      <div class="pt cards-wrapper">
         <Card class="visits-card">
           <template #card-title>Calendar & Virtual Care</template>
           <div class="visits-content">

@@ -9,14 +9,16 @@ import Login from '@/views/Auth/Login.vue'
 import SetPassword from '@/views/Auth/SetPassword.vue'
 
 import HomeView from '@/views/HomeView.vue'
-import PatientHomeView from '@/views/patient-HomeView.vue'
+import PatientHomeView from '@/views/PatientHomeView.vue'
 import PatientsView from '@/views/Patient/ListView.vue'
 import PatientDetailView from '@/views/Patient/DetailView.vue'
 import CalendarView from '@/views/CalendarView.vue'
 import QuotesView from '@/views/Quotes/QuotesView.vue'
 import AddQuoteView from '@/views/Quotes/AddView.vue'
 import MessagesView from '@/views/MessagesView.vue'
+import PatientMessagesView from '@/views/PatientMessagesView.vue'
 import QuizzesView from '@/views/Quizzes/QuizzesView.vue'
+import QuestionnairesView from '@/views/Questionnaires/QuestionnairesView.vue'
 import AddQuizView from '@/views/Quizzes/AddQuizView.vue'
 import DietView from '@/views/Diet/DietView.vue'
 import AddDietView from '@/views/Diet/AddDietView.vue'
@@ -136,6 +138,11 @@ const router = createRouter({
           component: MessagesView
         },
         {
+          path: "patient-messages",
+          name: "patient-messages",
+          component: PatientMessagesView
+        },
+        {
           path: "settings",
           name: "settings",
           component: SettingsView
@@ -154,6 +161,16 @@ const router = createRouter({
               name: "add-quiz",
               component: AddQuizView
             }
+          ]
+        },
+        {
+          path: '/questionnaire',
+          children: [
+            {
+              path: '',
+              name: 'questionnaire',
+              component: QuestionnairesView
+            },
           ]
         }
       ]
