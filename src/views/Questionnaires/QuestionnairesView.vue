@@ -1,25 +1,8 @@
 <script>
-import SearchIcon from '@/components/icons/IconSearch.vue'
-import AttachIcon from '@/components/icons/IconAttach.vue'
-import UserIcon from '@/components/icons/IconUser.vue'
-import FileIcon from '@/components/icons/IconFile.vue'
-import DownloadIcon from '@/components/icons/IconDownload.vue'
 import QuestionnaireIcon from '@/components/icons/IconQuestionnaire.vue'
-
-import { axiosInstance, downloadFile, uploadFile, getFileUrlFromRef } from '@/helpers';
-import { useAlertStore, useFileStore } from '@/stores';
-import userMixin from '@/mixins/user.js'
-
-import _forEach from 'lodash/forEach';
-import _findIndex from 'lodash/findIndex'
 
 export default {
     components: {
-        SearchIcon,
-        AttachIcon,
-        UserIcon,
-        FileIcon,
-        DownloadIcon,
         QuestionnaireIcon
     },
 }
@@ -38,20 +21,24 @@ export default {
 
             <ul class="q-list">
                 <li>
-                    <QuestionnaireIcon />
+                    <div class="q-list-icon">
+                        <QuestionnaireIcon />
+                    </div>
                     <div class="q-info">
                         <div>Diabetes</div>
                         <span>10 questions</span>
                     </div>
-                    <button>Start</button>
+                    <RouterLink :to="{ name: 'question-details' }">Begin</RouterLink>
                 </li>
                 <li>
-                    <QuestionnaireIcon />
+                    <div class="q-list-icon">
+                        <QuestionnaireIcon />
+                    </div>
                     <div class="q-info">
                         <div>Anxiety</div>
                         <span>8 questions</span>
                     </div>
-                    <button>Start</button>
+                    <RouterLink :to="{ name: 'question-details' }">Begin</RouterLink>
                 </li>
             </ul>
         </div>

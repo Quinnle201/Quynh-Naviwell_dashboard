@@ -19,6 +19,9 @@ import MessagesView from '@/views/MessagesView.vue'
 import PatientMessagesView from '@/views/PatientMessagesView.vue'
 import QuizzesView from '@/views/Quizzes/QuizzesView.vue'
 import QuestionnairesView from '@/views/Questionnaires/QuestionnairesView.vue'
+import QuestionDetailsView from '@/views/Questionnaires/QuestionDetailsView.vue'
+import CompleteView from '@/views/Questionnaires/CompleteView.vue'
+import QuestionView from '@/views/Questionnaires/QuestionView.vue'
 import AddQuizView from '@/views/Quizzes/AddQuizView.vue'
 import DietView from '@/views/Diet/DietView.vue'
 import AddDietView from '@/views/Diet/AddDietView.vue'
@@ -170,6 +173,22 @@ const router = createRouter({
               path: '',
               name: 'questionnaire',
               component: QuestionnairesView
+            },
+            {
+              path: 'question-details',
+              name: 'question-details',
+              component: QuestionDetailsView,
+              
+            },
+            {
+              path: 'question-details/question',
+              name: 'question',
+              component: QuestionView
+            },
+            {
+              path: 'question-details/question/complete',
+              name: 'complete',
+              component: CompleteView
             },
           ]
         }
