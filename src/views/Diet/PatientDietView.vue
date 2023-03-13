@@ -22,7 +22,7 @@ export default {
         <div class="diet-wrapper">
             <tabs class="diet-tabs" :tabList="tabList">
                 <template v-slot:tabPanel-1>
-                    <div class="diet-grid pt-grid">
+                    <div class="diet-grid pt-diet-grid">
                         <RouterLink :to="{ name: 'patient-diet-details' }">
                             <div class="diet-grid-item pt-diet-item">
                                 <img src="@/assets/img/mediterranean.jpg" alt="Diet image">
@@ -43,6 +43,7 @@ export default {
 
                                     <p>Paleolithic diets are all about eating like our ancestors did - opting for grass-fed meats, an abundance of fruit and veg and other wholefoods like nuts and seeds.</p>
                                 </div>
+                            
                             </div>
                         </RouterLink>
 
@@ -86,7 +87,50 @@ export default {
                 </template>
 
                 <template v-slot:tabPanel-2>
-                    <div class="diet-grid recipe-grid">
+                    <div class="diet-grid pt-recipe-grid">
+                        <RouterLink :to="{ name: 'patient-recipe-details' }">
+                            <div class="diet-grid-item pt-recipe-item">
+                                <img src="@/assets/img/shrimp-pho.jpg" alt="Recipe image">
+
+                                <div class="pt-recipe-item-content">
+                                    <div class="time">20 min</div>
+                                    <h6>Shrimp Pho</h6>
+                                </div>
+                            </div>
+                        </RouterLink>
+
+                        <RouterLink :to="{ name: 'patient-recipe-details' }">
+                            <div class="diet-grid-item pt-recipe-item">
+                                <img src="@/assets/img/mango-salad-w-avocado-and-black-beans.png" alt="Recipe image">
+
+                                <div class="pt-recipe-item-content">
+                                    <div class="time">8-10 min</div>
+                                    <h6>Mango salad with avocado and black beans</h6>
+                                </div>
+                            </div>
+                        </RouterLink>
+
+                        <RouterLink :to="{ name: 'patient-recipe-details' }">
+                            <div class="diet-grid-item pt-recipe-item">
+                                <img src="@/assets/img/shrimp-pho.jpg" alt="Recipe image">
+
+                                <div class="pt-recipe-item-content">
+                                    <div class="time">20 min</div>
+                                    <h6>Shrimp Pho</h6>
+                                </div>
+                            </div>
+                        </RouterLink>
+
+                        <RouterLink :to="{ name: 'patient-recipe-details' }">
+                            <div class="diet-grid-item pt-recipe-item">
+                                <img src="@/assets/img/mango-salad-w-avocado-and-black-beans.png" alt="Recipe image">
+
+                                <div class="pt-recipe-item-content">
+                                    <div class="time">8-10 min</div>
+                                    <h6>Mango salad with avocado and black beans</h6>
+                                </div>
+                            </div>
+                        </RouterLink>
                     </div>
                     
                     <div class="pagination-wrapper">

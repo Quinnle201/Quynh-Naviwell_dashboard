@@ -26,6 +26,7 @@ import AddQuizView from '@/views/Quizzes/AddQuizView.vue'
 import DietView from '@/views/Diet/DietView.vue'
 import PatientDietView from '@/views/Diet/PatientDietView.vue'
 import PatientDietDetailsView from '@/views/Diet/PatientDietDetailsView.vue'
+import PatientRecipeDetailsView from '@/views/Diet/PatientRecipeDetailsView.vue'
 import AddDietView from '@/views/Diet/AddDietView.vue'
 import AddRecipeView from '@/views/Diet/AddRecipeView.vue'
 import SettingsView from '@/views/SettingsView.vue'
@@ -113,6 +114,11 @@ const router = createRouter({
               path: '/patient-diet/diet-details',
               name: 'patient-diet-details',
               component: PatientDietDetailsView
+            },
+            {
+              path: '/patient-diet/recipe-details',
+              name: 'patient-recipe-details',
+              component: PatientRecipeDetailsView
             },
             {
               path: "add-diet/:id?",
