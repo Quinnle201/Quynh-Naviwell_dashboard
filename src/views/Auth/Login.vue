@@ -54,10 +54,10 @@ async function onSubmit() {
     .login-wrapper {
         background-color: #F4F4FF;
         height: 100vh;
-        margin: -4.5rem -0.5rem -0.5rem -7.5rem;
+        margin: -4rem -0.5rem 0 -7.5rem;
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
     }
 
     .login-inner {

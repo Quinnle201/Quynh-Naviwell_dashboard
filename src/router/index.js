@@ -30,6 +30,7 @@ import PatientRecipeDetailsView from '@/views/Diet/PatientRecipeDetailsView.vue'
 import AddDietView from '@/views/Diet/AddDietView.vue'
 import AddRecipeView from '@/views/Diet/AddRecipeView.vue'
 import SettingsView from '@/views/SettingsView.vue'
+import OnboardingView from '@/views//Onboarding/OnboardingView.vue'
 
 
 const router = createRouter({
@@ -56,6 +57,16 @@ const router = createRouter({
           return from
         }
       },
+    },
+    {
+      path: '/onboarding',
+      children: [
+        {
+          path: '',
+          name: 'onboarding',
+          component: OnboardingView
+        },
+      ]
     },
     {
       path: '/',
