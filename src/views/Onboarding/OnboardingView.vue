@@ -290,7 +290,7 @@ export default {
     }
 
     .welcome-progress li.complete svg {
-        width: 14px;
+        width: 12px;
         height: 14px;
         display: block;
         opacity: 1;
@@ -302,6 +302,7 @@ export default {
     }
 
     .info-form {
+        max-width: 60%;
         width: 100%;
         height: 100%;
         margin: 40px auto 0;
