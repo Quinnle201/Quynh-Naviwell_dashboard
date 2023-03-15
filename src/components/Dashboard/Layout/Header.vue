@@ -19,9 +19,10 @@
                     </div>
                 </div>
             </div>
-            <div class="quote">Wellness is a connection of paths: knowledge and action.</div>
+            <div class="quote">{{quote}}</div>
             <div class="d-flex flex-row gap-1 user-block">
-                <img :src="fileStore.profileAvatars(authStore.user)" alt="profile_photo" width="48" height="48" class="rounded-circle">
+                <img :src="fileStore.profileAvatars(authStore.user)" alt="profile_photo" width="48" height="48"
+                    class="rounded-circle">
                 <div class="text-center">
                     <a href="#" class="nav-link link-dark px-2 active" aria-current="page">{{
                         userName(authStore.user)
@@ -37,6 +38,7 @@
 import CurrentTime from '@/components/CurrentTime.vue';
 import userMixin from '@/mixins/user.js'
 import { useAuthStore, useFileStore } from '@/stores';
+import { axiosInstance } from '@/helpers';
 
 export default {
     mixins: [
@@ -55,20 +57,35 @@ export default {
             let currentDate = currentWeekday + ' ' + currentDay + ' ' + currentMonth + ' ' + currentYear;
             return currentDate;
         },
+        getQuoteOfDay() {
+            axiosInstance.get('/quotes/day-quote')
+                .then(response => {
+                    this.quote = response.data.data.text
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+
+        }
     },
     watch: {
         authStore: {
             async handler(value) {
-                this.fileStore.getPhotoLinkForUser(value.user)                
+                this.fileStore.getPhotoLinkForUser(value.user)
             },
             immediate: true,
             deep: true,
         }
     },
+    mounted() {
+        this.getQuoteOfDay();
+    },
     data() {
         const authStore = useAuthStore();
         const fileStore = useFileStore()
-        return { authStore, fileStore }
+        return { authStore, fileStore, quote: "" }
     }
 };
 </script>
