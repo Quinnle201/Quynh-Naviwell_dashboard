@@ -31,6 +31,7 @@ import AddDietView from '@/views/Diet/AddDietView.vue'
 import AddRecipeView from '@/views/Diet/AddRecipeView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import OnboardingView from '@/views//Onboarding/OnboardingView.vue'
+import LifestyleView from '@/views//Onboarding/LifestyleView.vue'
 
 
 const router = createRouter({
@@ -66,6 +67,11 @@ const router = createRouter({
           name: 'onboarding',
           component: OnboardingView
         },
+        {
+          path: '/lifestyle',
+          name: 'lifestyle',
+          component: LifestyleView
+        }
       ]
     },
     {

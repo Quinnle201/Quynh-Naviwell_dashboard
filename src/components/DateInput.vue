@@ -93,46 +93,53 @@ export default {
 </template>
   
 <style>
-    .FormDate {
-        display: inline-flex;
-        position: relative;
-        overflow: hidden;
-        color: #CCCCCC;
-        border: 1px solid #CCCCCC;
-        border-radius: 16px;
-    }
+  .FormDate {
+    display: inline-flex;
+    position: relative;
+    overflow: hidden;
+    color: #CCCCCC;
+    border: 1px solid #CCCCCC;
+    border-radius: 16px;
+  }
 
-    .FormDate__input {
-        padding: 0.75em;
-        padding-right: .375em;
-        padding-left: .375em;
-        border: none;
-        text-align: center;
-        -moz-appearance: textfield;
-    }
-    .FormDate__input::-webkit-inner-spin-button {
-        display: none;
-    }
-    .FormDate__input:first-child {
-        padding-left: 0.75em;
-    }
-    .FormDate__input:last-child {
-        padding-right: 0.75em;
-    }
-    .FormDate__input:focus {
-        outline: none;
-    }
-    .FormDate__input--day,
-    .FormDate__input--month {
-        width: 56px;
-    }
-    .FormDate__input--year {
-        width: 72px;
-    }
+  .FormDate__input {
+    padding: 0.75em;
+    padding-right: .375em;
+    padding-left: .375em;
+    border: none;
+    text-align: center;
+    -moz-appearance: textfield;
+  }
+
+  .FormDate__input::-webkit-inner-spin-button {
+    display: none;
+  }
+
+  .FormDate__input:first-child {
+    padding-left: 0.75em;
+  }
+
+  .FormDate__input:last-child {
+    padding-right: 0.75em;
+  }
+
+  .FormDate__input:focus {
+    outline: none;
+  }
+
+  .FormDate__input--day,
+  .FormDate__input--month {
+    width: 56px;
+  }
+
+  .FormDate__input--year {
+    width: 72px;
+  }
 
   .FormDate__divider {
-      padding-top: 0.75em;
-      padding-bottom: 0.75em;
-      pointer-events: none;
-    }
+    background-color: #FFFFFF;
+    padding-top: 0.75em;
+    padding-bottom: 0.75em;
+    pointer-events: none;
+  }
 </style>
