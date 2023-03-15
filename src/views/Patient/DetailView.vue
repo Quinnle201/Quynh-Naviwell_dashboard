@@ -478,18 +478,27 @@ export default {
 
             <div class="patient-grid">
                 <div class="light-bg patient-card border-cntr">
-                    <h4 class="patient-heading">Quizzes and Questionnaires(WIP)</h4>
+                    <h4 class="patient-heading">Quizzes and Questionnaires</h4>
 
                     <div class="patient-status">
-                        <div class="patient-status-item">
+                        <div v-if="patient.completed_quizzes[0]" class="patient-status-item">
                             <div class="patient-status-item-date">
-                                <div>Quiz Assigned:</div>
-                                <div>11/08/2022</div>
+                                <div>{{ patient.completed_quizzes[0].title }} quiz:</div>
+                                <div>{{ new Date(patient.completed_quizzes[0].completed_at).format("YYYY/MM/DD") }}</div>
+                            </div>
+
+                            <div class="label-status complete">Completed</div>
+                            <!-- <div class="patient-status-item-btn">Send Email or Text Reminder</div> -->
+                            <div class="patient-status-item-btn">Scored: {{ patient.completed_quizzes[0].score }}</div>
+                        </div>
+                        <div v-else  class="patient-status-item">
+                            <div class="patient-status-item-date">
+                                <div>No completed quizzes</div>
+                                <div></div>
                             </div>
 
                             <div class="label-status incomplete">Incomplete</div>
                             <div class="patient-status-item-btn">Send Email or Text Reminder</div>
-                            <div class="patient-status-item-btn">View Quiz Report</div>
                         </div>
 
                         <div class="patient-status-item">
