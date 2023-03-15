@@ -8,8 +8,6 @@ import Dashboard from '@/components/Dashboard/Dashboard.vue'
 import Login from '@/views/Auth/Login.vue'
 import SetPassword from '@/views/Auth/SetPassword.vue'
 
-import HomeView from '@/views/HomeView.vue'
-import PatientHomeView from '@/views/PatientHomeView.vue'
 import PatientsView from '@/views/Patient/ListView.vue'
 import PatientDetailView from '@/views/Patient/DetailView.vue'
 import CalendarView from '@/views/CalendarView.vue'
@@ -33,6 +31,10 @@ import SettingsView from '@/views/SettingsView.vue'
 import OnboardingView from '@/views//Onboarding/OnboardingView.vue'
 import LifestyleView from '@/views//Onboarding/LifestyleView.vue'
 
+function isPatient(){
+  const authStore = useAuthStore();
+  return authStore.user.profile_type.includes("PatientProfile");
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -83,12 +85,7 @@ const router = createRouter({
         {
           path: "home",
           name: "home",
-          component: HomeView
-        },
-        {
-          path: "/patient-home",
-          name: "patient-home",
-          component: PatientHomeView
+          component: () => isPatient() ? import('@/views/PatientHomeView.vue') : import('@/views/HomeView.vue')
         },
         {
           path: '/patients',

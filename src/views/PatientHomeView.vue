@@ -33,8 +33,29 @@ export default {
       const date = this.currentDate
       return date.currentWeekdayShort + ' ' + date.currentDay + ' ' + date.currentMonth + ' ' + date.currentYear;
     },
+    todayDate() {
+      return (time) => {
+            const date = new Date(time);
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let am_pm = date.getHours() >= 12 ? "pm" : "am";
+            hours = hours <= 9 ? `${hours}`.padStart(2, 0) : hours;
+            minutes = minutes <= 9 ? `${minutes}`.padStart(2, 0) : minutes;
+            return `${hours}:${minutes} ${am_pm}`
+      }
+    },
     localDate() {
-      return (time) => new Date(time).format('HH:mm')
+      return (time) => {
+          const date = new Date(time);
+            let month = date.toLocaleString('en-us', { month: 'short' });
+            let day = date.toLocaleString('en-us', { day: 'numeric' });
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let am_pm = date.getHours() >= 12 ? "pm" : "am";
+            hours = hours <= 9 ? `${hours}`.padStart(2, 0) : hours;
+            minutes = minutes <= 9 ? `${minutes}`.padStart(2, 0) : minutes;
+            return `${day} ${month} at ${hours}:${minutes} ${am_pm}`
+      }
     },
     inTime() {
       return (date) => {
@@ -57,8 +78,41 @@ export default {
       fileStore,
       alertStore,
       user: userStore.user,
+      messages: [],
+      appointments: []
     }
+  },
+  methods: {
+    getMessages() {
+      axiosInstance.get('/messages', { params: { "limit": 2 } })
+                .then(response => {
+                  console.log(response.data.data)
+                  this.messages = response.data.data.messages
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+    },
+    getAppointments() {
+      axiosInstance.get('/appointments', { params: { "upcoming": 0, "limit": 2 } })
+                .then(response => {
+                  console.log(response.data.data)
+                  this.appointments = response.data.data.appointments
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+    }
+  },
+  mounted() {
+    this.getMessages();
+    this.getAppointments()
   }
+
 };
 </script>
 
@@ -91,7 +145,7 @@ export default {
           <div class="quiz-card-inner">
             <div class="quiz-card-content">
               <img src="@/assets/img/icon-5.svg" alt="Icon">
-              
+
               <ul>
                 <li>Daily Health & Wellness Questions</li>
                 <li>Weekly Health & Wellness Tracker</li>
@@ -107,7 +161,7 @@ export default {
           <div class="quiz-card-inner">
             <div class="quiz-card-content">
               <img src="@/assets/img/icon-4.png" alt="Icon">
-              
+
               <div>
                 <h4>Quarterly Health & Wellness Evaluation</h4>
                 <span>See improvement over a larger period of time during your health improvement journey</span>
@@ -142,18 +196,14 @@ export default {
           <template #card-title>Messages</template>
 
           <ul>
-            <li>
-              <div class="messages-card-name">Dr. Wendell</div>
-              <div>Re: Question about results</div>
-            </li>
-            <li>
-              <div class="messages-card-name">Dr. Olivier</div>
-              <div>Re: Prescription Refill</div>
+            <li v-for="msg in messages">
+              <div class="messages-card-name">Dr. {{msg.from.last_name}}</div>
+              <div>Re: {{msg.body.message}}</div>
             </li>
           </ul>
 
           <RouterLink to="/messages" class="dashboard-card-btn active-btn">
-            <span>1 New Message</span>
+            <span>Open messages</span>
           </RouterLink>
         </Card>
 
@@ -181,15 +231,27 @@ export default {
           <div class="visits-content">
             <h4>Today</h4>
 
-            <div class="visits-content-item active">
-              <div>9:00 AM</div>
+            <div v-if="appointments[0]" class="visits-content-item active">
+              <div>{{ todayDate(appointments[0].start_time) }}</div>
               <div>Appointment</div>
-              <div class="physician">Dr. Wendell at VaroHealth</div>
+              <div class="physician">Dr. {{ appointments[0].physician.user.last_name }} at VarioHealth</div>
+            </div>
+            <div v-else>
+              <div class="visits-content-item">
+                <span>You have no scheduled appointments for today</span>
+              </div>
             </div>
 
             <h4>Upcoming</h4>
-            <div class="visits-content-item">
-              <span>You have no scheduled appointments</span>
+            <div v-if="appointments[1]" class="visits-content-item active">
+              <div>{{ localDate(appointments[1].start_time) }}</div>
+              <div>Appointment</div>
+              <div class="physician">Dr. {{ appointments[1].physician.user.last_name }} at VarioHealth</div>
+            </div>
+            <div v-else>
+              <div class="visits-content-item">
+                <span>You have no scheduled appointments</span>
+              </div>
             </div>
           </div>
           <template #card-btn>Go to Visits & Virtual Care</template>
