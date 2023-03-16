@@ -27,6 +27,7 @@ import AddDietView from '@/views/Diet/AddDietView.vue'
 import AddRecipeView from '@/views/Diet/AddRecipeView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import OnboardingView from '@/views//Onboarding/OnboardingView.vue'
+import QuizView from '@/views//Onboarding/QuizView.vue'
 import LifestyleView from '@/views//Onboarding/LifestyleView.vue'
 
 function isPatient(){
@@ -68,6 +69,12 @@ const router = createRouter({
           path: '',
           name: 'onboarding',
           component: OnboardingView,
+          meta: { physician: false, patient: true },
+        },
+        {
+          path: '/quiz',
+          name: 'quiz',
+          component: QuizView,
           meta: { physician: false, patient: true },
         },
         {
