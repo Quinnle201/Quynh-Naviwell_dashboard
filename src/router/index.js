@@ -14,8 +14,6 @@ import CalendarView from '@/views/CalendarView.vue'
 import QuotesView from '@/views/Quotes/QuotesView.vue'
 import AddQuoteView from '@/views/Quotes/AddView.vue'
 
-import QuizzesView from '@/views/Quizzes/QuizzesView.vue'
-import QuestionnairesView from '@/views/Questionnaires/QuestionnairesView.vue'
 import QuestionDetailsView from '@/views/Questionnaires/QuestionDetailsView.vue'
 import CompleteView from '@/views/Questionnaires/CompleteView.vue'
 import QuestionView from '@/views/Questionnaires/QuestionView.vue'
@@ -200,28 +198,17 @@ const router = createRouter({
             {
               path: '',
               name: 'quizzes',
-              component: QuizzesView,
-              meta: { physician: true, patient: false },
+              component: () => isPatient() ? import('@/views/Questionnaires/QuestionnairesView.vue') : import('@/views/Quizzes/QuizzesView.vue'),
+              meta: { physician: true, patient: true },
             },
             {
               path: "add-quiz/:id?",
               name: "add-quiz",
               component: AddQuizView,
               meta: { physician: true, patient: false },
-            }
-          ]
-        },
-        {
-          path: '/questionnaire',
-          children: [
-            {
-              path: '',
-              name: 'questionnaire',
-              component: QuestionnairesView,
-              meta: { physician: false, patient: true },
             },
             {
-              path: 'question-details',
+              path: ':id',
               name: 'question-details',
               component: QuestionDetailsView,
               meta: { physician: false, patient: true },
@@ -240,7 +227,37 @@ const router = createRouter({
               meta: { physician: false, patient: true },
             },
           ]
-        }
+        },
+        // {
+        //   path: '/questionnaire',
+        //   children: [
+        //     {
+        //       path: '',
+        //       name: 'questionnaire',
+        //       component: QuestionnairesView,
+        //       meta: { physician: false, patient: true },
+        //     },
+        //     {
+        //       path: 'question-details',
+        //       name: 'question-details',
+        //       component: QuestionDetailsView,
+        //       meta: { physician: false, patient: true },
+              
+        //     },
+        //     {
+        //       path: 'question-details/question',
+        //       name: 'question',
+        //       component: QuestionView,
+        //       meta: { physician: false, patient: true },
+        //     },
+        //     {
+        //       path: 'question-details/question/complete',
+        //       name: 'complete',
+        //       component: CompleteView,
+        //       meta: { physician: false, patient: true },
+        //     },
+        //   ]
+        // }
       ]
     },
   ]

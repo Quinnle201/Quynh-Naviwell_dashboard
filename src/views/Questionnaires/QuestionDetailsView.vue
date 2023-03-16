@@ -1,25 +1,115 @@
 <script>
+
+import { axiosInstance } from '@/helpers';
+import { useAlertStore } from '@/stores';
+import { Form, Field, FieldArray } from 'vee-validate';
+import CheckmarkIcon from '@/components/icons/IconCheckmark.vue'
+
+
+const QuizContent = {
+  article: 'article',
+  questions: 'questions',
+  completed: 'completed',
+};
+
+export default {
+    components: {
+        Form,
+        Field,
+        FieldArray,
+        CheckmarkIcon
+    },
+    
+    data() {
+        const alertStore = useAlertStore()
+        return {
+            alertStore,
+            quizId: null,
+            quizData: null,
+            content: QuizContent.article,
+            currentQuestion: 0,
+            QuizContent,
+        }
+    },
+    methods: {
+        getQuiz(id) {
+            axiosInstance.get(`/quizzes/${id}`)
+                .then(response => {
+                    this.quizData = response.data.data;
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                    this.close()
+                });
+        },
+        close() {
+            this.$router.back()
+        },
+        startQuiz() {
+            this.content = QuizContent.questions
+        },
+        nextQuestion() {
+            if(this.currentQuestion == this.quizData.questions.length-1) {
+                this.content = QuizContent.completed
+            } else {
+                this.currentQuestion++;
+            }
+        }
+    },
+    mounted() {
+        this.quizId = this.$route.params.id
+        this.getQuiz(this.quizId)
+    }
+}
 </script>
 
 <template>
-    <div class="page-wrapper">
+    <div class="page-wrapper" v-if="quizData">
         <div class="layout-wrapper">
-            <h3>Diabetes quiz</h3>
+            <h3>{{quizData.title}} quiz</h3>
         </div>
 
-        <div class="page-bg quiz-details">
-            <div class="quiz-details-info">
-                <h2>Introduction</h2>
-                <p>RCTs have found that type 2 diabetes can be prevented among high-risk individuals by metformin medication and evidence-based lifestyle change programs. The purpose of this study is to estimate the use of interventions to prevent type 2 diabetes in real-world clinical practice settings and determine the impact on diabetes-related clinical outcomes.</p>
-                <h2>Methods</h2>
-                <p>The analysis performed in 2020 used 2010-2018 electronic health record data from 69,434 patients aged ≥18 years at high risk for type 2 diabetes in 2 health systems. The use and impact of prescribed metformin, lifestyle change program, bariatric surgery, and combinations of the 3 were examined. A subanalysis was performed to examine uptake and retention among patients referred to the National Diabetes Prevention Program.</p>
-                <h2>Results</h2>
-                <p>Mean HbA1c values declined from before to after intervention for patients who were prescribed metformin (-0.067%; p &lt; 0.001) or had bariatric surgery (-0.318%; p &lt; 0.001). Among patients referred to the National Diabetes Prevention Program lifestyle change program, the type 2 diabetes postintervention incidence proportion was 14.0% for nonattendees, 12.8% for some attendance, and 7.5% for those who attended ≥4 sessions (p &lt; 0.001). Among referred patients to the National Diabetes Prevention Program lifestyle change program, uptake was low (13% for 1-3 sessions, 15% for ≥4 sessions), especially among males and Hispanic patients.</p>
-                <h2>Conclusions</h2>
-                <p>Findings suggest that metformin and bariatric surgery may improve HbA1c levels and that participation in the National Diabetes Prevention Program may reduce type 2 diabetes incidence. Efforts to increase the use of these interventions may have positive impacts on diabetes-related health outcomes.</p>
+        <Transition>
+            <div class="page-bg quiz-details" v-if="content == QuizContent.article">
+                <div class="quiz-details-info">
+                    <div class="ck-content" v-html="quizData.article"></div>
+                </div>
+                <button type="button" @click="startQuiz" >Start quiz</button> <!-- fix styles -->
             </div>
 
-            <RouterLink :to="{ name: 'question' }">Start quiz</RouterLink>
-        </div>
+            <div class="page-bg" v-else-if="content == QuizContent.questions">
+                <div class="question-wrapper">
+                    <div>Question {{ currentQuestion+1 }} of {{ quizData.questions.length }}</div>
+                    <h4>{{quizData.questions[currentQuestion].text }}</h4>
+                    <Form>
+                        <FieldArray name="questions">
+                            <fieldset v-for="(answer, index) in quizData.questions[currentQuestion].answers">
+                                <label>
+                                    {{ answer }}
+                                    <Field type="radio" :name="`1`" :value="index" />
+                                </label>
+                            </fieldset>
+                        </FieldArray>
+
+                        <button type="button" @click="nextQuestion">Next question</button>
+                    </Form>
+                </div>
+            </div>
+
+            <div class="page-bg"  v-else-if="content == QuizContent.completed">
+                <div class="complete-quiz">
+                    <div class="score">
+                        <CheckmarkIcon />
+                        <span>10 of 10</span>
+                    </div>
+                    <h4>Congratulations!</h4>
+                    <h6>All the answers are correct</h6>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ante magna, rutrum sit amet ante a, ultrices aliquet quam.</p>
+
+                    <RouterLink :to="{ name: 'quizzes' }">Go back to quizzes</RouterLink>
+                </div>
+            </div>
+        </Transition>
+
     </div>
 </template>
