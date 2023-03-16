@@ -74,7 +74,7 @@ export default {
                 <div class="quiz-details-info">
                     <div class="ck-content" v-html="quizData.article"></div>
                 </div>
-                <button type="button" @click="startQuiz" >Start quiz</button> <!-- fix styles -->
+                <button type="button" @click="startQuiz" class="quiz-details-btn">Start quiz</button>
             </div>
 
             <div class="page-bg" v-else-if="content == QuizContent.questions">
