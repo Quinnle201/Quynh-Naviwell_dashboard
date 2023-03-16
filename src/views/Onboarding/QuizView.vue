@@ -11,8 +11,6 @@ export default {
         Form, 
         Field, 
         FieldArray, 
-        DateInput,
-        AddIcon,
         CheckmarkIcon
     },
     data() {
@@ -31,12 +29,6 @@ export default {
                 // {value: 'Do you get sick frequently'},
                 // {value: 'Slow wound healing'}
             ],
-            // options: [
-            //     {value: 'Never'},
-            //     {value: 'Sometimes'},
-            //     {value: 'Often'},
-            //     {value: 'Always'},
-            // ]
         }
     },
     methods: {
@@ -46,47 +38,63 @@ export default {
 <template>
     <Header />
     <div class="welcome-wrapper">
+        <div class="quiz-progressbar">
+            <ul>
+                <li class="complete">Glucose</li>
+                <li class="quiz-progressbar-separator">
+                    <CheckmarkIcon />
+                </li>
+                <li class="active">Cardiovascular</li>
+                <li class="quiz-progressbar-separator">
+                    <CheckmarkIcon />
+                </li>
+                <li>Endocrine</li>
+                <li class="quiz-progressbar-separator">
+                    <CheckmarkIcon />
+                </li>
+                <li>GI & Hepatic</li>
+            </ul>
+        </div>
+        
         <div class="welcome-inner">
             <div class="welcome-heading">
+                <span>1/2</span>
                 <h4>Cardiovascular</h4>
                 <h6>Do you have or have you experienced the following in the past year?</h6>
             </div>
 
-            <div class="lifestyle-form">
+            <div class="quiz-form">
                 <p>Mark all that apply</p>
 
                 <Form>
                     <FieldArray name="cardiovascular">
                         <fieldset v-for="(question, index) in questions" :key="index">
-                                <div class="lifestyle-form-question">{{ index + 1 }}. {{ question.value }}</div>
-                                <div class="lifestyle-form-options">
-                                    <!-- <label v-for="(option, index) in options" :key="index">
-                                        {{ option.value }}
-                                        <Field type="radio" :name="'name'" :value="option.value" />
-                                    </label> -->
-                                    
-                                    <div class="lifestyle-form-input">
-                                       <Field type="radio" name="name" />
+                                <div class="quiz-form-question">{{ index + 1 }}. {{ question.value }}</div>
+                                <div class="quiz-form-options">
+                                    <div class="quiz-form-input">
+                                        <Field type="radio" name="name" />
                                         <label>Never</label> 
                                     </div>
                                         
-                                    <div class="lifestyle-form-input">
+                                    <div class="quiz-form-input">
                                         <Field type="radio" name="name" />
                                         <label>Sometimes</label>
                                     </div>
 
-                                    <div class="lifestyle-form-input">
+                                    <div class="quiz-form-input">
                                         <Field type="radio" name="name" />
                                         <label>Often</label>
                                     </div>
                                     
-                                    <div class="lifestyle-form-input">
+                                    <div class="quiz-form-input">
                                         <Field type="radio" name="name" />
                                         <label>Always</label>
                                     </div>
                                 </div>
                         </fieldset>
                     </FieldArray>
+
+                    <button class="quiz-form-button">Next</button>
                 </Form>
             </div>
         </div>
@@ -99,17 +107,85 @@ export default {
         height: 100vh;
         margin: -4rem -0.5rem 0 -7.5rem;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
+    }
+
+    .quiz-progressbar {
+        background-color: #FFFFFF;
+        max-width: 40%;
+        width: 100%;
+        height: auto;
+        margin: 0 auto 16px;
+        padding: 8px 16px;
+        border-radius: 16px;
+    }
+
+    .quiz-progressbar ul {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        list-style: none;
+    }
+
+    .quiz-progressbar ul li {
+        font-size: 14px;
+        font-weight: 500;
+        color: #CCCCCC;
+        white-space: nowrap;
+    }
+
+    .quiz-progressbar ul li.quiz-progressbar-separator {
+        background-color: #CCCCCC;
+        width: 100%;
+        height: 1px;
+        margin: 0 8px;
+    }
+
+    .quiz-progressbar ul li.quiz-progressbar-separator svg {
+        background-color: #FFFFFF;
+        width: 28px;
+        height: 28px;
+        padding: 0 8px;
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .quiz-progressbar ul li.complete {
+        color: #74C973;
+    }
+
+    .quiz-progressbar ul li.complete + li.quiz-progressbar-separator {
+        background-color: #CCEED0;
+        /* opacity: .4; */
+    }
+
+    .quiz-progressbar ul li.complete + li.quiz-progressbar-separator svg {
+        display: block;
+    }
+
+    .quiz-progressbar ul li.active {
+        font-size: 16px;
+        color: var(--main-color);
+    }
+
+    .quiz-progressbar ul li.active + li.quiz-progressbar-separator {
+        background-color: var(--main-color);
+        opacity: .4;
     }
 
     .welcome-inner {
         background-color: rgba(255, 255, 255, .8);
         max-width: 40%;
         width: 100%;
-        height: 85vh;
+        min-height: 78vh;
+        height: auto;
         margin: 0 auto;
-        padding: 32px 40px;
+        padding: 26px 40px;
         display: flex;
         flex-direction: column;
         /* justify-content: space-between; */
@@ -124,66 +200,61 @@ export default {
 
     .welcome-heading h4 {
         margin: 0;
+        color: var(--main-color);
+    }
+
+    .welcome-heading span {
+        background-color: #CCCCCC;
+        margin: 0;
+        padding: 4px 8px;
+        font-size: 16px;
+        color: #FFFFFF;
+        border-radius: 16px;
     }
 
     .welcome-heading h6 {
         margin: 0;
-        font-size: 18px;
-        font-weight: 400;
-        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        margin-top: 4px;
     }
 
-    .lifestyle-form {
+    .quiz-form {
         width: 100%;
         margin-top: 16px;
     }
 
-    .lifestyle-form p {
-        margin: 0;
-        font-size: 16px;
+    .quiz-form p {
+        margin: 0 0 4px 0;
+        font-size: 14px;
         font-weight: 400;
         color: var(--primary);
     }
 
-    .lifestyle-form fieldset {
+    .quiz-form fieldset {
         margin-bottom: 16px;
     }
 
-    .lifestyle-form-question {
+    .quiz-form-question {
         font-size: 16px;
         font-weight: 500;
     }
 
-    .lifestyle-form-options {
+    .quiz-form-options {
         margin-top: 4px;
         display: flex;
         justify-content: space-between;
     }
 
-    .lifestyle-form-input {
+    .quiz-form-input {
         max-width: 24%;
         flex: 0 0 24%;
-        position: relative;
         font-size: 14px;
         font-weight: 500;
-        color: #FFFFFF;
         text-align: center;
     }
 
-    .lifestyle-form-input:before {
-        content: '';
-        background-color: #FFFFFF;
-        width: 16px;
-        height: 16px;
-        position: absolute;
-        left: 8px;
-        top: 10px;
-        border: 1px solid var(--border-color);
-        border-radius: 50%;
-        z-index: 2;
-    }
-
-    .lifestyle-form-input input {
+    .quiz-form-input input {
         width: 100%;
         height: 100%;
         position: absolute;
@@ -193,15 +264,57 @@ export default {
         appearance: none;
     }
 
-    .lifestyle-form-input input + label {
-        background-color: var(--primary);
+    .quiz-form-input input + label {
+        /* background-color: var(--primary); */
         width: 100%;
         height: 100%;
-        padding: 8px 0;
+        padding: 4px 0;
+        position: relative;
+        border: 1px solid #CCCCCC;
         border-radius: 16px;
     }
 
-    .lifestyle-form-input input:checked + label {
+    .quiz-form-input input:checked + label {
+        background-color: var(--primary);
+        color: #FFFFFF;
+    }
+
+    .quiz-form-input input + label:before {
+        content: '';
+        background-color: #FFFFFF;
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        left: 8px;
+        top: 8px;
+        border: 1px solid #CCCCCC;
+        border-radius: 50%;
+        z-index: 2;
+    }
+
+    .quiz-form-input input:checked + label:before {
         background-color: var(--main-color);
+        border: 4px solid #FFFFFF;
+    }
+
+    .quiz-form form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .quiz-form-button {
+        background-color: var(--primary);
+        min-width: 220px;
+        width: auto;
+        height: 56px;
+        margin-top: 32px;
+        padding: 12px 32px;
+        align-self: center;
+        font-size: 18px;
+        font-weight: 500;
+        color: #FFFFFF;
+        text-align: center;
+        border-radius: 16px;
+        cursor: pointer;
     }
 </style>
