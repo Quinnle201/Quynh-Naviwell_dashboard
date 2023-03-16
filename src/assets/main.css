@@ -3406,7 +3406,7 @@ input[type=number] {
   height: calc(100% - 82px);
   margin-bottom: 32px;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: auto;
+  grid-template-rows: repeat(2, 1fr);
   grid-auto-flow: row;
   gap: 32px;
 }
@@ -3433,8 +3433,7 @@ input[type=number] {
 
 .diet-grid-item.pt-diet-item img {
   min-width: 36%;
-  /* height: 180px; */
-  /* height: 24vh; */
+  width: 36%;
   height: 100%;
   border-radius: 16px;
 }
