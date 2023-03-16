@@ -43,6 +43,7 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login,
+      meta: { physician: true, patient: true },
       beforeEnter: (to, from) => {
         const authStore = useAuthStore();
         if(authStore.user || authStore.claim != null){
@@ -54,6 +55,7 @@ const router = createRouter({
       path: '/set-password',
       name: 'setpassword',
       component: SetPassword,
+      meta: { physician: true, patient: true },
       beforeEnter: (to, from) => {
         const authStore = useAuthStore();
         if(!authStore.user || authStore.claim != null){
@@ -67,12 +69,14 @@ const router = createRouter({
         {
           path: '',
           name: 'onboarding',
-          component: OnboardingView
+          component: OnboardingView,
+          meta: { physician: false, patient: true },
         },
         {
           path: '/lifestyle',
           name: 'lifestyle',
-          component: LifestyleView
+          component: LifestyleView,
+          meta: { physician: false, patient: true },
         }
       ]
     },
@@ -85,11 +89,13 @@ const router = createRouter({
         {
           path: "home",
           name: "home",
-          component: () => isPatient() ? import('@/views/PatientHomeView.vue') : import('@/views/HomeView.vue')
+          component: () => isPatient() ? import('@/views/PatientHomeView.vue') : import('@/views/HomeView.vue'),
+          meta: { physician: true, patient: true },
         },
         {
           path: '/patients',
           component: { render: () => h(RouterView) },
+          meta: { physician: true, patient: false },
           children: [
             {
               path: '',
@@ -117,32 +123,32 @@ const router = createRouter({
             {
               path: '',
               name: 'diet',
-              component: DietView
+              component: () => isPatient() ? import('@/views/Diet/PatientDietView.vue') : import('@/views/Diet/DietView.vue'),
+              meta: { physician: true, patient: true },
             },
             {
-              path: '/patient-diet',
-              name: 'patient-diet',
-              component: PatientDietView
-            },
-            {
-              path: '/patient-diet/diet-details',
+              path: ':id',
               name: 'patient-diet-details',
-              component: PatientDietDetailsView
+              component: PatientDietDetailsView,
+              meta: { physician: false, patient: true }
             },
             {
-              path: '/patient-diet/recipe-details',
+              path: '/recipe/:id',
               name: 'patient-recipe-details',
-              component: PatientRecipeDetailsView
+              component: PatientRecipeDetailsView,
+              meta: { physician: false, patient: true }
             },
             {
               path: "add-diet/:id?",
               name: "add-diet",
-              component: AddDietView
+              component: AddDietView,
+              meta: { physician: true, patient: false }
             },
             {
               path: "add-recipe/:id?",
               name: "add-recipe",
-              component: AddRecipeView
+              component: AddRecipeView,
+              meta: { physician: true, patient: false }
             }
           ]
         },
@@ -153,34 +159,40 @@ const router = createRouter({
             {
               path: '',
               name: 'quotes',
-              component: QuotesView
+              component: QuotesView,
+              meta: { physician: true, patient: false },
             },
             {
               path: "mass-add",
               name: "quotes-mass-add",
-              component: AddQuoteView
+              component: AddQuoteView,
+              meta: { physician: true, patient: false },
             }
           ]
         },
         {
           path: "calendar/:id?",
           name: "calendar",
-          component: CalendarView
+          component: CalendarView,
+          meta: { physician: true, patient: false },
         },
         {
           path: "messages",
           name: "messages",
-          component: MessagesView
+          component: MessagesView,
+          meta: { physician: true, patient: false },
         },
         {
           path: "patient-messages",
           name: "patient-messages",
-          component: PatientMessagesView
+          component: PatientMessagesView,
+          meta: { physician: false, patient: true },
         },
         {
           path: "settings",
           name: "settings",
-          component: SettingsView
+          component: SettingsView,
+          meta: { physician: true, patient: true },
         },
         {
           path: '/quizzes',
@@ -189,12 +201,14 @@ const router = createRouter({
             {
               path: '',
               name: 'quizzes',
-              component: QuizzesView
+              component: QuizzesView,
+              meta: { physician: true, patient: false },
             },
             {
               path: "add-quiz/:id?",
               name: "add-quiz",
-              component: AddQuizView
+              component: AddQuizView,
+              meta: { physician: true, patient: false },
             }
           ]
         },
@@ -204,23 +218,27 @@ const router = createRouter({
             {
               path: '',
               name: 'questionnaire',
-              component: QuestionnairesView
+              component: QuestionnairesView,
+              meta: { physician: false, patient: true },
             },
             {
               path: 'question-details',
               name: 'question-details',
               component: QuestionDetailsView,
+              meta: { physician: false, patient: true },
               
             },
             {
               path: 'question-details/question',
               name: 'question',
-              component: QuestionView
+              component: QuestionView,
+              meta: { physician: false, patient: true },
             },
             {
               path: 'question-details/question/complete',
               name: 'complete',
-              component: CompleteView
+              component: CompleteView,
+              meta: { physician: false, patient: true },
             },
           ]
         }
@@ -240,6 +258,15 @@ router.beforeEach(async (to) => {
       authStore.returnUrl = to.fullPath;
       return '/login';
   }
+
+    if (!to.meta.patient && isPatient()) {
+      return '/';
+    }
+
+    if (!to.meta.physician && !isPatient()) {
+      return '/';
+    }
+
 });
 
 export default router

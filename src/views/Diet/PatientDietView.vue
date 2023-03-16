@@ -1,14 +1,52 @@
 <script>
 import Tabs from "@/components/Tabs.vue"
+import { useFileStore, useAlertStore } from '@/stores';
+import { axiosInstance } from '@/helpers';
 
 export default {
     components: {
         Tabs,
     },
     data() {
+        const fileStore = useFileStore();
         return {
             tabList: ["Diets", "Recipes"],
+            dietList: [],
+            recipeList: [],
+            fileStore,
         }
+    },
+    methods: {
+        getDiets() {
+            axiosInstance.get('/diet')
+                .then(response => {
+                    this.dietList = response.data.data.diets
+                    this.dietList.forEach((diet) => {
+                        this.fileStore.getPhotoLinkForDiet(diet)       
+                    })
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        getRecipes() {
+            axiosInstance.get('/recipes')
+                .then(response => {
+                    this.recipeList = response.data.data.recipes
+                    this.recipeList.forEach((recipe) => {
+                        this.fileStore.getPhotoLinkForRecipe(recipe)       
+                    })
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+    },
+    mounted() {
+        this.getDiets();
+        this.getRecipes()
     }
 }
 </script>
@@ -22,50 +60,16 @@ export default {
         <div class="diet-wrapper">
             <tabs class="diet-tabs" :tabList="tabList">
                 <template v-slot:tabPanel-1>
-                    <div class="diet-grid pt-diet-grid">
-                        <RouterLink :to="{ name: 'patient-diet-details' }">
+                    <div class="diet-grid pt-diet-grid" >
+                        <RouterLink :to="{ name: 'patient-diet-details', params: { id: diet.id } }" v-for="diet in dietList">
                             <div class="diet-grid-item pt-diet-item">
-                                <img src="@/assets/img/mediterranean.jpg" alt="Diet image">
+                                <img :src="fileStore.dietImages(diet)" alt="">
+                                <!-- <img src="@/assets/img/mediterranean.jpg" alt="Diet image"> -->
 
                                 <div class="diet-grid-item-content">
-                                    <h6>Mediterranean diet</h6>
+                                    <h6>{{diet.title}}</h6>
 
-                                    <p>The Mediterranean Diet emphasizes plant-based foods and healthy fats.</p>
-                                </div>
-                            </div>
-                        </RouterLink>
-
-                        <RouterLink :to="{ name: 'patient-diet-details' }">
-                            <div class="diet-grid-item pt-diet-item">
-                                <img src="@/assets/img/paleo.png" alt="Diet image">
-                                <div class="diet-grid-item-content">
-                                    <h6>Paleo diet</h6>
-
-                                    <p>Paleolithic diets are all about eating like our ancestors did - opting for grass-fed meats, an abundance of fruit and veg and other wholefoods like nuts and seeds.</p>
-                                </div>
-                            
-                            </div>
-                        </RouterLink>
-
-                        <RouterLink :to="{ name: 'patient-diet-details' }">
-                            <div class="diet-grid-item pt-diet-item">
-                                <img src="@/assets/img/paleo.png" alt="Diet image">
-                                <div class="diet-grid-item-content">
-                                    <h6>Paleo diet</h6>
-
-                                    <p>Paleolithic diets are all about eating like our ancestors did - opting for grass-fed meats, an abundance of fruit and veg and other wholefoods like nuts and seeds.</p>
-                                </div>
-                            </div>
-                        </RouterLink>
-                                                
-                        <RouterLink :to="{ name: 'patient-diet-details' }">
-                            <div class="diet-grid-item pt-diet-item">
-                                <img src="@/assets/img/mediterranean.jpg" alt="Diet image">
-
-                                <div class="diet-grid-item-content">
-                                    <h6>Mediterranean diet</h6>
-
-                                    <p>The Mediterranean Diet emphasizes plant-based foods and healthy fats.</p>
+                                    <p>{{diet.description}}</p>
                                 </div>
                             </div>
                         </RouterLink>
@@ -88,51 +92,19 @@ export default {
 
                 <template v-slot:tabPanel-2>
                     <div class="diet-grid pt-recipe-grid">
-                        <RouterLink :to="{ name: 'patient-recipe-details' }">
+                        <RouterLink :to="{ name: 'patient-recipe-details', params: { id: recipe.id } }" v-for="recipe in recipeList">
                             <div class="diet-grid-item pt-recipe-item">
-                                <img src="@/assets/img/shrimp-pho.jpg" alt="Recipe image">
+                                <img :src="fileStore.recipeImages(recipe)" alt="">
+                                <!-- <img src="@/assets/img/shrimp-pho.jpg" alt="Recipe image"> -->
 
                                 <div class="pt-recipe-item-content">
-                                    <div class="time">20 min</div>
-                                    <h6>Shrimp Pho</h6>
-                                </div>
-                            </div>
-                        </RouterLink>
-
-                        <RouterLink :to="{ name: 'patient-recipe-details' }">
-                            <div class="diet-grid-item pt-recipe-item">
-                                <img src="@/assets/img/mango-salad-w-avocado-and-black-beans.png" alt="Recipe image">
-
-                                <div class="pt-recipe-item-content">
-                                    <div class="time">8-10 min</div>
-                                    <h6>Mango salad with avocado and black beans</h6>
-                                </div>
-                            </div>
-                        </RouterLink>
-
-                        <RouterLink :to="{ name: 'patient-recipe-details' }">
-                            <div class="diet-grid-item pt-recipe-item">
-                                <img src="@/assets/img/shrimp-pho.jpg" alt="Recipe image">
-
-                                <div class="pt-recipe-item-content">
-                                    <div class="time">20 min</div>
-                                    <h6>Shrimp Pho</h6>
-                                </div>
-                            </div>
-                        </RouterLink>
-
-                        <RouterLink :to="{ name: 'patient-recipe-details' }">
-                            <div class="diet-grid-item pt-recipe-item">
-                                <img src="@/assets/img/mango-salad-w-avocado-and-black-beans.png" alt="Recipe image">
-
-                                <div class="pt-recipe-item-content">
-                                    <div class="time">8-10 min</div>
-                                    <h6>Mango salad with avocado and black beans</h6>
+                                    <div class="time">{{recipe.cook_time}} min</div>
+                                    <h6>{{recipe.title}}</h6>
                                 </div>
                             </div>
                         </RouterLink>
                     </div>
-                    
+
                     <div class="pagination-wrapper">
                         <div class="pagination-item pagination-item-arrow-left">
                             <img src="@/assets/img/select-icon.svg" alt="" />
