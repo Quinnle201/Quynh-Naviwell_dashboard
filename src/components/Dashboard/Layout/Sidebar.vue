@@ -1,4 +1,6 @@
 <script setup>
+import { markRaw, computed } from "vue";
+
 import HomeIcon from '../../icons/IconHome.vue'
 import CalendarIcon from '../../icons/IconCalendar.vue'
 import DietIcon from '../../icons/IconDiet.vue'
@@ -13,59 +15,105 @@ import MedicineIcon from '../../icons/IconMedicine.vue'
 import ProfileIcon from '../../icons/IconProfile.vue'
 import { RouterLink } from 'vue-router'
 
+import { useAuthStore } from '@/stores';
+
+
+const patientLinks = [
+  {
+    route: "/home",
+    icon: markRaw(HomeIcon)
+  },
+  {
+    route: "/quizzes",
+    icon: markRaw(QuizzesIcon)
+  },
+  {
+    route: "/messages",
+    icon: markRaw(MessagesIcon)
+  },
+  {
+    route: "/calendar",
+    icon: markRaw(CalendarIcon)
+  },
+  {
+    route: "/404",
+    icon: markRaw(ResultsIcon)
+  },
+  {
+    route: "/diet",
+    icon: markRaw(DietIcon)
+  },
+  {
+    route: "/fullscript",
+    icon: markRaw(MedicineIcon)
+  },
+  {
+    route: "/profile",
+    icon: markRaw(ProfileIcon)
+  },
+  {
+    route: "/settings",
+    icon: markRaw(SettingsIcon)
+  },
+]
+
+
+const physicianLinks = [
+  {
+    route: "/home",
+    icon: markRaw(HomeIcon)
+  },
+  {
+    route: "/calendar",
+    icon: markRaw(CalendarIcon)
+  },
+  {
+    route: "/messages",
+    icon: markRaw(MessagesIcon)
+  },
+  {
+    route: "/quizzes",
+    icon: markRaw(QuizzesIcon)
+  },
+  {
+    route: "/patients",
+    icon: markRaw(PatientsIcon)
+  },
+  {
+    route: "/404",
+    icon: markRaw(ResultsIcon)
+  },
+  {
+    route: "/diet",
+    icon: markRaw(DietIcon)
+  },
+  {
+    route: "/quotes",
+    icon: markRaw(QuotesIcon)
+  },
+  {
+    route: "/settings",
+    icon: markRaw(SettingsIcon)
+  },
+]
+
+
+const authStore = useAuthStore();
+const links = computed(() => {
+  return authStore.user.profile_type.includes("PatientProfile") ? patientLinks : physicianLinks
+})
+
 </script>
 
 <template>
-
   <div id="sidebarMenu" class="d-md-flex flex-column flex-shrink-0 overflow-auto sidebar collapse px-3">
-      <RouterLink to="/home" class="static" >
-        <img class="logo mx-auto m-2 img-fluid" src="@/assets/naviwell-logo.png"  alt="NaviWell" />
-     </RouterLink>
+    <RouterLink to="/home" class="static">
+      <img class="logo mx-auto m-2 img-fluid" src="@/assets/naviwell-logo.png" alt="NaviWell" />
+    </RouterLink>
     <ul class="nav nav-pills nav-flush mb-auto text-center d-flex justify-content-center py-3 gap-3">
-      <li class="nav-item mx-auto m-2">
-        <RouterLink to="/home" class="nav-link p-3 rounded-circle">
-          <HomeIcon width="30" height="30" />
-        </RouterLink>
-      </li>
-      <li class="nav-item">
-        <RouterLink to="/calendar" class="nav-link p-3 rounded-circle">
-          <CalendarIcon width="30" height="30" />
-        </RouterLink>
-      </li>
-      <li class="nav-item">
-        <RouterLink to="/messages" class="nav-link p-3 rounded-circle">
-          <MessagesIcon width="30" height="30" />
-        </RouterLink>
-      </li>
-      <li class="nav-item">
-        <RouterLink to="/quizzes" class="nav-link p-3 rounded-circle">
-          <QuizzesIcon width="30" height="30" />
-        </RouterLink>
-      </li>
-      <li class="nav-item">
-        <RouterLink to="/patients" class="nav-link p-3 rounded-circle">
-          <PatientsIcon width="30" height="30" />
-        </RouterLink>
-      </li>
-      <li class="nav-item">
-        <a href="#" class="nav-link p-3 rounded-circle" aria-current="page" title="" data-bs-toggle="tooltip"
-          data-bs-placement="right" data-bs-original-title="Home">
-          <ResultsIcon width="30" height="30" />
-        </a>
-      </li>
-      <li class="nav-item">
-        <RouterLink to="/diet" class="nav-link p-3 rounded-circle">
-          <DietIcon width="30" height="30" />
-        </RouterLink>
-      </li>
-      <li class="nav-item">
-        <RouterLink to="/quotes" class="nav-link p-3 rounded-circle">
-          <QuotesIcon width="30" height="30" />
-        </RouterLink>
-      </li>
-      <li class="nav-item">
-        <RouterLink to="/settings" class="nav-link p-3 rounded-circle">
-          <SettingsIcon width="30" height="30" />
+      <li class="nav-item" :class="index == 0 ? 'mx-auto m-2' : ''" v-for="(link, index) in links">
+        <RouterLink :to="link.route" class="nav-link p-3 rounded-circle">
+          <component :is="link.icon" :key="link.icon.name" width="30" height="30"></component>
         </RouterLink>
       </li>
     </ul>
