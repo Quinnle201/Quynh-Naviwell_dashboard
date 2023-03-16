@@ -13,16 +13,14 @@ import PatientDetailView from '@/views/Patient/DetailView.vue'
 import CalendarView from '@/views/CalendarView.vue'
 import QuotesView from '@/views/Quotes/QuotesView.vue'
 import AddQuoteView from '@/views/Quotes/AddView.vue'
-import MessagesView from '@/views/MessagesView.vue'
-import PatientMessagesView from '@/views/PatientMessagesView.vue'
+
 import QuizzesView from '@/views/Quizzes/QuizzesView.vue'
 import QuestionnairesView from '@/views/Questionnaires/QuestionnairesView.vue'
 import QuestionDetailsView from '@/views/Questionnaires/QuestionDetailsView.vue'
 import CompleteView from '@/views/Questionnaires/CompleteView.vue'
 import QuestionView from '@/views/Questionnaires/QuestionView.vue'
 import AddQuizView from '@/views/Quizzes/AddQuizView.vue'
-import DietView from '@/views/Diet/DietView.vue'
-import PatientDietView from '@/views/Diet/PatientDietView.vue'
+
 import PatientDietDetailsView from '@/views/Diet/PatientDietDetailsView.vue'
 import PatientRecipeDetailsView from '@/views/Diet/PatientRecipeDetailsView.vue'
 import AddDietView from '@/views/Diet/AddDietView.vue'
@@ -179,14 +177,8 @@ const router = createRouter({
         {
           path: "messages",
           name: "messages",
-          component: MessagesView,
-          meta: { physician: true, patient: false },
-        },
-        {
-          path: "patient-messages",
-          name: "patient-messages",
-          component: PatientMessagesView,
-          meta: { physician: false, patient: true },
+          component: () => isPatient() ? import('@/views/PatientMessagesView.vue') : import('@/views/MessagesView.vue'),
+          meta: { physician: true, patient: true },
         },
         {
           path: "settings",
