@@ -3348,46 +3348,32 @@ input[type=number] {
   border-radius: 50%;
 }
 
-.complete-quiz .score-correct {
+.complete-quiz.score-correct .score, 
+.complete-quiz.score-excellent .score {
   background-color: #CCEED0;
 }
-.complete-quiz .score-excellent {
-  background-color: #CCEED0;
-}
-.complete-quiz .score-good {
-  background-color: #B4D7FD;
-}
-.complete-quiz .score-bad {
+.complete-quiz.score-good .score, 
+.complete-quiz.score-bad .score {
   background-color: #B4D7FD;
 }
 
-.complete-quiz .score-correct svg path {
+.complete-quiz.score-correct .score svg path, 
+.complete-quiz .score-excellent .score svg path {
   fill: #74C973;
   stroke: #74C973;
 }
-.complete-quiz .score-excellent svg path {
-  fill: #74C973;
-  stroke: #74C973;
-}
-.complete-quiz .score-good svg path {
-  fill: #5C90F1;
-  stroke: #5C90F1;
-}
-.complete-quiz .score-bad svg path {
+.complete-quiz.score-good .score svg path, 
+.complete-quiz.score-bad .score svg path {
   fill: #5C90F1;
   stroke: #5C90F1;
 }
 
-.complete-quiz .score-correct span {
+.complete-quiz.score-correct .score span, 
+.complete-quiz.score-excellent .score span {
   color: #74C973;
 }
-.complete-quiz .score-excellent span {
-  color: #74C973;
-}
-.complete-quiz .score-good span {
-  color: #5C90F1;
-}
-.complete-quiz .score-bad span {
+.complete-quiz.score-good .score span, 
+.complete-quiz.score-bad .score span {
   color: #5C90F1;
 }
 
@@ -3430,6 +3416,10 @@ input[type=number] {
 
 .complete-quiz h6 {
   color: #74C973;
+}
+
+.complete-quiz.score-good h6 {
+  color: #5C90F1;
 }
 
 .complete-quiz p {

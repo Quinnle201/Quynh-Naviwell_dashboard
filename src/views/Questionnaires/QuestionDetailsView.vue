@@ -147,8 +147,8 @@ export default {
             </div>
 
             <div class="page-bg"  v-else-if="content == QuizContent.completed">
-                <div class="complete-quiz">
-                    <div class="score" :class="quizLabel.class">
+                <div class="complete-quiz" :class="quizLabel.class">
+                    <div class="score">
                         <CheckmarkIcon />
                         <span>{{quizLabel.correct}} of {{quizLabel.total}}</span>
                     </div>
