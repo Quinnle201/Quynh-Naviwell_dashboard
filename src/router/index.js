@@ -15,8 +15,6 @@ import QuotesView from '@/views/Quotes/QuotesView.vue'
 import AddQuoteView from '@/views/Quotes/AddView.vue'
 
 import QuestionDetailsView from '@/views/Questionnaires/QuestionDetailsView.vue'
-import CompleteView from '@/views/Questionnaires/CompleteView.vue'
-import QuestionView from '@/views/Questionnaires/QuestionView.vue'
 import AddQuizView from '@/views/Quizzes/AddQuizView.vue'
 
 import PatientDietDetailsView from '@/views/Diet/PatientDietDetailsView.vue'
@@ -227,18 +225,6 @@ const router = createRouter({
               component: QuestionDetailsView,
               meta: { physician: false, patient: true },
               
-            },
-            {
-              path: 'question-details/question',
-              name: 'question',
-              component: QuestionView,
-              meta: { physician: false, patient: true },
-            },
-            {
-              path: 'question-details/question/complete',
-              name: 'complete',
-              component: CompleteView,
-              meta: { physician: false, patient: true },
             },
           ]
         },

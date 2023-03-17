@@ -51,7 +51,7 @@ export default {
             </div>
 
             <ul class="q-list">
-                <li v-for="(quiz, index) in quizzes" :key="quiz.id">
+                <li v-for="(quiz, index) in quizzes" :key="quiz.id" :class="quiz.isCompleted ? 'completed' : ''">
                     <div class="q-list-icon">
                         <QuestionnaireIcon />
                     </div>
@@ -59,7 +59,7 @@ export default {
                         <div>{{quiz.title}}</div>
                         <span>{{quiz.questions.length}} questions</span>
                     </div>
-                    <RouterLink :to="{ name: 'question-details', params: { id: quiz.id } }">Begin</RouterLink>
+                    <RouterLink :to="{ name: 'question-details', params: { id: quiz.id } }">{{ quiz.isCompleted ? "Completed" : "Begin" }}</RouterLink>
                 </li>
             </ul>
         </div>

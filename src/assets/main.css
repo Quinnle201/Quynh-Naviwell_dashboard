@@ -3326,7 +3326,6 @@ input[type=number] {
 }
 
 .complete-quiz .score {
-  background-color: #CCEED0;
   width: 240px;
   height: 240px;
   margin-bottom: 32px;
@@ -3337,13 +3336,54 @@ input[type=number] {
   border-radius: 50%;
 }
 
+.complete-quiz .score-correct {
+  background-color: #CCEED0;
+}
+.complete-quiz .score-excellent {
+  background-color: #CCEED0;
+}
+.complete-quiz .score-good {
+  background-color: #B4D7FD;
+}
+.complete-quiz .score-bad {
+  background-color: #B4D7FD;
+}
+
+.complete-quiz .score-correct svg path {
+  fill: #74C973;
+  stroke: #74C973;
+}
+.complete-quiz .score-excellent svg path {
+  fill: #74C973;
+  stroke: #74C973;
+}
+.complete-quiz .score-good svg path {
+  fill: #5C90F1;
+  stroke: #5C90F1;
+}
+.complete-quiz .score-bad svg path {
+  fill: #5C90F1;
+  stroke: #5C90F1;
+}
+
+.complete-quiz .score-correct span {
+  color: #74C973;
+}
+.complete-quiz .score-excellent span {
+  color: #74C973;
+}
+.complete-quiz .score-good span {
+  color: #5C90F1;
+}
+.complete-quiz .score-bad span {
+  color: #5C90F1;
+}
+
 .complete-quiz .score svg {
   height: 72px;
 }
 
 .complete-quiz .score svg path {
-  fill: #74C973;
-  stroke: #74C973;
   stroke-width: 2;
   stroke-dasharray: 500;
   stroke-dashoffset: 500;
@@ -3364,7 +3404,6 @@ input[type=number] {
   margin-top: 8px;
   font-size: 24px;
   font-weight: 600;
-  color: #74C973;
 }
 
 .complete-quiz h4 {
