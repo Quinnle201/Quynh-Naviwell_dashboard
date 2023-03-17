@@ -25,8 +25,10 @@ import AddDietView from '@/views/Diet/AddDietView.vue'
 import AddRecipeView from '@/views/Diet/AddRecipeView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import OnboardingView from '@/views//Onboarding/OnboardingView.vue'
-import QuizView from '@/views//Onboarding/QuizView.vue'
-import LifestyleView from '@/views//Onboarding/LifestyleView.vue'
+import QuizView from '@/views/Onboarding/QuizView.vue'
+import LifestyleView from '@/views/Onboarding/LifestyleView.vue'
+import GetStartedView from '@/views/Onboarding/GetStartedView.vue'
+import CompleteInfoView from '@/views/Onboarding/CompleteInfoView.vue'
 
 function isPatient(){
   const authStore = useAuthStore();
@@ -79,6 +81,18 @@ const router = createRouter({
           path: '/lifestyle',
           name: 'lifestyle',
           component: LifestyleView,
+          meta: { physician: false, patient: true },
+        },
+        {
+          path: '/get-started',
+          name: 'get-started',
+          component: GetStartedView,
+          meta: { physician: false, patient: true },
+        },
+        {
+          path: '/complete-info',
+          name: 'complete-info',
+          component: CompleteInfoView,
           meta: { physician: false, patient: true },
         }
       ]
