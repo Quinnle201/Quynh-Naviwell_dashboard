@@ -16,12 +16,12 @@ export default {
     data() {
         return {
             questions: [
-                {value: 'Do you experience heartburn?'},
-                {value: 'Do you experience dizziness?'},
-                {value: 'Do you have brittle nails?'},
-                {value: 'Frequent fast heartbeat?'},
-                {value: 'Shortness of breath'},
-                {value: 'Do you get headaches'},
+                {text: 'Do you experience heartburn?', value: ''},
+                {text: 'Do you experience dizziness?', value: ''},
+                {text: 'Do you have brittle nails?', value: ''},
+                {text: 'Frequent fast heartbeat?', value: ''},
+                {text: 'Shortness of breath', value: ''},
+                {text: 'Do you get headaches', value: ''},
                 // {value: 'Muscle/leg cramping'},
                 // {value: 'Lack of Motivation'},
                 // {value: 'Dryness of skin'},
@@ -32,7 +32,7 @@ export default {
         }
     },
     methods: {
-    }
+    },
 }
 </script>
 <template>
@@ -69,25 +69,25 @@ export default {
                 <Form>
                     <FieldArray name="cardiovascular">
                         <fieldset v-for="(question, index) in questions" :key="index">
-                                <div class="quiz-form-question">{{ index + 1 }}. {{ question.value }}</div>
+                                <div class="quiz-form-question">{{ index + 1 }}. {{ question.text }}</div>
                                 <div class="quiz-form-options">
                                     <div class="quiz-form-input">
-                                        <Field type="radio" name="name" />
+                                        <Field type="radio" :name="`${question.text}`" v-model="question.value" />
                                         <label>Never</label> 
                                     </div>
                                         
                                     <div class="quiz-form-input">
-                                        <Field type="radio" name="name" />
+                                        <Field type="radio" :name="`${question.text}`" v-model="question.value" />
                                         <label>Sometimes</label>
                                     </div>
 
                                     <div class="quiz-form-input">
-                                        <Field type="radio" name="name" />
+                                        <Field type="radio" :name="`${question.text}`" v-model="question.value" />
                                         <label>Often</label>
                                     </div>
                                     
                                     <div class="quiz-form-input">
-                                        <Field type="radio" name="name" />
+                                        <Field type="radio" :name="`${question.text}`" v-model="question.value" />
                                         <label>Always</label>
                                     </div>
                                 </div>
@@ -277,6 +277,7 @@ export default {
     .quiz-form-input input:checked + label {
         background-color: var(--primary);
         color: #FFFFFF;
+        border: 1px solid var(--primary);
     }
 
     .quiz-form-input input + label:before {

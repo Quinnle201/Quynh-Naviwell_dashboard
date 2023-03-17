@@ -78,17 +78,10 @@ export default {
                             </Field>
                         </label>
 
-                        <fieldset class="info-form-checkbox">
-                            <span>Are you interested in learning about living a healthier lifestyle?</span>
-                            <label>
-                                No
-                                <Field type="checkbox" name="no" value="no"/>
-                            </label>
-                            <label>
-                                Yes
-                                <Field type="checkbox" name="yes" value="yes" />
-                            </label>
-                        </fieldset>
+                        <label class="info-form-checkbox">
+                            <Field type="checkbox" name="yes" value="yes" />
+                            I am interested in learning about living a healthier lifestyle
+                        </label>
                     </div>
 
                     <div class="info-form-button">Next</div>
@@ -216,5 +209,16 @@ export default {
 
     .info-form-checkbox {
         display: flex;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .info-form-checkbox input[type='checkbox'] {
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
+        accent-color: var(--main-color);
+        cursor: pointer;
     }
 </style>
