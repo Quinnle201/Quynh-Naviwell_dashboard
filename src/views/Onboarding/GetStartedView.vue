@@ -1,4 +1,13 @@
-<script></script>
+<script>
+export default {
+    methods: {
+        clickAction() {
+            //replace with questionnaire
+            this.$router.replace({name: 'home'})
+        },
+    }
+}
+</script>
 <template>
     <div class="welcome-wrapper">
         <div class="welcome-inner">
@@ -7,7 +16,7 @@
                 <h6>Let’s evaluate your health score</h6>
             </div>
 
-            <button class="info-form-button">Get started</button>
+            <button class="info-form-button" @click="clickAction">Get started</button>
         </div>
     </div>
 </template>

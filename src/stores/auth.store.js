@@ -2,7 +2,7 @@ import { defineStore, acceptHMRUpdate } from 'pinia';
 
 import { axiosInstance } from '@/helpers';
 import router from '@/router';
-import { useAlertStore } from '@/stores';
+import { useAlertStore, useProgrammaticAccesStore } from '@/stores';
 
 export const useAuthStore = defineStore({
     id: 'auth',
@@ -28,6 +28,8 @@ export const useAuthStore = defineStore({
                 this.user = data.data.user;
                 this.claim = data.data.auth
 
+                this.getUser()
+
                 // store user details and jwt in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(this.user));
                 localStorage.setItem('claim', JSON.stringify(this.claim));
@@ -47,6 +49,12 @@ export const useAuthStore = defineStore({
                 const data = response.data;
                 this.user = data.data;
                 localStorage.setItem('user', JSON.stringify(this.user));
+
+                if(this.user.profile_type.includes("PatientProfile") && !this.user.profile.patient_confirmed) {
+                    const programmaticAccess = useProgrammaticAccesStore();
+                    programmaticAccess.setAccessPage('onboarding')
+                }
+
             } catch (error) {
                 const alertStore = useAlertStore();
                 alertStore.error(error.response.data.message);

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore, useAlertStore } from '@/stores';
+import { useAuthStore, useProgrammaticAccesStore } from '@/stores';
 import { h } from 'vue'
 import { RouterView } from 'vue-router'
 
@@ -68,6 +68,28 @@ const router = createRouter({
           name: 'onboarding',
           component: OnboardingView,
           meta: { physician: false, patient: true },
+          beforeEnter: (to, from) => {
+            const programmaticAccess = useProgrammaticAccesStore();
+            if(programmaticAccess.getAccessPage == "onboarding"){
+              programmaticAccess.setAccessPage(null)
+              return true;
+            }
+            return from
+          },
+        },
+        {
+          path: '/get-started',
+          name: 'get-started',
+          component: GetStartedView,
+          meta: { physician: false, patient: true },
+          beforeEnter: (to, from) => {
+            const programmaticAccess = useProgrammaticAccesStore();
+            if(programmaticAccess.getAccessPage == "get-started"){
+              programmaticAccess.setAccessPage(null)
+              return true;
+            }
+            return from
+          },
         },
         {
           path: '/quiz',
@@ -79,12 +101,6 @@ const router = createRouter({
           path: '/lifestyle',
           name: 'lifestyle',
           component: LifestyleView,
-          meta: { physician: false, patient: true },
-        },
-        {
-          path: '/get-started',
-          name: 'get-started',
-          component: GetStartedView,
           meta: { physician: false, patient: true },
         },
         {
