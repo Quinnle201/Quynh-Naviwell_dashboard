@@ -22,6 +22,10 @@ axiosInstance.interceptors.request.use((request) => {
 // Function that will be called to refresh authorization
 const refreshAuthLogic = (failedRequest) => {
   return new Promise((resolve, reject) => {
+    //Sometimes logout can fail without token
+    if(failedRequest.config.url == "/logout") {
+      reject(error)
+    }
     const authStore = useAuthStore();
     authStore.refreshToken().then(() => {
       const { claim } = useAuthStore();
