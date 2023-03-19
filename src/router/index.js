@@ -204,8 +204,9 @@ const router = createRouter({
         {
           path: "calendar/:id?",
           name: "calendar",
-          component: CalendarView,
-          meta: { physician: true, patient: false },
+          // component: CalendarView,
+          component: () => isPatient() ? import('@/views/PatientCalendarView.vue') : import('@/views/CalendarView.vue'),
+          meta: { physician: true, patient: true },
         },
         {
           path: "messages",

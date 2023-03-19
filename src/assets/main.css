@@ -894,6 +894,7 @@ body {
 
 .calendar-visit-type {
   display: flex;
+  margin: 0 auto;
 }
 
 .calendar-btn {
