@@ -27,6 +27,7 @@ import QuizView from '@/views/Onboarding/QuizView.vue'
 import LifestyleView from '@/views/Onboarding/LifestyleView.vue'
 import GetStartedView from '@/views/Onboarding/GetStartedView.vue'
 import CompleteInfoView from '@/views/Onboarding/CompleteInfoView.vue'
+import PatientProfileView from '@/views/PatientProfileView.vue'
 
 function isPatient(){
   const authStore = useAuthStore();
@@ -182,6 +183,12 @@ const router = createRouter({
               meta: { physician: true, patient: false }
             }
           ]
+        },
+        {
+          path: 'profile',
+          name: 'profile',
+          component: PatientProfileView,
+          meta: { physician: false, patient: true },
         },
         {
           path: '/quotes',

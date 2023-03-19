@@ -369,7 +369,6 @@ export default {
 
     .quiz-progressbar ul {
         display: flex;
-        /* justify-content: space-between; */
         justify-content: center;
         align-items: center;
         list-style: none;
