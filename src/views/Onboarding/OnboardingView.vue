@@ -460,7 +460,7 @@ export default {
 }
 
 .info-form {
-    max-width: 60%;
+    max-width: calc(75% + 24px);
     width: 100%;
     height: 100%;
     margin: 40px auto 0;
@@ -469,6 +469,7 @@ export default {
 
 .info-form-inner-item {
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .info-form-inner-item::-webkit-scrollbar {
@@ -484,6 +485,7 @@ export default {
 .info-form-inner-item::-webkit-scrollbar-thumb {
     background-color: var(--primary);
     border-radius: 8px;
+    background-clip: padding-box;
 }
 
 .info-form-inner {
@@ -497,6 +499,7 @@ export default {
 
 .info-form-inner-item {
     width: 100%;
+    padding-right: 24px;
 }
 
 .info-form-label {
@@ -532,7 +535,8 @@ export default {
 }
 
 .info-form .info-form-item input::placeholder {
-    font-size: 14px;
+    font-size: 16px;
+    color: var(--text-color);
 }
 
 .info-form .info-form-item select {
@@ -543,6 +547,7 @@ export default {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    color: var(--text-color);
 }
 
 .info-form .info-form-item-wrapper {
@@ -575,6 +580,18 @@ export default {
     cursor: pointer;
 }
 
+.info-form-item-wrapper .info-form-add-btn {
+    position: absolute;
+    top: -10px;
+    right: -16px;
+}
+
+.info-form-item-wrapper .info-form-add-btn svg {
+    widows: 33px;
+    height: 33px;
+    margin-right: 0;
+}
+
 .info-form-add-btn svg {
     margin-right: 8px;
 }
@@ -587,4 +604,57 @@ export default {
         box-shadow: 2px 3px 6px rgba(204, 204, 204, 0.2);
     }
 }
+</style>
+
+<style>
+    .info-form-item .multiselect__tags {
+        background-color: #FFFEFE;
+        width: 100%;
+        min-height: 50px;
+        padding: 4px 10px;
+        display: block;
+        border: 1px solid #CCCCCC;
+        border-radius: 16px;
+    }
+
+    .info-form-item .multiselect {
+        margin-bottom: 16px;
+    }
+
+    .info-form-item .multiselect--active.multiselect {
+        /* line-height: 36px; */
+        margin-bottom: 0;
+    }
+
+    .info-form-item .multiselect__placeholder {
+        margin-bottom: 0;
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--text-color);
+        line-height: 36px;
+    }
+
+    .info-form-item .multiselect--active.multiselect .multiselect__input {
+        font-size: 12px;
+    }
+
+    .info-form-item .multiselect__content-wrapper::-webkit-scrollbar {
+        width: 8px;
+        height: 16px;
+    }
+
+    .info-form-item .multiselect__content-wrapper::-webkit-scrollbar-track {
+        background-color: #DBDBDB;
+        border-radius: 8px;
+    }
+
+    .info-form-item .multiselect__content-wrapper::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 8px;
+        background-clip: padding-box;
+    }
+
+    .info-form-item .multiselect__content-wrapper {
+        max-height: 250px!important;
+    }
 </style>
