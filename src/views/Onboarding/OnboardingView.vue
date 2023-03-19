@@ -193,29 +193,25 @@ export default {
 <template>
     <Header />
     <div class="welcome-wrapper">
+        <div class="quiz-progressbar">
+            <ul>
+                <li :class="progressClass(0)" @click="screen = 0">About you</li>
+                <li class="quiz-progressbar-separator">
+                    <CheckmarkIcon />
+                </li>
+                <li :class="progressClass(1)" @click="screen = 1">Contact information</li>
+                <li class="quiz-progressbar-separator">
+                    <CheckmarkIcon />
+                </li>
+                <li :class="progressClass(2)" @click="screen = 2">Health</li>
+            </ul>
+        </div>
+
         <div class="welcome-inner">
             <div class="welcome-heading">
                 <h4>Before we start</h4>
                 <h6>Fill out questions</h6>
             </div>
-
-            <ul class="welcome-progress">
-                <li :class="progressClass(0)" @click="screen = 0">
-                    <span>1</span>
-                    <CheckmarkIcon />
-                    About you
-                </li>
-                <li :class="progressClass(1)" @click="screen = 1">
-                    <span>2</span>
-                    <CheckmarkIcon />
-                    Contact information
-                </li>
-                <li :class="progressClass(2)" @click="screen = 2">
-                    <span>3</span>
-                    <CheckmarkIcon />
-                    Health
-                </li>
-            </ul>
 
             <Form class="info-form" @submit="onSubmit" :initial-values="ptData">
                 <div v-show="screen == 0" class="info-form-inner">
@@ -351,259 +347,342 @@ export default {
 </template>
 
 <style scoped>
-.welcome-wrapper {
-    background-color: #F4F4FF;
-    height: 100vh;
-    margin: -4rem -0.5rem 0 -7.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.welcome-sidebar ul {
-    list-style: none;
-}
-
-.welcome-sidebar ul li {
-    margin-bottom: 16px;
-    font-size: 18px;
-}
-
-.welcome-inner {
-    background-color: rgba(255, 255, 255, .8);
-    max-width: 40%;
-    width: 100%;
-    height: 80vh;
-    margin: 0 auto;
-    padding: 32px 40px;
-    display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
-    align-items: center;
-    border-radius: 16px;
-    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.welcome-heading {
-    text-align: center;
-}
-
-.welcome-heading h6 {
-    color: var(--primary);
-}
-
-.welcome-progress {
-    width: 100%;
-    margin: 16px auto 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    list-style: none;
-}
-
-.welcome-progress li {
-    max-width: 30%;
-    flex: 0 0 30%;
-    display: flex;
-    align-items: center;
-    padding-top: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    border-top: 4px solid #DBDBDB;
-}
-
-.welcome-progress li span {
-    background-color: #DBDBDB;
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
-    display: block;
-    font-size: 14px;
-    color: #FFFFFF;
-    text-align: center;
-    line-height: 26px;
-    border-radius: 50%;
-}
-
-.welcome-progress li svg {
-    width: 0;
-    height: 0;
-    display: none;
-    opacity: 0;
-    position: absolute;
-    left: 6px;
-}
-
-.welcome-progress li.active {
-    border-top-color: var(--primary);
-}
-
-.welcome-progress li.active span {
-    background-color: var(--primary);
-}
-
-.welcome-progress li.complete {
-    border-top-color: #74C973;
-    color: #74C973;
-}
-
-.welcome-progress li.complete svg {
-    width: 12px;
-    height: 14px;
-    display: block;
-    opacity: 1;
-}
-
-.welcome-progress li.complete span {
-    background-color: #CCEED0;
-    font-size: 0;
-}
-
-.info-form {
-    max-width: calc(75% + 24px);
-    width: 100%;
-    height: 100%;
-    margin: 40px auto 0;
-    overflow: auto;
-}
-
-.info-form-inner-item {
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.info-form-inner-item::-webkit-scrollbar {
-    width: 8px;
-    height: 16px;
-}
-
-.info-form-inner-item::-webkit-scrollbar-track {
-    background-color: #DBDBDB;
-    border-radius: 8px;
-}
-
-.info-form-inner-item::-webkit-scrollbar-thumb {
-    background-color: var(--primary);
-    border-radius: 8px;
-    background-clip: padding-box;
-}
-
-.info-form-inner {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.info-form-inner-item {
-    width: 100%;
-    padding-right: 24px;
-}
-
-.info-form-label {
-    margin-bottom: 16px;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.info-form .info-form-item {
-    width: 100%;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.info-form .info-form-item input,
-.info-form .info-form-item select {
-    background-color: #FFFEFE;
-    width: 100%;
-    height: 50px;
-    min-height: 50px;
-    margin-bottom: 16px;
-    padding: 4px 10px;
-    display: block;
-    font-size: 16px;
-    border: 1px solid #CCCCCC;
-    border-radius: 16px;
-    outline: none;
-    transition: .3s ease;
-}
-
-.info-form-item-error {
-    border: 1px solid red !important;
-}
-
-.info-form .info-form-item input::placeholder {
-    font-size: 16px;
-    color: var(--text-color);
-}
-
-.info-form .info-form-item select {
-    background-image: url(/src/assets/img/select-icon.svg);
-    background-repeat: no-repeat;
-    background-position: top 50% left 96%;
-    cursor: pointer;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    color: var(--text-color);
-}
-
-.info-form .info-form-item-wrapper {
-    display: flex;
-    justify-content: space-between;
-}
-
-.info-form .info-form-item-wrapper .info-form-item {
-    max-width: 48%;
-}
-
-.info-form-button,
-.info-form button {
-    background-color: var(--primary);
-    width: 100%;
-    height: 56px;
-    margin-top: 32px;
-    padding: 12px 32px;
-    font-size: 18px;
-    font-weight: 500;
-    color: #FFFFFF;
-    text-align: center;
-    border-radius: 16px;
-    cursor: pointer;
-}
-
-.info-form-add-btn {
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.info-form-item-wrapper .info-form-add-btn {
-    position: absolute;
-    top: -10px;
-    right: -16px;
-}
-
-.info-form-item-wrapper .info-form-add-btn svg {
-    widows: 33px;
-    height: 33px;
-    margin-right: 0;
-}
-
-.info-form-add-btn svg {
-    margin-right: 8px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-
-    .info-form .info-form-item input:focus,
-    .info-form .info-form-item select:focus {
-        border: 1px solid var(--primary);
-        box-shadow: 2px 3px 6px rgba(204, 204, 204, 0.2);
+    .welcome-wrapper {
+        background-color: #F4F4FF;
+        height: 100vh;
+        margin: -4rem -0.5rem 0 -7.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
-}
+
+    .quiz-progressbar {
+        background-color: #FFFFFF;
+        max-width: 40%;
+        width: 100%;
+        height: auto;
+        margin: 0 auto 16px;
+        padding: 8px 16px;
+        border-radius: 16px;
+    }
+
+    .quiz-progressbar ul {
+        display: flex;
+        /* justify-content: space-between; */
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+    }
+
+    .quiz-progressbar ul li {
+        flex: 0 0 14%;
+        font-size: 16px;
+        font-weight: 500;
+        color: #CCCCCC;
+        white-space: nowrap;
+    }
+
+    .quiz-progressbar ul li:nth-child(1) {
+        padding-right: 16px;
+        text-align: right;
+    }
+
+    .quiz-progressbar ul li:nth-child(3) {
+        padding: 0 16px;
+        text-align: center;
+    }
+
+    .quiz-progressbar ul li:nth-child(5) {
+        padding-left: 16px;
+        text-align: left;
+    }
+
+    .quiz-progressbar ul li.quiz-progressbar-separator {
+        background-color: #CCCCCC;
+        min-width: auto;
+        width: 100%;
+        height: 1px;
+        margin: 0 8px;
+    }
+
+    .quiz-progressbar ul li.quiz-progressbar-separator svg {
+        background-color: #FFFFFF;
+        width: 28px;
+        height: 28px;
+        padding: 0 8px;
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .quiz-progressbar ul li.complete {
+        color: #74C973;
+    }
+
+    .quiz-progressbar ul li.complete + li.quiz-progressbar-separator {
+        background-color: #CCEED0;
+    }
+
+    .quiz-progressbar ul li.complete + li.quiz-progressbar-separator svg {
+        display: block;
+    }
+
+    .quiz-progressbar ul li.active {
+        font-size: 18px;
+        color: var(--main-color);
+    }
+
+    .quiz-progressbar ul li.active + li.quiz-progressbar-separator {
+        background-color: var(--main-color);
+        opacity: .4;
+    }
+
+    .welcome-sidebar ul {
+        list-style: none;
+    }
+
+    .welcome-sidebar ul li {
+        margin-bottom: 16px;
+        font-size: 18px;
+    }
+
+    .welcome-inner {
+        background-color: rgba(255, 255, 255, .8);
+        max-width: 40%;
+        width: 100%;
+        height: 78vh;
+        margin: 0 auto;
+        padding: 32px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 16px;
+        box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-heading {
+        text-align: center;
+    }
+
+    .welcome-heading h6 {
+        color: var(--primary);
+    }
+
+    .welcome-progress {
+        width: 100%;
+        margin: 16px auto 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        list-style: none;
+    }
+
+    .welcome-progress li {
+        max-width: 30%;
+        flex: 0 0 30%;
+        display: flex;
+        align-items: center;
+        padding-top: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        border-top: 4px solid #DBDBDB;
+        cursor: pointer;
+    }
+
+    .welcome-progress li span {
+        background-color: #DBDBDB;
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+        display: block;
+        font-size: 14px;
+        color: #FFFFFF;
+        text-align: center;
+        line-height: 26px;
+        border-radius: 50%;
+    }
+
+    .welcome-progress li svg {
+        width: 0;
+        height: 0;
+        display: none;
+        opacity: 0;
+        position: absolute;
+        left: 6px;
+    }
+
+    .welcome-progress li.active {
+        border-top-color: var(--primary);
+    }
+
+    .welcome-progress li.active span {
+        background-color: var(--primary);
+    }
+
+    .welcome-progress li.complete {
+        border-top-color: #74C973;
+        color: #74C973;
+    }
+
+    .welcome-progress li.complete svg {
+        width: 12px;
+        height: 14px;
+        display: block;
+        opacity: 1;
+    }
+
+    .welcome-progress li.complete span {
+        background-color: #CCEED0;
+        font-size: 0;
+    }
+
+    .info-form {
+        width: 100%;
+        height: 100%;
+        margin: 16px auto 0;
+        overflow: auto;
+    }
+
+    .info-form-inner {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .info-form-inner-item {
+        max-width: calc(75% + 24px);
+        width: 100%;
+        margin-left: 24px;
+        padding-right: 24px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .info-form-inner-item::-webkit-scrollbar {
+        width: 8px;
+        height: 16px;
+    }
+
+    .info-form-inner-item::-webkit-scrollbar-track {
+        background-color: #DBDBDB;
+        border-radius: 8px;
+    }
+
+    .info-form-inner-item::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 8px;
+        background-clip: padding-box;
+    }
+
+    .info-form-label {
+        margin-bottom: 16px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .info-form .info-form-item {
+        width: 100%;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .info-form .info-form-item input,
+    .info-form .info-form-item select {
+        background-color: #FFFEFE;
+        width: 100%;
+        height: 50px;
+        min-height: 50px;
+        margin-bottom: 16px;
+        padding: 4px 10px;
+        display: block;
+        font-size: 16px;
+        border: 1px solid #CCCCCC;
+        border-radius: 16px;
+        outline: none;
+        transition: .3s ease;
+    }
+
+    .info-form-item-error {
+        border: 1px solid red !important;
+    }
+
+    .info-form .info-form-item input::placeholder {
+        font-size: 16px;
+        color: var(--text-color);
+    }
+
+    .info-form .info-form-item select {
+        background-image: url(/src/assets/img/select-icon.svg);
+        background-repeat: no-repeat;
+        background-position: top 50% left 96%;
+        cursor: pointer;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        color: var(--text-color);
+    }
+
+    .info-form .info-form-item-wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .info-form .info-form-item-wrapper .info-form-item {
+        max-width: 48%;
+    }
+
+    .info-form-button,
+    .info-form button {
+        background-color: var(--primary);
+        max-width: 75%;
+        width: 100%;
+        height: 56px;
+        margin-top: 32px;
+        padding: 12px 32px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #FFFFFF;
+        text-align: center;
+        border-radius: 16px;
+        cursor: pointer;
+    }
+
+    .info-form-add-btn {
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .info-form-item-wrapper .info-form-add-btn {
+        position: absolute;
+        top: -10px;
+        right: 0;
+    }
+
+    .info-form-item-wrapper .info-form-add-btn svg {
+        widows: 33px;
+        height: 33px;
+        margin-right: 0;
+    }
+
+    .info-form-add-btn svg {
+        margin-right: 8px;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+
+        .info-form .info-form-item input:focus,
+        .info-form .info-form-item select:focus {
+            border: 1px solid var(--primary);
+            box-shadow: 2px 3px 6px rgba(204, 204, 204, 0.2);
+        }
+    }
 </style>
 
 <style>
@@ -638,6 +717,10 @@ export default {
         font-size: 12px;
     }
 
+    .info-form-item .multiselect--active.multiselect .multiselect__tags {
+        border-color: var(--primary);
+    }
+
     .info-form-item .multiselect__content-wrapper::-webkit-scrollbar {
         width: 8px;
         height: 16px;
@@ -656,5 +739,9 @@ export default {
 
     .info-form-item .multiselect__content-wrapper {
         max-height: 250px!important;
+    }
+
+    .info-form-item .multiselect--active.multiselect .multiselect__content-wrapper {
+        border-color: var(--primary);
     }
 </style>
