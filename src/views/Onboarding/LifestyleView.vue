@@ -2,6 +2,11 @@
 import Header from '@/components/Dashboard/Layout/Header.vue'
 import { Form, Field, FieldArray } from 'vee-validate';
 
+import { useAlertStore, useAuthStore, useProgrammaticAccesStore } from '@/stores';
+
+import { axiosInstance } from '@/helpers';
+
+
 export default {
     components: {
         Header, 
@@ -10,10 +15,103 @@ export default {
         FieldArray, 
     },
     data() {
+        const alertStore = useAlertStore()
+        const authStore = useAuthStore();
         return {
+            alertStore,
+            authStore,
+            quizData: null,
+            lifestyleDropdowns: [],
+            interested_healthier: "1"
         }
     },
+    computed: {
+        patientId() {
+            return this.authStore.user.profile_id
+        }
+
+    },
     methods: {
+        submitQuizForm(values) {
+            let errors = false;
+            Object.entries(values).forEach(element => {
+                if(!element[1]) {
+                    errors = true;
+                }
+            });
+            if(errors) {
+                this.alertStore.error("Please provide answers to all of the questions!");
+                return;
+            }
+            const formData = {
+                sections: this.quizData,
+                lifestyle_data: values
+            }
+            axiosInstance.post(`/patients/${this.patientId}/questionnaire`, formData)
+                .then(response => {
+                    const programmaticAccess = useProgrammaticAccesStore();
+                    programmaticAccess.tempData.pdf = response.data.data.questionnaire?.patient_report
+                    programmaticAccess.setAccessPage('complete-info')
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        getLifestyleData() {
+            axiosInstance.get('/patients/data')
+                .then(response => {
+                    const lifestyleData = response.data.data
+                    this.lifestyleDropdowns.push({
+                        label: "Average hours of sleep",
+                        codename: "sleep_hours",
+                        values: Object.entries(lifestyleData.sleep_hours).map(item => ({value: item[0], label: item[1]}))
+                    })
+                    this.lifestyleDropdowns.push({
+                        label: "Activity Level (minimum of 30 minutes of activity/day)",
+                        codename: "activity_level",
+                        values: Object.entries(lifestyleData.activity_level).map(item => ({value: item[0], label: item[1]}))
+                    })
+
+                    this.lifestyleDropdowns.push({
+                        label: "Stress levels",
+                        codename: "stress_levels",
+                        values: Object.entries(lifestyleData.stress_levels).map(item => ({value: item[0], label: item[1]}))
+                    })
+                    this.lifestyleDropdowns.push({
+                        label: "Waist",
+                        codename: "waist_size",
+                        values: Object.entries(lifestyleData.waist_size).map(item => ({value: item[0], label: item[1]}))
+                    })
+                    this.lifestyleDropdowns.push({
+                        label: "Alcoholic beverages per week",
+                        codename: "alcohol_consumption",
+                        values: Object.entries(lifestyleData.alcohol_consumption).map(item => ({value: item[0], label: item[1]}))
+                    })
+                    this.lifestyleDropdowns.push({
+                        label: "Caffeinated Bev per day",
+                        codename: "caffeine_consumption",
+                        values: Object.entries(lifestyleData.caffeine_consumption).map(item => ({value: item[0], label: item[1]}))
+                    })
+                    this.lifestyleDropdowns.push({
+                        label: "Do you eat out more than 3x/week?",
+                        codename: "eat_out_level",
+                        values: [{label: "Yes", value: "1"}, {label: "No", value: "0"}]
+                    })
+                    
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        }
+    },
+    mounted() {
+        const programmaticAccess = useProgrammaticAccesStore();
+        this.quizData = programmaticAccess.tempData.quiz
+
+        this.getLifestyleData()
     }
 }
 </script>
@@ -26,65 +124,24 @@ export default {
                 <h6>Lorem ipsum dolor sit amet, consectetur adipiscing elit</h6>
             </div>
 
-            <Form class="info-form">
+            <Form class="info-form" @submit="submitQuizForm">
                 <div class="info-form-inner">
                     <div class="info-form-inner-item">
-                        <label class="info-form-item">
-                            <Field as="select" name="sleep">
-                                <option value="" disabled selected>Average hours of sleep</option>
-                                <option></option>
-                            </Field>
-                        </label>
-                        <label class="info-form-item">
-                            <Field as="select" name="activity">
-                                <option value="" disabled selected>Activity Level (minimum of 30 minutes of activity/day)</option>
-                                <option></option>
-                            </Field>
-                        </label>
-                        <label class="info-form-item">
-                            <Field as="select" name="bmi">
-                                <option value="" disabled selected>BMI</option>
-                                <option></option>
-                            </Field>
-                        </label>
-                        <label class="info-form-item">
-                            <Field as="select" name="stress">
-                                <option value="" disabled selected>Stress levels</option>
-                                <option></option>
-                            </Field>
-                        </label>
-                        <label class="info-form-item">
-                            <Field as="select" name="waist">
-                                <option value="" disabled selected>Waist</option>
-                                <option></option>
-                            </Field>
-                        </label>
-                        <label class="info-form-item">
-                            <Field as="select" name="alcohol">
-                                <option value="" disabled selected>Alcoholic beverages per week</option>
-                                <option></option>
-                            </Field>
-                        </label>
-                        <label class="info-form-item">
-                            <Field as="select" name="caffeine">
-                                <option value="" disabled selected>Caffeinated Bev per day</option>
-                                <option></option>
-                            </Field>
-                        </label>
-                        <label class="info-form-item">
-                            <Field as="select" name="eatout">
-                                <option value="" disabled selected>Do you eat out more than 3x/week?</option>
-                                <option></option>
+
+                        <label class="info-form-item" v-for="dropdown in lifestyleDropdowns">
+                            <Field as="select" :name="dropdown.codename">
+                                <option value="" disabled selected>{{dropdown.label}}</option>
+                                <option v-for="option in dropdown.values" :value="option.value">{{ option.label }}</option>
                             </Field>
                         </label>
 
                         <label class="info-form-checkbox">
-                            <Field type="checkbox" name="yes" value="yes" />
+                            <Field type="checkbox" name="interested_healthier" value="1" unchecked-value="0" v-model="interested_healthier"/>
                             I am interested in learning about living a healthier lifestyle
                         </label>
                     </div>
 
-                    <div class="info-form-button">Next</div>
+                    <button class="info-form-button">Next</button>
                 </div>
             </Form>
         </div>

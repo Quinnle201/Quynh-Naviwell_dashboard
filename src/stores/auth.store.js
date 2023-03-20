@@ -50,9 +50,14 @@ export const useAuthStore = defineStore({
                 this.user = data.data;
                 localStorage.setItem('user', JSON.stringify(this.user));
 
-                if(this.user.profile_type.includes("PatientProfile") && !this.user.profile.patient_confirmed) {
+                if(this.user.profile_type.includes("PatientProfile")) {
                     const programmaticAccess = useProgrammaticAccesStore();
-                    programmaticAccess.setAccessPage('onboarding')
+                    if(!this.user.profile.patient_confirmed) {
+                        programmaticAccess.setAccessPage('onboarding')
+                    } else if(this.user.profile.questionnaireRequired) {
+                        programmaticAccess.setAccessPage('quiz')
+                    }
+
                 }
 
             } catch (error) {

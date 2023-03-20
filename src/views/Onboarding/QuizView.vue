@@ -5,6 +5,9 @@ import DateInput from '@/components/DateInput.vue';
 import AddIcon from '@/components/icons/IconAdd.vue';
 import CheckmarkIcon from '@/components/icons/IconCheckmark.vue';
 
+import { useAlertStore, useProgrammaticAccesStore } from '@/stores';
+
+
 export default {
     components: {
         Header, 
@@ -14,94 +17,239 @@ export default {
         CheckmarkIcon
     },
     data() {
+        const alertStore = useAlertStore()
         return {
-            questions: [
-                {text: 'Do you experience heartburn?', value: ''},
-                {text: 'Do you experience dizziness?', value: ''},
-                {text: 'Do you have brittle nails?', value: ''},
-                {text: 'Frequent fast heartbeat?', value: ''},
-                {text: 'Shortness of breath', value: ''},
-                {text: 'Do you get headaches', value: ''},
-                // {value: 'Muscle/leg cramping'},
-                // {value: 'Lack of Motivation'},
-                // {value: 'Dryness of skin'},
-                // {value: 'Experience mental sluggishness'},
-                // {value: 'Do you get sick frequently'},
-                // {value: 'Slow wound healing'}
+            alertStore,
+            sections: [
+                {
+                    title: "Cardiovascular",
+                    codename: "cardio",
+                    questions: [
+                        {text: 'Do you experience heartburn?', value: -1},
+                        {text: 'Do you experience dizziness?', value: -1},
+                        {text: 'Do you have brittle nails?', value: -1},
+                        {text: 'Frequent fast heartbeat?', value: -1},
+                        {text: 'Shortness of breath', value: -1},
+                        {text: 'Do you get headaches', value: -1},
+                        {text: 'Muscle/leg cramping', value: -1},
+                        {text: 'Lack of Motivation', value: -1},
+                        {text: 'Dryness of skin', value: -1},
+                        {text: 'Experience mental sluggishness', value: -1},
+                        {text: 'Do you get sick frequently', value: -1},
+                        {text: 'Slow wound healing', value: -1},
+                    ],
+                },
+                {
+                    title: "Glucose",
+                    codename: "glucose",
+                    questions: [
+                        {text: 'Experienced recent weight gain?', value: -1},
+                        {text: 'Get light-headed if meals are missed?', value: -1},
+                        {text: 'Fatigue after meals?', value: -1},
+                        {text: 'Crave sweets during the day?', value: -1},
+                        {text: 'Frequent thirst or appetite?', value: -1},
+                        {text: 'Feel shaky, jittery, or moody if missed meals?', value: -1},
+                        {text: 'Do you snore at night?', value: -1},
+                        {text: 'Difficulty losing weight?', value: -1},
+                        {text: 'Edema or swelling in ankles, feet, hands or wrists?', value: -1},
+                        {text: 'Decreased physical stamina?', value: -1},
+                        {text: 'Heart palpitations?', value: -1},
+                        {text: 'Hungry after meals?', value: -1},
+                    ],
+                },
+                {
+                    title: "Endocrine",
+                    codename: "endo",
+                    questions: [
+                        {text: 'Do you experience mood changes?', value: -1},
+                        {text: 'Inability to concentrate?', value: -1},
+                        {text: 'Menstruation changes/infrequency (female)', value: -1},
+                        {text: 'Difficulty with erections? (males)', value: -1},
+                        {text: 'Cannot fall/stay asleep?', value: -1},
+                        {text: 'Crave salt or salty foods?', value: -1},
+                        {text: 'Perspire easily?', value: -1},
+                        {text: 'Gain weight easily?', value: -1},
+                        {text: 'Feel cold frequently?', value: -1},
+                        {text: 'Decreased or low libido?', value: -1},
+                        {text: 'Thinning of hair?', value: -1},
+                        {text: 'Time of day with low energy?', value: -1},
+                    ],
+                },
+                {
+                    title: "GI & Hepatic",
+                    codename: "gi",
+                    questions: [
+                        {text: 'Frequent diarrhea/constipation?', value: -1},
+                        {text: 'Acne/Unhealthy Skin?', value: -1},
+                        {text: 'Sensitive to smells and odors?', value: -1},
+                        {text: 'Increased food reactions?', value: -1},
+                        {text: 'Bloating, belching, burping?', value: -1},
+                        {text: 'Skin outbreaks or rash?', value: -1},
+                        {text: 'Stool color abnormal?', value: -1},
+                        {text: 'Taking more than 2 medications?', value: -1},
+                        {text: 'Hemorrhoids?', value: -1},
+                        {text: 'Frequent gas?', value: -1},
+                        {text: 'Experience irritable bowels?', value: -1},
+                        {text: 'Dry flaky skin or hair?', value: -1},
+                    ],
+                },
             ],
+            currentSectionIdx: 0,
+            currentPartIdx: 0,
         }
     },
     methods: {
+        actionNext() {
+            if(this.currentPartIdx == 1) {
+
+                if(this.currentSectionIdx == this.sections.length-1) {
+                    this.checkQuizAnswers()                    
+                    return
+                }
+                this.currentSectionIdx +=1
+                this.currentPartIdx = 0
+            } else {
+                this.currentPartIdx = 1
+            }
+        },
+        checkQuizAnswers() {
+            let errors = false;
+            let answers = {};
+            this.sections.forEach(section => {
+                answers[section.codename] = []
+                section.questions.forEach(question => {
+                    if(!question.value || question.value == -1) {
+                        errors = true;
+                    }
+                    answers[section.codename].push(question.value)
+                });
+            });
+
+            if(errors) {
+                this.currentSectionIdx = 0;
+                this.currentPartIdx = 0
+                this.alertStore.error("Please provide answers to all of the questions!")
+                return;
+            }
+
+            //proceed to lifestyle:
+            const programmaticAccess = useProgrammaticAccesStore();
+            programmaticAccess.tempData.quiz = answers
+            programmaticAccess.setAccessPage('lifestyle')
+        },
     },
+    computed: {
+        questionIndex() {
+            return (originalIndex) => {
+                return originalIndex + (this.currentPartIdx*6)
+            }
+        },
+        currentSection() {
+            return this.sections[this.currentSectionIdx]
+        },
+        questionsArray() {
+            let q = this.currentSection.questions;
+            let idx = this.currentPartIdx
+            return q.slice(idx * 6, (6 * (idx+1)) )
+            
+        },
+        progressClass() {
+            return (index) => {
+                var progressClass = []
+                if (this.currentSectionIdx == index) {
+                    progressClass.push("active")
+                }
+                if (this.currentSectionIdx > index) {
+                    progressClass.push("complete")
+                }
+
+                return progressClass.join(" ")
+            }
+        },
+    }
 }
 </script>
 <template>
     <Header />
     <div class="welcome-wrapper">
-        <div class="quiz-progressbar">
+        <div class="quiz-progressbar"> 
             <ul>
-                <li class="complete">Glucose</li>
-                <li class="quiz-progressbar-separator">
+                <template v-for="(section, index) in sections" >
+                <li :class="progressClass(index)">{{section.title}}</li>
+                <li class="quiz-progressbar-separator" v-if="index < sections.length-1">
                     <CheckmarkIcon />
                 </li>
-                <li class="active">Cardiovascular</li>
-                <li class="quiz-progressbar-separator">
-                    <CheckmarkIcon />
-                </li>
-                <li>Endocrine</li>
-                <li class="quiz-progressbar-separator">
-                    <CheckmarkIcon />
-                </li>
-                <li>GI & Hepatic</li>
+                </template>
             </ul>
         </div>
         
         <div class="welcome-inner">
+            
             <div class="welcome-heading">
-                <span>1/2</span>
-                <h4>Cardiovascular</h4>
+                <span>{{ currentPartIdx+1 }}/2</span>
+                <transition-group name="list">
+                    <h4 :key="currentSectionIdx">{{currentSection.title}}</h4>
+                </transition-group>
                 <h6>Do you have or have you experienced the following in the past year?</h6>
             </div>
-
             <div class="quiz-form">
                 <p>Mark all that apply</p>
+                
+                <Form :keepValues="true">
+                    
+                    <FieldArray :name="currentSection.codename">
+                        <transition-group name="list">
+                            <fieldset v-for="(question, index) in questionsArray" :key="questionIndex(index)">
+                                    <div class="quiz-form-question">{{ questionIndex(index) + 1 }}. {{ question.text }}</div>
+                                    <div class="quiz-form-options">
+                                        <div class="quiz-form-input">
+                                            <Field type="radio" :name="`${currentSection.codename}[${questionIndex(index)}]`" v-model="currentSection.questions[questionIndex(index)].value" value="0" />
+                                            <label>Never</label> 
+                                        </div>
+                                            
+                                        <div class="quiz-form-input">
+                                            <Field type="radio" :name="`${currentSection.codename}[${questionIndex(index)}]`" v-model="currentSection.questions[questionIndex(index)].value" value="1" />
+                                            <label>Sometimes</label>
+                                        </div>
 
-                <Form>
-                    <FieldArray name="cardiovascular">
-                        <fieldset v-for="(question, index) in questions" :key="index">
-                                <div class="quiz-form-question">{{ index + 1 }}. {{ question.text }}</div>
-                                <div class="quiz-form-options">
-                                    <div class="quiz-form-input">
-                                        <Field type="radio" :name="`${question.text}`" v-model="question.value" />
-                                        <label>Never</label> 
-                                    </div>
+                                        <div class="quiz-form-input">
+                                            <Field type="radio" :name="`${currentSection.codename}[${questionIndex(index)}]`" v-model="currentSection.questions[questionIndex(index)].value" value="2" />
+                                            <label>Often</label>
+                                        </div>
                                         
-                                    <div class="quiz-form-input">
-                                        <Field type="radio" :name="`${question.text}`" v-model="question.value" />
-                                        <label>Sometimes</label>
+                                        <div class="quiz-form-input">
+                                            <Field type="radio" :name="`${currentSection.codename}[${questionIndex(index)}]`" v-model="currentSection.questions[questionIndex(index)].value" value="3" />
+                                            <label>Always</label>
+                                        </div>
                                     </div>
-
-                                    <div class="quiz-form-input">
-                                        <Field type="radio" :name="`${question.text}`" v-model="question.value" />
-                                        <label>Often</label>
-                                    </div>
-                                    
-                                    <div class="quiz-form-input">
-                                        <Field type="radio" :name="`${question.text}`" v-model="question.value" />
-                                        <label>Always</label>
-                                    </div>
-                                </div>
-                        </fieldset>
+                            </fieldset>
+                        </transition-group>
                     </FieldArray>
-
-                    <button class="quiz-form-button">Next</button>
+                    
+                    <button type="button" @click="actionNext" class="quiz-form-button">Next</button>
                 </Form>
+                
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+    .list-enter-from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    .list-move, /* apply transition to moving elements */
+    .list-enter-active  
+    {
+        transition: all 0.8s ease;
+    }
+    .list-leave-active {
+        transition: all 0s ease;
+        opacity: 0;
+        position: absolute;
+    }
+
     .welcome-wrapper {
         background-color: #F4F4FF;
         height: 100vh;

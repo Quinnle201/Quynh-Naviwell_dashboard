@@ -97,18 +97,42 @@ const router = createRouter({
           name: 'quiz',
           component: QuizView,
           meta: { physician: false, patient: true },
+          beforeEnter: (to, from) => {
+            const programmaticAccess = useProgrammaticAccesStore();
+            if(programmaticAccess.getAccessPage == "quiz"){
+              programmaticAccess.setAccessPage(null)
+              return true;
+            }
+            return from
+          },
         },
         {
           path: '/lifestyle',
           name: 'lifestyle',
           component: LifestyleView,
           meta: { physician: false, patient: true },
+          beforeEnter: (to, from) => {
+            const programmaticAccess = useProgrammaticAccesStore();
+            if(programmaticAccess.getAccessPage == "lifestyle"){
+              programmaticAccess.setAccessPage(null)
+              return true;
+            }
+            return from
+          },
         },
         {
           path: '/complete-info',
           name: 'complete-info',
           component: CompleteInfoView,
           meta: { physician: false, patient: true },
+          beforeEnter: (to, from) => {
+            const programmaticAccess = useProgrammaticAccesStore();
+            if(programmaticAccess.getAccessPage == "complete-info"){
+              programmaticAccess.setAccessPage(null)
+              return true;
+            }
+            return from
+          },
         }
       ]
     },

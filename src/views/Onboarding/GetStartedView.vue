@@ -1,9 +1,12 @@
 <script>
+
+import { useProgrammaticAccesStore } from '@/stores';
+
 export default {
     methods: {
         clickAction() {
-            //replace with questionnaire
-            this.$router.replace({name: 'home'})
+            const programmaticAccess = useProgrammaticAccesStore();
+            programmaticAccess.setAccessPage('quiz')
         },
     }
 }

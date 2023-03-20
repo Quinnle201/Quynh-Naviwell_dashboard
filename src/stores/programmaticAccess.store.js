@@ -12,5 +12,7 @@ export const useProgrammaticAccesStore = defineStore('programmaticAccess', () =>
     
   }
 
-  return { setAccessPage, getAccessPage }
+  const tempData = ref({})
+
+  return { setAccessPage, getAccessPage, tempData }
 })

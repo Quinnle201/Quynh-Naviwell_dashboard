@@ -1,4 +1,38 @@
-<script></script>
+<script>
+
+import { useAlertStore, useAuthStore, useProgrammaticAccesStore } from '@/stores';
+import { downloadFile } from '@/helpers';
+
+
+export default {
+    data() {
+        const alertStore = useAlertStore()
+        const authStore = useAuthStore();
+        const programmaticAccess = useProgrammaticAccesStore();
+        return {
+            alertStore,
+            authStore,
+            programmaticAccess
+        }
+    },
+    computed: {
+        userId() {
+            return this.authStore.user.id
+        }
+
+    },
+    methods: {
+        downloadReport() {
+            
+            let quizReportRef = this.programmaticAccess.tempData.pdf
+            this.alertStore.success(`Opening your report`)
+            downloadFile(null, `${this.userId}/reports/${quizReportRef}`, 'users')
+
+        }
+    }
+}
+
+</script>
 <template>
     <div class="welcome-wrapper">
         <div class="welcome-inner">
@@ -7,7 +41,7 @@
                 <h6>Questionnaires completed</h6>
             </div>
 
-            <button class="info-form-button">Report</button>
+            <button class="info-form-button" @click="downloadReport">Report</button>
         </div>
     </div>
 </template>
