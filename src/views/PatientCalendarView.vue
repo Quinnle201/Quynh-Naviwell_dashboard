@@ -3,8 +3,6 @@ import Modal from '@/components/Modals/Modal.vue'
 import AddIcon from '@/components/icons/IconAdd.vue'
 import ScheduleModal from '@/components/Modals/PatientScheduleModal.vue'
 
-import DeleteModal from '@/components/Modals/DeleteModal.vue'
-
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 import { axiosInstance } from '@/helpers';
@@ -30,10 +28,33 @@ export default {
             isModalVisible: false,
             selectedEvent: null,
             modalEvent: null,
-            showDialog: false,
-            isDeleteModalVisible: false,
+
             events: [],
         };
+    },
+    watch: {
+        '$route.params': {
+            handler(toParams, previousParams) {
+                const id = toParams.id;
+                if (id) {
+                    this.getEventById(id)
+                }
+            },
+            immediate: true
+        },
+        selectedEvent: {
+            handler(value) {
+                if (value != null) {
+                    const visitEvent = _find(this.events, ['id', value.id])
+                    const data = Object.assign({}, visitEvent.dataObject);
+                    data.content = value.content
+                    this.modalEvent = data
+                } else {
+                    this.modalEvent = null
+                }
+
+            }
+        }
     },
     computed: {
         localDate() {
@@ -61,6 +82,9 @@ export default {
             }
         }
     },
+    mounted() {
+        this.getEvents();
+    },
     methods: {
         showModal(event, e) {
             this.selectedEvent = event
@@ -73,13 +97,49 @@ export default {
             this.selectedEvent = null
             this.isModalVisible = false;
         },
-        eventScheduled(event, isUpdated) {
-            if(isUpdated) {
-                this.updateVisit(event)
-            } else {
-                this.addVisit(event)
+        addVisit(data) {
+            if(this.events.some(event => event.id === data.id)){
+                return null
             }
+            const visitObject = 
+            {
+                dataObject: data,
+                id: data.id,
+                start: this.localDate(data.start_time),
+                end: this.localDate(data.finish_time),
+                title: this.calendarEventClass(data).label,
+                content: `Dr. ${data.physician.user.last_name}`,
+                class: this.calendarEventClass(data).class,
+                label: this.calendarEventClass(data).label
+            }
+            this.events.push(visitObject)
+            return visitObject
         },
+        getEvents() {
+            axiosInstance.get('/appointments')
+                .then(response => {
+                    response.data.data.appointments.forEach(appt => {
+                        this.addVisit(appt)
+                    });
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        getEventById(id) {
+            axiosInstance.get(`/appointments/${id}`)
+                .then(response => {
+                    const visit = this.addVisit(response.data.data)
+                    this.showModal(visit, null)
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        }
     },
 }
 </script>
@@ -119,6 +179,6 @@ export default {
             </vue-cal>
         </div>
 
-        <ScheduleModal v-show="isModalVisible" @close="closeModal" @scheduled="eventScheduled" />
+        <ScheduleModal v-show="isModalVisible" :event="modalEvent" @close="closeModal"/>
     </div>
 </template>
