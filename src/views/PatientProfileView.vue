@@ -349,7 +349,7 @@ export default {
         </div>
 
         <div class="page-bg">
-            <Form @submit="onSubmit" ref="populatedForm">
+            <Form @submit="onSubmit" ref="populatedForm" class="profile-form">
                 <div class="profile-inner">
 
                     <div class="profile-card">
@@ -383,7 +383,7 @@ export default {
                                         <div class="info-form-item-wrapper">
                                             <label class="info-form-item">
                                                 Drug type
-                                                <Field as="select" :name="`drugs[${index}].type`">
+                                                <Field as="select" :name="`drugs[${index}].type`" class="form-select">
                                                     <option value="" disabled>Pick one</option>
                                                     <option v-for="code in dxCodes" :value="code.value">{{ code.name }}</option>
                                                 </Field>
@@ -392,7 +392,7 @@ export default {
                                                 Amount
                                                 <Field type="number" :name="`drugs[${index}].amount`" placeholder="0" />
                                             </label>
-                                            <div class="info-form-add-btn" v-if="fields.length > 1" @click="remove(index);">
+                                            <div class="info-form-add-btn remove" v-if="fields.length > 1" @click="remove(index);">
                                                 <RemoveIcon width="35" height="35" />
                                             </div>
                                         </div>
@@ -408,151 +408,222 @@ export default {
                     </div>
 
                 </div>
-                <button type="submit" class="w-btn w-btn-save">Save</button>
-
+                <button type="submit" class="w-btn w-btn-save profile-btn">Save</button>
             </Form>
         </div>
     </div>
 </template>
 
 <style>
-.profile-inner {
-    height: 100%;
-    padding-bottom: 30px;
-    display: flex;
-    justify-content: space-between;
-    gap: 32px;
-}
+    .profile-form {
+        display: flex;
+        flex-direction: column;
+    }
 
-.profile-card {
-    background-color: #FFFEFE;
-    width: 100%;
-    padding: 0 30px 24px;
-    display: flex;
-    flex-direction: column;
-    border-radius: 16px;
-    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
-}
+    .profile-inner {
+        height: 100%;
+        padding-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        gap: 32px;
+    }
 
-.profile-card:nth-child(2) {
-    flex: 0 0 28%;
-}
+    .profile-card {
+        background-color: #FFFEFE;
+        width: 100%;
+        padding: 0 30px 24px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 16px;
+        box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-.profile-card-title {
-    margin-top: 24px;
-    margin-bottom: 18px;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 20px;
-    color: #000000;
-    text-align: center;
-}
+    .profile-card:nth-child(2) {
+        flex: 0 0 28%;
+    }
 
-.profile-card-content ul {
-    list-style: none;
-}
+    .profile-card-title {
+        margin-top: 24px;
+        margin-bottom: 18px;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 20px;
+        color: #000000;
+        text-align: center;
+    }
 
-.profile-card-content ul li {
-    margin-bottom: 24px;
-    display: grid;
-    grid-template-columns: 30fr 70fr;
-    align-items: center;
-    gap: 26px;
-}
+    .profile-card-content ul {
+        list-style: none;
+    }
 
-.profile-card-content ul li:last-child {
-    margin-bottom: 0;
-}
+    .profile-card-content ul li {
+        margin-bottom: 24px;
+        display: grid;
+        grid-template-columns: 30fr 70fr;
+        align-items: center;
+        gap: 26px;
+    }
 
-.profile-card-content ul li input+span[role="alert"] {
-    background-color: #FF0000;
-    width: 65%;
-    padding: 3px 6px;
-    position: absolute;
-    right: 0;
-    bottom: -34px;
-    color: #FFFFFF;
-    border-radius: 3px;
-    z-index: 9;
-}
+    .profile-card-content ul li:last-child {
+        margin-bottom: 0;
+    }
 
-.profile-card-content ul li input+span[role="alert"]:before {
-    content: '';
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid #FF0000;
-    position: absolute;
-    top: -7px;
-    left: 7px;
-}
+    .profile-card-content ul li input+span[role="alert"] {
+        background-color: #FF0000;
+        width: 65%;
+        padding: 3px 6px;
+        position: absolute;
+        right: 0;
+        bottom: -34px;
+        color: #FFFFFF;
+        border-radius: 3px;
+        z-index: 9;
+    }
 
-.profile-card-content ul li.fullw-input {
-    grid-template-columns: 1fr;
-    gap: 0;
-    text-align: center;
-}
+    .profile-card-content ul li input+span[role="alert"]:before {
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid #FF0000;
+        position: absolute;
+        top: -7px;
+        left: 7px;
+    }
 
-.profile-card-content ul li.fullw-input label {
-    margin-bottom: 3px;
-}
+    .profile-card-content ul li.fullw-input {
+        grid-template-columns: 1fr;
+        gap: 0;
+        text-align: center;
+    }
 
-.profile-card-content ul li label {
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 16px;
-    color: #000000;
-    white-space: nowrap;
-}
+    .profile-card-content ul li.fullw-input label {
+        margin-bottom: 3px;
+    }
 
-.profile-card-content ul li input {
-    background-color: #F4F4FF;
-    width: 100%;
-    height: 48px;
-    padding-left: 22px;
-    border-radius: 10px;
-    color: #000000;
-    outline: none;
-    border: none;
-}
+    .profile-card-content ul li label {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 16px;
+        color: #000000;
+        white-space: nowrap;
+    }
 
-.profile-card-content .medication-block {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    .profile-card-content ul li input {
+        background-color: #F4F4FF;
+        width: 100%;
+        height: 48px;
+        padding-left: 22px;
+        border-radius: 10px;
+        font-size: 16px;
+        color: #000000;
+        outline: none;
+        border: none;
+    }
 
-.profile-card-content .medication-block ul {
-    width: 100%;
-    max-height: 204px;
-    overflow-y: auto;
-}
+    .profile-card-content .medication-block {
+        width: 100%;
+        max-height: 215px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-.profile-card-content .medication-block ul::-webkit-scrollbar {
-    width: 8px;
-}
+    .profile-card-content .medication-block::-webkit-scrollbar {
+        width: 8px;
+        height: 16px;
+    }
 
-.profile-card-content .medication-block ul::-webkit-scrollbar-track {
-    background-color: #E7E7E7;
-    border-radius: 8px;
-}
+    .profile-card-content .medication-block::-webkit-scrollbar-track {
+        background-color: #DBDBDB;
+        border-radius: 8px;
+    }
 
-.profile-card-content .medication-block ul::-webkit-scrollbar-thumb {
-    background-color: #5C90F1;
-    border-radius: 8px;
-}
+    .profile-card-content .medication-block::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 8px;
+    }
 
-.profile-card-content .medication-block ul li {
-    margin-bottom: 16px;
-}
+    .profile-card-content .medication-block ul {
+        width: 100%;
+        max-height: 204px;
+        overflow-y: auto;
+    }
 
-.profile-card-content .medication-block button {
-    margin-top: 16px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 14px;
-    color: #0258BC;
-}
+    .profile-card-content .medication-block ul::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .profile-card-content .medication-block ul::-webkit-scrollbar-track {
+        background-color: #E7E7E7;
+        border-radius: 8px;
+    }
+
+    .profile-card-content .medication-block ul::-webkit-scrollbar-thumb {
+        background-color: #5C90F1;
+        border-radius: 8px;
+    }
+
+    .profile-card-content .medication-block ul li {
+        margin-bottom: 16px;
+    }
+
+    .profile-card-content .medication-block button {
+        margin-top: 16px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 14px;
+        color: #0258BC;
+    }
+
+    .medication-block fieldset {
+        margin-bottom: 16px;
+    }
+
+    .form-select {
+        height: 48px;
+    }
+
+    .medication-block .info-form-item-wrapper {
+        padding-right: 24px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .medication-block .info-form-item input {
+        background-color: #F4F4FF;
+        width: 100%;
+        height: 48px;
+        padding-left: 22px;
+        border-radius: 10px;
+        color: #000000;
+        outline: none;
+        border: none;
+    }
+
+    .info-form-add-btn.remove {
+        position: absolute;
+        right: -16px;
+    }
+
+    .medication-block label.info-form-item {
+        flex: 0 0 48%;
+        font-size: 16px;
+        font-weight: 400;
+        color: #000000;
+    }
+
+    .medication-block .info-form-add-btn {
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .profile-form .profile-btn {
+        margin-left: auto;
+        font-size: 16px;
+    }
 </style>
