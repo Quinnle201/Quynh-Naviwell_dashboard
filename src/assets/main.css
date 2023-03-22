@@ -65,10 +65,10 @@ body {
     display: none;
   }
 
-  body {
+  /* body {
     padding-top: 5.5rem;
     padding-left: 0.5rem;
-  }
+  } */
 }
 
 .sidebar .nav-link {
@@ -107,11 +107,11 @@ body {
 
 }
 
-@media (max-width: 767.98px) {
+/* @media (max-width: 767.98px) {
   .navbar {
     height: 5rem;
   }
-}
+} */
 
 .text-small {
   font-size: 85%;

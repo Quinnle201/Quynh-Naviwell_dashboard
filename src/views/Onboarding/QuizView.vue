@@ -252,11 +252,11 @@ export default {
 
     .welcome-wrapper {
         background-color: #F4F4FF;
-        height: 100vh;
-        margin: -4rem -0.5rem 0 -7.5rem;
+        min-height: calc(100vh - 64px);
+        margin: 0px -0.5rem 0 -7.5rem;
+        padding-bottom: 32px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
     }
 
@@ -330,7 +330,7 @@ export default {
         background-color: rgba(255, 255, 255, .8);
         max-width: 40%;
         width: 100%;
-        min-height: 78vh;
+        /* min-height: 78vh; */
         height: auto;
         margin: 0 auto;
         padding: 26px 40px;
@@ -465,5 +465,104 @@ export default {
         text-align: center;
         border-radius: 16px;
         cursor: pointer;
+    }
+
+    @media screen and (max-width: 1440px) {
+        /* .welcome-wrapper {
+            height: 94vh;
+        } */
+        
+        .quiz-progressbar, 
+        .welcome-inner {
+            max-width: 60%;
+        }
+    }
+
+    @media screen and (max-width: 1199px) {
+        .quiz-progressbar, 
+        .welcome-inner {
+            max-width: 80%;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .quiz-progressbar ul li {
+            font-size: 14px;
+        }
+
+        .quiz-progressbar ul li.active {
+            font-size: 16px;
+        }
+
+        .welcome-inner {
+            padding: 16px 24px;
+        }
+
+        .welcome-heading h4 {
+            font-size: 20px;
+        }
+
+        .welcome-heading h6 {
+            font-size: 14px;
+        }
+
+        .quiz-form-button {
+            margin-top: 16px;
+            font-size: 16px;
+        }
+    }
+
+    @media screen and (max-width: 576px) {
+        .quiz-progressbar, 
+        .welcome-inner {
+            max-width: 90%;
+        }
+
+        .quiz-form-input {
+            max-width: 100%;
+            flex: auto;
+        }
+
+        .quiz-form-options {
+            gap: 8px;
+        }
+
+        .quiz-form-input input + label:before {
+            display: none;
+        }
+
+        .quiz-progressbar ul {
+            display: grid;
+            grid-template-columns: 35fr 15fr 35fr 15fr;
+        }
+
+        .quiz-progressbar ul li {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .quiz-progressbar ul li.quiz-progressbar-separator {
+            max-width: 50%;
+            margin: 0 4px;
+            overflow: visible;
+        }
+
+        .quiz-form-button {
+            min-width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 375px) {
+        
+
+        .welcome-heading h4 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .welcome-inner {
+            padding: 16px 12px;
+        }
     }
 </style>
