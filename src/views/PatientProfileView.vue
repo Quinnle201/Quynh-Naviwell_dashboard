@@ -1,43 +1,35 @@
 <script>
-import { Form, Field, ErrorMessage } from 'vee-validate';
+import { Form, Field, ErrorMessage, FieldArray  } from 'vee-validate';
 import * as Yup from 'yup';
 import PatientInputGenerator from '@/components/Patient/PatientInputGenerator.vue'
 
+import AddIcon from '@/components/icons/IconAdd.vue';
+import RemoveIcon from '@/components/icons/IconRemoveCircle.vue';
+
 import { axiosInstance } from '@/helpers';
-import { useAlertStore } from '@/stores';
-import { calculateBMI } from '@/helpers';
+import { useAlertStore, useAuthStore } from '@/stores';
+
 import _get from 'lodash/get';
-import _find from 'lodash/find';
-import he from 'vue-cal/dist/i18n/he.cjs';
 
 export default {
     components: {
         Form,
         Field,
+        FieldArray,
         ErrorMessage,
+        AddIcon,
+        RemoveIcon,
         PatientInputGenerator,
-    },
-    props: {
-        patient: Object
-    },
-    watch: {
-        patient: {
-            handler(value) {
-                if (value != null) {
-                    this.setPatientData(value)
-                } else {
-                    this.resetPatientData()
-                }
-
-            },
-            deep: true,
-        }
     },
     async mounted() {
         await this.getDxCodes();
-        if (this.patient != null) {
-            this.setPatientData(this.patient)
-        }
+        this.getPatient()
+
+    },
+    computed: {
+        user() {
+            return this.authStore.user
+        },
     },
     data() {
 
@@ -157,17 +149,11 @@ export default {
                     rules: Yup.string().nullable()
                 },
                 {
-                    label: 'Email *',
-                    name: 'user.email',
-                    as: 'input',
-                    model: 'user.email',
-                    rules: Yup.string().required('Email is required'),
-                },
-                {
                     label: 'Phone',
                     name: 'user.phone',
                     as: 'input',
                     model: 'user.phone',
+                    classattr: 'fullw-input',
                     rules: Yup.string().nullable(),
                 },
             ]
@@ -236,22 +222,30 @@ export default {
         }
 
         const alertStore = useAlertStore();
-        return { generalInfo, contactInfo, emergencyContactInfo, currentMeds, alertStore, dxCodes:[] }
+        const authStore = useAuthStore()
+        return { generalInfo, contactInfo, emergencyContactInfo, currentMeds, alertStore, authStore, dxCodes: [], patient: null, }
     },
     methods: {
-        close() {
-            this.$emit('close');
-            this.resetPatientData()
-        },
         async getDxCodes() {
             try {
                 const response = await axiosInstance.get('/dx-codes')
                 this.dxCodes = response.data.map(code => {
-                    return {'name': code.value, 'value': code.id };
+                    return { 'name': code.value, 'value': code.id };
                 });
-            }  catch (error) {
+            } catch (error) {
                 console.log(error)
             }
+        },
+        getPatient() {
+            axiosInstance.get(`/patients/${this.user.profile_id}`)
+                .then(response => {
+                    const patient = response.data.data;
+                    this.setPatientData(patient);
+                    this.patient = patient;
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                });
         },
         setPatientData(patient) {
             const pt = Object.assign({}, patient);;
@@ -265,9 +259,6 @@ export default {
                 if (item.model) {
                     this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
                 }
-                if (item.name == 'user.email') {
-                    item.disabled = "true"
-                }
 
             })
             this.emergencyContactInfo.fields.forEach((item) => {
@@ -277,6 +268,7 @@ export default {
             })
 
 
+            const drugs = [];
             this.currentMeds.fields.forEach((item) => {
                 if (item.model) {
                     const med = _get(pt, item.model)
@@ -284,71 +276,68 @@ export default {
                     var medType = ""
                     if (med) {
                         const medArray = med.split(":");
-                        medType = this.dxCodes.find(({ value }) => value === medArray[0]).name;
-                        medValue = medArray[1] + " medications";
+                        medType = medArray[0].trim();
+                        medValue = medArray[1].trim();
+                        drugs.push({type: medType, amount: medValue});
                     }
-                    this.$refs.populatedForm.setFieldValue(item.name, medType + " - " + medValue);
                 }
             })
-
-            if (pt.meds.length > this.currentMeds.fields.length) {
-                for (var i = 3; i < pt.meds.length; i++) {
-                    this.addMedRow()
-                    this.$refs.populatedForm.setFieldValue(`meds[${i}]`, pt.meds[i]);
-                }
-
+            if(drugs.length == 0) {
+                drugs.push({type: '', amount: 0});
+                drugs.push({type: '', amount: 0});
             }
+            this.$refs.populatedForm.setFieldValue("drugs", drugs)
+        },
 
-        },
-        resetPatientData() {
-            _find(this.contactInfo.fields, ['name', 'user.email']).disabled = undefined;
-            this.currentMeds.fields.length = 3;
-            this.$refs.populatedForm.setValues({})
-        },
         onSubmit(values) {
 
-            const healthData = values['health-data'];
-            const height = `${healthData.height_ft}'${healthData.height_in}"`
-            if (healthData.height_ft && healthData.height_ft && healthData.weight) {
-                healthData.bmi = calculateBMI(height, healthData.weight)
-                values['health-data']['height'] = height
+            if(!values.profile.dob) {
+                this.alertStore.error("Date of birth is required!")
+                return;
             }
-            if (this.patient != null) {
-                axiosInstance.put(`/patients/${this.patient.id}`, values)
-                    .then(response => {
-                        this.$emit('update:patient', response.data.data)
-                        this.alertStore.success('Patient updated.');
-                        this.close()
-                    })
-                    .catch(error => {
-                        this.alertStore.error(error.response.data.message)
-                    });
-            } else {
-                axiosInstance.post('/patients', values)
-                    .then(response => {
-                        this.close()
-                        this.alertStore.success('Patient created.');
-                    })
-                    .catch(error => {
-                        this.alertStore.error(error.response.data.message)
-                    });
+            if(!values.profile.gender) {
+                this.alertStore.error("Your gender is required!")
+                return;
             }
-        },
-        addMedRow() {
-            this.currentMeds.fields.push({
-                label: '',
-                name: `meds[${this.currentMeds.fields.length}]`,
-                model: `meds[${this.currentMeds.fields.length}]`,
-                as: 'input',
-                classattr: 'fullw-input',
-                placeholder: "Medication Name, Dosage, Frequency",
-                rules: Yup.string().nullable()
+            if(!values.user.phone) {
+                this.alertStore.error("Phone is required!")
+                return;
+            }
+
+            const medications = values.drugs.filter(drug => drug.type)
+            const keysAndValues = medications.map(med => {
+                let amount = parseInt(med.amount, 10)
+                let type = med.type
+                if (Number.isNaN(amount)) {
+                    amount = 0;
+                }
+                return { type, amount }
             })
-            const medsContainer = this.$refs.medsContainer.$refs.list;
-            this.$nextTick(() => {
-                medsContainer.scrollTop = medsContainer.scrollHeight;
+            const uniqueMedValues = keysAndValues.reduce(function (res, value) {
+                if (!res[value.type]) {
+                    res[value.type] = 0;
+                }
+                res[value.type] += value.amount;
+                return res;
+            }, {});
+            let medicine = []
+            Object.keys(uniqueMedValues).forEach(function (key, index) {
+                medicine.push(`${key}: ${uniqueMedValues[key]}`)
             });
-        }
+
+            values.meds = medicine
+
+
+            axiosInstance.put(`/patients/${this.user.profile_id}`, values)
+                .then(response => {
+                    this.alertStore.success('Your profile has been updated.');
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+
+        },
     },
 };
 </script>
@@ -360,184 +349,210 @@ export default {
         </div>
 
         <div class="page-bg">
-            <div class="profile-inner">
-                <div class="profile-card">
-                    <div class="profile-card-title">General Information</div>
+            <Form @submit="onSubmit" ref="populatedForm">
+                <div class="profile-inner">
 
-                    <div class="profile-card-content">
-                        <PatientInputGenerator :schema="generalInfo" />
-                    </div>
-                </div>
+                    <div class="profile-card">
+                        <div class="profile-card-title">General Information</div>
 
-                <div class="profile-card">
-                    <div class="profile-card-title">Contact Information</div>
-
-                    <div class="profile-card-content">
-                        <PatientInputGenerator :schema="contactInfo" />
-
-                        
-                    </div>
-                </div>
-
-                <div class="profile-card">
-                    <div class="profile-card-content">
-                        <div class="profile-card-title">Emergency Contact Information</div>
-                        <PatientInputGenerator :schema="emergencyContactInfo" />
-                    </div>
-
-                    <div class="profile-card-title">Current Medications and Supplements</div>
-
-                    <div class="profile-card-content">
-                        <div class="medication-block">
-                            <PatientInputGenerator :schema="currentMeds" ref="medsContainer" />
-
-                            <button type="button" @click="addMedRow">Add Medication or Supplement</button>
+                        <div class="profile-card-content">
+                            <PatientInputGenerator :schema="generalInfo" />
                         </div>
                     </div>
+
+                    <div class="profile-card">
+                        <div class="profile-card-title">Contact Information</div>
+
+                        <div class="profile-card-content">
+                            <PatientInputGenerator :schema="contactInfo" />
+                        </div>
+                    </div>
+
+                    <div class="profile-card">
+                        <div class="profile-card-content">
+                            <div class="profile-card-title">Emergency Contact Information</div>
+                            <PatientInputGenerator :schema="emergencyContactInfo" />
+                        </div>
+
+                        <div class="profile-card-title">Current Medications and Supplements</div>
+
+                        <div class="profile-card-content">
+                            <div class="medication-block">
+                                <FieldArray name="drugs" v-slot="{ fields, push, remove }" v-if="patient">
+                                    <fieldset v-for="(field, index) in fields" :key="field.key">
+                                        <div class="info-form-item-wrapper">
+                                            <label class="info-form-item">
+                                                Drug type
+                                                <Field as="select" :name="`drugs[${index}].type`">
+                                                    <option value="" disabled>Pick one</option>
+                                                    <option v-for="code in dxCodes" :value="code.value">{{ code.name }}</option>
+                                                </Field>
+                                            </label>
+                                            <label class="info-form-item">
+                                                Amount
+                                                <Field type="number" :name="`drugs[${index}].amount`" placeholder="0" />
+                                            </label>
+                                            <div class="info-form-add-btn" v-if="fields.length > 1" @click="remove(index);">
+                                                <RemoveIcon width="35" height="35" />
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="info-form-add-btn" v-if="fields.length < 15"
+                                        @click="push({ type: '', amount: 0 });">
+                                        <AddIcon />
+                                        Add Medicine
+                                    </div>
+                                </FieldArray>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
+                <button type="submit" class="w-btn w-btn-save">Save</button>
+
+            </Form>
         </div>
     </div>
 </template>
 
 <style>
-    .profile-inner {
-        height: 100%;
-        padding-bottom: 30px;
-        display: flex;
-        justify-content: space-between;
-        gap: 32px;
-    }
+.profile-inner {
+    height: 100%;
+    padding-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+}
 
-    .profile-card {
-        background-color: #FFFEFE;
-        width: 100%;
-        padding: 0 30px 24px;
-        display: flex;
-        flex-direction: column;
-        border-radius: 16px;
-        box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
-    }
+.profile-card {
+    background-color: #FFFEFE;
+    width: 100%;
+    padding: 0 30px 24px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-    .profile-card:nth-child(2) {
-        flex: 0 0 28%;
-    }
+.profile-card:nth-child(2) {
+    flex: 0 0 28%;
+}
 
-    .profile-card-title {
-        margin-top: 24px;
-        margin-bottom: 18px;
-        font-size: 20px;
-        font-weight: 400;
-        line-height: 20px;
-        color: #000000;
-        text-align: center;
-    }
+.profile-card-title {
+    margin-top: 24px;
+    margin-bottom: 18px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #000000;
+    text-align: center;
+}
 
-    .profile-card-content ul {
-        list-style: none;
-    }
+.profile-card-content ul {
+    list-style: none;
+}
 
-    .profile-card-content ul li {
-        margin-bottom: 24px;
-        display: grid;
-        grid-template-columns: 30fr 70fr;
-        align-items: center;
-        gap: 26px;
-    }
+.profile-card-content ul li {
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: 30fr 70fr;
+    align-items: center;
+    gap: 26px;
+}
 
-    .profile-card-content ul li:last-child {
-        margin-bottom: 0;
-    }
+.profile-card-content ul li:last-child {
+    margin-bottom: 0;
+}
 
-    .profile-card-content ul li input+span[role="alert"] {
-        background-color: #FF0000;
-        width: 65%;
-        padding: 3px 6px;
-        position: absolute;
-        right: 0;
-        bottom: -34px;
-        color: #FFFFFF;
-        border-radius: 3px;
-        z-index: 9;
-    }
+.profile-card-content ul li input+span[role="alert"] {
+    background-color: #FF0000;
+    width: 65%;
+    padding: 3px 6px;
+    position: absolute;
+    right: 0;
+    bottom: -34px;
+    color: #FFFFFF;
+    border-radius: 3px;
+    z-index: 9;
+}
 
-    .profile-card-content ul li input+span[role="alert"]:before {
-        content: '';
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 8px solid #FF0000;
-        position: absolute;
-        top: -7px;
-        left: 7px;
-    }
+.profile-card-content ul li input+span[role="alert"]:before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #FF0000;
+    position: absolute;
+    top: -7px;
+    left: 7px;
+}
 
-    .profile-card-content ul li.fullw-input {
-        grid-template-columns: 1fr;
-        gap: 0;
-        text-align: center;
-    }
+.profile-card-content ul li.fullw-input {
+    grid-template-columns: 1fr;
+    gap: 0;
+    text-align: center;
+}
 
-    .profile-card-content ul li.fullw-input label {
-        margin-bottom: 3px;
-    }
+.profile-card-content ul li.fullw-input label {
+    margin-bottom: 3px;
+}
 
-    .profile-card-content ul li label {
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 16px;
-        color: #000000;
-        white-space: nowrap;
-    }
+.profile-card-content ul li label {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #000000;
+    white-space: nowrap;
+}
 
-    .profile-card-content ul li input {
-        background-color: #F4F4FF;
-        width: 100%;
-        height: 48px;
-        padding-left: 22px;
-        border-radius: 10px;
-        color: #000000;
-        outline: none;
-        border: none;
-    }
+.profile-card-content ul li input {
+    background-color: #F4F4FF;
+    width: 100%;
+    height: 48px;
+    padding-left: 22px;
+    border-radius: 10px;
+    color: #000000;
+    outline: none;
+    border: none;
+}
 
-    .profile-card-content .medication-block {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.profile-card-content .medication-block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-    .profile-card-content .medication-block ul {
-        width: 100%;
-        max-height: 204px;
-        overflow-y: auto;
-    }
+.profile-card-content .medication-block ul {
+    width: 100%;
+    max-height: 204px;
+    overflow-y: auto;
+}
 
-    .profile-card-content .medication-block ul::-webkit-scrollbar {
-        width: 8px;
-    }
+.profile-card-content .medication-block ul::-webkit-scrollbar {
+    width: 8px;
+}
 
-    .profile-card-content .medication-block ul::-webkit-scrollbar-track {
-        background-color: #E7E7E7;
-        border-radius: 8px;
-    }
+.profile-card-content .medication-block ul::-webkit-scrollbar-track {
+    background-color: #E7E7E7;
+    border-radius: 8px;
+}
 
-    .profile-card-content .medication-block ul::-webkit-scrollbar-thumb {
-        background-color: #5C90F1;
-        border-radius: 8px;
-    }
+.profile-card-content .medication-block ul::-webkit-scrollbar-thumb {
+    background-color: #5C90F1;
+    border-radius: 8px;
+}
 
-    .profile-card-content .medication-block ul li {
-        margin-bottom: 16px;
-    }
+.profile-card-content .medication-block ul li {
+    margin-bottom: 16px;
+}
 
-    .profile-card-content .medication-block button {
-        margin-top: 16px;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 14px;
-        color: #0258BC;
-    }
+.profile-card-content .medication-block button {
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 14px;
+    color: #0258BC;
+}
 </style>
