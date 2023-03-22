@@ -97,4 +97,65 @@ export default {
         cursor: pointer;
         z-index: 2;
     }
+
+    @media screen and (max-width: 1440px) {
+        .welcome-inner {
+            max-width: 60%;
+        }
+    }
+
+    @media screen and (max-width: 1199px) {
+        .welcome-inner {
+            max-width: 80%;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .welcome-heading h4 {
+            font-size: 28px;
+        }
+
+        .welcome-heading h6 {
+            font-size: 20px;
+        }
+
+        .info-form-button {
+            margin-top: 16px;
+            font-size: 16px;
+        }
+    }
+
+    @media screen and (max-width: 576px) {
+        .welcome-inner {
+            max-width: 90%;
+            padding: 16px 32px;
+        }
+
+        .welcome-heading h4 {
+            font-size: 24px;
+        }
+
+        .welcome-heading h6 {
+            font-size: 18px;
+        }
+
+        .info-form-button {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    @media screen and (max-width: 375px) {
+        .welcome-inner {
+            padding: 16px 32px;
+        }
+
+        .welcome-heading h4 {
+            font-size: 22px;
+        }
+
+        .welcome-heading h6 {
+            font-size: 16px;
+        }
+    }
 </style>
