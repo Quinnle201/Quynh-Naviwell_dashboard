@@ -365,6 +365,7 @@ export default {
         margin: 0 auto 16px;
         padding: 8px 16px;
         border-radius: 16px;
+        z-index: 1999;
     }
 
     .quiz-progressbar ul {
@@ -542,7 +543,8 @@ export default {
         width: 100%;
         height: 100%;
         margin: 16px auto 0;
-        overflow: auto;
+        overflow-x: auto;
+        overflow-y: hidden;
     }
 
     .info-form-inner {
@@ -643,11 +645,11 @@ export default {
         width: 100%;
         height: 56px;
         margin-top: 32px;
-        padding: 12px 32px;
         font-size: 18px;
         font-weight: 500;
         color: #FFFFFF;
         text-align: center;
+        line-height: 56px;
         border-radius: 16px;
         cursor: pointer;
     }
@@ -675,11 +677,141 @@ export default {
     }
 
     @media (hover: hover) and (pointer: fine) {
-
         .info-form .info-form-item input:focus,
         .info-form .info-form-item select:focus {
             border: 1px solid var(--primary);
             box-shadow: 2px 3px 6px rgba(204, 204, 204, 0.2);
+        }
+    }
+
+    @media screen and (max-width: 1440px) {
+        .welcome-wrapper {
+            margin-top: -2rem;
+        }
+        
+        .quiz-progressbar, 
+        .welcome-inner {
+            max-width: 60%;
+        }
+
+        .quiz-progressbar ul li:nth-child(1) {
+            padding-right: 8px;
+        }
+
+        .quiz-progressbar ul li:nth-child(3) {
+            padding: 0 8px;
+        }
+
+        .quiz-progressbar ul li:nth-child(5) {
+            padding-left: 8px;
+        }
+    }
+
+    @media screen and (max-width: 1199px) {
+        .quiz-progressbar, 
+        .welcome-inner {
+            max-width: 80%;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .quiz-progressbar ul li {
+            font-size: 14px;
+        }
+
+        .quiz-progressbar ul li.active {
+            font-size: 16px;
+        }
+
+        .quiz-progressbar ul li.quiz-progressbar-separator {
+            flex: 0 0 8%;
+        }
+
+        .quiz-progressbar ul li:nth-child(1), 
+        .quiz-progressbar ul li:nth-child(3), 
+        .quiz-progressbar ul li:nth-child(5) {
+            padding: 0;
+        }
+
+        .welcome-inner {
+            padding: 16px 24px;
+        }
+
+        .welcome-heading h4 {
+            font-size: 20px;
+        }
+
+        .welcome-heading h6 {
+            font-size: 14px;
+        }
+
+        .info-form-inner-item {
+            max-width: 90%;
+            margin-left: 8px;
+            padding-right: 8px;
+        }
+
+        .info-form-inner-item::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .info-form-label {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-form .info-form-item {
+            font-size: 14px;
+        }
+
+        .info-form .info-form-item input, 
+        .info-form .info-form-item select {
+            font-size: 14px;
+        }
+
+        .info-form .info-form-item input::placeholder {
+            font-size: 14px;
+        }
+
+        .info-form-button, 
+         .info-form button {
+            max-width: 90%;
+            margin-top: 16px;
+            font-size: 16px;
+        }
+
+        .info-form-add-btn {
+            font-size: 14px;
+        }
+    }
+
+    @media screen and (max-width: 576px) {
+        .quiz-progressbar, 
+        .welcome-inner {
+            max-width: 90%;
+        }
+    }
+
+    @media screen and (max-width: 375px) {
+        .quiz-progressbar ul li {
+            font-size: 12px;
+        }
+
+        .quiz-progressbar ul li.active {
+            font-size: 14px;
+        }
+
+        .quiz-progressbar ul li.quiz-progressbar-separator {
+            flex: 0 0 6%;
+        }
+
+        .welcome-heading h4 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .welcome-inner {
+            padding: 16px 12px;
         }
     }
 </style>
@@ -700,7 +832,6 @@ export default {
     }
 
     .info-form-item .multiselect--active.multiselect {
-        /* line-height: 36px; */
         margin-bottom: 0;
     }
 
@@ -742,5 +873,11 @@ export default {
 
     .info-form-item .multiselect--active.multiselect .multiselect__content-wrapper {
         border-color: var(--primary);
+    }
+
+    @media screen and (max-width: 768px) {
+        .info-form-item .multiselect__placeholder {
+            font-size: 14px;
+        }
     }
 </style>
