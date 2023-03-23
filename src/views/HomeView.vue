@@ -3,6 +3,7 @@ import CurrrentTime from '@/components/CurrentTime.vue'
 import Card from '@/components/Card.vue'
 import LabIcon from '@/components/icons/IconLab.vue'
 import RecipeIcon from '@/components/icons/IconRecipe.vue'
+import ClinicLogoBlock from '@/components/Dashboard/Layout/ClinicBlock.vue'
 
 import { useAuthStore, useFileStore, useAlertStore } from '@/stores';
 import { axiosInstance } from '@/helpers';
@@ -17,7 +18,8 @@ export default {
     CurrrentTime,
     Card,
     LabIcon,
-    RecipeIcon
+    RecipeIcon,
+    ClinicLogoBlock
   },
   computed: {
     currentDate() {
@@ -119,13 +121,7 @@ export default {
 <template>
   <div class="wrapper">
     <div class="top-block">
-      <div class="top-block-logo">
-        <img src="@/assets/img/variohealth-logo.png" alt="VarioHealth Logo" />
-        <div class="top-block-info_text">
-          <span>VarioHealth</span>
-          <span>Advanced Integrative Medicine</span>
-        </div>
-      </div>
+      <ClinicLogoBlock/>
 
       <div class="top-block-info">
         <h3>Good Morning Dr. {{ user.last_name }}</h3>

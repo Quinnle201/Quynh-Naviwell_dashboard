@@ -7,6 +7,9 @@ import MapIcon from '@/components/icons/IconMap.vue'
 
 import userMixin from '@/mixins/user.js'
 
+import { useClinicStore } from '@/stores';
+
+
 export default {
     props: {
         event: {
@@ -23,14 +26,12 @@ export default {
         MapIcon,
     },
     data() {
+        const clinicStore = useClinicStore()
         return {
+            clinicStore,
             visit_type: "",
             time: "",
             physician_name: "",
-            clinic: {
-                name: "VarioHealth Advanced Integrated Medicine",
-                address: "9456 SH 121 S, Frisco, TX 75035"
-            }
         }
     },
     watch: {
@@ -50,6 +51,9 @@ export default {
         },
     },
     computed: {
+        clinic() {
+            return this.clinicStore.clinic;
+        },
         formatAmPmTime() {
             return (time) => {
                 const date = new Date(time);

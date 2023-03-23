@@ -3,8 +3,9 @@ import CurrrentTime from '@/components/CurrentTime.vue'
 import Card from '@/components/Card.vue'
 import LabIcon from '@/components/icons/IconLab.vue'
 import RecipeIcon from '@/components/icons/IconRecipe.vue'
+import ClinicLogoBlock from '@/components/Dashboard/Layout/ClinicBlock.vue'
 
-import { useAuthStore, useFileStore, useAlertStore } from '@/stores';
+import { useAuthStore, useFileStore, useAlertStore, useClinicStore } from '@/stores';
 import { axiosInstance } from '@/helpers';
 import userMixin from '@/mixins/user.js'
 import { RouterLink } from 'vue-router'
@@ -17,9 +18,13 @@ export default {
     CurrrentTime,
     Card,
     LabIcon,
-    RecipeIcon
+    RecipeIcon,
+    ClinicLogoBlock
   },
   computed: {
+    clinic() {
+      return this.clinicStore.clinic;
+    },
     currentDate() {
       let date = new Date();
       let currentWeekdayShort = date.toLocaleString('en-us', { weekday: 'short' });
@@ -74,9 +79,11 @@ export default {
     const userStore = useAuthStore()
     const fileStore = useFileStore()
     const alertStore = useAlertStore()
+    const clinicStore = useClinicStore()
     return {
       fileStore,
       alertStore,
+      clinicStore,
       user: userStore.user,
       messages: [],
       appointments: []
@@ -119,13 +126,7 @@ export default {
 <template>
   <div class="wrapper">
     <div class="top-block">
-      <div class="top-block-logo">
-        <img src="@/assets/img/variohealth-logo.png" alt="VarioHealth Logo" />
-        <div class="top-block-info_text">
-          <span>VarioHealth</span>
-          <span>Advanced Integrative Medicine</span>
-        </div>
-      </div>
+      <ClinicLogoBlock/>
 
       <div class="top-block-info">
         <h3>Good Morning {{ user.first_name }}</h3>
@@ -234,7 +235,7 @@ export default {
             <div v-if="appointments[0]" class="visits-content-item active">
               <div>{{ todayDate(appointments[0].start_time) }}</div>
               <div>Appointment</div>
-              <div class="physician">Dr. {{ appointments[0].physician.user.last_name }} at VarioHealth</div>
+              <div class="physician">Dr. {{ appointments[0].physician.user.last_name }} at {{clinic.name}}</div>
             </div>
             <div v-else>
               <div class="visits-content-item">
@@ -246,7 +247,7 @@ export default {
             <div v-if="appointments[1]" class="visits-content-item active">
               <div>{{ localDate(appointments[1].start_time) }}</div>
               <div>Appointment</div>
-              <div class="physician">Dr. {{ appointments[1].physician.user.last_name }} at VarioHealth</div>
+              <div class="physician">Dr. {{ appointments[1].physician.user.last_name }} at {{clinic.name}}</div>
             </div>
             <div v-else>
               <div class="visits-content-item">

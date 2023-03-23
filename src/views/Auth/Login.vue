@@ -1,9 +1,15 @@
 <script setup>
-import { useAuthStore } from '@/stores';
-import { ref } from 'vue'
+import { useAuthStore, useClinicStore } from '@/stores';
+import { ref, computed } from 'vue'
 
 const email = ref("")
 const password = ref("")
+
+const clinicStore = useClinicStore();
+
+ const clinic = computed(() => {
+    return clinicStore.clinic
+})
 
 async function onSubmit() {
     const authStore = useAuthStore();
@@ -20,10 +26,10 @@ async function onSubmit() {
 
             <div class="login-form">
                 <div class="login-form-img">
-                    <img src="@/assets/img/variohealth-logo.png" alt="VarioHealth Logo">
+                    <img v-if="clinicStore.logoRef" :src="clinicStore.logoRef" :alt="clinic.name + ' Logo'">
                     <div>
-                        <span>VarioHealth</span>
-                        <span>Advanced Integrative Medicine</span>
+                        <span>{{clinic.name}}</span>
+                        <span>{{clinic.description}}</span>
                     </div>
                 </div>
                 

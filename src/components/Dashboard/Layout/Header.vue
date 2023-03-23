@@ -11,13 +11,7 @@
                 <span>{{ currentDate() }}</span>
             </div>
             <div class="header-logo">
-                <div class="top-block-logo">
-                    <img src="@/assets/img/variohealth-logo.png" alt="VarioHealth Logo" />
-                    <div class="top-block-info_text">
-                        <span>VarioHealth</span>
-                        <span>Advanced Integrative Medicine</span>
-                    </div>
-                </div>
+                <ClinicLogoBlock/>
             </div>
             <div class="quote">{{quote}}</div>
             <div class="d-flex flex-row gap-1 user-block">
@@ -36,6 +30,7 @@
 
 <script>
 import CurrentTime from '@/components/CurrentTime.vue';
+import ClinicLogoBlock from '@/components/Dashboard/Layout/ClinicBlock.vue'
 import userMixin from '@/mixins/user.js'
 import { useAuthStore, useFileStore } from '@/stores';
 import { axiosInstance } from '@/helpers';
@@ -46,6 +41,7 @@ export default {
     ],
     components: {
         CurrentTime,
+        ClinicLogoBlock,
     },
     methods: {
         currentDate() {
