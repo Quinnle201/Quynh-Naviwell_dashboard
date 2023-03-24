@@ -31,7 +31,7 @@ import PatientProfileView from '@/views/PatientProfileView.vue'
 
 function isPatient(){
   const authStore = useAuthStore();
-  return authStore.user.profile_type.includes("PatientProfile");
+  return authStore.isPatient;
 }
 
 const router = createRouter({

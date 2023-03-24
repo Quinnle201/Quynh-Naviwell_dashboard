@@ -12,6 +12,9 @@ export const useAuthStore = defineStore({
         claim: JSON.parse(localStorage.getItem('claim')),
         returnUrl: null
     }),
+    getters: {
+        isPatient: (state) => state.user?.profile_type.includes("PatientProfile")
+      },
     actions: {
         async login(email, password) {
             try {
@@ -35,7 +38,9 @@ export const useAuthStore = defineStore({
                 localStorage.setItem('claim', JSON.stringify(this.claim));
 
                 // redirect to previous url or default to home page
-                router.push('/');
+                router
+                    .push({ path: '/' })
+                    .then(() => { router.go() })
             } catch (error) {
                 const alertStore = useAlertStore();
                 alertStore.error(error.response.data.message);
@@ -50,7 +55,7 @@ export const useAuthStore = defineStore({
                 this.user = data.data;
                 localStorage.setItem('user', JSON.stringify(this.user));
 
-                if(this.user.profile_type.includes("PatientProfile")) {
+                if(this.isPatient) {
                     const programmaticAccess = useProgrammaticAccesStore();
                     if(!this.user.profile.patient_confirmed) {
                         programmaticAccess.setAccessPage('onboarding')

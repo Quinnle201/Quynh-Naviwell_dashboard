@@ -100,7 +100,10 @@ const physicianLinks = [
 
 const authStore = useAuthStore();
 const links = computed(() => {
-  return authStore.user.profile_type.includes("PatientProfile") ? patientLinks : physicianLinks
+  if(authStore.user) {
+    return authStore.isPatient ? patientLinks : physicianLinks
+  }
+  return [];
 })
 
 </script>
