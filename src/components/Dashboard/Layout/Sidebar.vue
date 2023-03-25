@@ -44,7 +44,8 @@ const patientLinks = [
     icon: markRaw(DietIcon)
   },
   {
-    route: "/fullscript",
+    route: "https://fullscript.com",
+    external: true,
     icon: markRaw(MedicineIcon)
   },
   {
@@ -115,9 +116,12 @@ const links = computed(() => {
     </RouterLink>
     <ul class="nav nav-pills nav-flush mb-auto text-center d-flex justify-content-center py-3 gap-3">
       <li class="nav-item" :class="index == 0 ? 'mx-auto m-2' : ''" v-for="(link, index) in links">
-        <RouterLink :to="link.route" class="nav-link p-3 rounded-circle">
+        <RouterLink :to="link.route" class="nav-link p-3 rounded-circle" v-if="!link.external">
           <component :is="link.icon" :key="link.icon.name" width="30" height="30"></component>
         </RouterLink>
+        <a v-else :href="link.route" target="_blank" class="nav-link p-3 rounded-circle">
+          <component :is="link.icon" :key="link.icon.name" width="30" height="30"></component>
+        </a>
       </li>
     </ul>
   </div>

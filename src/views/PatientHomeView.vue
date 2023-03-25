@@ -5,10 +5,12 @@ import LabIcon from '@/components/icons/IconLab.vue'
 import RecipeIcon from '@/components/icons/IconRecipe.vue'
 import ClinicLogoBlock from '@/components/Dashboard/Layout/ClinicBlock.vue'
 
-import { useAuthStore, useFileStore, useAlertStore, useClinicStore } from '@/stores';
-import { axiosInstance } from '@/helpers';
+import { useAuthStore, useFileStore, useAlertStore, useClinicStore, useProgrammaticAccesStore } from '@/stores';
+import { axiosInstance, downloadFile } from '@/helpers';
 import userMixin from '@/mixins/user.js'
 import { RouterLink } from 'vue-router'
+
+import _last from 'lodash/last'
 
 export default {
   mixins: [
@@ -80,10 +82,12 @@ export default {
     const fileStore = useFileStore()
     const alertStore = useAlertStore()
     const clinicStore = useClinicStore()
+    const programmaticAccess = useProgrammaticAccesStore()
     return {
       fileStore,
       alertStore,
       clinicStore,
+      programmaticAccess,
       user: userStore.user,
       messages: [],
       appointments: [],
@@ -119,6 +123,16 @@ export default {
                 .catch(error => {
                     this.alertStore.error(error.response.data.message)
                 });
+    },
+    questionnaireClicked() {
+      if (this.user.profile.questionnaireRequired) {
+        programmaticAccess.setAccessPage('quiz')
+      } else {
+        //Open report pdf
+        let quizReportRef = _last(this.user.profile.questionaires).patient_report
+        this.alertStore.success(`Opening patient report`)
+        downloadFile(null, `${this.user.id}/reports/${quizReportRef}`, 'users')
+      }
     }
   },
   mounted() {
@@ -159,7 +173,7 @@ export default {
               </ul>
             </div>
 
-            <RouterLink to="/" class="dashboard-card-btn">
+            <RouterLink to="/quizzes" class="dashboard-card-btn">
               <span>*1 New Quiz* Go to Quizzes</span>
             </RouterLink>
           </div>
@@ -174,8 +188,8 @@ export default {
               </div>
             </div>
 
-            <RouterLink to="/" class="dashboard-card-btn">
-              <span>Go to Questionnaires</span>
+            <RouterLink to="#" @click="questionnaireClicked()" class="dashboard-card-btn">
+              <span>{{ user.profile.questionnaireRequired ?  'Go to Questionnaires' : 'View your results' }}</span>
             </RouterLink>
           </div>
         </Card>
@@ -191,7 +205,7 @@ export default {
             <template #card-title>Diet & Recipes</template>
             <RecipeIcon />
             <template #card-btn>
-              <RouterLink :to="{}" class="dashboard-card-btn active-btn">New Recipes for You</RouterLink>
+              <RouterLink to="/diet" class="dashboard-card-btn active-btn">New Recipes for You</RouterLink>
             </template>
           </Card>
         </div>
@@ -216,7 +230,7 @@ export default {
         <Card class="fullscript-card">
           <template #card-title>FullScript</template>
           <img src="@/assets/img/icon-6.svg" alt="Icon" />
-          <template #card-btn>Go to FullScript Account</template>
+          <a class="dashboard-card-btn" href="https://fullscript.com" target="_blank">Go to FullScript Account</a>
         </Card>
 
         <Card class="list-card">
@@ -227,7 +241,9 @@ export default {
             <li>Health Conditions</li>
             <li>Current Medications</li>
           </ul>
-          <template #card-btn>Go to Medical History & Data</template>
+          <RouterLink to="/profile" class="dashboard-card-btn">
+            <span>Go to Medical History & Data</span>
+          </RouterLink>
         </Card>
       </div>
 
@@ -260,7 +276,9 @@ export default {
               </div>
             </div>
           </div>
-          <template #card-btn>Go to Visits & Virtual Care</template>
+          <RouterLink to="/calendar" class="dashboard-card-btn">
+            <span>Go to Visits & Virtual Care</span>
+          </RouterLink>
         </Card>
 
         <Card class="list-card">
@@ -270,7 +288,9 @@ export default {
             <li>Email Address</li>
             <li>Password and Security</li>
           </ul>
-          <template #card-btn>Go to Account Settings</template>
+          <RouterLink to="/settings" class="dashboard-card-btn">
+            <span>Go to Account Settings</span>
+          </RouterLink>
         </Card>
       </div>
     </div>
