@@ -28,6 +28,7 @@ import LifestyleView from '@/views/Onboarding/LifestyleView.vue'
 import GetStartedView from '@/views/Onboarding/GetStartedView.vue'
 import CompleteInfoView from '@/views/Onboarding/CompleteInfoView.vue'
 import PatientProfileView from '@/views/PatientProfileView.vue'
+import NotFound from '@/views/404.vue'
 
 function isPatient(){
   const authStore = useAuthStore();
@@ -305,7 +306,13 @@ const router = createRouter({
         //       meta: { physician: false, patient: true },
         //     },
         //   ]
-        // }
+        // },
+        {
+          path: '/:pathMatch(.*)*',
+          name: 'NotFound',
+          component: NotFound,
+          meta: { physician: true, patient: true },
+        }
       ]
     },
   ]
