@@ -4,7 +4,7 @@ import { ref, computed } from 'vue'
 
 const email = ref("")
 const password = ref("")
-
+const isLoading = ref(false)
 const clinicStore = useClinicStore();
 
  const clinic = computed(() => {
@@ -12,8 +12,12 @@ const clinicStore = useClinicStore();
 })
 
 async function onSubmit() {
+    isLoading.value = true
     const authStore = useAuthStore();
-    await authStore.login(email.value, password.value);
+    const loggedIn = await authStore.login(email.value, password.value);
+    if(!loggedIn) {
+        isLoading.value = false
+    }
 }
 </script>
 
@@ -48,7 +52,10 @@ async function onSubmit() {
                             <label for="remember">Remember me</label>
                         </div>
 
-                        <button>Login</button>
+                        <button :disabled="isLoading">
+                            <div v-if="isLoading" id="loading"></div>
+                            <template v-else>Login</template>
+                        </button>
                     </div>
                 </Form>
             </div>

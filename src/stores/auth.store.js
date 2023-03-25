@@ -41,9 +41,11 @@ export const useAuthStore = defineStore({
                 router
                     .push({ path: '/' })
                     .then(() => { router.go() })
+                return true;
             } catch (error) {
                 const alertStore = useAlertStore();
                 alertStore.error(error.response.data.message);
+                return false;
             }
         },
 
