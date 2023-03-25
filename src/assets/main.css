@@ -3508,6 +3508,11 @@ input[type=number] {
 
 .diet-grid-item.pt-diet-item .diet-grid-item-content p {
   margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
+  text-overflow: ellipsis;
+  overflow: hidden;
   font-size: 18px;
   color: var(--text-color);
 }
@@ -3857,3 +3862,4 @@ input[type=number] {
 @-webkit-keyframes spin {
   to { -webkit-transform: rotate(360deg); }
 }
+
