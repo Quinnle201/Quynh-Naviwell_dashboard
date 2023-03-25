@@ -86,31 +86,37 @@ export default {
       clinicStore,
       user: userStore.user,
       messages: [],
-      appointments: []
+      appointments: [],
+      quizzes: []
     }
   },
   methods: {
     getMessages() {
       axiosInstance.get('/messages', { params: { "limit": 2 } })
                 .then(response => {
-                  console.log(response.data.data)
                   this.messages = response.data.data.messages
 
                 })
                 .catch(error => {
-                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+    },
+    getQuizzes() {
+      axiosInstance.get(`/quizzes`, { params: { "limit": 3 } })
+                .then(response => {
+                  this.quizzes = response.data.data.quizzes
+                })
+                .catch(error => {
                     this.alertStore.error(error.response.data.message)
                 });
     },
     getAppointments() {
       axiosInstance.get('/appointments', { params: { "upcoming": 0, "limit": 2 } })
                 .then(response => {
-                  console.log(response.data.data)
                   this.appointments = response.data.data.appointments
 
                 })
                 .catch(error => {
-                    console.log(error)
                     this.alertStore.error(error.response.data.message)
                 });
     }
@@ -118,6 +124,7 @@ export default {
   mounted() {
     this.getMessages();
     this.getAppointments()
+    this.getQuizzes()
   }
 
 };
@@ -148,9 +155,7 @@ export default {
               <img src="@/assets/img/icon-5.svg" alt="Icon">
 
               <ul>
-                <li>Daily Health & Wellness Questions</li>
-                <li>Weekly Health & Wellness Tracker</li>
-                <li>Test My Knowledge!</li>
+                <li :class="quiz.isCompleted ? 'completed' : ''" v-for="quiz in quizzes">{{ quiz.title }}</li>
               </ul>
             </div>
 

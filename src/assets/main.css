@@ -614,9 +614,19 @@ body {
   font-weight: 500;
 }
 
-.quiz-card-content ul li:before {
+.quiz-card-content ul li.completed:before {
   content: '';
   background-image: url('@/assets/img/checkmark.svg');
+  background-size: 24px 24px;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 0;
+}
+
+.quiz-card-content ul li:before {
+  content: '';
+  background-image: url('@/assets/img/xmark.svg');
   background-size: 24px 24px;
   width: 24px;
   height: 24px;
