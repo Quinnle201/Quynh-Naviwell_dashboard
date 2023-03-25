@@ -1,6 +1,7 @@
 <script>
 import { Form, Field, ErrorMessage, FieldArray  } from 'vee-validate';
 import * as Yup from 'yup';
+import LineChart from '@/components/LineChart.vue'
 import PatientInputGenerator from '@/components/Patient/PatientInputGenerator.vue'
 
 import AddIcon from '@/components/icons/IconAdd.vue';
@@ -20,6 +21,7 @@ export default {
         AddIcon,
         RemoveIcon,
         PatientInputGenerator,
+        LineChart
     },
     async mounted() {
         await this.getDxCodes();
@@ -121,7 +123,7 @@ export default {
                     name: 'contact.address',
                     as: 'input',
                     model: 'contact_info.address',
-                    classattr: 'fullw-input',
+                    // classattr: 'fullw-input',
                     rules: Yup.string().nullable()
                 },
                 {
@@ -129,7 +131,7 @@ export default {
                     name: 'contact.current-address',
                     as: 'input',
                     model: 'contact_info.current-address',
-                    classattr: 'fullw-input',
+                    // classattr: 'fullw-input',
                     rules: Yup.string().nullable()
                 },
                 {
@@ -137,7 +139,7 @@ export default {
                     name: 'contact.city',
                     as: 'input',
                     model: 'contact_info.city',
-                    classattr: 'fullw-input',
+                    // classattr: 'fullw-input',
                     rules: Yup.string().nullable()
                 },
                 {
@@ -145,7 +147,7 @@ export default {
                     name: 'contact.zip',
                     as: 'input',
                     model: 'contact_info.zip',
-                    classattr: 'fullw-input',
+                    // classattr: 'fullw-input',
                     rules: Yup.string().nullable()
                 },
                 {
@@ -153,7 +155,7 @@ export default {
                     name: 'user.phone',
                     as: 'input',
                     model: 'user.phone',
-                    classattr: 'fullw-input',
+                    // classattr: 'fullw-input',
                     rules: Yup.string().nullable(),
                 },
             ]
@@ -221,9 +223,65 @@ export default {
             ]
         }
 
+        const dataChart = {
+            data: {
+                datasets: [{
+                    type: 'line',
+                    label: "Weight",
+                    id: 'weight',
+                    data: [],
+                    borderColor: "#4766FF",
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    type: 'scatter',
+                    showLine: true,
+                    label: "Blood Presure",
+                    id: 'bp',
+                    data: [],
+                    borderColor: "#73D44D",
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    type: 'line',
+                    label: "Resting Heart Rate",
+                    id: 'resting_hr',
+                    data: [],
+                    borderColor: "#FF4D4D",
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    type: 'line',
+                    label: "Body Fat",
+                    id: 'bodyfat',
+                    data: [],
+                    borderColor: "#FFB54F",
+                    borderWidth: 2,
+                    fill: false,
+                },
+                ],
+                labels: []
+            },
+            options: {
+                responsive: true,
+                lineTension: 1,
+                scales: {
+                    xAxes: [{
+                        // display: false
+                    }],
+                    yAxes: [{
+                        // display: false
+                    }],
+                },
+            },
+        }
+
         const alertStore = useAlertStore();
         const authStore = useAuthStore()
-        return { generalInfo, contactInfo, emergencyContactInfo, currentMeds, alertStore, authStore, dxCodes: [], patient: null, }
+        return { generalInfo, contactInfo, emergencyContactInfo, currentMeds, alertStore, authStore, dxCodes: [], patient: null, dataChart}
     },
     methods: {
         async getDxCodes() {
@@ -361,17 +419,51 @@ export default {
                     </div>
 
                     <div class="profile-card">
-                        <div class="profile-card-title">Contact Information</div>
+                        <div class="profile-card-content">
+                            <div class="profile-card-title">Contact Information</div>
+                            <PatientInputGenerator :schema="contactInfo" />
+                        </div>
 
                         <div class="profile-card-content">
-                            <PatientInputGenerator :schema="contactInfo" />
+                            <div class="profile-card-title">Emergency Contact Information</div>
+                            <PatientInputGenerator :schema="emergencyContactInfo" />
                         </div>
                     </div>
 
                     <div class="profile-card">
-                        <div class="profile-card-content">
-                            <div class="profile-card-title">Emergency Contact Information</div>
-                            <PatientInputGenerator :schema="emergencyContactInfo" />
+                        <div class="patient-data light-bg patient-card pt-card">
+                            <div class="profile-card-title">Health Data(WIP)</div>
+
+                            <ul>
+                                <li>
+                                    Height
+                                    <span>5'11"</span>
+                                </li>
+                                <li>
+                                    Body Fat
+                                    <span>19</span>
+                                </li>
+                                <li>
+                                    Weight
+                                    <span>160</span>
+                                </li>
+                                <li>
+                                    BP
+                                    <span>50/120</span>
+                                </li>
+                                <li>
+                                    BMI
+                                    <span>20</span>
+                                </li>
+                                <li>
+                                    Resting HR
+                                    <span>60</span>
+                                </li>
+                            </ul>
+
+                            <div>
+                                <LineChart :data="dataChart" />
+                            </div>
                         </div>
 
                         <div class="profile-card-title">Current Medications and Supplements</div>
@@ -439,7 +531,8 @@ export default {
     }
 
     .profile-card:nth-child(2) {
-        flex: 0 0 28%;
+        flex: 0 0 30%;
+        justify-content: space-between;
     }
 
     .profile-card-title {
@@ -457,7 +550,7 @@ export default {
     }
 
     .profile-card-content ul li {
-        margin-bottom: 24px;
+        margin-bottom: 16px;
         display: grid;
         grid-template-columns: 30fr 70fr;
         align-items: center;
@@ -513,7 +606,7 @@ export default {
     .profile-card-content ul li input {
         background-color: #F4F4FF;
         width: 100%;
-        height: 48px;
+        height: 46px;
         padding-left: 22px;
         border-radius: 10px;
         font-size: 16px;
@@ -580,15 +673,16 @@ export default {
     }
 
     .medication-block fieldset {
+        width: 100%;
         margin-bottom: 16px;
     }
 
     .form-select {
-        height: 48px;
+        height: 46px;
     }
 
     .medication-block .info-form-item-wrapper {
-        padding-right: 24px;
+        padding-right: 35px;
         display: flex;
         justify-content: space-between;
     }
@@ -596,7 +690,7 @@ export default {
     .medication-block .info-form-item input {
         background-color: #F4F4FF;
         width: 100%;
-        height: 48px;
+        height: 46px;
         padding-left: 22px;
         border-radius: 10px;
         color: #000000;
@@ -606,7 +700,7 @@ export default {
 
     .info-form-add-btn.remove {
         position: absolute;
-        right: -16px;
+        right: 0;
     }
 
     .medication-block label.info-form-item {
@@ -625,5 +719,24 @@ export default {
     .profile-form .profile-btn {
         margin-left: auto;
         font-size: 16px;
+    }
+
+    .patient-data.light-bg.patient-card.pt-card {
+        margin-bottom: -8px;
+        padding: 0;
+    }
+
+    .patient-data.light-bg.patient-card.pt-card ul {
+        margin-top: 0;
+    }
+
+    .patient-data.light-bg.patient-card.pt-card ul li {
+        margin-bottom: 8px;
+    }
+
+    .patient-data.light-bg.patient-card.pt-card ul li span {
+        background-color: #F4F4F4;
+        font-size: 16px;
+        font-weight: 500;
     }
 </style>
