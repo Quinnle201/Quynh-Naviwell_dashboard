@@ -120,8 +120,8 @@ export default {
                 axiosInstance.delete(`/diet/${this.selectedDiet.id}`)
                     .then(response => {
                         this.alertStore.success('Diet deleted')
-                        const index = _findIndex(this.dietList, ['id', this.selectedDiet.id])
-                        this.dietList.splice(index, 1)
+                        const index = _findIndex(this.dietList[this.currentDietPage], ['id', this.selectedDiet.id])
+                        this.dietList[this.currentPage].splice(index, 1)
                     })
                     .catch(error => {
                         console.log(error)

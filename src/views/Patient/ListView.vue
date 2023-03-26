@@ -144,8 +144,8 @@ export default {
             this.getPatients()
         },
         updatePatientInfo(patient) {
-            const index = _findIndex(this.patients, ['id', patient.id])
-            this.patients.splice(index, 1, patient)
+            const index = _findIndex(this.patients[this.currentPage], ['id', patient.id])
+            this.patients[this.currentPage].splice(index, 1, patient)
         },
         sendMessage(values) {
             const formBody = {

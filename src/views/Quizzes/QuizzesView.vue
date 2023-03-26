@@ -64,8 +64,8 @@ export default {
                 this.closeDeleteModal()
                 axiosInstance.delete(`/quizzes/${quizId}`)
                     .then(response => {
-                        const quizIndex = this.quizzes.findIndex((elem) => elem.id == quizId)
-                        this.quizzes.splice(quizIndex, 1)
+                        const quizIndex = this.quizzes[this.currentPage].findIndex((elem) => elem.id == quizId)
+                        this.quizzes[this.currentPage].splice(quizIndex, 1)
                         this.alertStore.success('Quiz deleted')
                     })
                     .catch(error => {
