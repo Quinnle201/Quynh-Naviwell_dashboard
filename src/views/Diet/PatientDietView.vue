@@ -28,7 +28,7 @@ export default {
             if(this.dietList[this.currentDietPage]) {
                 return
             }
-            axiosInstance.get(`/diet?page=${this.currentPage}`, { params: { per_page: 4 } })
+            axiosInstance.get(`/diet?page=${this.currentDietPage}`, { params: { per_page: 4 } })
                 .then(response => {
                     const diets = response.data.data.diets
                     this.dietList[this.currentDietPage] = diets
