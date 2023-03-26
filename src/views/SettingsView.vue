@@ -3,7 +3,7 @@ import CalendarIcon from '@/components/icons/IconCalendar.vue'
 import { Form, Field } from 'vee-validate';
 
 import { axiosInstance, uploadFile, getFileUrlFromRef } from '@/helpers';
-import { useAlertStore, useFileStore } from '@/stores';
+import { useAlertStore, useFileStore, useAuthStore } from '@/stores';
 
 export default {
     components: {
@@ -14,9 +14,12 @@ export default {
     data() {
         const alertStore = useAlertStore()
         const fileStore = useFileStore()
+        const authStore = useAuthStore();
+
         return {
             alertStore,
             fileStore,
+            authStore,
             file: null,
             user: null,
         }
@@ -77,6 +80,18 @@ export default {
                     console.log(error)
                     this.alertStore.error(error.response.data.message)
                 });
+
+            if(values.password && values.new_password && values.new_password_confirmation) {
+                if(values.new_password != values.new_password_confirmation) {
+                    this.alertStore.error("New passwords don't match")
+                    return
+                }
+                this.updatePassword(this.authStore.user.email, values.password, values.new_password, values.new_password_confirmation)
+            }
+            
+        },
+        async updatePassword(email, oldPwd, newPwd, newPwdConf) {
+            await this.authStore.changePassword(email, oldPwd, newPwd, newPwdConf, false);
         }
     },
     mounted() {
@@ -117,6 +132,21 @@ export default {
                             Date of birth
                             <Field name="dob" type="date" />
                             <CalendarIcon />
+                        </label>
+
+                        <label for="password" class="settings-inner-input-date">
+                            Old password
+                            <Field name="password" type="password" />
+                        </label>
+
+                        <label for="new_password" class="settings-inner-input-date">
+                            New password
+                            <Field name="new_password" type="password" />
+                        </label>
+
+                        <label for="new_password_confirmation" class="settings-inner-input-date">
+                            Confirm new password
+                            <Field name="new_password_confirmation" type="password" />
                         </label>
 
                         <button type="submit" class="w-btn">Save</button>
