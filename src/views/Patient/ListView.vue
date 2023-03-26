@@ -6,6 +6,7 @@ import PatientDetails from '@/components/Patient/PatientDetails.vue'
 import Modal from '@/components/Modals/Modal.vue'
 import DeleteModal from '@/components/Modals/DeleteModal.vue'
 import ScheduleModal from '@/components/Modals/ScheduleModal.vue'
+import Pagination from '@/components/Pagination.vue';
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore, useFileStore } from '@/stores';
@@ -23,7 +24,8 @@ export default {
         Form,
         Field,
         DeleteModal,
-        ScheduleModal
+        ScheduleModal,
+        Pagination
     },
     mixins: [
         userMixin
@@ -56,7 +58,9 @@ export default {
                 {
                     text: 'Name Z-A', value: 'Name Z-A'
                 },
-            ]
+            ],
+            totalPages: 1,
+            currentPage: 1,
         }
     },
     mounted() {
@@ -118,16 +122,26 @@ export default {
             this.selectedPatient = null
         },
         getPatients() {
-            axiosInstance.get('/patients')
+            if(this.patients[this.currentPage]) {
+                return
+            }
+            axiosInstance.get(`/patients?page=${this.currentPage}`, { params: { per_page: 4 } })
                 .then(response => {
-                    this.patients = response.data.data.patients;
-                    this.patients.forEach(pt => {
+                    const patients = response.data.data.patients
+                    this.patients[this.currentPage] = patients
+                    this.totalPages = response.data.data.meta.last
+
+                    patients.forEach(pt => {
                         this.fileStore.getPhotoLinkForUser(pt.user)
                     });
                 })
                 .catch(error => {
                     this.alertStore.error(error.response.data.message)
                 });
+        },
+        onPageChange(page) {
+            this.currentPage = page;
+            this.getPatients()
         },
         updatePatientInfo(patient) {
             const index = _findIndex(this.patients, ['id', patient.id])
@@ -195,7 +209,7 @@ export default {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(patient, index) in patients" :key="patient.id">
+                        <tr v-for="(patient, index) in patients[currentPage]" :key="patient.id">
                             <td class="patients-img">
                                 <img :src="fileStore.profileAvatars(patient.user)" alt="">
                                 <RouterLink :to="{ name: 'patient', params: { id: patient.id } }"><span>{{
@@ -222,6 +236,13 @@ export default {
                     </tbody>
                 </table>
             </div>
+
+            <pagination
+                v-if="totalPages > 1"
+                :totalPages="totalPages"
+                :currentPage="currentPage"
+                @pagechanged="onPageChange"
+            />
         </div>
 
         <AddPatientModal v-show="isModalVisible" :patient="selectedPatient"
