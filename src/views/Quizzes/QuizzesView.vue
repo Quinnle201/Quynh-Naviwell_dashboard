@@ -8,6 +8,7 @@ import Pagination from '@/components/Pagination.vue';
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
+import _ from 'lodash';
 
 export default {
     components: {
@@ -28,7 +29,14 @@ export default {
             isDeleteModalVisible: false,
             totalPages: 1,
             currentPage: 1,
+            searchTerm: "",
         }
+    },
+    watch: {
+        searchTerm(newVal){
+            this.searchQuizzes(this, newVal)
+        }
+        
     },
     mounted() {
         this.getQuizList()
@@ -39,6 +47,12 @@ export default {
         },
     },
     methods: {
+        searchQuizzes: _.debounce(function(self, newVal) {
+            self.currentPage = 1
+            this.quizzes = []
+            self.getQuizList()
+
+        }, 250),
         showDetailModal(idx) {
             this.isDetailModalVisible === idx ? (this.isDetailModalVisible = true) : (this.isDetailModalVisible = idx);
         },
@@ -78,7 +92,7 @@ export default {
             if(this.quizzes[this.currentPage]) {
                 return
             }
-            axiosInstance.get(`/quizzes?page=${this.currentPage}`, { params: { per_page: 24 } })
+            axiosInstance.get(`/quizzes?page=${this.currentPage}`, { params: { per_page: 24, searchTerm: this.searchTerm } })
                 .then(response => {
                     const quizzes = response.data.data.quizzes
                     this.quizzes[this.currentPage] = quizzes
@@ -111,7 +125,7 @@ export default {
         <div class="quizzes-wrapper page-bg">
             <div class="quotes-search-wrapper">
                 <label class="quotes-search">
-                    <input placeholder="Search" type="search" autocomplete="off">
+                    <input placeholder="Search" type="search" autocomplete="off" v-model="searchTerm">
                     <SearchIcon />
                 </label>
             </div>
