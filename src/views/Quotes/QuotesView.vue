@@ -12,6 +12,7 @@ import Pagination from '@/components/Pagination.vue';
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
 import _findIndex from 'lodash/findIndex';
+import _ from 'lodash';
 
 export default {
     components: {
@@ -47,6 +48,7 @@ export default {
             }],
             totalPages: 1,
             currentPage: 1,
+            searchTerm: "",
         }
     },
     watch: {
@@ -60,12 +62,21 @@ export default {
                     })
                 }
             }
+        },
+        searchTerm(newVal){
+            this.searchQuotes(this, newVal)
         }
     },
     mounted() {
         this.getQuotes()
     },
     methods: {
+        searchQuotes: _.debounce(function(self, newVal) {
+            self.currentPage = 1
+            self.quotes = []
+            self.getQuotes()
+
+        }, 250),
         showModal(quote) {
             this.selectedQuote = quote
             this.isModalVisible = true;
@@ -84,7 +95,7 @@ export default {
             if(this.quotes[this.currentPage]) {
                 return
             }
-            axiosInstance.get(`/quotes?page=${this.currentPage}`, { params: { per_page: 12 } })
+            axiosInstance.get(`/quotes?page=${this.currentPage}`, { params: { per_page: 12, searchTerm: this.searchTerm } })
                 .then(response => {
                     const quotes = response.data.data.quotes
                     this.quotes[this.currentPage] = quotes
@@ -164,7 +175,7 @@ export default {
         <div class="quotes-wrapper page-bg">
             <div class="quotes-search-wrapper">
                 <label class="quotes-search">
-                    <input placeholder="Search" type="search" autocomplete="off">
+                    <input placeholder="Search" type="search" autocomplete="off" v-model="searchTerm">
                     <SearchIcon />
                 </label>
             </div>
