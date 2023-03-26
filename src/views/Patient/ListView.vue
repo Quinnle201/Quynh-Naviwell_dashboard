@@ -11,6 +11,7 @@ import Pagination from '@/components/Pagination.vue';
 import { axiosInstance } from '@/helpers';
 import { useAlertStore, useFileStore } from '@/stores';
 import _findIndex from 'lodash/findIndex';
+import _ from 'lodash';
 import userMixin from '@/mixins/user.js'
 import { Form, Field } from 'vee-validate';
 
@@ -61,10 +62,17 @@ export default {
             ],
             totalPages: 1,
             currentPage: 1,
+            searchTerm: "",
         }
     },
     mounted() {
         this.getPatients();
+    },
+    watch: {
+        searchTerm(newVal){
+            this.searchPatients(this, newVal)
+        }
+        
     },
     computed: {
         age() {
@@ -80,6 +88,12 @@ export default {
         }
     },
     methods: {
+        searchPatients: _.debounce(function(self, newVal) {
+            self.currentPage = 1
+            self.patients = []
+            self.getPatients()
+
+        }, 250),
         showScheduleModal(patient) {
             this.show = null
             this.isScheduleModalVisible = true
@@ -125,7 +139,7 @@ export default {
             if(this.patients[this.currentPage]) {
                 return
             }
-            axiosInstance.get(`/patients?page=${this.currentPage}`, { params: { per_page: 4 } })
+            axiosInstance.get(`/patients?page=${this.currentPage}`, { params: { per_page: 4, searchTerm: this.searchTerm } })
                 .then(response => {
                     const patients = response.data.data.patients
                     this.patients[this.currentPage] = patients
@@ -178,7 +192,7 @@ export default {
                 <div class="patient-search-wrapper">
                     <form class="" method="get">
                         <label class="patients-search search-input">
-                            <input placeholder="Search" type="search" autocomplete="off">
+                            <input placeholder="Search" type="search" autocomplete="off" v-model="searchTerm">
                             <SearchIcon />
                         </label>
                     </form>
