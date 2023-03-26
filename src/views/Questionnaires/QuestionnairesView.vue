@@ -1,18 +1,22 @@
 <script>
 import QuestionnaireIcon from '@/components/icons/IconQuestionnaire.vue'
+import Pagination from '@/components/Pagination.vue';
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
 
 export default {
     components: {
-        QuestionnaireIcon
+        QuestionnaireIcon,
+        Pagination
     },
     data() {
         const alertStore = useAlertStore()
         return {
             alertStore,
             quizzes: [],
+            totalPages: 1,
+            currentPage: 1,
         }
     },
     mounted() {
@@ -25,14 +29,19 @@ export default {
     },
     methods: {
         getQuizList() {
-            axiosInstance.get('/quizzes')
+            axiosInstance.get(`/quizzes?page=${this.currentPage}`, { params: { per_page: 10 } })
                 .then(response => {
                     this.quizzes = response.data.data.quizzes
+                    this.totalPages = response.data.data.meta.last
                 })
                 .catch(error => {
                     console.log(error)
                     this.alertStore.error(error.response.data.message)
                 });
+        },
+        onPageChange(page) {
+            this.currentPage = page;
+            this.getQuizList()
         }
     }
 }
@@ -63,6 +72,13 @@ export default {
                     <a v-else href="#">Completed</a>
                 </li>
             </ul>
+
+            <pagination
+                v-if="totalPages > 1"
+                :totalPages="totalPages"
+                :currentPage="currentPage"
+                @pagechanged="onPageChange"
+            />
         </div>
     </div>
 </template>

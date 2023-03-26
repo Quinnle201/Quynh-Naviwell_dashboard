@@ -4,6 +4,7 @@ import SearchIcon from '@/components/icons/IconSearch.vue'
 import EditIcon from '@/components/icons/IconEdit.vue'
 import DetailModal from '@/components/Modals/DetailModal.vue'
 import DeleteModal from '@/components/Modals/DeleteModal.vue'
+import Pagination from '@/components/Pagination.vue';
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
@@ -14,7 +15,8 @@ export default {
         SearchIcon,
         EditIcon,
         DetailModal,
-        DeleteModal
+        DeleteModal,
+        Pagination
     },
     data() {
         const alertStore = useAlertStore()
@@ -24,6 +26,8 @@ export default {
             selectedQuizId: null,
             isDetailModalVisible: false,
             isDeleteModalVisible: false,
+            totalPages: 1,
+            currentPage: 1,
         }
     },
     mounted() {
@@ -71,14 +75,19 @@ export default {
             }
         },
         getQuizList() {
-            axiosInstance.get('/quizzes')
+            axiosInstance.get(`/quizzes?page=${this.currentPage}`, { params: { per_page: 24 } })
                 .then(response => {
                     this.quizzes = response.data.data.quizzes
+                    this.totalPages = response.data.data.meta.last
                 })
                 .catch(error => {
                     console.log(error)
                     this.alertStore.error(error.response.data.message)
                 });
+        },
+        onPageChange(page) {
+            this.currentPage = page;
+            this.getQuizList()
         }
     }
 }
@@ -122,19 +131,12 @@ export default {
                 </div>
             </div>
 
-            <div class="pagination-wrapper">
-                <div class="pagination-item pagination-item-arrow-left">
-                    <img src="@/assets/img/select-icon.svg" alt="" />
-                </div>
-                <div class="pagination-item active">1</div>
-                <div class="pagination-item">2</div>
-                <div class="pagination-item">3</div>
-                <div class="pagination-item">...</div>
-                <div class="pagination-item">9</div>
-                <div class="pagination-item pagination-item-arrow-right">
-                    <img src="@/assets/img/select-icon.svg" alt="" />
-                </div>
-            </div>
+            <pagination
+                v-if="totalPages > 1"
+                :totalPages="totalPages"
+                :currentPage="currentPage"
+                @pagechanged="onPageChange"
+            />
         </div>
 
         <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal" @delete="deleteQuiz">
