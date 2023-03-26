@@ -78,7 +78,7 @@ export default {
             if(this.quizzes[this.currentPage]) {
                 return
             }
-            axiosInstance.get(`/quizzes?page=${this.currentPage}`, { params: { per_page: 1 } })
+            axiosInstance.get(`/quizzes?page=${this.currentPage}`, { params: { per_page: 24 } })
                 .then(response => {
                     const quizzes = response.data.data.quizzes
                     this.quizzes[this.currentPage] = quizzes
