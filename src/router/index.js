@@ -11,6 +11,7 @@ import SetPassword from '@/views/Auth/SetPassword.vue'
 import PatientsView from '@/views/Patient/ListView.vue'
 import PatientDetailView from '@/views/Patient/DetailView.vue'
 import CalendarView from '@/views/CalendarView.vue'
+import LabResultsView from '@/views/LabResultsView.vue'
 import QuotesView from '@/views/Quotes/QuotesView.vue'
 import AddQuoteView from '@/views/Quotes/AddView.vue'
 
@@ -28,6 +29,7 @@ import LifestyleView from '@/views/Onboarding/LifestyleView.vue'
 import GetStartedView from '@/views/Onboarding/GetStartedView.vue'
 import CompleteInfoView from '@/views/Onboarding/CompleteInfoView.vue'
 import PatientProfileView from '@/views/PatientProfileView.vue'
+import PatientLabResultsView from '@/views/PatientLabResultsView.vue'
 import NotFound from '@/views/404.vue'
 
 function isPatient(){
@@ -239,6 +241,18 @@ const router = createRouter({
           // component: CalendarView,
           component: () => isPatient() ? import('@/views/PatientCalendarView.vue') : import('@/views/CalendarView.vue'),
           meta: { physician: true, patient: true },
+        },
+        {
+          path: "lab-results",
+          name: "lab-results",
+          component: LabResultsView,
+          meta: { physician: true, patient: true },
+        },
+        {
+          path: "patient-lab-results",
+          name: "patient-lab-results",
+          component: PatientLabResultsView,
+          meta: { physician: false, patient: true },
         },
         {
           path: "messages",

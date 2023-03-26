@@ -1608,7 +1608,7 @@ button.vuecal__arrow {
 
 .patient-profile-left {
   width: 100%;
-  margin-right: 18px;
+  /* margin-right: 18px; */
   padding: 16px 26px;
   display: flex;
   justify-content: space-between;
@@ -1617,6 +1617,7 @@ button.vuecal__arrow {
 .patient-profile-left-info {
   display: flex;
   align-items: center;
+  margin-left: 18px;
 }
 
 .patient-profile-left-info-img {
@@ -3757,6 +3758,92 @@ input[type=number] {
   font-weight: 500;
 }
 
+
+/* lab results physician */
+.patients-table.lab-table th:last-child,
+.patients-table.lab-table td:last-child {
+  width: 30%;
+}
+
+.lab-file {
+  cursor: pointer;
+}
+
+.lab-file-inner {
+  background-color: var(--primary);
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 16px;
+}
+
+.lab-file-inner span {
+  max-width: 280px;
+  color: #FFFFFF;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.lab-file-inner .attach-icon {
+  padding-left: 16px;
+  box-sizing: content-box;
+}
+
+.lab-file-inner .attach-icon path {
+  fill: var(--main-color);
+}
+
+/* lab results patient */
+.results-wrapper {
+  height: calc(100% - 82px);
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  grid-auto-flow: row;
+  gap: 32px;
+}
+
+.results-wrapper .results-item {
+  background-color: #FFFFFF;
+  padding: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 16px;
+  border: 1px solid #FFFFFF;
+  overflow: hidden;
+  transition: .5s ease;
+}
+
+.results-wrapper .results-item-name {
+  font-size: 18px;
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.results-wrapper .results-item-date {
+  font-size: 16px;
+  color: #464646;
+}
+
+.results-wrapper .results-item-file {
+  margin-left: 12px;
+  display: flex;
+  cursor: pointer;
+}
+
+.results-wrapper .results-item-file span {
+  max-width: 180px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+}
 
 
 
