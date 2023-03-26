@@ -11,6 +11,7 @@ import DeleteModal from '@/components/Modals/DeleteModal.vue'
 import RoundBtn from '@/components/Buttons/RoundBtn.vue'
 import VueMultiselect from 'vue-multiselect'
 import PatientsIcon from '@/components/icons/IconPatients.vue'
+import Pagination from '@/components/Pagination.vue';
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
@@ -29,7 +30,8 @@ export default {
         DeleteModal,
         RoundBtn,
         VueMultiselect,
-        PatientsIcon
+        PatientsIcon,
+        Pagination
     },
     data() {
         const alertStore = useAlertStore()
@@ -53,13 +55,22 @@ export default {
                 label: 'Select All',
                 groups: ['Group 1', 'Group 2', 'Group 3', 'Group 4']
             }],
+            totalRecipePages: 0,
+            totalDietPages: 0,
+            currentPage: 1,
+            currentDietPage: 1
         };
     },
     methods: {
         getDiets() {
-            axiosInstance.get('/diet')
+            if(this.dietList[this.currentDietPage]) {
+                return
+            }
+            axiosInstance.get(`/diet?page=${this.currentDietPage}`, { params: { per_page: 20 } })
                 .then(response => {
-                    this.dietList = response.data.data.diets
+                    const diets = response.data.data.diets
+                    this.dietList[this.currentDietPage] = diets
+                    this.totalDietPages = response.data.data.meta.last
                 })
                 .catch(error => {
                     console.log(error)
@@ -67,9 +78,14 @@ export default {
                 });
         },
         getRecipes() {
-            axiosInstance.get('/recipes')
+            if(this.recipeList[this.currentPage]) {
+                return
+            }
+            axiosInstance.get(`/recipes?page=${this.currentPage}`, { params: { per_page: 16 } })
                 .then(response => {
-                    this.recipeList = response.data.data.recipes
+                    const recipes = response.data.data.recipes
+                    this.recipeList[this.currentPage] = recipes
+                    this.totalRecipePages = response.data.data.meta.last
                 })
                 .catch(error => {
                     console.log(error)
@@ -121,6 +137,15 @@ export default {
         },
         updateRecipe(id) {
             this.$router.push({ name: 'add-recipe', params: { id: id } })
+        },
+        onRecipePageChange(page) {
+            this.currentPage = page;
+            this.getRecipes()
+            
+        },
+        onDietPageChange(page) {
+            this.currentDietPage = page;
+            this.getDiets()
         }
     },
     computed: {
@@ -158,7 +183,7 @@ export default {
                     </div>
 
                     <div class="diet-grid">
-                        <div class="diet-grid-item" v-for="diet in dietList">
+                        <div class="diet-grid-item" v-for="diet in dietList[currentDietPage]">
                             <div class="diet-grid-item-content">
                                 <h6>{{diet.title}}</h6>
 
@@ -180,19 +205,12 @@ export default {
 
                     </div>
 
-                    <div class="pagination-wrapper">
-                        <div class="pagination-item pagination-item-arrow-left">
-                            <img src="@/assets/img/select-icon.svg" alt="" />
-                        </div>
-                        <div class="pagination-item active">1</div>
-                        <div class="pagination-item">2</div>
-                        <div class="pagination-item">3</div>
-                        <div class="pagination-item">...</div>
-                        <div class="pagination-item">9</div>
-                        <div class="pagination-item pagination-item-arrow-right">
-                            <img src="@/assets/img/select-icon.svg" alt="" />
-                        </div>
-                    </div>
+                    <pagination
+                        v-if="totalDietPages > 1"
+                        :totalPages="totalDietPages"
+                        :currentPage="currentDietPage"
+                        @pagechanged="onDietPageChange"
+                    />
                 </template>
 
                 <template v-slot:tabPanel-2>
@@ -211,7 +229,7 @@ export default {
                     </div>
 
                     <div class="diet-grid recipe-grid">
-                        <div class="diet-grid-item" v-for="recipe in recipeList">
+                        <div class="diet-grid-item" v-for="recipe in recipeList[currentPage]">
                             <div class="diet-grid-item-content">
                                 <h6>{{ recipe.title }}</h6>
 
@@ -231,19 +249,12 @@ export default {
                         </div>
                     </div>
 
-                    <div class="pagination-wrapper">
-                        <div class="pagination-item pagination-item-arrow-left">
-                            <img src="@/assets/img/select-icon.svg" alt="" />
-                        </div>
-                        <div class="pagination-item active">1</div>
-                        <div class="pagination-item">2</div>
-                        <div class="pagination-item">3</div>
-                        <div class="pagination-item">...</div>
-                        <div class="pagination-item">9</div>
-                        <div class="pagination-item pagination-item-arrow-right">
-                            <img src="@/assets/img/select-icon.svg" alt="" />
-                        </div>
-                    </div>
+                    <pagination
+                        v-if="totalRecipePages > 1"
+                        :totalPages="totalRecipePages"
+                        :currentPage="currentPage"
+                        @pagechanged="onRecipePageChange"
+                    />
                 </template>
             </tabs>
         </div>
