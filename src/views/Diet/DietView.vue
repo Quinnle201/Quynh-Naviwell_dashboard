@@ -16,6 +16,7 @@ import Pagination from '@/components/Pagination.vue';
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
 import _findIndex from 'lodash/findIndex';
+import _ from 'lodash';
 
 export default {
     components: {
@@ -58,15 +59,38 @@ export default {
             totalRecipePages: 0,
             totalDietPages: 0,
             currentPage: 1,
-            currentDietPage: 1
+            currentDietPage: 1,
+            searchDietTerm: "",
+            searchRecipeTerm: "",
         };
     },
+    watch: {
+        searchDietTerm(newVal){
+            this.searchDiets(this, newVal)
+        },
+        searchRecipeTerm(newVal) {
+            this.searchRecipes(this, newVal)
+        }
+        
+    },
     methods: {
+        searchDiets: _.debounce(function(self, newVal) {
+            self.currentDietPage = 1
+            self.dietList = []
+            self.getDiets()
+
+        }, 250),
+        searchRecipes: _.debounce(function(self, newVal) {
+            self.currentPage = 1
+            self.recipeList = []
+            self.getRecipes()
+
+        }, 250),
         getDiets() {
             if(this.dietList[this.currentDietPage]) {
                 return
             }
-            axiosInstance.get(`/diet?page=${this.currentDietPage}`, { params: { per_page: 20 } })
+            axiosInstance.get(`/diet?page=${this.currentDietPage}`, { params: { per_page: 20, searchTerm: this.searchDietTerm } })
                 .then(response => {
                     const diets = response.data.data.diets
                     this.dietList[this.currentDietPage] = diets
@@ -81,7 +105,7 @@ export default {
             if(this.recipeList[this.currentPage]) {
                 return
             }
-            axiosInstance.get(`/recipes?page=${this.currentPage}`, { params: { per_page: 16 } })
+            axiosInstance.get(`/recipes?page=${this.currentPage}`, { params: { per_page: 16, searchTerm: this.searchRecipeTerm } })
                 .then(response => {
                     const recipes = response.data.data.recipes
                     this.recipeList[this.currentPage] = recipes
@@ -171,7 +195,7 @@ export default {
                     <div class="diet-search-wrapper">
                         <form class="" method="get">
                             <label class="search-input">
-                                <input placeholder="Search" type="search" autocomplete="off">
+                                <input placeholder="Search" type="search" autocomplete="off" v-model="searchDietTerm">
                                 <SearchIcon />
                             </label>
                         </form>
@@ -217,7 +241,7 @@ export default {
                     <div class="diet-search-wrapper">
                         <form class="" method="get">
                             <label class="search-input">
-                                <input placeholder="Search" type="search" autocomplete="off">
+                                <input placeholder="Search" type="search" autocomplete="off" v-model="searchRecipeTerm">
                                 <SearchIcon />
                             </label>
                         </form>
