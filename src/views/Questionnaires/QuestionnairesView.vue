@@ -29,9 +29,13 @@ export default {
     },
     methods: {
         getQuizList() {
+            if(this.quizzes[this.currentPage]) {
+                return
+            }
             axiosInstance.get(`/quizzes?page=${this.currentPage}`, { params: { per_page: 10 } })
                 .then(response => {
-                    this.quizzes = response.data.data.quizzes
+                    const quizzes = response.data.data.quizzes
+                    this.quizzes[this.currentPage] = quizzes
                     this.totalPages = response.data.data.meta.last
                 })
                 .catch(error => {
@@ -60,7 +64,7 @@ export default {
             </div>
 
             <ul class="q-list">
-                <li v-for="(quiz, index) in quizzes" :key="quiz.id" :class="quiz.isCompleted ? 'completed' : ''">
+                <li v-for="(quiz, index) in quizzes[currentPage]" :key="quiz.id" :class="quiz.isCompleted ? 'completed' : ''">
                     <div class="q-list-icon">
                         <QuestionnaireIcon />
                     </div>

@@ -75,9 +75,13 @@ export default {
             }
         },
         getQuizList() {
-            axiosInstance.get(`/quizzes?page=${this.currentPage}`, { params: { per_page: 24 } })
+            if(this.quizzes[this.currentPage]) {
+                return
+            }
+            axiosInstance.get(`/quizzes?page=${this.currentPage}`, { params: { per_page: 1 } })
                 .then(response => {
-                    this.quizzes = response.data.data.quizzes
+                    const quizzes = response.data.data.quizzes
+                    this.quizzes[this.currentPage] = quizzes
                     this.totalPages = response.data.data.meta.last
                 })
                 .catch(error => {
@@ -113,7 +117,7 @@ export default {
             </div>
 
             <div class="quizzes-grid">
-                <div class="quizzes-grid-item" v-for="(quiz, index) in quizzes" :key="quiz.id">
+                <div class="quizzes-grid-item" v-for="(quiz, index) in quizzes[currentPage]" :key="quiz.id">
                     <div class="quizzes-grid-item-content">
                         <h6>{{ quiz.title }}</h6>
                         <div class="quizzes-grid-item-date">{{ localDate(quiz.created_at) }}</div>
