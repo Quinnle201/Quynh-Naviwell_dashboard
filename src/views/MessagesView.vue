@@ -47,10 +47,12 @@ export default {
             isChatModalVisible: false,
             isScheduleModalVisible: false,
             list: [],
+            filteredList: [],
             selectedPatient: null,
             messages: [],
             searchList: [],
             files: null,
+            chatSearchTerm: ""
         }
     },
     computed: {
@@ -75,6 +77,22 @@ export default {
         }
     },
     watch: {
+        chatSearchTerm: {
+            handler(value) {
+                if (value != null) {
+                    this.filteredList = this.list.filter(o => o.name.toLowerCase().includes(value.toLowerCase()));
+
+                } else {
+                    this.filteredList = list
+                }
+            }
+        },
+        list: {
+            handler(value) {
+                this.filteredList = value
+            },
+            immediate: true,
+        },
         selectedPatient: {
             handler(value) {
                 if (value != null) {
@@ -314,7 +332,7 @@ export default {
                     <div>
                         <form class="" method="get">
                             <label class="search-input">
-                                <input placeholder="Search" type="search" autocomplete="off">
+                                <input placeholder="Search" type="search" autocomplete="off" v-model="chatSearchTerm">
                                 <SearchIcon />
                             </label>
                         </form>
@@ -324,8 +342,8 @@ export default {
                 <div class="chat-content-wrapper">
                     <div class="chat-content-inner">
                         <ul class="chat-list">
-                            <li :class="msg.patient_id == selectedPatient?.id ? 'active-chat' : ''" class="chat-list-item"
-                                v-for="msg in list" @click="selectChat(msg)">
+                            <li :key="msg.patient_id" :class="msg.patient_id == selectedPatient?.id ? 'active-chat' : ''" class="chat-list-item"
+                                v-for="msg in filteredList" @click="selectChat(msg)">
                                 <div class="chat-list-item-img">
                                     <img :src="fileStore.profileAvatars(msg.patient.user)" alt="User photo" />
                                 </div>
