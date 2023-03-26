@@ -7,6 +7,7 @@ import EditIcon from '@/components/icons/IconEdit.vue'
 import VueMultiselect from 'vue-multiselect'
 import { Form, Field } from 'vee-validate';
 import { RouterLink } from 'vue-router'
+import Pagination from '@/components/Pagination.vue';
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
@@ -22,7 +23,8 @@ export default {
         VueMultiselect,
         Form,
         Field,
-        RouterLink
+        RouterLink,
+        Pagination
     },
     data() {
         const alertStore = useAlertStore();
@@ -43,6 +45,8 @@ export default {
                 label: 'Select All',
                 groups: ['Group 1', 'Group 2', 'Group 3', 'Group 4']
             }],
+            totalPages: 1,
+            currentPage: 1,
         }
     },
     watch: {
@@ -77,9 +81,14 @@ export default {
             this.isDeleteModalVisible = false;
         },
         getQuotes() {
-            axiosInstance.get('/quotes')
+            if(this.quotes[this.currentPage]) {
+                return
+            }
+            axiosInstance.get(`/quotes?page=${this.currentPage}`, { params: { per_page: 12 } })
                 .then(response => {
-                    this.quotes = response.data.data.quotes
+                    const quotes = response.data.data.quotes
+                    this.quotes[this.currentPage] = quotes
+                    this.totalPages = response.data.data.meta.last
                 })
                 .catch(error => {
                     console.log(error)
@@ -89,8 +98,8 @@ export default {
         deleteQuote() {
             axiosInstance.delete(`/quotes/${this.selectedQuote.id}`)
                 .then(response => {
-                    const index = _findIndex(this.quotes, ['id', this.selectedQuote.id])
-                    this.quotes.splice(index, 1);
+                    const index = _findIndex(this.quotes[this.currentPage], ['id', this.selectedQuote.id])
+                    this.quotes[this.currentPage].splice(index, 1);
                     this.closeDeleteModal()
                     this.closeModal()
                     this.alertStore.success('Quote removed')
@@ -104,8 +113,8 @@ export default {
             if (this.selectedQuote != null) {
                 axiosInstance.put(`/quotes/${this.selectedQuote.id}`, values)
                     .then(response => {
-                        const index = _findIndex(this.quotes, ['id', this.selectedQuote.id])
-                        this.quotes.splice(index, 1, response.data.data)
+                        const index = _findIndex(this.quotes[this.currentPage], ['id', this.selectedQuote.id])
+                        this.quotes[this.currentPage].splice(index, 1, response.data.data)
                         this.closeModal()
                         this.alertStore.success('Quote updated')
                     })
@@ -116,7 +125,7 @@ export default {
             } else {
                 axiosInstance.post('/quotes', values)
                     .then(response => {
-                        this.quotes.push(response.data.data)
+                        this.quotes[this.currentPage].push(response.data.data)
                         this.closeModal()
                         this.alertStore.success('Quote added')
                     })
@@ -125,6 +134,10 @@ export default {
                         this.alertStore.error(error.response.data.message)
                     });
             }
+        },
+        onPageChange(page) {
+            this.currentPage = page;
+            this.getQuotes()
         }
     }
 }
@@ -157,7 +170,7 @@ export default {
             </div>
 
             <div class="quotes-grid">
-                <div class="quotes-grid-item" v-for="quote in quotes">
+                <div class="quotes-grid-item" v-for="quote in quotes[currentPage]">
                     <div class="quotes-grid-item-date">
                         <div>{{ new Date(quote.created_at).format('MM/DD/YYYY') }}</div>
                     </div>
@@ -170,19 +183,12 @@ export default {
                 </div>
             </div>
 
-            <div class="pagination-wrapper">
-                <div class="pagination-item pagination-item-arrow-left">
-                    <img src="@/assets/img/select-icon.svg" alt="" />
-                </div>
-                <div class="pagination-item active">1</div>
-                <div class="pagination-item">2</div>
-                <div class="pagination-item">3</div>
-                <div class="pagination-item">...</div>
-                <div class="pagination-item">9</div>
-                <div class="pagination-item pagination-item-arrow-right">
-                    <img src="@/assets/img/select-icon.svg" alt="" />
-                </div>
-            </div>
+            <pagination
+                v-if="totalPages > 1"
+                :totalPages="totalPages"
+                :currentPage="currentPage"
+                @pagechanged="onPageChange"
+            />
 
             <Modal v-show="isModalVisible" @close="closeModal" class="quotes-modal">
                 <template #header>{{ selectedQuote? 'Edit Quote': 'Add New Quote' }}</template>
