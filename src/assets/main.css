@@ -3760,9 +3760,10 @@ input[type=number] {
 
 
 /* lab results physician */
-.patients-table.lab-table th:last-child,
-.patients-table.lab-table td:last-child {
-  width: 30%;
+.patients-table.lab-table tbody tr td:last-child {
+  width: 1%;
+  padding-right: 50px;
+  white-space: nowrap;
 }
 
 .lab-file {

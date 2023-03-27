@@ -36,7 +36,7 @@ const patientLinks = [
     icon: markRaw(CalendarIcon)
   },
   {
-    route: "/404",
+    route: "/patient-lab-results",
     icon: markRaw(ResultsIcon)
   },
   {
@@ -81,7 +81,7 @@ const physicianLinks = [
     icon: markRaw(PatientsIcon)
   },
   {
-    route: "/404",
+    route: "/lab-results",
     icon: markRaw(ResultsIcon)
   },
   {

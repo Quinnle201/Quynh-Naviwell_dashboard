@@ -40,14 +40,14 @@ export default {
                 </div>
             </div> -->
 
-            <div class="patients-table">
+            <div class="patients-table lab-table">
                 <table>
                     <thead>
                         <tr>
+                            <th>File</th>
                             <th>Result name</th>
                             <th>Patient</th>
                             <th>Date</th>
-                            <th>File</th>
                         </tr>
                     </thead>
                     <tbody>
