@@ -1048,6 +1048,7 @@ body {
 .checkbox input {
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   position: relative;
   outline: none;
   background: #FFFFFF;
@@ -2766,6 +2767,7 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .add-diet-inner {

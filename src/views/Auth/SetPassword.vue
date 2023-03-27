@@ -63,7 +63,7 @@ async function onSubmit() {
     </div>
 </template>
 
-<style>
+<style scoped>
     .login-wrapper {
         background-color: #F4F4FF;
         height: 100vh;

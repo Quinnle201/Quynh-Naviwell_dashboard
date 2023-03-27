@@ -49,8 +49,10 @@ async function onSubmit() {
                     </div>
                     <div class="form-group login-btn">
                         <div class="login-checkbox">
-                            <input type="checkbox" id="" name="remember" value="">
-                            <label for="remember">Remember me</label>
+                            <label for="remember">
+                                <input type="checkbox" id="remember" name="remember" value="">
+                                Remember me
+                            </label>
                         </div>
 
                         <button :disabled="isLoading">
@@ -75,13 +77,13 @@ async function onSubmit() {
     }
 
     .login-inner {
-        max-width: 25vw;
+        max-width: 480px;
         width: 100%;
         margin-top: -100px;
     }
 
     .login-inner-logo img {
-        max-height: 180px;
+        max-height: 19vh;
         margin: 0 auto;
     }
 
@@ -143,6 +145,10 @@ async function onSubmit() {
         font-weight: 500;
     }
 
+    .login-form .form-group input {
+        height: 50px;
+    }
+
     .login-form .login-btn {
         margin-top: 20px;
         display: flex;
@@ -163,19 +169,17 @@ async function onSubmit() {
         border-radius: 20px;
     }
 
-    .login-form .login-btn .login-checkbox {
-        display: flex;
-        align-items: center;
-    }
-
     .login-form .login-btn .login-checkbox label {
-        margin-left: 5px;
+        display: flex;
         font-size: 14px;
+        cursor: pointer;
     }
 
     .login-form .login-btn .login-checkbox input {
         width: 20px;
         height: 20px;
+        margin-right: 5px;
+        cursor: pointer;
     }
 
     .forgot-pass {
@@ -185,4 +189,41 @@ async function onSubmit() {
         text-align: right;
         cursor: pointer;
     }
+
+    @media screen and (max-width: 1440px) {}
+
+    @media screen and (max-width: 1199px) {}
+
+    @media screen and (max-width: 768px), 
+    screen and (max-height: 700px) {
+        .login-inner {
+            margin-top: 0;
+        }
+    }
+
+    @media screen and (max-width: 576px) {
+       .login-inner {
+            max-width: 85%;
+       }
+
+       .login-form {
+        margin-top: 40px;
+            padding: 18px 16px;
+       }
+
+       .login-form .login-btn {
+            margin-top: 8px;
+            align-items: center;
+       }
+
+       .login-form .login-btn button {
+            min-width: auto;
+            width: auto;
+            height: 40px;
+            font-size: 16px;
+            line-height: 40px;
+        }
+    }
+
+    @media screen and (max-width: 375px) {}
 </style>
