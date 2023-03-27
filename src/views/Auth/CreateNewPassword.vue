@@ -36,26 +36,24 @@ async function onSubmit() {
                         <span>{{clinic.description}}</span>
                     </div>
                 </div>
+
+                <div class="forgot-pass-text">
+                    <h6>Create new password</h6>
+                </div>
                 
                 <form @submit.prevent="onSubmit">
                     <div class="form-group">
-                        <label>Email</label>
-                        <input name="email" v-model="email" type="email" class="form-control" />
+                        <label>New password</label>
+                        <input name="new-password"  v-model="password" type="password" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label>Password</label>
-                        <input name="password"  v-model="password" type="password" class="form-control" />
-                        <div class="forgot-pass">Forgot password?</div>
+                        <label>Confirm new password</label>
+                        <input name="new-password"  v-model="password" type="password" class="form-control" />
                     </div>
                     <div class="form-group login-btn">
-                        <div class="login-checkbox">
-                            <input type="checkbox" id="" name="remember" value="">
-                            <label for="remember">Remember me</label>
-                        </div>
-
                         <button :disabled="isLoading">
                             <div v-if="isLoading" id="loading"></div>
-                            <template v-else>Login</template>
+                            <template v-else>Submit</template>
                         </button>
                     </div>
                 </Form>
@@ -127,7 +125,7 @@ async function onSubmit() {
     }
 
     .login-form form {
-        margin-top: 35px;
+        margin-top: 16px;
     }
 
     .login-form .form-group {
@@ -146,8 +144,8 @@ async function onSubmit() {
     .login-form .login-btn {
         margin-top: 20px;
         display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
+        justify-content: center;
+        align-items: center;
     }
 
     .login-form .login-btn button {
@@ -163,26 +161,15 @@ async function onSubmit() {
         border-radius: 20px;
     }
 
-    .login-form .login-btn .login-checkbox {
-        display: flex;
-        align-items: center;
+    .forgot-pass-text {
+        margin-top: 35px;
+        text-align: center;
+        color: var(--text-color);
     }
 
-    .login-form .login-btn .login-checkbox label {
-        margin-left: 5px;
-        font-size: 14px;
-    }
-
-    .login-form .login-btn .login-checkbox input {
-        width: 20px;
-        height: 20px;
-    }
-
-    .forgot-pass {
-        margin-top: 8px;
-        font-size: 16px;
-        color: var(--primary);
-        text-align: right;
-        cursor: pointer;
+    .forgot-pass-text h6 {
+        margin: 0;
+        font-size: 24px;
+        color: var(--text-color);
     }
 </style>
