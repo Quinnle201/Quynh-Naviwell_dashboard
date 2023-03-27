@@ -1,7 +1,9 @@
 <script>
-import { Form, Field, ErrorMessage } from 'vee-validate';
+import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate';
 import * as Yup from 'yup';
 import PatientInputGenerator from '@/components/Patient/PatientInputGenerator.vue'
+import RemoveIcon from '@/components/icons/IconRemoveCircle.vue';
+import AddIcon from '@/components/icons/IconAdd.vue';
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
@@ -15,7 +17,10 @@ export default {
         Form,
         Field,
         ErrorMessage,
+        FieldArray,
         PatientInputGenerator,
+        RemoveIcon,
+        AddIcon,
     },
     props: {
         patient: Object
@@ -34,7 +39,8 @@ export default {
         }
     },
     async mounted() {
-        await this.getDxCodes();
+        await this.getMedicine();
+
         if (this.patient != null) {
             this.setPatientData(this.patient)
         }
@@ -249,54 +255,22 @@ export default {
             ]
         }
 
-        const currentMeds = {
-            fields: [
-                {
-                    label: '',
-                    name: 'meds[0]',
-                    model: 'meds[0]',
-                    as: 'input',
-                    classattr: 'fullw-input',
-                    placeholder: "Medication Name, Dosage, Frequency",
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: '',
-                    name: 'meds[1]',
-                    model: 'meds[1]',
-                    as: 'input',
-                    classattr: 'fullw-input',
-                    placeholder: "Medication Name, Dosage, Frequency",
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: '',
-                    name: 'meds[2]',
-                    model: 'meds[2]',
-                    as: 'input',
-                    classattr: 'fullw-input',
-                    placeholder: "Medication Name, Dosage, Frequency",
-                    rules: Yup.string().nullable()
-                },
-
-            ]
-        }
 
         const alertStore = useAlertStore();
-        return { generalInfo, contactInfo, emergencyContactInfo, insuranceInfo, patientInfo, currentMeds, alertStore, dxCodes:[] }
+        return { generalInfo, contactInfo, emergencyContactInfo, insuranceInfo, patientInfo, alertStore, medicineArray: [] }
     },
     methods: {
         close() {
             this.$emit('close');
             this.resetPatientData()
         },
-        async getDxCodes() {
+        async getMedicine() {
             try {
-                const response = await axiosInstance.get('/dx-codes')
-                this.dxCodes = response.data.map(code => {
-                    return {'name': code.value, 'value': code.id };
+                const response = await axiosInstance.get('/medicine')
+                this.medicineArray = response.data.map(code => {
+                    return { 'name': code.name, 'value': code.id };
                 });
-            }  catch (error) {
+            } catch (error) {
                 console.log(error)
             }
         },
@@ -305,12 +279,12 @@ export default {
             pt.dob = new Date(pt.dob).format("YYYY/MM/DD");
             this.generalInfo.fields.forEach((item) => {
                 if (item.model) {
-                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                    this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
                 }
             })
             this.contactInfo.fields.forEach((item) => {
                 if (item.model) {
-                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                    this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
                 }
                 if (item.name == 'user.email') {
                     item.disabled = "true"
@@ -319,48 +293,41 @@ export default {
             })
             this.emergencyContactInfo.fields.forEach((item) => {
                 if (item.model) {
-                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                    this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
                 }
             })
             this.insuranceInfo.fields.forEach((item) => {
                 if (item.model) {
-                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                    this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
                 }
             })
             this.patientInfo.fields.forEach((item) => {
                 if (item.model) {
-                    this.$refs.populatedForm.setFieldValue(item.name, _get(pt, item.model));
+                    this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
                 }
             })
 
+            const drugs = [];
+            pt.meds.forEach((med, index) => {
+                var medValue = ""
+                var medType = ""
+                const medArray = med.split(":");
+                medType = medArray[0].trim();
+                medValue = medArray[1].trim();
+                drugs.push({ type: medType, amount: medValue });
 
-            this.currentMeds.fields.forEach((item) => {
-                if (item.model) {
-                    const med = _get(pt, item.model)
-                    var medValue = ""
-                    var medType = ""
-                    if (med) {
-                        const medArray = med.split(":");
-                        medType = this.dxCodes.find(({ value }) => value === medArray[0]).name;
-                        medValue = medArray[1] + " medications";
-                    }
-                    this.$refs.populatedForm.setFieldValue(item.name, medType + " - " + medValue);
-                }
-            })
+            });
 
-            if (pt.meds.length > this.currentMeds.fields.length) {
-                for (var i = 3; i < pt.meds.length; i++) {
-                    this.addMedRow()
-                    this.$refs.populatedForm.setFieldValue(`meds[${i}]`, pt.meds[i]);
-                }
-
+            if (drugs.length == 0) {
+                drugs.push({ type: '', amount: null });
+                drugs.push({ type: '', amount: null });
             }
+            this.$refs.addPatientForm.setFieldValue("drugs", drugs)
 
         },
         resetPatientData() {
             _find(this.contactInfo.fields, ['name', 'user.email']).disabled = undefined;
-            this.currentMeds.fields.length = 3;
-            this.$refs.populatedForm.setValues({})
+            this.$refs.addPatientForm.setValues({})
         },
         onSubmit(values) {
 
@@ -370,6 +337,30 @@ export default {
                 healthData.bmi = calculateBMI(height, healthData.weight)
                 values['health-data']['height'] = height
             }
+
+            const medications = values.drugs.filter(drug => drug.type)
+            const keysAndValues = medications.map(med => {
+                let amount = parseInt(med.amount, 10)
+                let type = med.type
+                if (Number.isNaN(amount)) {
+                    amount = 0;
+                }
+                return { type, amount }
+            })
+            const uniqueMedValues = keysAndValues.reduce(function (res, value) {
+                if (!res[value.type]) {
+                    res[value.type] = 0;
+                }
+                res[value.type] += value.amount;
+                return res;
+            }, {});
+            let medicine = []
+            Object.keys(uniqueMedValues).forEach(function (key, index) {
+                medicine.push(`${key}: ${uniqueMedValues[key]}`)
+            });
+
+            values.meds = medicine
+
             if (this.patient != null) {
                 axiosInstance.put(`/patients/${this.patient.id}`, values)
                     .then(response => {
@@ -391,21 +382,6 @@ export default {
                     });
             }
         },
-        addMedRow() {
-            this.currentMeds.fields.push({
-                label: '',
-                name: `meds[${this.currentMeds.fields.length}]`,
-                model: `meds[${this.currentMeds.fields.length}]`,
-                as: 'input',
-                classattr: 'fullw-input',
-                placeholder: "Medication Name, Dosage, Frequency",
-                rules: Yup.string().nullable()
-            })
-            const medsContainer = this.$refs.medsContainer.$refs.list;
-            this.$nextTick(() => {
-                medsContainer.scrollTop = medsContainer.scrollHeight;
-            });
-        }
     },
 };
 </script>
@@ -413,7 +389,7 @@ export default {
 <template>
     <Transition>
         <div class="addpatient-wrapper">
-            <Form @submit="onSubmit" ref="populatedForm">
+            <Form @submit="onSubmit" ref="addPatientForm">
                 <div class="addpatient-head">
                     <h4>{{ patient == null ? 'Create New Patient' : "Edit patient information" }}</h4>
                     <div>
@@ -473,12 +449,38 @@ export default {
                                 <PatientInputGenerator :schema="patientInfo" class="patientInfo" />
 
                                 <div class="addpatient-card-content-title">Current Medications and Supplements</div>
-
-                                <div class="medication-block">
-                                    <PatientInputGenerator :schema="currentMeds" ref="medsContainer" />
-
-                                    <button type="button" @click="addMedRow">Add Medication or
-                                        Supplement</button>
+                                <div class="profile-card-content">
+                                    <div class="medication-block">
+                                        <FieldArray name="drugs" v-slot="{ fields, push, remove }">
+                                            <fieldset v-for="(field, index) in fields" :key="field.key">
+                                                <div class="info-form-item-wrapper">
+                                                    <label class="info-form-item">
+                                                        Drug Class
+                                                        <Field as="select" :name="`drugs[${index}].type`"
+                                                            class="form-select">
+                                                            <option value="" disabled>Pick one</option>
+                                                            <option v-for="code in medicineArray" :value="code.value">{{
+                                                                code.name }}</option>
+                                                        </Field>
+                                                    </label>
+                                                    <label class="info-form-item">
+                                                        Number of Medications
+                                                        <Field type="number" :name="`drugs[${index}].amount`"
+                                                            placeholder="0" />
+                                                    </label>
+                                                    <div class="info-form-add-btn remove" v-if="fields.length > 1"
+                                                        @click="remove(index);">
+                                                        <RemoveIcon width="35" height="35" />
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <div class="info-form-add-btn" v-if="fields.length < 15"
+                                                @click="push({ type: '', amount: null });">
+                                                <AddIcon />
+                                                Add Medicine
+                                            </div>
+                                        </FieldArray>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -703,5 +705,4 @@ export default {
 
 .heightInput div label {
     margin: auto 16px auto 0;
-}
-</style>
+}</style>

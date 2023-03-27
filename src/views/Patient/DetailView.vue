@@ -9,10 +9,13 @@ import AddPatientModal from './AddModal.vue'
 import Modal from '@/components/Modals/Modal.vue'
 import DeleteModal from '@/components/Modals/DeleteModal.vue'
 import EditIcon from '@/components/icons/IconEdit.vue'
+import RemoveIcon from '@/components/icons/IconRemoveCircle.vue';
+import AddIcon from '@/components/icons/IconAdd.vue';
+
 import ScheduleModal from '@/components/Modals/ScheduleModal.vue'
 
 
-import { Form, Field } from 'vee-validate';
+import { Form, Field, FieldArray } from 'vee-validate';
 import { RouterLink } from 'vue-router'
 import { axiosInstance, uploadFile, downloadFile } from '@/helpers';
 import { useAlertStore, useFileStore } from '@/stores';
@@ -35,7 +38,10 @@ export default {
         DeleteModal,
         Form,
         Field,
-        EditIcon
+        FieldArray,
+        EditIcon,
+        RemoveIcon,
+        AddIcon
     },
     mixins: [
         userMixin
@@ -102,22 +108,22 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, patient_id: null, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, isScheduleModalVisible: false, medsData: false, isChatModalVisible: false,  dxCodes:[] }
+        return { patient, patient_id: null, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, isScheduleModalVisible: false, medsData: false, isChatModalVisible: false, medicineArray: [], patientDrugs: [] }
     },
     async mounted() {
-        await this.getDxCodes()
+        await this.getMedicine()
         const id = this.$route.params.id;
         this.getPatientById(id)
         this.getPatientHealthData(id)
     },
     methods: {
-        async getDxCodes() {
+        async getMedicine() {
             try {
-                const response = await axiosInstance.get('/dx-codes')
-                this.dxCodes = response.data.map(code => {
-                    return {'name': code.value, 'value': code.id };
+                const response = await axiosInstance.get('/medicine')
+                this.medicineArray = response.data.map(code => {
+                    return { 'name': code.name, 'value': code.id };
                 });
-            }  catch (error) {
+            } catch (error) {
                 console.log(error)
             }
         },
@@ -126,6 +132,23 @@ export default {
                 .then(response => {
                     this.patient = response.data.data;
                     this.fileStore.getPhotoLinkForUser(this.patient.user)
+
+                    this.patientDrugs = []
+                    this.patient.meds.forEach((med, index) => {
+                        var medValue = ""
+                        var medType = ""
+                        const medArray = med.split(":");
+                        medType = medArray[0].trim();
+                        medValue = medArray[1].trim();
+                        this.patientDrugs.push({ type: medType, amount: medValue });
+
+                    });
+
+                    if (this.patientDrugs.length == 0) {
+                        this.patientDrugs.push({ type: '', amount: null });
+                        this.patientDrugs.push({ type: '', amount: null });
+                    }
+
                 })
                 .catch(error => {
                     console.log(error)
@@ -193,6 +216,7 @@ export default {
         },
         showMeds() {
             this.medsData = true;
+            this.$refs.medicationForm.setFieldValue("drugs", this.patientDrugs)
         },
         showChatModal() {
             this.isChatModalVisible = true;
@@ -214,17 +238,11 @@ export default {
             this.isScheduleModalVisible = false
             this.patient_id = null
         },
-        addMeds: function () {
-            if (this.patient.meds.length < 50) this.patient.meds.push(undefined);
-            const medsContainer = this.$refs.medsContainer;
-            this.$nextTick(() => {
-                medsContainer.scrollTop = medsContainer.scrollHeight;
-            });
-        },
         updatePatientInfo(patient) {
             this.patient = patient
         },
         addMedsData(values) {
+            return
             axiosInstance.put(`/patients/${this.patient.id}`, values)
                 .then(response => {
                     this.updatePatientInfo(response.data.data)
@@ -321,7 +339,7 @@ export default {
         heightin() {
             return this.height[1].replace(/[^0-9.]/g, '');
         },
-        apptDate(){
+        apptDate() {
             return (appt) => {
                 if (!appt) {
                     return ""
@@ -350,7 +368,7 @@ export default {
                 var medValue = ""
                 var medType = ""
                 const medArray = med.split(":");
-                medType = this.dxCodes.find(({ value }) => value === medArray[0]).name;
+                medType = this.medicineArray.find(({ value }) => value === medArray[0]).name;
                 medValue = medArray[1] + " medications";
                 return medType + " - " + medValue
             }
@@ -427,7 +445,8 @@ export default {
                 <div class="patient-profile-right light-bg" v-if="patient.appointments[0]">
                     <h4 class="patient-heading">Next Appointment Scheduled</h4>
                     <span>{{ apptDate(patient.appointments[0]) }}</span>
-                    <RouterLink custom v-slot="{ navigate }" :to="{ name: 'calendar', params: { id: patient.appointments[0].id } }" >
+                    <RouterLink custom v-slot="{ navigate }"
+                        :to="{ name: 'calendar', params: { id: patient.appointments[0].id } }">
                         <button @click="navigate" @keypress.enter="navigate">Open in Calendar</button>
                     </RouterLink>
                 </div>
@@ -491,7 +510,7 @@ export default {
                             <!-- <div class="patient-status-item-btn">Send Email or Text Reminder</div> -->
                             <div class="patient-status-item-btn">Scored: {{ patient.completed_quizzes[0].score }}</div>
                         </div>
-                        <div v-else  class="patient-status-item">
+                        <div v-else class="patient-status-item">
                             <div class="patient-status-item-date">
                                 <div>No completed quizzes</div>
                                 <div></div>
@@ -507,13 +526,16 @@ export default {
                                 <div>{{ new Date(patient.questionnaireAssignDate).format("YYYY/MM/DD") }}</div>
                             </div>
 
-                            <div :class="questionnaire ? 'complete' : 'incomplete'" class="label-status">{{ questionnaire ? 'Complete' : 'Incomplete' }}</div>
+                            <div :class="questionnaire ? 'complete' : 'incomplete'" class="label-status">{{ questionnaire ?
+                                'Complete' : 'Incomplete' }}</div>
 
                             <div class="patient-status-item-duration">
-                                <div v-if="questionnaire">Completed on <span>{{new Date(questionnaire.created_at).format("YYYY/MM/DD") }}</span></div>
+                                <div v-if="questionnaire">Completed on <span>{{ new
+                                    Date(questionnaire.created_at).format("YYYY/MM/DD") }}</span></div>
                             </div>
 
-                            <div v-if="questionnaire" class="patient-status-item-btn" @click="downloadReport">View Questionnaire Report</div> 
+                            <div v-if="questionnaire" class="patient-status-item-btn" @click="downloadReport">View
+                                Questionnaire Report</div>
                         </div>
                     </div>
                 </div>
@@ -571,8 +593,8 @@ export default {
                             <li v-for="med in patient.meds">{{ medicine(med) }}</li>
                         </ul>
 
-                        <div class="patient-status-item-btn" @click=showMeds()>View and Edit Medications and Supplements
-                        </div>
+                        <!-- <div class="patient-status-item-btn" @click=showMeds()>View and Edit Medications and Supplements -->
+                        <!-- </div> -->
                     </div>
                 </div>
 
@@ -617,17 +639,33 @@ export default {
         <Modal v-show="medsData" @close="closeModal">
             <template #header>Medications and Supplements</template>
             <template #content>
-                <Form @submit="addMedsData">
-                    <div class="popup-content-item meds-input bl-bg" ref="medsContainer">
-                        <Field v-for="(med, index) in patient.meds" :key="index" :name="`meds[${index}]`" :value="med"
-                            v-slot="{ field }">
-                            <input class="popup-content-item-input" type="text"
-                                placeholder="Medication Name, Dosage, Frequency" v-bind="field" />
-                        </Field>
-                    </div>
-
-                    <button type="button" class="meds-button" @click="addMeds">Add Medication or Supplement</button>
-
+                <Form @submit="addMedsData" ref="medicationForm">
+                    <!-- <div class="popup-content-item meds-input bl-bg" ref="medsContainer"> -->
+                    <FieldArray name="drugs" v-slot="{ fields, push, remove }">
+                        <fieldset v-for="(field, index) in fields" :key="field.key">
+                            <div class="info-form-item-wrapper">
+                                <label class="info-form-item">
+                                    Drug Class
+                                    <Field as="select" :name="`drugs[${index}].type`" class="form-select">
+                                        <option value="" disabled>Pick one</option>
+                                        <option v-for="code in medicineArray" :value="code.value">{{ code.name }}</option>
+                                    </Field>
+                                </label>
+                                <label class="info-form-item">
+                                    Number of Medications
+                                    <Field type="number" :name="`drugs[${index}].amount`" placeholder="0" />
+                                </label>
+                                <div class="info-form-add-btn remove" v-if="fields.length > 1" @click="remove(index);">
+                                    <RemoveIcon width="35" height="35" />
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="info-form-add-btn" v-if="fields.length < 15" @click="push({ type: '', amount: null });">
+                            <AddIcon />
+                            Add Medicine
+                        </div>
+                    </FieldArray>
+                    <!-- </div> -->
                     <div class="popup-footer">
                         <button type="reset" class="w-btn w-btn-close" @click="closeModal">
                             Cancel
@@ -677,8 +715,7 @@ export default {
 
                     <div class="popup-content-item bl-bg">
                         <label class="label-w-icon">BMI
-                            <input name="bmi" type="text" class="popup-content-item-input" :value="bmi(values)"
-                                disabled />
+                            <input name="bmi" type="text" class="popup-content-item-input" :value="bmi(values)" disabled />
                         </label>
                     </div>
 
@@ -700,10 +737,10 @@ export default {
             </template>
         </Modal>
         <!-- Scheduling modal -->
-        <ScheduleModal v-show="isScheduleModalVisible" @close="closeScheduleModal" :patient_id="patient_id"/>
+        <ScheduleModal v-show="isScheduleModalVisible" @close="closeScheduleModal" :patient_id="patient_id" />
         <!-- update parient info modal -->
-        <AddPatientModal v-show="updateModal" :patient="patient" v-on:update:patient="updatePatientInfo($event)"
-            @close="closeModal" @showMeds="showMeds()">
+        <AddPatientModal v-show="updateModal" :patient="patient"
+            v-on:update:patient="updatePatientInfo($event)" @close="closeModal" @showMeds="showMeds()">
         </AddPatientModal>
         <!-- delete modal -->
         <DeleteModal v-show="isDeleteModalVisible" @close="closeModal">

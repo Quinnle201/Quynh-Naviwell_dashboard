@@ -105,10 +105,10 @@ export default {
                     this.alertStore.error(error.response.data.message)
                 });
         },
-        getMedCodes() {
-            axiosInstance.get('/dx-codes')
+        getMedine() {
+            axiosInstance.get('/medicine')
                 .then(response => {
-                    this.medCodes = response.data.map(i => ({ 'label': i.value, 'value': i.id }));
+                    this.medCodes = response.data.map(i => ({ 'label': i.name, 'value': i.id }));
                 })
                 .catch(error => {
                     console.log(error)
@@ -185,7 +185,7 @@ export default {
     mounted() {
         this.getFamilyHistory()
         this.getMedConditions()
-        this.getMedCodes()
+        this.getMedine()
         
     }
 }
@@ -316,14 +316,14 @@ export default {
                             <fieldset v-for="(field, index) in fields" :key="field.key">
                                 <div class="info-form-item-wrapper">
                                     <label class="info-form-item">
-                                        Drug type
+                                        Drug Class
                                         <Field as="select" :name="`drugs[${index}].type`">
                                             <option value="" disabled>Pick one</option>
                                             <option v-for="code in medCodes" :value="code.value">{{ code.label }}</option>
                                         </Field>
                                     </label>
                                     <label class="info-form-item">
-                                        Amount
+                                        Number of Medications
                                         <Field type="number" :name="`drugs[${index}].amount`" placeholder="0" />
                                     </label>
                                     <div class="info-form-add-btn" v-if="fields.length > 1" @click="remove(index);">
@@ -332,7 +332,7 @@ export default {
                                 </div>
                             </fieldset>
                             <div class="info-form-add-btn" v-if="fields.length < 15"
-                                @click="push({ type: '', amount: 0 });">
+                                @click="push({ type: '', amount: null });">
                                 <AddIcon />
                                 Add Medicine
                             </div>

@@ -1,5 +1,5 @@
 <script>
-import { Form, Field, ErrorMessage, FieldArray  } from 'vee-validate';
+import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate';
 import * as Yup from 'yup';
 import LineChart from '@/components/LineChart.vue'
 import PatientInputGenerator from '@/components/Patient/PatientInputGenerator.vue'
@@ -24,7 +24,7 @@ export default {
         LineChart
     },
     async mounted() {
-        await this.getDxCodes();
+        await this.getMedicine();
         this.getPatient()
 
     },
@@ -190,39 +190,6 @@ export default {
             ]
         }
 
-        const currentMeds = {
-            fields: [
-                {
-                    label: '',
-                    name: 'meds[0]',
-                    model: 'meds[0]',
-                    as: 'input',
-                    classattr: 'fullw-input',
-                    placeholder: "Medication Name, Dosage, Frequency",
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: '',
-                    name: 'meds[1]',
-                    model: 'meds[1]',
-                    as: 'input',
-                    classattr: 'fullw-input',
-                    placeholder: "Medication Name, Dosage, Frequency",
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: '',
-                    name: 'meds[2]',
-                    model: 'meds[2]',
-                    as: 'input',
-                    classattr: 'fullw-input',
-                    placeholder: "Medication Name, Dosage, Frequency",
-                    rules: Yup.string().nullable()
-                },
-
-            ]
-        }
-
         const dataChart = {
             data: {
                 datasets: [{
@@ -281,14 +248,14 @@ export default {
 
         const alertStore = useAlertStore();
         const authStore = useAuthStore()
-        return { generalInfo, contactInfo, emergencyContactInfo, currentMeds, alertStore, authStore, dxCodes: [], patient: null, dataChart}
+        return { generalInfo, contactInfo, emergencyContactInfo, alertStore, authStore, medicine: [], patient: null, dataChart }
     },
     methods: {
-        async getDxCodes() {
+        async getMedicine() {
             try {
-                const response = await axiosInstance.get('/dx-codes')
-                this.dxCodes = response.data.map(code => {
-                    return { 'name': code.value, 'value': code.id };
+                const response = await axiosInstance.get('/medicine')
+                this.medicine = response.data.map(code => {
+                    return { 'name': code.name, 'value': code.id };
                 });
             } catch (error) {
                 console.log(error)
@@ -327,37 +294,34 @@ export default {
 
 
             const drugs = [];
-            this.currentMeds.fields.forEach((item) => {
-                if (item.model) {
-                    const med = _get(pt, item.model)
-                    var medValue = ""
-                    var medType = ""
-                    if (med) {
-                        const medArray = med.split(":");
-                        medType = medArray[0].trim();
-                        medValue = medArray[1].trim();
-                        drugs.push({type: medType, amount: medValue});
-                    }
-                }
-            })
-            if(drugs.length == 0) {
-                drugs.push({type: '', amount: 0});
-                drugs.push({type: '', amount: 0});
+            pt.meds.forEach((med, index) => {
+                var medValue = ""
+                var medType = ""
+                const medArray = med.split(":");
+                medType = medArray[0].trim();
+                medValue = medArray[1].trim();
+                drugs.push({ type: medType, amount: medValue });
+
+            });
+
+            if (drugs.length == 0) {
+                drugs.push({ type: '', amount: null });
+                drugs.push({ type: '', amount: null });
             }
             this.$refs.populatedForm.setFieldValue("drugs", drugs)
         },
 
         onSubmit(values) {
 
-            if(!values.profile.dob) {
+            if (!values.profile.dob) {
                 this.alertStore.error("Date of birth is required!")
                 return;
             }
-            if(!values.profile.gender) {
+            if (!values.profile.gender) {
                 this.alertStore.error("Your gender is required!")
                 return;
             }
-            if(!values.user.phone) {
+            if (!values.user.phone) {
                 this.alertStore.error("Phone is required!")
                 return;
             }
@@ -474,23 +438,25 @@ export default {
                                     <fieldset v-for="(field, index) in fields" :key="field.key">
                                         <div class="info-form-item-wrapper">
                                             <label class="info-form-item">
-                                                Drug type
+                                                Drug Class
                                                 <Field as="select" :name="`drugs[${index}].type`" class="form-select">
                                                     <option value="" disabled>Pick one</option>
-                                                    <option v-for="code in dxCodes" :value="code.value">{{ code.name }}</option>
+                                                    <option v-for="code in medicine" :value="code.value">{{ code.name }}
+                                                    </option>
                                                 </Field>
                                             </label>
                                             <label class="info-form-item">
-                                                Amount
+                                                Number of Medications
                                                 <Field type="number" :name="`drugs[${index}].amount`" placeholder="0" />
                                             </label>
-                                            <div class="info-form-add-btn remove" v-if="fields.length > 1" @click="remove(index);">
+                                            <div class="info-form-add-btn remove" v-if="fields.length > 1"
+                                                @click="remove(index);">
                                                 <RemoveIcon width="35" height="35" />
                                             </div>
                                         </div>
                                     </fieldset>
                                     <div class="info-form-add-btn" v-if="fields.length < 15"
-                                        @click="push({ type: '', amount: 0 });">
+                                        @click="push({ type: '', amount: null });">
                                         <AddIcon />
                                         Add Medicine
                                     </div>
@@ -507,236 +473,236 @@ export default {
 </template>
 
 <style>
-    .profile-form {
-        display: flex;
-        flex-direction: column;
-    }
+.profile-form {
+    display: flex;
+    flex-direction: column;
+}
 
-    .profile-inner {
-        height: 100%;
-        padding-bottom: 30px;
-        display: flex;
-        justify-content: space-between;
-        gap: 32px;
-    }
+.profile-inner {
+    height: 100%;
+    padding-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+}
 
-    .profile-card {
-        background-color: #FFFEFE;
-        width: 100%;
-        padding: 0 30px 24px;
-        display: flex;
-        flex-direction: column;
-        border-radius: 16px;
-        box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
-    }
+.profile-card {
+    background-color: #FFFEFE;
+    width: 100%;
+    padding: 0 30px 24px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-    .profile-card:nth-child(2) {
-        flex: 0 0 30%;
-        justify-content: space-between;
-    }
+.profile-card:nth-child(2) {
+    flex: 0 0 30%;
+    justify-content: space-between;
+}
 
-    .profile-card-title {
-        margin-top: 24px;
-        margin-bottom: 18px;
-        font-size: 20px;
-        font-weight: 400;
-        line-height: 20px;
-        color: #000000;
-        text-align: center;
-    }
+.profile-card-title {
+    margin-top: 24px;
+    margin-bottom: 18px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #000000;
+    text-align: center;
+}
 
-    .profile-card-content ul {
-        list-style: none;
-    }
+.profile-card-content ul {
+    list-style: none;
+}
 
-    .profile-card-content ul li {
-        margin-bottom: 16px;
-        display: grid;
-        grid-template-columns: 30fr 70fr;
-        align-items: center;
-        gap: 26px;
-    }
+.profile-card-content ul li {
+    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: 30fr 70fr;
+    align-items: center;
+    gap: 26px;
+}
 
-    .profile-card-content ul li:last-child {
-        margin-bottom: 0;
-    }
+.profile-card-content ul li:last-child {
+    margin-bottom: 0;
+}
 
-    .profile-card-content ul li input+span[role="alert"] {
-        background-color: #FF0000;
-        width: 65%;
-        padding: 3px 6px;
-        position: absolute;
-        right: 0;
-        bottom: -34px;
-        color: #FFFFFF;
-        border-radius: 3px;
-        z-index: 9;
-    }
+.profile-card-content ul li input+span[role="alert"] {
+    background-color: #FF0000;
+    width: 65%;
+    padding: 3px 6px;
+    position: absolute;
+    right: 0;
+    bottom: -34px;
+    color: #FFFFFF;
+    border-radius: 3px;
+    z-index: 9;
+}
 
-    .profile-card-content ul li input+span[role="alert"]:before {
-        content: '';
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 8px solid #FF0000;
-        position: absolute;
-        top: -7px;
-        left: 7px;
-    }
+.profile-card-content ul li input+span[role="alert"]:before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #FF0000;
+    position: absolute;
+    top: -7px;
+    left: 7px;
+}
 
-    .profile-card-content ul li.fullw-input {
-        grid-template-columns: 1fr;
-        gap: 0;
-        text-align: center;
-    }
+.profile-card-content ul li.fullw-input {
+    grid-template-columns: 1fr;
+    gap: 0;
+    text-align: center;
+}
 
-    .profile-card-content ul li.fullw-input label {
-        margin-bottom: 3px;
-    }
+.profile-card-content ul li.fullw-input label {
+    margin-bottom: 3px;
+}
 
-    .profile-card-content ul li label {
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 16px;
-        color: #000000;
-        white-space: nowrap;
-    }
+.profile-card-content ul li label {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #000000;
+    white-space: nowrap;
+}
 
-    .profile-card-content ul li input {
-        background-color: #F4F4FF;
-        width: 100%;
-        height: 46px;
-        padding-left: 22px;
-        border-radius: 10px;
-        font-size: 16px;
-        color: #000000;
-        outline: none;
-        border: none;
-    }
+.profile-card-content ul li input {
+    background-color: #F4F4FF;
+    width: 100%;
+    height: 46px;
+    padding-left: 22px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #000000;
+    outline: none;
+    border: none;
+}
 
-    .profile-card-content .medication-block {
-        width: 100%;
-        max-height: 215px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
+.profile-card-content .medication-block {
+    width: 100%;
+    max-height: 215px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
-    .profile-card-content .medication-block::-webkit-scrollbar {
-        width: 8px;
-        height: 16px;
-    }
+.profile-card-content .medication-block::-webkit-scrollbar {
+    width: 8px;
+    height: 16px;
+}
 
-    .profile-card-content .medication-block::-webkit-scrollbar-track {
-        background-color: #DBDBDB;
-        border-radius: 8px;
-    }
+.profile-card-content .medication-block::-webkit-scrollbar-track {
+    background-color: #DBDBDB;
+    border-radius: 8px;
+}
 
-    .profile-card-content .medication-block::-webkit-scrollbar-thumb {
-        background-color: var(--primary);
-        border-radius: 8px;
-    }
+.profile-card-content .medication-block::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 8px;
+}
 
-    .profile-card-content .medication-block ul {
-        width: 100%;
-        max-height: 204px;
-        overflow-y: auto;
-    }
+.profile-card-content .medication-block ul {
+    width: 100%;
+    max-height: 204px;
+    overflow-y: auto;
+}
 
-    .profile-card-content .medication-block ul::-webkit-scrollbar {
-        width: 8px;
-    }
+.profile-card-content .medication-block ul::-webkit-scrollbar {
+    width: 8px;
+}
 
-    .profile-card-content .medication-block ul::-webkit-scrollbar-track {
-        background-color: #E7E7E7;
-        border-radius: 8px;
-    }
+.profile-card-content .medication-block ul::-webkit-scrollbar-track {
+    background-color: #E7E7E7;
+    border-radius: 8px;
+}
 
-    .profile-card-content .medication-block ul::-webkit-scrollbar-thumb {
-        background-color: #5C90F1;
-        border-radius: 8px;
-    }
+.profile-card-content .medication-block ul::-webkit-scrollbar-thumb {
+    background-color: #5C90F1;
+    border-radius: 8px;
+}
 
-    .profile-card-content .medication-block ul li {
-        margin-bottom: 16px;
-    }
+.profile-card-content .medication-block ul li {
+    margin-bottom: 16px;
+}
 
-    .profile-card-content .medication-block button {
-        margin-top: 16px;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 14px;
-        color: #0258BC;
-    }
+.profile-card-content .medication-block button {
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 14px;
+    color: #0258BC;
+}
 
-    .medication-block fieldset {
-        width: 100%;
-        margin-bottom: 16px;
-    }
+.medication-block fieldset {
+    width: 100%;
+    margin-bottom: 16px;
+}
 
-    .form-select {
-        height: 46px;
-    }
+.form-select {
+    height: 46px;
+}
 
-    .medication-block .info-form-item-wrapper {
-        padding-right: 35px;
-        display: flex;
-        justify-content: space-between;
-    }
+.medication-block .info-form-item-wrapper {
+    padding-right: 35px;
+    display: flex;
+    justify-content: space-between;
+}
 
-    .medication-block .info-form-item input {
-        background-color: #F4F4FF;
-        width: 100%;
-        height: 46px;
-        padding-left: 22px;
-        border-radius: 10px;
-        color: #000000;
-        outline: none;
-        border: none;
-    }
+.medication-block .info-form-item input {
+    background-color: #F4F4FF;
+    width: 100%;
+    height: 46px;
+    padding-left: 22px;
+    border-radius: 10px;
+    color: #000000;
+    outline: none;
+    border: none;
+}
 
-    .info-form-add-btn.remove {
-        position: absolute;
-        right: 0;
-    }
+.info-form-add-btn.remove {
+    position: absolute;
+    right: 0;
+}
 
-    .medication-block label.info-form-item {
-        flex: 0 0 48%;
-        font-size: 16px;
-        font-weight: 400;
-        color: #000000;
-    }
+.medication-block label.info-form-item {
+    flex: 0 0 48%;
+    font-size: 16px;
+    font-weight: 400;
+    color: #000000;
+}
 
-    .medication-block .info-form-add-btn {
-        font-size: 16px;
-        font-weight: 500;
-        cursor: pointer;
-    }
+.medication-block .info-form-add-btn {
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
 
-    .profile-form .profile-btn {
-        margin-left: auto;
-        font-size: 16px;
-    }
+.profile-form .profile-btn {
+    margin-left: auto;
+    font-size: 16px;
+}
 
-    .patient-data.light-bg.patient-card.pt-card {
-        margin-bottom: -8px;
-        padding: 0;
-    }
+.patient-data.light-bg.patient-card.pt-card {
+    margin-bottom: -8px;
+    padding: 0;
+}
 
-    .patient-data.light-bg.patient-card.pt-card ul {
-        margin-top: 0;
-    }
+.patient-data.light-bg.patient-card.pt-card ul {
+    margin-top: 0;
+}
 
-    .patient-data.light-bg.patient-card.pt-card ul li {
-        margin-bottom: 8px;
-    }
+.patient-data.light-bg.patient-card.pt-card ul li {
+    margin-bottom: 8px;
+}
 
-    .patient-data.light-bg.patient-card.pt-card ul li span {
-        background-color: #F4F4F4;
-        font-size: 16px;
-        font-weight: 500;
-    }
+.patient-data.light-bg.patient-card.pt-card ul li span {
+    background-color: #F4F4F4;
+    font-size: 16px;
+    font-weight: 500;
+}
 </style>
