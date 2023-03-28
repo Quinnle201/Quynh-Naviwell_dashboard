@@ -160,37 +160,39 @@ export default {
       </div>
     </div>
 
-    <div class="main-grid">
+    <div class="main-grid pt-grid">
       <div class="pt cards-wrapper">
         <Card class="quiz-card">
           <template #card-title>My Quizzes & Questionnaires</template>
-          <div class="quiz-card-inner">
-            <div class="quiz-card-content">
-              <img src="@/assets/img/icon-5.svg" alt="Icon">
+          <div>
+            <div class="quiz-card-inner">
+              <div class="quiz-card-content">
+                <img src="@/assets/img/icon-5.svg" alt="Icon">
 
-              <ul>
-                <li :class="quiz.isCompleted ? 'completed' : ''" v-for="quiz in quizzes">{{ quiz.title }}</li>
-              </ul>
-            </div>
-
-            <RouterLink to="/quizzes" class="dashboard-card-btn">
-              <span>*1 New Quiz* Go to Quizzes</span>
-            </RouterLink>
-          </div>
-
-          <div class="quiz-card-inner">
-            <div class="quiz-card-content">
-              <img src="@/assets/img/icon-4.png" alt="Icon">
-
-              <div>
-                <h4>Quarterly Health & Wellness Evaluation</h4>
-                <span>See improvement over a larger period of time during your health improvement journey</span>
+                <ul>
+                  <li :class="quiz.isCompleted ? 'completed' : ''" v-for="quiz in quizzes">{{ quiz.title }}</li>
+                </ul>
               </div>
+
+              <RouterLink to="/quizzes" class="dashboard-card-btn">
+                <span>*1 New Quiz* Go to Quizzes</span>
+              </RouterLink>
             </div>
 
-            <RouterLink to="#" @click="questionnaireClicked()" class="dashboard-card-btn">
-              <span>{{ user.profile.questionnaireRequired ?  'Go to Questionnaires' : 'View your results' }}</span>
-            </RouterLink>
+            <div class="quiz-card-inner">
+              <div class="quiz-card-content">
+                <img src="@/assets/img/icon-4.png" alt="Icon">
+
+                <div>
+                  <h4>Quarterly Health & Wellness Evaluation</h4>
+                  <span>See improvement over a larger period of time during your health improvement journey</span>
+                </div>
+              </div>
+
+              <RouterLink to="#" @click="questionnaireClicked()" class="dashboard-card-btn">
+                <span>{{ user.profile.questionnaireRequired ?  'Go to Questionnaires' : 'View your results' }}</span>
+              </RouterLink>
+            </div>
           </div>
         </Card>
 
@@ -281,7 +283,7 @@ export default {
           </RouterLink>
         </Card>
 
-        <Card class="list-card">
+        <Card class="list-card settings-card">
           <template #card-title>Account Settings</template>
           <ul>
             <li>Name, Date of Birth, Address</li>

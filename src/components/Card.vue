@@ -37,8 +37,9 @@
         align-self: center;
         font-size: 16px;
         font-weight: 500;
-        line-height: 16px;
+        line-height: 18px;
         color: var(--main-color);
+        text-align: center;
         cursor: pointer;
         transition: .3s ease;
     }
