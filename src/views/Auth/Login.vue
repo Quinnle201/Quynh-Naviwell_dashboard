@@ -70,7 +70,7 @@ async function onSubmit() {
     .login-wrapper {
         background-color: #F4F4FF;
         height: 100vh;
-        margin: -4rem -0.5rem 0 -7.5rem;
+        margin: -4rem -0.5rem 0 -7rem;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -190,9 +190,6 @@ async function onSubmit() {
         cursor: pointer;
     }
 
-    @media screen and (max-width: 1440px) {}
-
-    @media screen and (max-width: 1199px) {}
 
     @media screen and (max-width: 768px), 
     screen and (max-height: 700px) {
@@ -204,6 +201,10 @@ async function onSubmit() {
     @media screen and (max-width: 576px) {
        .login-inner {
             max-width: 85%;
+       }
+
+       .login-inner-logo img {
+        max-width: 180px;
        }
 
        .login-form {
@@ -225,5 +226,9 @@ async function onSubmit() {
         }
     }
 
-    @media screen and (max-width: 375px) {}
+    @media screen and (max-width: 375px) {
+        .login-inner {
+            max-width: 95%;
+       }
+    }
 </style>
