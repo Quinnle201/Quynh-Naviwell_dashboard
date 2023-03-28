@@ -71,12 +71,12 @@ const router = createRouter({
       name: 'resetpassword',
       component: ResetPassword,
       meta: { physician: true, patient: true },
-    },
-    {
-      path: '/create-password',
-      name: 'createpassword',
-      component: CreateNewPassword,
-      meta: { physician: true, patient: true },
+      beforeEnter: (to, from) => {
+        const authStore = useAuthStore();
+        if(authStore.user || authStore.claim != null){
+          return from
+        }
+      },
     },
     {
       path: '/onboarding',
@@ -349,7 +349,7 @@ const router = createRouter({
 router.beforeEach(async (to) => {
 
   // redirect to login page if not logged in and trying to access a restricted page 
-  const publicPages = ['/login', '/set-password'];
+  const publicPages = ['/login', '/set-password', '/reset-password' ];
   const authRequired = !publicPages.includes(to.path);
   const authStore = useAuthStore();
 

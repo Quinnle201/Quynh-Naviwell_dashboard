@@ -1,24 +1,91 @@
 <script setup>
 import { useAuthStore, useClinicStore } from '@/stores';
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
+const ScreenType = {
+    request: "request",
+    sent: "sent",
+    reset: "reset"
+}
 
 const email = ref("")
 const password = ref("")
+const password_confirmation = ref("")
+
+const code = ref("")
 const isLoading = ref(false)
 const clinicStore = useClinicStore();
+
+const screenType = ref(ScreenType.request);
+
 
  const clinic = computed(() => {
     return clinicStore.clinic
 })
 
+const route = useRoute()
+const router = useRouter()
+
 async function onSubmit() {
     isLoading.value = true
     const authStore = useAuthStore();
-    const loggedIn = await authStore.login(email.value, password.value);
+    const loggedIn = await authStore.setForgotPassword(email.value, code.value, password.value, password_confirmation.value);
     if(!loggedIn) {
         isLoading.value = false
+    } else {
+        router.push({ path: '/login' })
+    }
+    
+}
+
+async function onSubmitResetPassword() {
+    isLoading.value = true
+    const authStore = useAuthStore();
+    const pwdResetRequest = await authStore.resetPassword(email.value);
+    if(!pwdResetRequest) {
+        isLoading.value = false
+    } else {
+        screenType.value = ScreenType.sent
     }
 }
+
+const resetPayload = computed(() => {
+    if(!route.query?.code || !route.query.email){
+        return null
+    }
+    return {
+        email: route.query?.email,
+        code: route.query?.code,
+        name: route.query?.name,
+    }
+})
+
+
+const resetValues = ref({
+    email: null,
+    code: null,
+    name: null,
+})
+
+onMounted(() => {    
+  if(resetPayload.value) {
+    try {
+        const payload = resetPayload.value
+        if(payload.email && payload.code) {
+            screenType.value = ScreenType.reset
+            resetValues.value = payload
+            email.value = payload.email
+            code.value = payload.code
+        }
+    } catch {
+        screenType.value = ScreenType.request
+    }
+  } else {
+    screenType.value = ScreenType.request
+  }
+})
+
 </script>
 
 <template>
@@ -28,7 +95,7 @@ async function onSubmit() {
                 <img src="@/assets/img/naviwell-logo.png" alt="NaviWell Logo">
             </div>
 
-            <div class="login-form">
+            <div class="login-form" v-if="screenType == ScreenType.request">
                 <div class="login-form-img">
                     <img v-if="clinicStore.logoRef" :src="clinicStore.logoRef" :alt="clinic.name + ' Logo'">
                     <div>
@@ -42,15 +109,60 @@ async function onSubmit() {
                     <p>Please, enter the email address associated with your account</p>
                 </div>
                 
-                <form @submit.prevent="onSubmit">
+                <form @submit.prevent="onSubmitResetPassword">
                     <div class="form-group">
                         <label>Enter email address</label>
-                        <input name="password"  v-model="password" type="password" class="form-control" />
+                        <input name="email"  v-model="email" type="email" class="form-control" />
                     </div>
+                    <button type="button" @click="screenType = ScreenType.reset">Already have reset code?</button>
                     <div class="form-group login-btn">
                         <button :disabled="isLoading">
                             <div v-if="isLoading" id="loading"></div>
                             <template v-else>Reset password</template>
+                        </button>
+                    </div>
+                </Form>
+            </div>
+
+            <div class="login-form" v-else-if="screenType == ScreenType.sent">
+                <p>Password reset request sent</p>
+            </div>
+
+            <div class="login-form" v-else-if="screenType == ScreenType.reset">
+                <div class="login-form-img">
+                    <img v-if="clinicStore.logoRef" :src="clinicStore.logoRef" :alt="clinic.name + ' Logo'">
+                    <div>
+                        <span>{{ clinic.name }}</span>
+                        <span>{{ clinic.description }}</span>
+                    </div>
+                </div>
+
+                <div class="forgot-pass-text">
+                    <h6 v-show="resetValues.name">Welcome back {{ resetValues.name }},</h6>
+                    <h6>Create your new password</h6>
+                </div>
+
+                <form @submit.prevent="onSubmit">
+                    <div class="form-group" v-if="!resetValues.email">
+                        <label>Email</label>
+                        <input name="email" v-model="email" type="email" class="form-control" />
+                    </div>
+                    <div class="form-group" v-if="!resetValues.code">
+                        <label>Verification code</label>
+                        <input name="code" v-model="code" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>New password</label>
+                        <input name="new-password" v-model="password" type="password" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm new password</label>
+                        <input name="new-password" v-model="password_confirmation" type="password" class="form-control" />
+                    </div>
+                    <div class="form-group login-btn">
+                        <button :disabled="isLoading">
+                            <div v-if="isLoading" id="loading"></div>
+                            <template v-else>Submit</template>
                         </button>
                     </div>
                 </Form>

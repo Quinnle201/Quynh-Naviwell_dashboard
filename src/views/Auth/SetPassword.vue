@@ -1,6 +1,6 @@
 <script setup>
 import { useAuthStore, useClinicStore } from '@/stores';
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const authStore = useAuthStore();
 const data = JSON.parse(window.atob(authStore.user));

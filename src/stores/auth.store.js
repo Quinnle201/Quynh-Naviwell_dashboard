@@ -113,6 +113,30 @@ export const useAuthStore = defineStore({
             const data = response.data
             this.claim = data.data;
             localStorage.setItem('claim', JSON.stringify(this.claim));
+        },
+
+        async resetPassword(email) {
+            try {
+                const response = await axiosInstance.post('/reset-password', { email });
+                return true;
+
+            } catch (error) {
+                const alertStore = useAlertStore();
+                alertStore.error(error.response.data.message);
+                return false
+            } 
+        },
+
+        async setForgotPassword(email, code, password, password_confirmation) {
+            try {
+                const response = await axiosInstance.post('/set-password', { email, code, password, password_confirmation });
+                return true;
+
+            } catch (error) {
+                const alertStore = useAlertStore();
+                alertStore.error(error.response.data.message);
+                return false
+            }
         }
     }
 });

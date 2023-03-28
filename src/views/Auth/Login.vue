@@ -1,6 +1,7 @@
 <script setup>
 import { useAuthStore, useClinicStore } from '@/stores';
 import { ref, computed } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const email = ref("")
 const password = ref("")
@@ -45,7 +46,7 @@ async function onSubmit() {
                     <div class="form-group">
                         <label>Password</label>
                         <input name="password"  v-model="password" type="password" class="form-control" />
-                        <div class="forgot-pass">Forgot password?</div>
+                        <RouterLink to="/reset-password" class="forgot-pass">Forgot password?</RouterLink>
                     </div>
                     <div class="form-group login-btn">
                         <div class="login-checkbox">
