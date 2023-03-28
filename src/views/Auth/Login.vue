@@ -204,11 +204,11 @@ async function onSubmit() {
        }
 
        .login-inner-logo img {
-        max-width: 180px;
+            max-width: 180px;
        }
 
        .login-form {
-        margin-top: 40px;
+            margin-top: 40px;
             padding: 18px 16px;
        }
 
