@@ -11,6 +11,7 @@ import { axiosInstance } from '@/helpers';
 import { useAlertStore, useAuthStore } from '@/stores';
 
 import _get from 'lodash/get';
+import _find from 'lodash/find'
 
 export default {
     components: {
@@ -26,6 +27,7 @@ export default {
     async mounted() {
         await this.getMedicine();
         this.getPatient()
+        this.getPatientHealthData()
 
     },
     computed: {
@@ -248,7 +250,7 @@ export default {
 
         const alertStore = useAlertStore();
         const authStore = useAuthStore()
-        return { generalInfo, contactInfo, emergencyContactInfo, alertStore, authStore, medicine: [], patient: null, dataChart }
+        return { generalInfo, contactInfo, emergencyContactInfo, alertStore, authStore, medicine: [], patient: null, dataChart, dataLoaded: false }
     },
     methods: {
         async getMedicine() {
@@ -265,12 +267,42 @@ export default {
             axiosInstance.get(`/patients/${this.user.profile_id}`)
                 .then(response => {
                     const patient = response.data.data;
-                    this.setPatientData(patient);
                     this.patient = patient;
+                    this.setPatientData(patient);
+                    
                 })
                 .catch(error => {
+                    console.log(error)
                     this.alertStore.error(error.response.data.message)
                 });
+        },
+        getPatientHealthData() {
+            axiosInstance.get(`/patients/${this.user.profile_id}/health-data`)
+                .then(response => {
+                    this.buildChart(response.data['health-data'])
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        buildChart(healthData) {
+            healthData.forEach(data => {
+                var dataCreated = new Date(data.created_at).format('MM/DD/YY')
+                this.dataChart.data.labels.push(dataCreated)
+                for (const [key, value] of Object.entries(data)) {
+                    var chart = _find(this.dataChart.data.datasets, ['id', key]);
+                    var finalValue = value
+                    if (key == 'bp' && value != null) {
+                        const pressure = value.split('/')
+                        finalValue = { 'x': pressure[0], 'y': pressure[1] }
+                    }
+                    if (chart) {
+                        chart.data.push(finalValue)
+                    }
+                }
+            });
+            this.dataLoaded = true
         },
         setPatientData(patient) {
             const pt = Object.assign({}, patient);;
@@ -394,39 +426,39 @@ export default {
                         </div>
                     </div>
 
-                    <div class="profile-card">
+                    <div class="profile-card" v-if="patient">
                         <div class="patient-data light-bg patient-card pt-card">
-                            <div class="profile-card-title">Health Data(WIP)</div>
+                            <div class="profile-card-title">Health Data</div>
 
                             <ul>
-                                <li>
-                                    Height
-                                    <span>5'11"</span>
-                                </li>
-                                <li>
-                                    Body Fat
-                                    <span>19</span>
-                                </li>
-                                <li>
-                                    Weight
-                                    <span>160</span>
-                                </li>
-                                <li>
-                                    BP
-                                    <span>50/120</span>
-                                </li>
-                                <li>
-                                    BMI
-                                    <span>20</span>
-                                </li>
-                                <li>
-                                    Resting HR
-                                    <span>60</span>
-                                </li>
-                            </ul>
+                        <li>
+                            Height
+                            <span>{{ patient.current_health_data?.height ?? '-' }}</span>
+                        </li>
+                        <li>
+                            Body Fat
+                            <span>{{ patient.current_health_data?.bodyfat ?? '-' }}</span>
+                        </li>
+                        <li>
+                            Weight
+                            <span>{{ patient.current_health_data?.weight ?? '-' }}</span>
+                        </li>
+                        <li>
+                            BP
+                            <span>{{ patient.current_health_data?.bp ?? '-' }}</span>
+                        </li>
+                        <li>
+                            BMI
+                            <span>{{ patient.current_health_data?.bmi ?? '-' }}</span>
+                        </li>
+                        <li>
+                            Resting HR
+                            <span>{{ patient.current_health_data?.resting_hr ?? '-' }}</span>
+                        </li>
+                    </ul>
 
                             <div>
-                                <LineChart :data="dataChart" />
+                                <LineChart v-if="dataLoaded" :data="dataChart" />
                             </div>
                         </div>
 
