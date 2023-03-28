@@ -8,7 +8,6 @@ import Dashboard from '@/components/Dashboard/Dashboard.vue'
 import Login from '@/views/Auth/Login.vue'
 import SetPassword from '@/views/Auth/SetPassword.vue'
 import ResetPassword from '@/views/Auth/ResetPassword.vue'
-import CreateNewPassword from '@/views/Auth/CreateNewPassword.vue'
 
 import PatientsView from '@/views/Patient/ListView.vue'
 import PatientDetailView from '@/views/Patient/DetailView.vue'
