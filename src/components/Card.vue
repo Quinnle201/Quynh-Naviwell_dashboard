@@ -53,4 +53,15 @@
     .dashboard-card-btn:empty {
         display: none!important;
     }
+
+    @media screen and (max-width: 768px) {
+        .dashboard-card {
+            padding: 16px 18px;
+        }
+
+        .dashboard-card h4 {
+            font-size: 18px;
+            line-height: 18px;
+        }
+    }
 </style>
