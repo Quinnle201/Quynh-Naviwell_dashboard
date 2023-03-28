@@ -66,20 +66,20 @@ async function onSubmit() {
     .login-wrapper {
         background-color: #F4F4FF;
         height: 100vh;
-        margin: -4rem -0.5rem 0 -7.5rem;
+        margin: -4rem -0.5rem 0 -7rem;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
     .login-inner {
-        max-width: 25vw;
+        max-width: 480px;
         width: 100%;
         margin-top: -100px;
     }
 
     .login-inner-logo img {
-        max-height: 180px;
+        max-height: 19vh;
         margin: 0 auto;
     }
 
@@ -141,6 +141,10 @@ async function onSubmit() {
         font-weight: 500;
     }
 
+    .login-form .form-group input {
+        height: 50px;
+    }
+
     .login-form .login-btn {
         margin-top: 20px;
         display: flex;
@@ -171,5 +175,46 @@ async function onSubmit() {
         margin: 0;
         font-size: 24px;
         color: var(--text-color);
+    }
+
+    @media screen and (max-width: 768px), 
+    screen and (max-height: 700px) {
+        .login-inner {
+            margin-top: 0;
+        }
+    }
+
+    @media screen and (max-width: 576px) {
+       .login-inner {
+            max-width: 85%;
+       }
+
+       .login-inner-logo img {
+            max-width: 180px;
+       }
+
+       .login-form {
+            margin-top: 40px;
+            padding: 18px 16px;
+       }
+
+       .login-form .login-btn {
+            margin-top: 8px;
+            align-items: center;
+       }
+
+       .login-form .login-btn button {
+            min-width: auto;
+            width: auto;
+            height: 40px;
+            font-size: 16px;
+            line-height: 40px;
+        }
+    }
+
+    @media screen and (max-width: 375px) {
+        .login-inner {
+            max-width: 95%;
+       }
     }
 </style>
