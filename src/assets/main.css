@@ -2928,6 +2928,10 @@ input[type=number] {
   white-space: nowrap;
 }
 
+.settings-inner-input label:last-child {
+  margin-bottom: 0;
+}
+
 .settings-inner-input label input {
   width: 310px;
   height: 50px;
@@ -2936,7 +2940,7 @@ input[type=number] {
   font-size: 16px;
   color: #000000;
   border: 1px solid rgba(115, 115, 115, .1);
-  border-radius: 16px;
+  border-radius: 10px;
   outline: none;
 }
 
@@ -4021,6 +4025,28 @@ input[type=number] {
   .cards-wrapper-grid {
     gap: 16px;
   }
+
+  /* settings */
+  .settings-inner {
+    justify-content: center;
+  }
+
+  .settings-inner-img img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .settings-inner .border {
+    margin: 0 32px;
+  }
+
+  .settings-inner-input label {
+    margin-bottom: 16px;
+  }
+
+  .settings-inner-input button {
+    margin-top: 24px;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -4078,6 +4104,23 @@ input[type=number] {
     max-width: 40px;
     margin: 0 auto 16px;
   }
+
+  /* settings */
+  .settings-inner-img {
+    align-items: center;
+  }
+
+  .settings-inner {
+    flex-direction: column;
+  }
+
+  .settings-inner .border {
+    margin: 16px 0;
+  }
+
+  .settings-inner-input label input {
+    width: 100%;
+  }
 }
 
 @media only screen and (max-width: 576px) {
@@ -4097,6 +4140,26 @@ input[type=number] {
   .top-block .top-block-info {
     max-width: 100%;
     flex: auto;
+  }
+
+  /* settings */
+  .settings-inner-img img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .settings-inner-img button {
+    margin-top: 8px;
+    font-size: 16px;
+  }
+
+  .settings-inner-input label {
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
+
+  .settings-inner-input label input {
+    margin-top: 4px;
   }
 }
 
