@@ -3792,6 +3792,8 @@ input[type=number] {
 }
 
 .lab-file-inner .attach-icon {
+  min-width: 24px;
+  height: 40px;
   padding-left: 16px;
   box-sizing: content-box;
 }
@@ -3815,8 +3817,8 @@ input[type=number] {
   background-color: #FFFFFF;
   padding: 22px;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
   border-radius: 16px;
   border: 1px solid #FFFFFF;
   overflow: hidden;
@@ -3824,13 +3826,8 @@ input[type=number] {
 }
 
 .results-wrapper .results-item-name {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 500;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 
 .results-wrapper .results-item-date {
@@ -3839,13 +3836,15 @@ input[type=number] {
 }
 
 .results-wrapper .results-item-file {
-  margin-left: 12px;
+  width: 100%;
+  margin-top: 12px;
   display: flex;
+  justify-content: space-between;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .results-wrapper .results-item-file span {
-  max-width: 180px;
   font-size: 16px;
   font-weight: 500;
   line-height: 16px;
@@ -4025,7 +4024,13 @@ input[type=number] {
   }
 }
 
-@media screen and (max-width: 1280px) {}
+@media screen and (max-width: 1280px) {
+  /* lab results */
+  .results-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+  }
+}
 
 @media screen and (max-width: 1199px) {
   .top-block {
@@ -4093,6 +4098,11 @@ input[type=number] {
 
   .settings-inner-input button {
     margin-top: 24px;
+  }
+
+  /* lab results */
+  .results-wrapper {
+    gap: 16px;
   }
 }
 
@@ -4215,6 +4225,28 @@ input[type=number] {
   .chat-content-wrapper .chat-content-inner {
     padding: 16px 8px;
   }
+
+  /* lab results patient */
+  .results-wrapper .results-item {
+    padding: 8px 16px;
+  }
+
+  .results-wrapper .results-item-name {
+    font-size: 18px;
+  }
+
+  .results-wrapper .results-item-date {
+    font-size: 14px;
+  }
+
+  .results-wrapper .results-item-file span {
+    font-size: 14px;
+    line-height: 14px;
+  }
+
+  .lab-file-inner .attach-icon {
+    padding-left: 8px;
+  }
 }
 
 @media only screen and (max-width: 576px) {
@@ -4286,6 +4318,12 @@ input[type=number] {
 
   .q-list li {
     padding: 12px 12px;
+  }
+
+  /* lab results */
+  .results-wrapper {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: auto;
   }
 }
 
