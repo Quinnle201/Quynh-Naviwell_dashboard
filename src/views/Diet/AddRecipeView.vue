@@ -264,7 +264,7 @@ export default {
                     <div class="add-diet-day-grid-item title">Add Ingredients</div>
                     <div class="add-diet-day-grid">
                         <fieldset v-for="(field, index) in fields" :key="field.key">
-                            <button v-if="fields.length > 1" type="button" @click="remove(index)">Remove Ingredient</button>
+                            <button v-if="fields.length > 1" type="button" @click="remove(index)" class="remove">Remove Ingredient</button>
                             <div class="add-diet">
                                 <label>Ingredient</label>
                                 <Field type="text" :name="`ingredients[${index}]`" placeholder="e.g. 200gr quinoa" />
@@ -285,7 +285,7 @@ export default {
                         <div class="add-diet-day-grid-item title">How to cook</div>
                         <div class="add-diet-day-grid">
                             <fieldset v-for="(field, index) in fields" :key="field.key">
-                                <button v-if="fields.length > 1" type="button" @click="remove(index)">Remove Step</button>
+                                <button v-if="fields.length > 1" type="button" @click="remove(index)" class="remove">Remove Step</button>
                                 <div class="add-diet">
                                     <label>Step {{ index + 1 }}</label>
                                     <Field as="textarea" :name="`steps[${index}]`" placeholder="e.g. Bring 1 cup water to a boil in a pot, then add the quinoa. Cook for 15 minutes, until water is absorbed. Take off the heat and let cool." />

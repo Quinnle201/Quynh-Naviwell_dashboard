@@ -2865,6 +2865,13 @@ input[type=number] {
   justify-content: flex-start;
 }
 
+button.remove {
+  padding: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #FF0000;
+}
+
 .add-diet.description {
   margin-top: 16px;
 }
