@@ -3859,7 +3859,28 @@ input[type=number] {
 /* add lab result */
 .addresult-wrapper {}
 
+.addresult-wrapper .upload-photo {
+  margin-bottom: 16px;
+}
+
+.addresult-wrapper .upload-photo > div {
+  background-color: var(--primary);
+  width: 50px;
+  height: 50px;
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.addresult-wrapper .upload-photo > div svg path {
+  fill: #FFFFFF;
+}
+
 .input-wrapper {
+  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
 }
@@ -3868,7 +3889,7 @@ input[type=number] {
   background-color: #FFFEFE;
   max-width: 320px;
   width: 100%;
-  padding: 15px 30px;
+  padding: 12px 16px;
   border: none;
   border-radius: 16px;
   font-weight: 400;
@@ -3877,8 +3898,43 @@ input[type=number] {
   line-height: 24px;
   color: var(--text-color);
   outline: none;
+  position: relative;
 }
 
+.addresult-wrapper label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  color: #000000;
+}
+
+.input-wrapper .label-w-icon {
+  max-width: 320px;
+  margin: 6px 0 0 0;
+}
+
+.input-wrapper .label-w-icon svg {
+  width: 24px;
+  position: absolute;
+  right: 14px;
+  top: 40%;
+  z-index: 0;
+}
+
+.input-wrapper .label-w-icon svg path {
+  fill: #B8B8B8;
+}
+
+.addresult-btn {
+  margin-bottom: auto;
+}
+
+.addresult-btn .w-btn-close {
+  background-color: transparent;
+  margin-right: 16px;
+  border: 1px solid var(--primary);
+}
 
 
 /* CKEditor */
