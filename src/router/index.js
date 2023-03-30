@@ -12,7 +12,8 @@ import ResetPassword from '@/views/Auth/ResetPassword.vue'
 import PatientsView from '@/views/Patient/ListView.vue'
 import PatientDetailView from '@/views/Patient/DetailView.vue'
 import CalendarView from '@/views/CalendarView.vue'
-import LabResultsView from '@/views/LabResultsView.vue'
+import LabResultsView from '@/views/LabResults/LabResultsView.vue'
+import AddResultView from '@/views/LabResults/AddResultView.vue'
 import QuotesView from '@/views/Quotes/QuotesView.vue'
 import AddQuoteView from '@/views/Quotes/AddView.vue'
 
@@ -256,10 +257,22 @@ const router = createRouter({
           meta: { physician: true, patient: true },
         },
         {
-          path: "lab-results",
-          name: "lab-results",
-          component: LabResultsView,
-          meta: { physician: true, patient: true },
+          path: '/lab-results',
+          component: { render: () => h(RouterView) },
+          children: [
+            {
+              path: '',
+              name: 'lab-results',
+              component: LabResultsView,
+              meta: { physician: true, patient: true },
+            },
+            {
+              path: "add-result",
+              name: "add-result",
+              component: AddResultView,
+              meta: { physician: true, patient: true },
+            }
+          ]
         },
         {
           path: "patient-lab-results",

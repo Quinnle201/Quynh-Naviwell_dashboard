@@ -1,6 +1,7 @@
 <script>
 import SearchIcon from '@/components/icons/IconSearch.vue'
 import DownloadIcon from '@/components/icons/IconDownload.vue'
+import AddIcon from '@/components/icons/IconAdd.vue'
 import _findIndex from 'lodash/findIndex';
 import _ from 'lodash';
 import { Form, Field } from 'vee-validate';
@@ -9,9 +10,28 @@ export default {
     components: {
         SearchIcon,
         DownloadIcon,
+        AddIcon,
         Form,
         Field,
     },
+    data() {
+        return {
+            options: [
+                {
+                    text: 'Result name', value: 'Result name'
+                },
+                {
+                    text: 'Patient', value: 'Patient'
+                },
+                {
+                    text: 'Date', value: 'Date'
+                },
+                {
+                    text: 'File', value: 'File'
+                },
+            ],
+        }
+    }
 };
 </script>
 
@@ -22,7 +42,7 @@ export default {
         </div>
 
         <div class="patients-wrapper page-bg">
-            <!-- <div class="patients-top-wrapper">
+            <div class="patients-top-wrapper">
                 <div class="patient-search-wrapper">
                     <form class="" method="get">
                         <label class="patients-search search-input">
@@ -38,16 +58,21 @@ export default {
                         </option>
                     </select>
                 </div>
-            </div> -->
+
+                <RouterLink :to="{ name: 'add-result' }" class="add-button">
+                    <AddIcon />
+                    <button type="button">Add Lab Result</button>
+                </RouterLink>
+            </div>
 
             <div class="patients-table lab-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>File</th>
                             <th>Result name</th>
                             <th>Patient</th>
                             <th>Date</th>
+                            <th>File</th>
                         </tr>
                     </thead>
                     <tbody>

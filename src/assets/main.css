@@ -3850,6 +3850,29 @@ input[type=number] {
   line-height: 16px;
 }
 
+/* add lab result */
+.addresult-wrapper {}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-wrapper input {
+  background-color: #FFFEFE;
+  max-width: 320px;
+  width: 100%;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 16px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 16px;
+  line-height: 24px;
+  color: var(--text-color);
+  outline: none;
+}
+
 
 
 /* CKEditor */
