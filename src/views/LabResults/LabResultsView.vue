@@ -86,6 +86,11 @@ export default {
                                     <DownloadIcon class="attach-icon" />
                                 </div>
                             </td>
+                            <td>
+                                <RouterLink :to="{ name: 'add-result' }">
+                                    Edit
+                                </RouterLink>
+                            </td>
                         </tr>
                         <tr>
                             <td>lorem ipsum dolor sit amet consectetur adipiscing elit</td>
@@ -96,6 +101,11 @@ export default {
                                     <span>lorem-ipsum-dolor-sit-amet-consectetur-adipiscing-elit.pdf</span>
                                     <DownloadIcon class="attach-icon" />
                                 </div>
+                            </td>
+                            <td>
+                                <RouterLink :to="{ name: 'add-result' }">
+                                    Edit
+                                </RouterLink>
                             </td>
                         </tr>
                     </tbody>
