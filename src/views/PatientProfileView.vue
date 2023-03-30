@@ -279,7 +279,8 @@ export default {
         getPatientHealthData() {
             axiosInstance.get(`/patients/${this.user.profile_id}/health-data`)
                 .then(response => {
-                    this.buildChart(response.data['health-data'])
+                    const data = response.data.data
+                    this.buildChart(data['health-data'])
                 })
                 .catch(error => {
                     console.log(error)
