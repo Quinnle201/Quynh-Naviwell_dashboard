@@ -255,7 +255,7 @@ export default {
                     <div class="add-diet-day-grid">
                         <fieldset v-for="(field, index) in fields" :key="field.key">
                             <div class="add-diet-day-grid-item title">Day {{ index + 1 }}</div>
-                            <button v-if="fields.length > 1" type="button" @click="remove(index);dietData.duration--">Remove Day</button>
+                            <button v-if="fields.length > 1" type="button" @click="remove(index);dietData.duration--" class="remove">Remove Day</button>
                             <div class="add-diet">
                                 <label>Breakfast</label>
                                 <Field as="textarea" :name="`days[${index}].breakfast`" placeholder="e.g. Greek yogurt with strawberries and chia seeds" />

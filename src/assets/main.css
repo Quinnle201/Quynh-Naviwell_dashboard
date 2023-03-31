@@ -2636,8 +2636,9 @@ ul.messages-list li.physician-message .message-list-time {
   display: grid;
   grid-auto-flow: column;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(5, 1fr);
+  /* grid-template-rows: repeat(5, 1fr); */
   gap: 16px;
+  grid-auto-flow: row;
 }
 
 .diet-grid.recipe-grid {
@@ -2726,7 +2727,8 @@ ul.diet-grid-item-content-list li:before {
   flex-direction: column;
 }
 
-.add-diet {
+.add-diet.upload-photo {
+  width: fit-content;
   display: flex;
   flex-direction: column;
   margin-bottom: 16px;
@@ -2771,6 +2773,7 @@ input[type=number] {
 }
 
 .add-diet-inner {
+  margin-bottom: 16px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
@@ -2804,6 +2807,7 @@ input[type=number] {
 }
 
 .add-diet textarea {
+  width: 100%;
   height: 90px;
   resize: none;
 }
@@ -2848,12 +2852,11 @@ input[type=number] {
 }
 
 .add-diet-day-grid {
+  margin-bottom: 16px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
 }
-
-/* .add-diet-day-grid-item {} */
 
 .add-diet-day-grid-item.title {
   font-weight: 500;
@@ -2866,6 +2869,12 @@ input[type=number] {
   justify-content: flex-start;
 }
 
+.add-diet-wrapper .addquote-selects {
+  margin-bottom: 0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
 button.remove {
   padding: 0;
   font-size: 12px;
@@ -2874,7 +2883,7 @@ button.remove {
 }
 
 .add-diet.description {
-  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .add-diet.description textarea {
@@ -4114,6 +4123,21 @@ button.remove {
     padding: 4px 16px;
     font-size: 16px;
   }
+
+  /* diet/recipes */
+  .diet-search-wrapper, 
+  .diet-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .diet-search-wrapper .add-button {
+    grid-column: 3;
+  }
+
+  .add-diet-inner, 
+  .add-diet-day-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media screen and (max-width: 1280px) {
@@ -4121,6 +4145,11 @@ button.remove {
   .results-wrapper {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(12, 1fr);
+  }
+
+  /* diet/recipes */
+  .add-diet.description textarea {
+    width: 100%;
   }
 }
 
@@ -4241,6 +4270,10 @@ button.remove {
   .recipe-details-dir-item {
     max-width: 100%;
   }
+
+  .add-diet-wrapper .addquote-selects {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media screen and (max-width: 992px) {
@@ -4252,6 +4285,30 @@ button.remove {
 
   .q-list li {
     align-items: flex-start;
+  }
+
+  /* diet-recipes */
+  .diet-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .diet-search-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .add-diet-inner, .add-diet-day-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .add-diet-head .add-diet input,
+  .add-diet input {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .steps-wrapper .add-diet-day-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -4424,9 +4481,17 @@ button.remove {
   .recipe-details-descr-labels {
     justify-content: center;
   }
+
+  .add-button button {
+    font-size: 16px;
+  }
+
+  .add-diet-wrapper .addquote-selects {
+    grid-template-columns: 1fr;
+  }
 }
 
-@media only screen and (max-width: 576px) {
+@media screen and (max-width: 576px) {
   .pg-header .header-logo,  
   .quote {
     display: none;
@@ -4520,6 +4585,38 @@ button.remove {
 
   .recipe-details-aside img {
     height: 24vh;
+  }
+
+  /* diet-recipes */
+  .diet-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-button svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .add-button button {
+    display: none;
+  }
+
+  .add-diet-inner, 
+  .add-diet-day-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-diet-btns {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .add-diet-btns .w-btn {
+    min-width: auto;
+  }
+
+  .steps-wrapper .add-diet-day-grid {
+    grid-template-columns: 1fr;
   }
 }
 
