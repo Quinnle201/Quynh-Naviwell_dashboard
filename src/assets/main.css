@@ -1933,7 +1933,6 @@ button.vuecal__arrow {
 .quotes-search-wrapper {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  margin-right: 28px;
 }
 
 .quotes-search {
@@ -4182,6 +4181,13 @@ button.remove {
   .calendar-wrapper .vuecal__flex.weekday-label {
     font-size: 16px;
   }
+
+  /* quotes */
+  .quotes-search-wrapper, 
+  .quotes-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 @media screen and (max-width: 1199px) {
@@ -4707,6 +4713,42 @@ button.remove {
 
   .vuecal__title-bar {
     justify-content: flex-start;
+  }
+
+  /* quotes */
+  /* .quotes-btns-wrapper .add-button {
+    display: flex;
+    flex-direction: column;
+  } */
+
+  .page-wrapper.quotes .layout-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-wrapper.quotes .layout-wrapper h3 {
+    margin-bottom: 8px;
+  }
+
+  .quotes-btns-wrapper .add-button button {
+    width: 100%;
+    display: block;
+    text-align: left;
+  }
+
+  .quotes-grid-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .quotes-grid-item-content {
+    padding: 6px 0;
+  }
+
+  .quotes-grid-item-content p {
+    max-width: 100%;
+    -webkit-line-clamp: unset;
+    overflow: visible;
   }
 }
 

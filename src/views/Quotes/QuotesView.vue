@@ -155,7 +155,7 @@ export default {
 </script>
 
 <template>
-    <div class="page-wrapper">
+    <div class="page-wrapper quotes">
         <div class="layout-wrapper">
             <h3>Inspirational quotes</h3>
 
