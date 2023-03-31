@@ -138,4 +138,14 @@
     background-color: var(--primary);
     border-radius: 8px;
   }
+  @media screen and (max-width: 768px) {
+    .popup-overlay .popup {
+      max-width: unset;
+      min-width: 80vw;
+    }
+
+    .popup-overlay .popup .w-btn {
+      min-width: auto;
+    }
+  }
 </style>
