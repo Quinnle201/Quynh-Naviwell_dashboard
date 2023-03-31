@@ -4188,6 +4188,17 @@ button.remove {
     grid-template-columns: 1fr;
     gap: 16px;
   }
+
+  .addquote-wrapper .addquote-grid {
+    margin-bottom: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+  }
+
+  .addquote-wrapper .add-quote-btn {
+    margin-bottom: 32px;
+  }
 }
 
 @media screen and (max-width: 1199px) {
@@ -4670,13 +4681,19 @@ button.remove {
     grid-template-columns: 1fr;
   }
 
-  .add-diet-btns {
+  .add-diet-btns,
+  .addquote-btns {
     display: flex;
     justify-content: space-between;
   }
 
-  .add-diet-btns .w-btn {
+  .add-diet-btns .w-btn, 
+  .addquote-btns .w-btn {
     min-width: auto;
+  }
+
+  .addquote-btns .w-btn-close {
+    margin-right: 0;
   }
 
   .steps-wrapper .add-diet-day-grid {
@@ -4749,6 +4766,10 @@ button.remove {
     max-width: 100%;
     -webkit-line-clamp: unset;
     overflow: visible;
+  }
+
+  .addquote-wrapper .addquote-grid {
+    grid-template-columns: 1fr;
   }
 }
 
