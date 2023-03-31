@@ -216,6 +216,7 @@ body {
 
 .page-wrapper {
   padding: 22px 8px 0;
+  margin-bottom: 16px;
 }
 
 .layout-wrapper {
@@ -3821,13 +3822,14 @@ button.remove {
   margin-bottom: 32px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(8, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   grid-auto-flow: row;
   gap: 32px;
 }
 
 .results-wrapper .results-item {
   background-color: #FFFFFF;
+  max-height: 220px;
   padding: 22px;
   display: flex;
   flex-direction: column;
@@ -3864,8 +3866,6 @@ button.remove {
 }
 
 /* add lab result */
-.addresult-wrapper {}
-
 .addresult-wrapper .upload-photo {
   margin-bottom: 16px;
 }
@@ -4125,6 +4125,14 @@ button.remove {
 }
 
 @media screen and (max-width: 1199px) {
+  .pg-header .header-datetime {
+    flex-direction: column;
+  }
+
+  .header-datetime span:first-child {
+    margin-right: 0;
+  }
+
   .top-block {
     width: calc(100% - 16px);
     min-height: 120px;
@@ -4196,6 +4204,43 @@ button.remove {
   .results-wrapper {
     gap: 16px;
   }
+  
+  /* patient diet/recipes */
+  /* .diet-wrapper, 
+  .diet-tabs {
+    height: auto;
+  } */
+
+  .diet-grid.pt-diet-grid {
+    margin-bottom: 0;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 16px;
+  }
+  
+  .diet-grid.pt-recipe-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .diet-grid-item.pt-diet-item img {
+    max-width: 50%;
+    min-width: auto;
+    width: 100%;
+  }
+
+  .diet-grid-item.pt-recipe-item img {
+    max-height: 240px;
+  }
+
+  /* recipe details */
+  .recipe-details-aside {
+    flex: 0 0 45%;
+  }
+
+  .recipe-details-dir-item {
+    max-width: 100%;
+  }
 }
 
 @media screen and (max-width: 992px) {
@@ -4213,6 +4258,10 @@ button.remove {
 @media screen and (max-width: 768px) {
   body {
     padding: 4rem 0 0;
+  }
+
+  .pg-header .header-datetime {
+    display: none;
   }
 
   .sidebar {
@@ -4339,9 +4388,50 @@ button.remove {
   .lab-file-inner .attach-icon {
     padding-left: 8px;
   }
+
+  /* diet details */
+  .diet-details {
+    max-width: 100%;
+  }
+
+  .diet-details-img h3 {
+    font-size: 32px;
+  }
+
+  /* recipe details */
+  .diet-wrapper.recipe-details {
+    flex-direction: column;
+  }
+
+  .recipe-details-aside {
+    margin-bottom: 16px;
+    flex: auto;
+  }
+
+  .recipe-details-aside img {
+    height: 35vh;
+  }
+
+  .recipe-details-descr {
+    margin-left: 0;
+  }
+
+  .recipe-details-descr h3 {
+    font-size: 28px;
+    text-align: center;
+  }
+
+  .recipe-details-descr-labels {
+    justify-content: center;
+  }
 }
 
 @media only screen and (max-width: 576px) {
+  .pg-header .header-logo,  
+  .quote {
+    display: none;
+  }
+
   .top-block {
     width: 100%;
     flex-direction: column;
@@ -4416,6 +4506,20 @@ button.remove {
   .results-wrapper {
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: auto;
+  }
+
+  /* patient diet/recipes */
+  .diet-grid.pt-recipe-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* recipe details */
+  .recipe-details-descr h3 {
+    font-size: 24px;
+  }
+
+  .recipe-details-aside img {
+    height: 24vh;
   }
 }
 

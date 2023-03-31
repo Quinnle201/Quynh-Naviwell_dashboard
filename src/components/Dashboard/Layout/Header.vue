@@ -1,7 +1,7 @@
 <template>
     <header class="navbar ms-auto fixed-top flex-md-nowrap">
         <div class="container-fluid">
-            <img class="ms-3 my-0" height="48" src="@/assets/naviwell-logo.png" data-bs-toggle="collapse"
+            <img class="my-0" height="48" src="@/assets/naviwell-logo.png" data-bs-toggle="collapse"
                 data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
                 aria-label="Toggle navigation" />
             <div class="header-datetime">
