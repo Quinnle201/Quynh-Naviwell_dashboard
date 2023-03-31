@@ -4172,6 +4172,16 @@ button.remove {
   .add-diet.description textarea {
     width: 100%;
   }
+
+  /* calendar */
+  .calendar-wrapper .vuecal__title, 
+  .calendar-wrapper .vuecal__title button {
+    font-size: 18px;
+  }
+  
+  .calendar-wrapper .vuecal__flex.weekday-label {
+    font-size: 16px;
+  }
 }
 
 @media screen and (max-width: 1199px) {
@@ -4330,6 +4340,11 @@ button.remove {
 
   .steps-wrapper .add-diet-day-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* calendar */
+  .calendar-visit-type ul {
+    display: none;
   }
 }
 
@@ -4678,6 +4693,20 @@ button.remove {
 
   .info-form-item select {
     margin-top: 4px;
+  }
+
+  /* calendar */
+  .calendar-wrapper .vuecal__title, 
+  .calendar-wrapper .vuecal__title button {
+    font-size: 16px;
+  }
+
+  .calendar-wrapper .vuecal__today-btn span.default {
+    font-size: 14px;
+  }
+
+  .vuecal__title-bar {
+    justify-content: flex-start;
   }
 }
 
