@@ -432,31 +432,31 @@ export default {
                             <div class="profile-card-title">Health Data</div>
 
                             <ul>
-                        <li>
-                            Height
-                            <span>{{ patient.current_health_data?.height ?? '-' }}</span>
-                        </li>
-                        <li>
-                            Body Fat
-                            <span>{{ patient.current_health_data?.bodyfat ?? '-' }}</span>
-                        </li>
-                        <li>
-                            Weight
-                            <span>{{ patient.current_health_data?.weight ?? '-' }}</span>
-                        </li>
-                        <li>
-                            BP
-                            <span>{{ patient.current_health_data?.bp ?? '-' }}</span>
-                        </li>
-                        <li>
-                            BMI
-                            <span>{{ patient.current_health_data?.bmi ?? '-' }}</span>
-                        </li>
-                        <li>
-                            Resting HR
-                            <span>{{ patient.current_health_data?.resting_hr ?? '-' }}</span>
-                        </li>
-                    </ul>
+                                <li>
+                                    Height
+                                    <span>{{ patient.current_health_data?.height ?? '-' }}</span>
+                                </li>
+                                <li>
+                                    Body Fat
+                                    <span>{{ patient.current_health_data?.bodyfat ?? '-' }}</span>
+                                </li>
+                                <li>
+                                    Weight
+                                    <span>{{ patient.current_health_data?.weight ?? '-' }}</span>
+                                </li>
+                                <li>
+                                    BP
+                                    <span>{{ patient.current_health_data?.bp ?? '-' }}</span>
+                                </li>
+                                <li>
+                                    BMI
+                                    <span>{{ patient.current_health_data?.bmi ?? '-' }}</span>
+                                </li>
+                                <li>
+                                    Resting HR
+                                    <span>{{ patient.current_health_data?.resting_hr ?? '-' }}</span>
+                                </li>
+                            </ul>
 
                             <div>
                                 <LineChart v-if="dataLoaded" :data="dataChart" />
@@ -730,7 +730,8 @@ export default {
 }
 
 .patient-data.light-bg.patient-card.pt-card ul li {
-    margin-bottom: 8px;
+    margin: 0 0 8px;
+    flex: 0 0 50%;
 }
 
 .patient-data.light-bg.patient-card.pt-card ul li span {
