@@ -4062,12 +4062,18 @@ button.remove {
     padding: 18px 4px;
   }
 
-  .main-grid.pt-grid {
+  .main-grid {
     grid-template-columns: 60fr 40fr;
   }
 
   .quiz-card-content img {
     margin-right: 16px;
+  }
+
+  .cards-wrapper:nth-child(3) {
+    grid-column: 1/3;
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
   }
 
   .pt.cards-wrapper:nth-child(3) {
@@ -4396,18 +4402,18 @@ button.remove {
     grid-template-columns: 1fr;
   }
 
-  .pt.cards-wrapper:nth-child(1) {
+  .cards-wrapper:nth-child(1) {
     grid-column: 1/3;
     grid-template-rows: auto;
   }
 
-  .pt.cards-wrapper:nth-child(2) {
+  .cards-wrapper:nth-child(2) {
     grid-column: 1/3;
     grid-template-rows: auto;
     order: 3;
   }
 
-  .pt.cards-wrapper:nth-child(3) {
+  .cards-wrapper:nth-child(3) {
     grid-template-columns: 1fr;
     order: 2;
   }
