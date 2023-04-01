@@ -4164,6 +4164,25 @@ button.remove {
     max-width: 80%;
     margin: 0 auto;
   }
+
+  .add-button button {
+    font-size: 18px;
+    line-height: 18px;
+  }
+
+  /* patients */
+  .patients-table table thead tr th {
+    font-size: 16px;
+  }
+
+  .patients-table table thead tr th:first-child, 
+  .patients-table tbody tr td:first-child {
+    padding-left: 32px;
+  }
+
+  .patients-table tbody tr td.patients-img span {
+    margin-left: 16px;
+  }
 }
 
 @media screen and (max-width: 1280px) {
@@ -4369,6 +4388,80 @@ button.remove {
   .calendar-visit-type ul {
     display: none;
   }
+
+  /* patients */
+  .patients-top-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .patient-search-wrapper {
+    width: 100%;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .patient-search-wrapper form {
+    flex: 0 0 70%;
+  }
+
+  .search-input.patients-search input {
+    width: 100%;
+    padding: 12px 24px;
+    border-radius: 16px;
+  }
+
+  .patient-select {
+    margin-left: 0;
+    font-size: 14px;
+  }
+
+  .patients-table table {
+    border-spacing: 0 8px;
+  }
+  
+  .patients-table table thead tr th {
+    max-width: 80px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 32px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .patients-table table thead tr th:first-child, 
+  .patients-table tbody tr td:first-child {
+    padding-left: 16px;
+  }
+
+  .patients-table tbody tr {
+    height: 64px;
+  }
+  
+  .patients-table tbody tr td.patients-img img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .patients-table tbody tr td.patients-img span {
+    margin-left: 8px;
+}
+
+  .label-status {
+    min-width: 100px;
+    width: auto;
+    padding: 8px;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 12px;
+  }
+
+  .patients-details img {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -4382,9 +4475,6 @@ button.remove {
 
   .sidebar {
     top: 4.5rem;
-  }
-
-  .sidebar .logo {
     display: none;
   }
 
@@ -4569,6 +4659,11 @@ button.remove {
 
   .profile-card-content .medication-block {
     max-height: 100%;
+  }
+
+  /* patients */
+  .patients-table tbody tr td.patients-img img {
+    display: none;
   }
 }
 
@@ -4776,6 +4871,88 @@ button.remove {
 
   .addquote-wrapper .addquote-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* patients */
+  .patients-top-wrapper {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .patient-search-wrapper {
+    margin-bottom: 0;
+  }
+
+  .patient-search-wrapper form {
+    flex: auto;
+  }
+
+  .patient-select {
+    margin: 0 8px;
+  }
+
+  .patients-table {
+    margin-top: 0;
+  }
+
+  .patients-table table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .patients-table tbody tr {
+    height: auto;
+  }
+
+  .patients-table table tr {
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    display: block;
+  }
+
+  .patients-table table tr td {
+    min-height: 42px;
+    display: block;
+    border-bottom: 1px solid #DBDBDB;
+    text-align: right;
+    line-height: 40px;
+  }
+
+  .patients-table table td::before {
+    content: attr(data-label);
+    float: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: #969696;
+  }
+
+  .patients-table table td[data-label='Next Appointment']:empty:after {
+    content: '-';
+    float: right;
+  }
+ 
+  .patients-table tbody tr td:first-child {
+    padding-left: 0;
+  }
+
+  .patients-table tbody tr td:first-child, 
+  .patients-table tbody tr td:last-child {
+    border-radius: 0;
+  }
+
+  .patients-table tbody tr td:last-child {
+    padding-bottom: 0;
+    border: none;
+  }
+
+  .patients-details img {
+    margin-left: auto;
   }
 }
 

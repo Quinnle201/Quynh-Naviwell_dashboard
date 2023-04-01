@@ -215,29 +215,29 @@ export default {
                 <table>
                     <thead>
                         <tr>
-                            <th>Patient Name</th>
-                            <th>Age</th>
-                            <th>Next Appointment</th>
-                            <th>Quiz Status(incomplete)</th>
-                            <th>Details</th>
+                            <th scope="col">Patient Name</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Next Appointment</th>
+                            <th scope="col">Quiz Status(incomplete)</th>
+                            <th scope="col">Details</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(patient, index) in patients[currentPage]" :key="patient.id">
-                            <td class="patients-img">
+                            <td class="patients-img" scope="row" data-label="Patient Name">
                                 <img :src="fileStore.profileAvatars(patient.user)" alt="">
                                 <RouterLink :to="{ name: 'patient', params: { id: patient.id } }"><span>{{
                                     userName(patient.user)
                                 }}</span></RouterLink>
 
                             </td>
-                            <td>{{ age(patient) }}</td>
-                            <td> {{ apptDate(patient.appointments[0]) }}</td>
-                            <td>
+                            <td data-label="Age">{{ age(patient) }}</td>
+                            <td data-label="Next Appointment"> {{ apptDate(patient.appointments[0]) }}</td>
+                            <td data-label="Quiz Status(incomplete)">
                                 <div class="label-status incomplete">Incomplete</div>
                                 <!-- <div class="label-status complete">Complete</div> -->
                             </td>
-                            <td class="patients-details">
+                            <td class="patients-details" data-label="Details">
                                 <img @click="showDetails(index)" src="@/assets/img/details-icon.png"
                                     alt="Details Icon" />
                                 <Transition>
