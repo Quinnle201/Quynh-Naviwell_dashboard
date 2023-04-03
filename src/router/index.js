@@ -264,7 +264,7 @@ const router = createRouter({
               path: '',
               name: 'lab-results',
               component: LabResultsView,
-              meta: { physician: true, patient: true },
+              meta: { physician: true, patient: false },
             },
             {
               path: "add/:id?",
