@@ -110,7 +110,7 @@ const links = computed(() => {
 </script>
 
 <template>
-  <div id="sidebarMenu" class="d-md-flex flex-column flex-shrink-0 overflow-auto sidebar collapse px-3">
+  <div id="sidebarMenu" class="flex-column flex-shrink-0 overflow-auto sidebar px-3">
     <RouterLink to="/home" class="static">
       <img class="logo mx-auto m-2 img-fluid" src="@/assets/naviwell-logo.png" alt="NaviWell" />
     </RouterLink>

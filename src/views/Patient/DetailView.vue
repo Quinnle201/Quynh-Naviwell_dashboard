@@ -599,37 +599,45 @@ export default {
                     </div>
                 </div>
 
-                <div class="patient-data light-bg patient-card">
-                    <h4 class="patient-heading">Patient Health Data(WIP)</h4>
-
-                    <ul>
-                        <li>
-                            Height
-                            <span>{{ patient.current_health_data?.height ?? '-' }}</span>
-                        </li>
-                        <li>
-                            Body Fat
-                            <span>{{ patient.current_health_data?.bodyfat ?? '-' }}</span>
-                        </li>
-                        <li>
-                            Weight
-                            <span>{{ patient.current_health_data?.weight ?? '-' }}</span>
-                        </li>
-                        <li>
-                            BP
-                            <span>{{ patient.current_health_data?.bp ?? '-' }}</span>
-                        </li>
-                        <li>
-                            BMI
-                            <span>{{ patient.current_health_data?.bmi ?? '-' }}</span>
-                        </li>
-                        <li>
-                            Resting HR
-                            <span>{{ patient.current_health_data?.resting_hr ?? '-' }}</span>
-                        </li>
-                    </ul>
-
+                <div class="patient-data light-bg patient-card doc">
                     <div>
+                        <h4 class="patient-heading">Patient Health Data(WIP)</h4>
+
+                        <ul>
+                            <li>
+                                <div>Height</div>
+                                <span>{{ patient.current_health_data?.height ?? '-' }}</span>
+                                
+                            </li>
+                            <li>
+                                <div>Body Fat</div>
+                                <span>{{ patient.current_health_data?.bodyfat ?? '-' }}</span>
+                                
+                            </li>
+                            <li>
+                                <div>Weight</div>
+                                <span>{{ patient.current_health_data?.weight ?? '-' }}</span>
+                                
+                            </li>
+                            <li>
+                                <div>BP</div>
+                                <span>{{ patient.current_health_data?.bp ?? '-' }}</span>
+                                
+                            </li>
+                            <li>
+                                <div>BMI</div>
+                                <span>{{ patient.current_health_data?.bmi ?? '-' }}</span>
+                                
+                            </li>
+                            <li>
+                                <div>Resting HR</div>
+                                <span>{{ patient.current_health_data?.resting_hr ?? '-' }}</span>
+                                
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="patient-data-chart">
                         <LineChart v-if="dataLoaded" :data="dataChart" />
                     </div>
                 </div>

@@ -67,4 +67,27 @@ import { RouterLink } from 'vue-router'
             box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
         }
     }
+
+    @media screen and (max-width: 768px) {
+        .notfound-wrapper {
+            margin-top: 10vh;
+        }
+
+        .notfound-block:before {
+            font-size: 160px;
+        }
+
+        img {
+            width: 92px;
+        }
+
+        h1 {
+            font-size: 56px;
+        }
+
+        h1, 
+        p {
+            text-align: center;
+        }
+    }
 </style>
