@@ -968,6 +968,7 @@ body {
 
 .type-select-item {
   padding: 12px 20px 12px 24px;
+  font-weight: 500;
   border-radius: 20px;
   cursor: not-allowed;
   opacity: .3;
@@ -976,7 +977,6 @@ body {
 .type-select-item.active {
   background-color: var(--primary);
   font-size: 14px;
-  font-weight: 500;
   color: #FFFFFF;
   cursor: pointer;
   opacity: 1;
@@ -4241,6 +4241,12 @@ button.remove {
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .sidebar .nav-link {
+    width: 56px;
+    height: 56px;
+  }
+
   /* lab results */
   .results-wrapper {
     grid-template-columns: repeat(2, 1fr);
@@ -4340,6 +4346,10 @@ button.remove {
 
   .header-datetime span:first-child {
     margin-right: 0;
+  }
+
+  .sidebar .nav {
+    gap: 8px!important;
   }
 
   .top-block {
@@ -4813,6 +4823,16 @@ button.remove {
   .patients-table tbody tr td.patients-img img {
     display: none;
   }
+
+  /* calendar modal */
+  .type-select {
+    width: max-content;
+    margin-bottom: 16px;
+  }
+
+  .type-select-item {
+    padding: 12px 16px 12px 24px;
+  }
 }
 
 @media screen and (max-width: 576px) {
@@ -5189,6 +5209,22 @@ button.remove {
 
   .patients-table.lab-table tbody tr td a {
     font-size: 16px;
+  }
+
+  /* calendar modal */
+  .popup-content {
+    margin-top: 12px;
+  }
+
+  .popup-content-item.visit-type {
+    margin-bottom: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .type-select-item, 
+  .type-select-item.active {
+    padding: 8px 12px;
+    font-size: 12px;
   }
 }
 
