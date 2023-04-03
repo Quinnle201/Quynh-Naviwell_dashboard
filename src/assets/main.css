@@ -4337,6 +4337,18 @@ button.remove {
   .patient-data-chart {
     flex: 0 0 50%;
   }
+
+  /* quiz */
+  .quizzes-grid {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .layout-wrapper.quiz{
+    flex-direction: row;
+    align-items: center;
+  }
 }
 
 @media screen and (max-width: 1199px) {
@@ -4662,6 +4674,11 @@ button.remove {
   /* diet/recipes */
   .details-inner.grid-two {
     transform: translateX(-80%);
+  }
+
+  /* quiz */
+  .quizzes-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -5252,6 +5269,45 @@ button.remove {
   /*  */
   .btn-icon {
     margin-bottom: 8px;
+  }
+
+  /* quiz */
+  .quizzes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* add quiz */
+  .addquiz-wrapper .addquote-selects {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .addquiz-inner-item {
+    flex: auto;
+  }
+
+  .addquiz-inner input, 
+  .addquiz-inner textarea {
+    width: 100%;
+  }
+
+  .addquiz-inner input::placeholder, 
+  .addquiz-inner textarea::placeholder {
+    font-size: 14px;
+  }
+
+  .addquiz-wrapper .add-button button {
+    display: block;
+  }
+
+  .addquiz-btns {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .addquiz-btns .w-btn {
+    min-width: 120px;
+    padding: 12px 16px;
   }
 }
 

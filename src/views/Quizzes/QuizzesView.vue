@@ -113,7 +113,7 @@ export default {
 
 <template>
     <div class="page-wrapper">
-        <div class="layout-wrapper">
+        <div class="layout-wrapper quiz">
             <h3>Quizzes</h3>
 
             <RouterLink :to="{ name: 'add-quiz' }" class="add-button">
