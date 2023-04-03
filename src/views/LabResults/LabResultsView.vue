@@ -6,6 +6,12 @@ import _findIndex from 'lodash/findIndex';
 import _ from 'lodash';
 import { Form, Field } from 'vee-validate';
 
+import { axiosInstance, downloadFile } from '@/helpers';
+import { useAlertStore, useFileStore } from '@/stores';
+
+import userMixin from '@/mixins/user.js'
+
+
 export default {
     components: {
         SearchIcon,
@@ -14,23 +20,65 @@ export default {
         Form,
         Field,
     },
+    mixins: [
+        userMixin
+    ],
     data() {
+        const alertStore = useAlertStore();
+        const fileStore = useFileStore();
         return {
-            options: [
-                {
-                    text: 'Result name', value: 'Result name'
-                },
-                {
-                    text: 'Patient', value: 'Patient'
-                },
-                {
-                    text: 'Date', value: 'Date'
-                },
-                {
-                    text: 'File', value: 'File'
-                },
-            ],
+            alertStore,
+            fileStore,
+            results: [],
+            totalPages: 1,
+            currentPage: 1,
+            searchTerm: "",
         }
+    },
+    watch: {
+        searchTerm(newVal){
+            this.searchResults(this, newVal)
+        }
+        
+    },
+    mounted() {
+        this.getResults();
+    },
+    computed: {
+        resultDate(){
+            return (result) => {
+                if (!result) {
+                    return ""
+                }
+                return new Date(result.date).toDateString()
+            }
+        }
+    },
+    methods: {
+        searchResults: _.debounce(function(self, newVal) {
+            self.currentPage = 1
+            self.results = []
+            self.getResults()
+
+        }, 250),
+        getResults() {
+            if(this.results[this.currentPage]) {
+                return
+            }
+            axiosInstance.get(`/lab-results?page=${this.currentPage}`, { params: { per_page: 4, searchTerm: this.searchTerm } })
+                .then(response => {
+                    const results = response.data.data.lab_results
+                    this.results[this.currentPage] = results
+                    this.totalPages = response.data.data.meta.last
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        async clickedDownload(result) {
+            this.alertStore.success(`Downloading ${result.file.name}`)
+            downloadFile(result.file, `${result.patient_id}/${result.file.ref}`, 'results')
+        },
     }
 };
 </script>
@@ -50,19 +98,13 @@ export default {
                             <SearchIcon />
                         </label>
                     </form>
-
-                    <select v-model="selected" class="patient-select">
-                        <option disabled value="">Sort</option>
-                        <option v-for="option in options" :value="option.value">
-                            {{ option.text }}
-                        </option>
-                    </select>
                 </div>
 
                 <RouterLink :to="{ name: 'add-result' }" class="add-button">
                     <AddIcon />
                     <button type="button">Add Lab Result</button>
                 </RouterLink>
+
             </div>
 
             <div class="patients-table lab-table">
@@ -71,39 +113,24 @@ export default {
                         <tr>
                             <th>Result name</th>
                             <th>Patient</th>
-                            <th>Date</th>
                             <th>File</th>
+                            <th>Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Blood test</td>
-                            <td>John Doe</td>
-                            <td>27.03.23</td>
+                        <tr v-for="result in results[currentPage]">
+                            <td>{{result.name}}</td>
+                            <td>{{userName(result.patient.user)}}</td>
                             <td class="lab-file">
-                                <div class="lab-file-inner">
-                                    <span>blood-test.pdf</span>
+                                <div class="lab-file-inner" @click="clickedDownload(result)">
+                                    <span>{{result.file.name}}</span>
                                     <DownloadIcon class="attach-icon" />
                                 </div>
                             </td>
+                            <td>{{resultDate(result)}}</td>
                             <td>
-                                <RouterLink :to="{ name: 'add-result' }">
-                                    Edit
-                                </RouterLink>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>lorem ipsum dolor sit amet consectetur adipiscing elit</td>
-                            <td>John Doe</td>
-                            <td>27.03.23</td>
-                            <td class="lab-file">
-                                <div class="lab-file-inner">
-                                    <span>lorem-ipsum-dolor-sit-amet-consectetur-adipiscing-elit.pdf</span>
-                                    <DownloadIcon class="attach-icon" />
-                                </div>
-                            </td>
-                            <td>
-                                <RouterLink :to="{ name: 'add-result' }">
+                                <RouterLink :to="{ name: 'add-result', params: { id: result.id } }">
                                     Edit
                                 </RouterLink>
                             </td>

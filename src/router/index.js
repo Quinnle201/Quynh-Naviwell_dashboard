@@ -267,10 +267,10 @@ const router = createRouter({
               meta: { physician: true, patient: true },
             },
             {
-              path: "add-result",
+              path: "add/:id?",
               name: "add-result",
               component: AddResultView,
-              meta: { physician: true, patient: true },
+              meta: { physician: true, patient: false },
             }
           ]
         },
