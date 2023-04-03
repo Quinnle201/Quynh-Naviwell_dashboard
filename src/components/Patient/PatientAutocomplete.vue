@@ -26,8 +26,11 @@ export default {
         patient: String,
     },
     watch: {
-        patient(value) {
-            this.searchTerm = value
+        patient: {
+            handler(value) {
+                this.searchTerm = value
+            },
+            immediate: true
             
         },
         searchTerm(newS, oldS) {
