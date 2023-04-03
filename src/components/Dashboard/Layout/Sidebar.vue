@@ -110,7 +110,12 @@ const links = computed(() => {
 </script>
 
 <template>
-  <div id="sidebarMenu" class="flex-column flex-shrink-0 overflow-auto sidebar px-3">
+  <div class="burger-menu" @click="showMenu()" :class="showMobileMenu === false ? '' : 'active'">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <div id="sidebarMenu" class="flex-column flex-shrink-0 overflow-auto sidebar px-3" :class="this.showMobileMenu ? 'open-menu' : 'closed-menu'">
     <RouterLink to="/home" class="static">
       <img class="logo mx-auto m-2 img-fluid" src="@/assets/naviwell-logo.png" alt="NaviWell" />
     </RouterLink>
@@ -125,4 +130,115 @@ const links = computed(() => {
       </li>
     </ul>
   </div>
+  <div class="overlay" :class="showMobileMenu === false ? '' : 'active'" @click="showMenu(false)"></div>
 </template>
+
+<script>
+  export default {
+    data() {
+      return {
+        showMobileMenu: false,
+      };
+    },
+    methods: {
+      showMenu() {
+        this.showMobileMenu = !this.showMobileMenu;
+      },
+    },
+    watch: {
+      '$route.path'() {
+        this.showMobileMenu = false;
+      }
+    }
+  };
+</script>
+
+<style>
+.burger-menu {
+  background-color: var(--main-color);
+  min-width: 40px;
+  width: auto!important;
+  height: 40px;
+  padding: 0!important;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -52px;
+  left: 8px;
+  border-radius: 50%;
+  z-index: 10000;
+}
+
+.burger-menu span {
+  background-color: #FFFFFF;
+  width: 17px;
+  height: 2px;
+  margin-bottom: 3px;
+  display: block;
+  border-radius: 3px;
+  transform-origin: 4px 0px;
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0), opacity 0.55s ease;
+}
+
+.burger-menu span:first-child {
+  transform-origin: 0% 0%;
+}
+
+.burger-menu span:last-child {
+  margin-bottom: 0;
+  transform-origin: 0% 100%;
+}
+
+.burger-menu.active span {
+  opacity: 1;
+  transform: rotate(45deg) translate(2px, -2px);
+}
+
+.burger-menu.active span:nth-child(2) {
+  opacity: 0;
+  transform: rotate(45deg) translate(2px, -2px);
+}
+
+.burger-menu.active span:last-child {
+  transform: rotate(-45deg) translate(1px, 3px);
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar .static {
+    display: none;
+  }
+
+  .sidebar {
+    transition: .5s ease;
+  }
+
+  .overlay {
+    background-color: rgb(0,0,0);
+    width: 100vw;
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+    transition: .2s ease;
+  }
+
+  .overlay.active {
+    opacity: .4;
+    z-index: 1000;
+  }
+
+  .sidebar.open-menu {
+    transform: none;
+
+  }
+  .sidebar.closed-menu {
+    transform: translateX(-100px);
+  }
+
+  .burger-menu {
+    display: flex;
+  }
+} 
+</style>
