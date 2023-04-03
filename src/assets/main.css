@@ -4620,6 +4620,11 @@ button.remove {
   .patients-table.lab-table tbody tr td:last-child {
     padding-right: 16px;
   }
+
+  /* diet/recipes */
+  .details-inner.grid-two {
+    transform: translateX(-80%);
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -5231,12 +5236,17 @@ button.remove {
   .pagination-wrapper {
     justify-content: space-between;
   }
-  
+
   .pagination-item {
     width: 42px;
     height: 42px;
     font-size: 16px;
     line-height: 40px;
+  }
+
+  /*  */
+  .btn-icon {
+    margin-bottom: 8px;
   }
 }
 
