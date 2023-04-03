@@ -5226,6 +5226,18 @@ button.remove {
     padding: 8px 12px;
     font-size: 12px;
   }
+
+  /* pagination */
+  .pagination-wrapper {
+    justify-content: space-between;
+  }
+  
+  .pagination-item {
+    width: 42px;
+    height: 42px;
+    font-size: 16px;
+    line-height: 40px;
+  }
 }
 
 @media screen and (max-width: 375px) {
