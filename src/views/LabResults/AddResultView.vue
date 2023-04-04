@@ -177,7 +177,7 @@ export default {
 
         <div class="addresult-wrapper page-bg">
             <Form v-if="resultData" @submit="addResult" :initial-values="resultData">
-                <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" />
+                <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" accept="application/pdf" />
                 <div class="upload-photo" @click="selectFile()">
                     <label>Upload Result</label>
                     <div>
