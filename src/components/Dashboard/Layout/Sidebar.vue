@@ -1,5 +1,5 @@
 <script setup>
-import { markRaw, computed } from "vue";
+import { markRaw, computed, ref, watch } from "vue";
 
 import HomeIcon from '../../icons/IconHome.vue'
 import CalendarIcon from '../../icons/IconCalendar.vue'
@@ -16,6 +16,7 @@ import ProfileIcon from '../../icons/IconProfile.vue'
 import { RouterLink } from 'vue-router'
 
 import { useAuthStore } from '@/stores';
+import { useRoute } from 'vue-router'
 
 
 const patientLinks = [
@@ -101,11 +102,23 @@ const physicianLinks = [
 
 const authStore = useAuthStore();
 const links = computed(() => {
-  if(authStore.user) {
+  if (authStore.user) {
     return authStore.isPatient ? patientLinks : physicianLinks
   }
   return [];
 })
+
+const showMobileMenu = ref(false)
+
+function showMenu() {
+  showMobileMenu.value = !showMobileMenu.value;
+}
+
+const route = useRoute()
+watch(route, (to) => {
+  showMobileMenu.value = false;
+})
+
 
 </script>
 
@@ -115,7 +128,8 @@ const links = computed(() => {
     <span></span>
     <span></span>
   </div>
-  <div id="sidebarMenu" class="flex-column flex-shrink-0 overflow-auto sidebar px-3" :class="this.showMobileMenu ? 'open-menu' : 'closed-menu'">
+  <div id="sidebarMenu" class="flex-column flex-shrink-0 overflow-auto sidebar px-3"
+    :class="showMobileMenu ? 'open-menu' : 'closed-menu'">
     <RouterLink to="/home" class="static">
       <img class="logo mx-auto m-2 img-fluid" src="@/assets/naviwell-logo.png" alt="NaviWell" />
     </RouterLink>
@@ -133,33 +147,13 @@ const links = computed(() => {
   <div class="overlay" :class="showMobileMenu === false ? '' : 'active'" @click="showMenu(false)"></div>
 </template>
 
-<script>
-  export default {
-    data() {
-      return {
-        showMobileMenu: false,
-      };
-    },
-    methods: {
-      showMenu() {
-        this.showMobileMenu = !this.showMobileMenu;
-      },
-    },
-    watch: {
-      '$route.path'() {
-        this.showMobileMenu = false;
-      }
-    }
-  };
-</script>
-
 <style>
 .burger-menu {
   background-color: var(--main-color);
   min-width: 40px;
-  width: auto!important;
+  width: auto !important;
   height: 40px;
-  padding: 0!important;
+  padding: 0 !important;
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -179,7 +173,7 @@ const links = computed(() => {
   display: block;
   border-radius: 3px;
   transform-origin: 4px 0px;
-  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0), opacity 0.55s ease;
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1.0), opacity 0.55s ease;
 }
 
 .burger-menu span:first-child {
@@ -215,7 +209,7 @@ const links = computed(() => {
   }
 
   .overlay {
-    background-color: rgb(0,0,0);
+    background-color: rgb(0, 0, 0);
     width: 100vw;
     height: 100%;
     position: absolute;
@@ -233,6 +227,7 @@ const links = computed(() => {
     transform: none;
 
   }
+
   .sidebar.closed-menu {
     transform: translateX(-116px);
   }
@@ -240,5 +235,5 @@ const links = computed(() => {
   .burger-menu {
     display: flex;
   }
-} 
+}
 </style>
