@@ -492,217 +492,308 @@ export default {
 </template>
 
 <style>
-.v-enter-active,
-.v-leave-active {
-    transition: opacity 0.4s ease;
-}
+    .v-enter-active,
+    .v-leave-active {
+        transition: opacity 0.4s ease;
+    }
 
-.v-enter-from,
-.v-leave-to {
-    opacity: 0;
-}
+    .v-enter-from,
+    .v-leave-to {
+        opacity: 0;
+    }
 
-.addpatient-wrapper {
-    background-color: #FFFFFF;
-    width: 100%;
-    height: 100%;
-    padding: 28px 32px;
-    position: absolute;
-    top: -8px;
-}
+    .addpatient-wrapper {
+        background-color: #FFFFFF;
+        width: 100%;
+        height: 100%;
+        padding: 28px 32px;
+        position: absolute;
+        top: 0;
+    }
 
-.addpatient-head {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .addpatient-head {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-.addpatient-head h4 {
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 24px;
-    color: #000000;
-}
+    .addpatient-head h4 {
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 24px;
+        color: #000000;
+    }
 
-.addpatient-head button.w-btn.w-btn-close {
-    margin-left: 36px;
-}
+    .addpatient-head button.w-btn.w-btn-close {
+        margin-left: 36px;
+    }
 
-.add-patient-inner {
-    height: 98%;
-    padding-bottom: 30px;
-    display: grid;
-    grid-template-columns: 35fr 30fr 35fr;
-    gap: 26px;
-}
+    .add-patient-inner {
+        height: 98%;
+        padding-bottom: 30px;
+        display: grid;
+        grid-template-columns: 35fr 30fr 35fr;
+        gap: 26px;
+    }
 
-.add-patient-card {
-    background-color: #FFFEFE;
-    padding: 0 30px 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border-radius: 16px;
-    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
-}
+    .add-patient-card {
+        background-color: #FFFEFE;
+        padding: 0 30px 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-radius: 16px;
+        box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-.addpatient-card-two .add-patient-card:first-child {
-    margin-bottom: 26px;
-}
+    .addpatient-card-two .add-patient-card:first-child {
+        margin-bottom: 26px;
+    }
 
-.add-patient-card-title {
-    margin-top: 24px;
-    margin-bottom: 18px;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 20px;
-    color: #000000;
-    text-align: center;
-}
+    .add-patient-card-title {
+        margin-top: 24px;
+        margin-bottom: 18px;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 20px;
+        color: #000000;
+        text-align: center;
+    }
 
-.addpatient-card-content ul {
-    list-style: none;
-}
+    .addpatient-card-content ul {
+        list-style: none;
+    }
 
-.addpatient-card-content ul li {
-    margin-bottom: 16px;
-    display: grid;
-    grid-template-columns: 30fr 70fr;
-    align-items: center;
-    gap: 26px;
-}
+    .addpatient-card-content ul li {
+        margin-bottom: 16px;
+        display: grid;
+        grid-template-columns: 30fr 70fr;
+        align-items: center;
+        gap: 26px;
+    }
 
-.addpatient-card-content ul li:last-child {
-    margin-bottom: 0;
-}
+    .addpatient-card-content ul li:last-child {
+        margin-bottom: 0;
+    }
 
-.addpatient-card-content ul li input+span[role="alert"] {
-    background-color: #FF0000;
-    width: 65%;
-    padding: 3px 6px;
-    position: absolute;
-    right: 0;
-    bottom: -34px;
-    color: #FFFFFF;
-    border-radius: 3px;
-    z-index: 9;
-}
+    .addpatient-card-content ul li input+span[role="alert"] {
+        background-color: #FF0000;
+        width: 65%;
+        padding: 3px 6px;
+        position: absolute;
+        right: 0;
+        bottom: -34px;
+        color: #FFFFFF;
+        border-radius: 3px;
+        z-index: 9;
+    }
 
-.addpatient-card-content ul li input+span[role="alert"]:before {
-    content: '';
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid #FF0000;
-    position: absolute;
-    top: -7px;
-    left: 7px;
-}
+    .addpatient-card-content ul li input+span[role="alert"]:before {
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid #FF0000;
+        position: absolute;
+        top: -7px;
+        left: 7px;
+    }
 
-.addpatient-card-content ul li.fullw-input {
-    grid-template-columns: 1fr;
-    gap: 0;
-    text-align: center;
-}
+    .addpatient-card-content ul li.fullw-input {
+        grid-template-columns: 1fr;
+        gap: 0;
+        text-align: center;
+    }
 
-.addpatient-card-content ul li.fullw-input label {
-    margin-bottom: 3px;
-}
+    .addpatient-card-content ul li.fullw-input label {
+        margin-bottom: 3px;
+    }
 
-.addpatient-card-content ul li label {
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 16px;
-    color: #000000;
-    white-space: nowrap;
-}
+    .addpatient-card-content ul li label {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 16px;
+        color: #000000;
+        white-space: nowrap;
+    }
 
-.addpatient-card-content ul li input,
-.addpatient-card-content ul li textarea {
-    background-color: #F4F4FF;
-    width: 100%;
-    padding-left: 22px;
-    border-radius: 10px;
-    color: #000000;
-    outline: none;
-    border: none;
-}
+    .addpatient-card-content ul li input,
+    .addpatient-card-content ul li textarea {
+        background-color: #F4F4FF;
+        width: 100%;
+        padding-left: 22px;
+        border-radius: 10px;
+        color: #000000;
+        outline: none;
+        border: none;
+    }
 
-.addpatient-card-content ul li input {
-    height: 40px;
-}
+    .addpatient-card-content ul li input {
+        height: 40px;
+    }
 
-.addpatient-card-content ul li textarea {
-    height: 100%;
-    grid-row: span 6;
-    grid-column: span 2;
-    padding-top: 16px;
-    resize: none;
-}
+    .addpatient-card-content ul li textarea {
+        height: 100%;
+        grid-row: span 6;
+        grid-column: span 2;
+        padding-top: 16px;
+        resize: none;
+    }
 
-.addpatient-card-content ul li textarea::placeholder {
-    color: #000000;
-}
+    .addpatient-card-content ul li textarea::placeholder {
+        color: #000000;
+    }
 
-.addpatient-card-content-title {
-    margin: 8px 0;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 16px;
-    color: #000000;
-    text-align: center;
-}
+    .addpatient-card-content-title {
+        margin: 8px 0;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 16px;
+        color: #000000;
+        text-align: center;
+    }
 
-.addpatient-card-content .medication-block {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    .addpatient-card-content .medication-block {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-.addpatient-card-content .medication-block ul {
-    width: 100%;
-    max-height: 180px;
-    overflow-y: auto;
-}
+    .addpatient-card-content .medication-block ul {
+        width: 100%;
+        max-height: 180px;
+        overflow-y: auto;
+    }
 
-.addpatient-card-content .medication-block ul::-webkit-scrollbar {
-    width: 8px;
-}
+    .addpatient-card-content .medication-block ul::-webkit-scrollbar {
+        width: 8px;
+    }
 
-.addpatient-card-content .medication-block ul::-webkit-scrollbar-track {
-    background-color: #E7E7E7;
-    border-radius: 8px;
-}
+    .addpatient-card-content .medication-block ul::-webkit-scrollbar-track {
+        background-color: #E7E7E7;
+        border-radius: 8px;
+    }
 
-.addpatient-card-content .medication-block ul::-webkit-scrollbar-thumb {
-    background-color: #5C90F1;
-    border-radius: 8px;
-}
+    .addpatient-card-content .medication-block ul::-webkit-scrollbar-thumb {
+        background-color: #5C90F1;
+        border-radius: 8px;
+    }
 
-.addpatient-card-content .medication-block button {
-    margin-top: 16px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 14px;
-    color: #0258BC;
-}
+    .addpatient-card-content .medication-block button {
+        margin-top: 16px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 14px;
+        color: #0258BC;
+    }
 
-.patientInfo {
-    margin-bottom: 16px;
-}
+    .patientInfo {
+        margin-bottom: 16px;
+    }
 
-.heightInput div {
-    display: flex;
-    margin-right: -16px;
-}
+    .heightInput div {
+        display: flex;
+        margin-right: -16px;
+    }
 
-.heightInput div input {
-    margin-right: 3px;
-}
+    .heightInput div input {
+        margin-right: 3px;
+    }
 
-.heightInput div label {
-    margin: auto 16px auto 0;
-}</style>
+    .heightInput div label {
+        margin: auto 16px auto 0;
+    }
+
+    @media screen and (max-width: 1440px) {
+        .addpatient-wrapper {
+            padding: 24px 6px 24px 0;
+        }
+
+        .addpatient-head {
+            margin-bottom: 8px;
+        }
+
+        .addpatient-head h4 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .add-patient-inner {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .add-patient-inner .addpatient-card-two {
+            grid-column: 1/3;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 26px;
+        }
+
+        .addpatient-card-two .add-patient-card:first-child {
+            height: fit-content;
+            margin-bottom: 0;
+        }
+    }
+
+    @media screen and (max-width: 992px) {
+        .addpatient-head {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .addpatient-head h4 {
+            margin-bottom: 8px;
+        }
+
+        .addpatient-head button.w-btn {
+            min-width: auto;
+            padding: 10px 32px;
+        }
+
+        .addpatient-head button.w-btn.w-btn-close {
+            margin-left: 16px;
+        }
+
+        .add-patient-inner {
+            grid-template-columns: 1fr;
+        }
+
+        .add-patient-inner .addpatient-card-two {
+            grid-column: auto;
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media screen and (max-width: 576px) {
+        .add-patient-card {
+            padding: 0 18px 16px;
+        }
+
+        .add-patient-card-title {
+            margin: 16px 0;
+            font-size: 18px;
+        }
+
+        .addpatient-card-content ul li label,
+        .addpatient-card-content .form-select {
+            font-size: 14px;
+        }
+
+        .add-patient-inner, 
+        .add-patient-inner .addpatient-card-two {
+            gap: 16px;
+        }
+
+        .addpatient-card-content .medication-block .info-form-item-wrapper {
+            padding-right: 0;
+        }
+
+        .addpatient-card-content .medication-block label.info-form-item {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+    }
+</style>

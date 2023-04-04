@@ -234,7 +234,7 @@ const links = computed(() => {
 
   }
   .sidebar.closed-menu {
-    transform: translateX(-100px);
+    transform: translateX(-116px);
   }
 
   .burger-menu {
