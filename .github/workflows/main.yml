@@ -23,7 +23,7 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo VITE_API_URL="http://naviwell-dev.eba-sijwcvyv.us-east-2.elasticbeanstalk.com/api" >> .env
+          echo VITE_API_URL="https://backend.naviwellgroup.com/api" >> .env
           echo VITE_DOMAIN="naviwellgroup.com" >> .env
           echo VITE_FILEAPI_URL="https://waii0kvk8e.execute-api.us-east-2.amazonaws.com/Stage" >> .env
           cat .env
