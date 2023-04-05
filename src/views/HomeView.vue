@@ -35,14 +35,6 @@ export default {
       const date = this.currentDate
       return date.currentWeekdayShort + ' ' + date.currentDay + ' ' + date.currentMonth + ' ' + date.currentYear;
     },
-    greet() {
-      if (hrs < 12)
-        greet = 'Good Morning';
-      else if (hrs >= 12 && hrs <= 17)
-        greet = 'Good Afternoon';
-      else if (hrs >= 17 && hrs <= 24)
-        greet = 'Good Evening';
-    },
     localDate() {
       return (time) => new Date(time).format('HH:mm')
     },
@@ -132,7 +124,7 @@ export default {
       <ClinicLogoBlock/>
 
       <div class="top-block-info">
-        <h3>{{greet }} Dr. {{ user.last_name }}</h3>
+        <h3>Good Morning Dr. {{ user.last_name }}</h3>
         <div class="top-block-info-date">
           <span>{{ dateBanner }}</span>
           <span>
