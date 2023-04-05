@@ -158,8 +158,8 @@ watch(route, (to) => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: -52px;
+  position: fixed;
+  top: 11px;
   left: 8px;
   border-radius: 50%;
   z-index: 10000;

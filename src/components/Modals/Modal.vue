@@ -139,9 +139,17 @@
     border-radius: 8px;
   }
   @media screen and (max-width: 768px) {
+    .popup {
+      padding: 16px 18px;
+    }
+
     .popup-overlay .popup {
       max-width: unset;
       min-width: 80vw;
+    }
+
+    .popup-header h4 {
+      font-size: 20px;
     }
 
     .popup-overlay .popup .w-btn {

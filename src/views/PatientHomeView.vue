@@ -150,7 +150,7 @@ export default {
       <ClinicLogoBlock/>
 
       <div class="top-block-info">
-        <h3>Good Morning {{ user.first_name }}</h3>
+        <h3>Good {{hours < 12 ? ' Morning' : hours < 18 ? ' Afternoon' : ' Evening'}} {{ user.first_name }}</h3>
         <div class="top-block-info-date">
           <span>{{ dateBanner }}</span>
           <span>

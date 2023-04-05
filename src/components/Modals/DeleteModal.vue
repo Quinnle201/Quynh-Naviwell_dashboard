@@ -44,33 +44,6 @@
     .v-leave-to {
         opacity: 0;
     }
-  
-    .popup-overlay {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, 0.3);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
-
-    .popup {
-        background: #FFFFFF;
-        max-width: 450px;
-        min-width: 450px;
-        width: auto;
-        height: auto;
-        padding: 32px 30px;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
-        border-radius: 25px;
-        overflow-x: auto;
-    }
 
     .modal-inner {
         text-align: center;

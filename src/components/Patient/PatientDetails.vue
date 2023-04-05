@@ -78,8 +78,9 @@ export default {
     }
 
     .details-inner {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        /* display: grid;
+        grid-template-columns: repeat(4, 1fr); */
+        display: flex;
         justify-items: center;
         gap: 0 12px;
         background-color: #FFFFFF;

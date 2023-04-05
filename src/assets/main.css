@@ -9,6 +9,11 @@
   --border-color: #737373;
 }
 
+::selection {
+  background-color: var(--primary);
+  color: #FFFFFF;
+}
+
 a {
   text-decoration: none;
 }
@@ -2239,6 +2244,7 @@ button.vuecal__arrow {
 .chat-left ul.chat-list li .chat-list-item-content-name {
   font-size: 18px;
   font-weight: 500;
+  line-height: 18px;
 }
 
 .chat-left ul.chat-list li .chat-list-item-content-message {
@@ -2266,13 +2272,14 @@ button.vuecal__arrow {
 
 .chat-left ul.chat-list li .chat-list-item-info-icon span {
   background-color: var(--primary);
-  min-width: 25px;
-  height: 25px;
-  padding: 6px;
+  min-width: 20px;
+  height: 20px;
   display: block;
-  color: #FFFFFF;
-  line-height: 16px;
+  font-size: 12px;
+  font-weight: 500;
   text-align: center;
+  line-height: 20px;
+  color: #FFFFFF;
   border-radius: 50%;
 }
 
@@ -2591,16 +2598,22 @@ ul.messages-list li.physician-message .message-list-time {
 
 .send-inner .send-inner-btns-file div {
   background-color: var(--primary);
+  max-width: 50%;
   height: 100%;
   margin-left: 16px;
   padding: 4px 16px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
   color: #FFFFFF;
   border-radius: 16px;
   cursor: default;
 }
 
 .send-inner .send-inner-btns-file div > span {
-  margin-left: 3px;
+  position: absolute;
+  top: 4px;
+  right: 8px;
   cursor: pointer;
 }
 
@@ -4348,6 +4361,65 @@ button.remove {
   .layout-wrapper.quiz{
     flex-direction: row;
     align-items: center;
+  }
+
+  /* messages */
+  .chat-wrapper {
+    grid-template-columns: 30fr 70fr;
+  }
+
+  .chat-content-wrapper .chat-content-inner {
+    padding: 24px 8px;
+  }
+
+  .chat-left ul.chat-list li {
+    padding: 8px 12px;
+  }
+
+  .chat-left ul.chat-list li .chat-list-item-img img, 
+  .chat-right .chat-right-head-info img {
+    min-width: 40px;
+    height: 40px;
+  }
+
+  .chat-left ul.chat-list li .chat-list-item-content-name, 
+  .chat-right .chat-right-head-info .chat-right-head-info-name {
+    font-size: 16px;
+  }
+
+  .chat-left ul.chat-list li .chat-list-item-content-message {
+    max-width: 140px;
+    font-size: 14px;
+  }
+
+  .chat-left ul.chat-list li .chat-list-item-info-date {
+    font-size: 14px;
+  }
+
+  .chat-right .chat-right-head {
+    padding: 8px 16px;
+  }
+
+  .chat-left-head, .chat-right-head {
+    min-height: 84px;
+  }
+
+  .chat-main {
+    padding: 0 8px;
+  }
+
+  .send-inner .send-inner-btns .attach-btn {
+    min-width: 40px;
+    height: 40px;
+  }
+
+  .send-inner .send-inner-btns .attach-btn svg {
+    width: 16px;
+  }
+
+  .chat-left ul.chat-list li .chat-list-item-content, 
+  .chat-left ul.chat-list li .chat-list-item-info {
+    margin: -3px 0 -3px 8px;
   }
 }
 
