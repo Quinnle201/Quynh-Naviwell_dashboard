@@ -2760,6 +2760,10 @@ ul.diet-grid-item-content-list li:before {
   margin-bottom: 16px;
 }
 
+.add-diet.upload-photo img {
+  margin-bottom: 8px;
+}
+
 .add-diet-head .add-diet input[disabled] {
   background-color: #FFFFFF;
   max-width: fit-content;
@@ -3905,7 +3909,7 @@ button.remove {
   margin-bottom: 16px;
 }
 
-.addresult-wrapper .upload-photo > div {
+.addresult-wrapper .upload-photo .upload-btn {
   background-color: var(--primary);
   width: 50px;
   height: 50px;
@@ -3917,8 +3921,23 @@ button.remove {
   cursor: pointer;
 }
 
-.addresult-wrapper .upload-photo > div svg path {
+.addresult-wrapper .upload-photo .upload-btn svg path {
   fill: #FFFFFF;
+}
+
+.addresult-wrapper .upload-photo .result-file {
+  background-color: var(--primary);
+  width: fit-content;
+  height: 100%;
+  margin-top: 8px;
+  padding: 4px 16px;
+  color: #FFFFFF;
+  border-radius: 16px;
+  cursor: default;
+}
+
+.addresult-wrapper .upload-photo .result-file span {
+  cursor: pointer;
 }
 
 .input-wrapper {

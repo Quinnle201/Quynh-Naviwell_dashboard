@@ -180,13 +180,15 @@ export default {
                 <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" accept="application/pdf" />
                 <div class="upload-photo" @click="selectFile()">
                     <label>Upload Result</label>
-                    <div>
+                    <div class="upload-btn">
                         <AttachIcon />
                     </div>
-                </div>
-                <div v-if="file">{{ file.name }}
+
+                    <div v-if="file" class="result-file">{{ file.name }}
                         <span @click="deleteFile">x</span>
                     </div>
+                </div>
+                
                 <div class="input-wrapper">
                     <label>Result Name</label>
                     <Field name="name" type="text" placeholder="" />
