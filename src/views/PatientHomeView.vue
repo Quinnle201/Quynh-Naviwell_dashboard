@@ -115,7 +115,7 @@ export default {
                 });
     },
     getAppointments() {
-      axiosInstance.get('/appointments', { params: { "upcoming": 0, "limit": 2 } })
+      axiosInstance.get('/appointments', { params: { "upcoming": 1, "limit": 2 } })
                 .then(response => {
                   this.appointments = response.data.data.appointments
 
