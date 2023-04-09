@@ -43,3 +43,13 @@ jobs:
           AWS_DEFAULT_REGION: ${{env.AWS_REGION}}
           AWS_BUCKET_NAME: ${{env.S3_BUCKET_NAME}}
           DIST_LOCATION_CODE: ./dist
+      
+      # Clears the CloudFront cache so new requests will receive the latest version of your app
+      - name: Invalidate Cloudfront
+        uses: chetan/invalidate-cloudfront-action@v1.3
+        env:
+          DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION }}
+          PATHS: '/*'
+          AWS_REGION: ${{env.AWS_REGION}}
+          AWS_ACCESS_KEY_ID: ${{secrets.ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.SECRET_ACCESS_KEY}}
