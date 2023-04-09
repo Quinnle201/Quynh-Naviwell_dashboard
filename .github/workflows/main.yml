@@ -25,7 +25,7 @@ jobs:
           touch .env
           echo VITE_API_URL="https://backend.naviwellgroup.com/api" >> .env
           echo VITE_DOMAIN="naviwellgroup.com" >> .env
-          echo VITE_FILEAPI_URL="https://waii0kvk8e.execute-api.us-east-2.amazonaws.com/Stage" >> .env
+          echo VITE_FILEAPI_URL="https://waii0kvk8e.execute-api.us-east-2.amazonaws.com/v1" >> .env
           cat .env
           
           
