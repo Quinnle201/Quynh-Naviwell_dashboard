@@ -543,48 +543,48 @@ export default {
 
                 <div class="patient-card-two">
                     <div class="patient-lab light-bg patient-card">
-                        <h4 class="patient-heading">Lab Results & Suggested ing(WIP)</h4>
+                        <h4 class="patient-heading">Lab Results & Suggested ing</h4>
 
                         <ul>
                             <li>
                                 Sodium
-                                <span>150</span>
+                                <span>-</span>
                             </li>
                             <li>
                                 Glucose
-                                <span>90 mg/dL</span>
+                                <span>-</span>
                             </li>
                             <li>
                                 Potassium
-                                <span>3.5</span>
+                                <span>-</span>
                             </li>
                             <li>
                                 BUN
-                                <span>12 mg/dL</span>
+                                <span>-</span>
                             </li>
                         </ul>
 
                         <ul>
                             <li>
                                 Cholesterol
-                                <span>160 mg/dL</span>
+                                <span>-</span>
                             </li>
                             <li>
                                 Triglycerides
-                                <span>62 mg/dL</span>
+                                <span>-</span>
                             </li>
                             <li>
                                 HDL
-                                <span>48 mg/dL</span>
+                                <span>-</span>
                             </li>
                             <li>
                                 LDL
-                                <span>115 mg/dL</span>
+                                <span>-</span>
                             </li>
                         </ul>
 
                         <div>
-                            <div class="patient-status-item-btn active-btn">New Lipid Panel Results to Review</div>
+                            <RouterLink class="patient-status-item-btn active-btn" :to="{ name: 'lab-results' }">Review results</RouterLink>
                         </div>
                     </div>
                     <div class="patient-meds light-bg patient-card">
@@ -601,7 +601,7 @@ export default {
 
                 <div class="patient-data light-bg patient-card doc">
                     <div>
-                        <h4 class="patient-heading">Patient Health Data(WIP)</h4>
+                        <h4 class="patient-heading">Patient Health Data</h4>
 
                         <ul>
                             <li>

@@ -211,7 +211,7 @@ export default {
             </li>
           </ul>
           <template #card-btn>
-            Add New Patient(wip)
+            <RouterLink :to="{ name: 'patients' }">Add New Patient</RouterLink>
           </template>
         </Card>
       </div>
