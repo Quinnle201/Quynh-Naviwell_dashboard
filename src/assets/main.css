@@ -2108,8 +2108,7 @@ button.vuecal__arrow {
 
 .addquote-wrapper .add-quote-btn {
   width: 100%;
-  margin-bottom: -150px;
-  margin-top: auto;
+  margin: 16px 0;
   display: flex;
   align-items: center;
   cursor: pointer;
