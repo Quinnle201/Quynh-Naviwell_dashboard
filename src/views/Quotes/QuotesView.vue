@@ -51,6 +51,15 @@ export default {
             searchTerm: "",
         }
     },
+    computed: {
+        beginOfWeek() {
+            const result = new Date();
+            while (result.getDay() !== 1) { //1 is Monday
+                result.setDate(result.getDate() - 1);
+            }
+            return result.format('MM/DD/YYYY')
+        }
+    },
     watch: {
         selectedQuote: {
             handler(value) {
@@ -187,6 +196,9 @@ export default {
                     </div>
                     <div class="quotes-grid-item-content">
                         <p>{{ quote.text }}</p>
+                        <span v-if="new Date(quote.scheduled_at).format('MM/DD/YYYY') == beginOfWeek">active</span>
+                        <span v-else-if="new Date(quote.scheduled_at).format('MM/DD/YYYY') < beginOfWeek">passed</span>
+                        <span v-else>upcoming</span>
                     </div>
                     <div class="quotes-grid-item-btn" @click="showModal(quote)">
                         <EditIcon />
