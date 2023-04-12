@@ -2035,6 +2035,15 @@ button.vuecal__arrow {
   white-space: pre-wrap;
 }
 
+.quotes-grid-item-content span {
+  background-color: var(--primary);
+  margin-top: 8px;
+  padding: 2px 12px;
+  display: inline-block;
+  color: #FFFFFF;
+  border-radius: 16px;
+}
+
 .quotes-grid-item-btn {
   background-color: var(--primary);
   min-width: 50px;
