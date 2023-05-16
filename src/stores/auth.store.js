@@ -13,7 +13,7 @@ export const useAuthStore = defineStore({
         returnUrl: null
     }),
     getters: {
-        isPatient: (state) => state.user?.profile_type.includes("PatientProfile")
+        isPatient: (state) => state.user?.profile_type?.includes("PatientProfile")
       },
     actions: {
         async login(email, password) {
