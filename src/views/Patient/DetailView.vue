@@ -134,15 +134,17 @@ export default {
                     this.fileStore.getPhotoLinkForUser(this.patient.user)
 
                     this.patientDrugs = []
-                    this.patient.meds.forEach((med, index) => {
-                        var medValue = ""
-                        var medType = ""
-                        const medArray = med.split(":");
-                        medType = medArray[0].trim();
-                        medValue = medArray[1].trim();
-                        this.patientDrugs.push({ type: medType, amount: medValue });
+                    if(this.patient.meds) {
+                        this.patient.meds.forEach((med, index) => {
+                            var medValue = ""
+                            var medType = ""
+                            const medArray = med.split(":");
+                            medType = medArray[0].trim();
+                            medValue = medArray[1].trim();
+                            this.patientDrugs.push({ type: medType, amount: medValue });
 
-                    });
+                        });
+                    }
 
                     if (this.patientDrugs.length == 0) {
                         this.patientDrugs.push({ type: '', amount: null });
