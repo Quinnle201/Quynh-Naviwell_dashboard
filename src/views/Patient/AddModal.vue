@@ -308,15 +308,17 @@ export default {
             })
 
             const drugs = [];
-            pt.meds.forEach((med, index) => {
-                var medValue = ""
-                var medType = ""
-                const medArray = med.split(":");
-                medType = medArray[0].trim();
-                medValue = medArray[1].trim();
-                drugs.push({ type: medType, amount: medValue });
+            if(pt.meds) {
+                pt.meds.forEach((med, index) => {
+                    var medValue = ""
+                    var medType = ""
+                    const medArray = med.split(":");
+                    medType = medArray[0].trim();
+                    medValue = medArray[1].trim();
+                    drugs.push({ type: medType, amount: medValue });
 
-            });
+                });
+            }
 
             if (drugs.length == 0) {
                 drugs.push({ type: '', amount: null });
@@ -338,28 +340,30 @@ export default {
                 values['health-data']['height'] = height
             }
 
-            const medications = values.drugs.filter(drug => drug.type)
-            const keysAndValues = medications.map(med => {
-                let amount = parseInt(med.amount, 10)
-                let type = med.type
-                if (Number.isNaN(amount)) {
-                    amount = 0;
-                }
-                return { type, amount }
-            })
-            const uniqueMedValues = keysAndValues.reduce(function (res, value) {
-                if (!res[value.type]) {
-                    res[value.type] = 0;
-                }
-                res[value.type] += value.amount;
-                return res;
-            }, {});
-            let medicine = []
-            Object.keys(uniqueMedValues).forEach(function (key, index) {
-                medicine.push(`${key}: ${uniqueMedValues[key]}`)
-            });
+            if(values.drugs) {
+                const medications = values.drugs.filter(drug => drug.type)
+                const keysAndValues = medications.map(med => {
+                    let amount = parseInt(med.amount, 10)
+                    let type = med.type
+                    if (Number.isNaN(amount)) {
+                        amount = 0;
+                    }
+                    return { type, amount }
+                })
+                const uniqueMedValues = keysAndValues.reduce(function (res, value) {
+                    if (!res[value.type]) {
+                        res[value.type] = 0;
+                    }
+                    res[value.type] += value.amount;
+                    return res;
+                }, {});
+                let medicine = []
+                Object.keys(uniqueMedValues).forEach(function (key, index) {
+                    medicine.push(`${key}: ${uniqueMedValues[key]}`)
+                });
 
-            values.meds = medicine
+                values.meds = medicine
+            }
 
             if (this.patient != null) {
                 axiosInstance.put(`/patients/${this.patient.id}`, values)
