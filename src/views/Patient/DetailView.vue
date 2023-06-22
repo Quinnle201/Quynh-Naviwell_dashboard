@@ -545,7 +545,7 @@ export default {
 
                 <div class="patient-card-two">
                     <div class="patient-lab light-bg patient-card">
-                        <h4 class="patient-heading">Lab Results & Suggested ing</h4>
+                        <h4 class="patient-heading">Diagnostic results & Suggested ing</h4>
 
                         <ul>
                             <li>

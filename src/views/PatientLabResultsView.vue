@@ -59,7 +59,7 @@ export default {
 <template>
     <div class="page-wrapper">
         <div class="layout-wrapper">
-            <h3>Lab results</h3>
+            <h3>Diagnostic results</h3>
         </div>
 
         <div class="results-wrapper page-bg">

@@ -169,7 +169,7 @@ export default {
 
         <div class="cards-wrapper-grid">
           <Card>
-            <template #card-title>Lab Results</template>
+            <template #card-title>Diagnostic results</template>
             <LabIcon />
             <span class="dashboard-card-btn active-btn">3 New Reports to Review</span>
           </Card>
