@@ -6,7 +6,7 @@ import RecipeIcon from '@/components/icons/IconRecipe.vue'
 import ClinicLogoBlock from '@/components/Dashboard/Layout/ClinicBlock.vue'
 
 import { useAuthStore, useFileStore, useAlertStore } from '@/stores';
-import { axiosInstance } from '@/helpers';
+import { axiosInstance, formatAMPM } from '@/helpers';
 import userMixin from '@/mixins/user.js'
 import { RouterLink } from 'vue-router'
 
@@ -51,7 +51,7 @@ export default {
       return date.currentWeekdayShort + ' ' + date.currentDay + ' ' + date.currentMonth + ' ' + date.currentYear;
     },
     localDate() {
-      return (time) => new Date(time).format('HH:mm')
+      return (time) => formatAMPT(new Date(time))
     },
     inTime() {
       return (date) => {

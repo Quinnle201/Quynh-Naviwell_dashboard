@@ -6,7 +6,7 @@ import FileIcon from '@/components/icons/IconFile.vue'
 import DownloadIcon from '@/components/icons/IconDownload.vue'
 import { Form, Field } from 'vee-validate';
 
-import { axiosInstance, downloadFile, uploadFile } from '@/helpers';
+import { axiosInstance, downloadFile, uploadFile, formatAMPM } from '@/helpers';
 import { useAlertStore, useFileStore, useAuthStore } from '@/stores';
 import userMixin from '@/mixins/user.js'
 
@@ -55,7 +55,7 @@ export default {
             return this.authStore.user
         },
         time() {
-            return (time) => new Date(time).format('hh:mm')
+            return (time) => formatAMPM(new Date(time))
         },
     },
     methods: {

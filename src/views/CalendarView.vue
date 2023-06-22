@@ -7,7 +7,7 @@ import DeleteModal from '@/components/Modals/DeleteModal.vue'
 
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-import { axiosInstance } from '@/helpers';
+import { axiosInstance, formatAMPM } from '@/helpers';
 import { useAlertStore } from '@/stores';
 import userMixin from '@/mixins/user.js'
 import _find from 'lodash/find';
@@ -62,7 +62,7 @@ export default {
     },
     computed: {
         localDate() {
-            return (time) => new Date(time).toLocaleString()
+            return (time) => formatAMPT(new Date(time))
         },
         calendarEventClass() {
             return (appt) => {
@@ -237,7 +237,7 @@ export default {
         </DeleteModal>
 
         <div class="calendar-wrapper">
-            <vue-cal :time-from="8 * 60" :time-to="18 * 60" :time-step="15" today-button
+            <vue-cal :time-from="8 * 60" :time-to="18 * 60.5" :time-step="15" :twelveHour="true" today-button
                 :disable-views="['years', 'year']" hide-view-selector
                 :editable-events="{ title: false, drag: false, resize: false, delete: false, create: false }"
                 :events="events" :on-event-click="showModal">

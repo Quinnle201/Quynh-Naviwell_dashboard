@@ -12,7 +12,7 @@ import ScheduleModal from '@/components/Modals/ScheduleModal.vue'
 import AddIcon from '@/components/icons/IconAdd.vue'
 import PatientAutocomplete from '@/components/Patient/PatientAutocomplete.vue'
 
-import { axiosInstance, downloadFile, uploadFile, getFileUrlFromRef } from '@/helpers';
+import { axiosInstance, downloadFile, uploadFile, getFileUrlFromRef, formatAMPM } from '@/helpers';
 import { useAlertStore, useFileStore } from '@/stores';
 import userMixin from '@/mixins/user.js'
 
@@ -60,7 +60,7 @@ export default {
             return (time) => new Date(time).format('DD.MM')
         },
         time() {
-            return (time) => new Date(time).format('hh:mm')
+            return (time) => formatAMPM(new Date(time))
         },
         getMessageType() {
             return (msgObject) => {

@@ -6,7 +6,7 @@ import { Form, Field } from 'vee-validate';
 import CheckIcon from '@/components/icons/IconCheck.vue'
 import CalendarIcon from '@/components/icons/IconCalendar.vue'
 
-import { axiosInstance } from '@/helpers';
+import { axiosInstance, formatAMPM } from '@/helpers';
 import { useAlertStore } from '@/stores';
 
 import _find from 'lodash/find';
@@ -70,7 +70,9 @@ export default {
                     if (hour < 10) {
                         hour = `0${h}`
                     }
-                    array.push({ 'label': `${hour}:${min[m]}`, 'value': `${hour}:${min[m]}` })
+                    const ms = new Date().setHours(hour, min[m])
+                    const date = new Date(ms)
+                    array.push({ 'label': formatAMPM(date), 'value': `${hour}:${min[m]}` })
                 }
             }
             return array

@@ -6,7 +6,7 @@ import RecipeIcon from '@/components/icons/IconRecipe.vue'
 import ClinicLogoBlock from '@/components/Dashboard/Layout/ClinicBlock.vue'
 
 import { useAuthStore, useFileStore, useAlertStore, useClinicStore, useProgrammaticAccesStore } from '@/stores';
-import { axiosInstance, downloadFile } from '@/helpers';
+import { axiosInstance, downloadFile, formatAMPM } from '@/helpers';
 import userMixin from '@/mixins/user.js'
 import { RouterLink } from 'vue-router'
 
@@ -43,12 +43,7 @@ export default {
     todayDate() {
       return (time) => {
             const date = new Date(time);
-            let hours = date.getHours();
-            let minutes = date.getMinutes();
-            let am_pm = date.getHours() >= 12 ? "pm" : "am";
-            hours = hours <= 9 ? `${hours}`.padStart(2, 0) : hours;
-            minutes = minutes <= 9 ? `${minutes}`.padStart(2, 0) : minutes;
-            return `${hours}:${minutes} ${am_pm}`
+            return formatAMPM(date);
       }
     },
     localDate() {
@@ -56,12 +51,7 @@ export default {
           const date = new Date(time);
             let month = date.toLocaleString('en-us', { month: 'short' });
             let day = date.toLocaleString('en-us', { day: 'numeric' });
-            let hours = date.getHours();
-            let minutes = date.getMinutes();
-            let am_pm = date.getHours() >= 12 ? "pm" : "am";
-            hours = hours <= 9 ? `${hours}`.padStart(2, 0) : hours;
-            minutes = minutes <= 9 ? `${minutes}`.padStart(2, 0) : minutes;
-            return `${day} ${month} at ${hours}:${minutes} ${am_pm}`
+            return `${day} ${month} at ${formatAMPM(date)}`
       }
     },
     inTime() {
@@ -75,6 +65,21 @@ export default {
           return true
         }
       }
+    },
+    greetTime() {
+      var myDate = new Date();
+      var hrs = myDate.getHours();
+
+      var greet;
+
+      if (hrs < 12)
+        greet = 'Good Morning';
+      else if (hrs >= 12 && hrs <= 17)
+        greet = 'Good Afternoon';
+      else if (hrs >= 17 && hrs <= 24)
+        greet = 'Good Evening';
+
+        return greet;
     },
   },
   data() {
@@ -150,7 +155,7 @@ export default {
       <ClinicLogoBlock/>
 
       <div class="top-block-info">
-        <h3>Good {{hours < 12 ? ' Morning' : hours < 18 ? ' Afternoon' : ' Evening'}} {{ user.first_name }}</h3>
+        <h3>{{greetTime}} {{ user.first_name }}</h3>
         <div class="top-block-info-date">
           <span>{{ dateBanner }}</span>
           <span>
