@@ -172,7 +172,7 @@ export default {
 <template>
     <div class="page-wrapper">
         <div class="layout-wrapper">
-            <h3>Add Diagnostic result</h3>
+            <h3>Add Diagnostic Result</h3>
         </div>
 
         <div class="addresult-wrapper page-bg">
