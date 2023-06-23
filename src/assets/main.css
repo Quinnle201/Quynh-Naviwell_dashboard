@@ -4005,6 +4005,28 @@ button.remove {
   border: 1px solid var(--primary);
 }
 
+.document-btn {
+  background-color: var(--primary);
+  width: fit-content;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  color: #FFFFFF;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.document-btn svg {
+  width: 23px;
+  height: 100%;
+  margin-right: 8px;
+}
+
+.document-btn svg path {
+  fill: #FFFFFF;
+}
+
 
 /* CKEditor */
 :root {

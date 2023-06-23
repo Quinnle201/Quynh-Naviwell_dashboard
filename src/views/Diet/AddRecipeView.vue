@@ -1,5 +1,6 @@
 <script>
 import AddIcon from '@/components/icons/IconAdd.vue'
+import AttachmentIcon from '@/components/icons/IconAttach.vue'
 import CameraIcon from '@/components/icons/IconCamera.vue'
 import { Form, Field, FieldArray } from 'vee-validate';
 import VueMultiselect from 'vue-multiselect'
@@ -11,6 +12,7 @@ export default {
     components: {
         AddIcon,
         CameraIcon,
+        AttachmentIcon,
         Form,
         Field,
         FieldArray,
@@ -271,24 +273,17 @@ export default {
 
                 <div class="add-diet-head">
                     <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" accept="image/*" />
-                    <div class="add-diet upload-photo" @click="selectFile()">
-                        <label>Upload Photo</label>
-                        
-                        <img v-if="recipeImage" :src="recipeImage" style="width:150px;height:150px;aspect-ratio: 1;"/>
-                        <div>
-                            <CameraIcon />
-                        </div>
-                        
+                    <div class="document-btn" @click="selectFile()">
+                        <CameraIcon />
+                        <span>Upload Photo</span>
+                        <img v-if="dietImage" :src="dietImage" style="width:150px;height:150px;aspect-ratio: 1;"/>
                     </div>
 
                     <input hidden type="file" name="pdf-attachment" @change="addPdfFile" ref="pdfFileUpload" accept="application/pdf" />
                     <a v-if="recipePdf" :href="recipePdf" target="_blank">Download attachment</a>
-                    <div class="add-diet upload-photo" @click="selectPdfFile()">
-                        <label>Upload Attachment</label>
-                        <div>
-                            <CameraIcon />
-                        </div>
-                        
+                    <div class="document-btn" @click="selectPdfFile()">
+                        <AttachmentIcon />
+                        <span>Upload Attachment</span>
                     </div>
 
                     <div class="add-diet-inner">
