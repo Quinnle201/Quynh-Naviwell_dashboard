@@ -25,6 +25,7 @@ export default {
             alertStore,
             fileStore,
             file: null,
+            pdf_file: null,
             dxCodes: [],
             selectedDxCodes: [],
         }
@@ -35,6 +36,14 @@ export default {
                 return URL.createObjectURL(this.file)
             } else if(this.fileStore.recipeImages(this.recipeData)){
                 return this.fileStore.recipeImages(this.recipeData)
+            }
+            return null
+        },
+        recipePdf() {
+            if(this.pdf_file) {
+                return URL.createObjectURL(this.pdf_file)
+            } else if(this.fileStore.recipePdfFiles(this.recipeData)){
+                return this.fileStore.recipePdfFiles(this.recipeData)
             }
             return null
         }
@@ -90,7 +99,8 @@ export default {
                     this.recipeId = this.recipeData.id;
                     this.selectedDxCodes = this.recipeData.codes;
                     this.getDxCodes()
-                    this.fileStore.getPhotoLinkForRecipe(this.recipeData)       
+                    this.fileStore.getPhotoLinkForRecipe(this.recipeData)
+                    this.fileStore.getPdfLinkForRecipe(this.recipeData)   
                 })
                 .catch(error => {
                     this.alertStore.error(error.response.data.message)
@@ -104,10 +114,21 @@ export default {
             const r = this.$refs.fileUpload;
             r.click();
         },
+        selectPdfFile() {
+            const r = this.$refs.pdfFileUpload;
+            r.click();
+        },
         addFile(event) {
             const files = event.target.files
             if (files) {
                 this.file = files[0]
+            }
+
+        },
+        addPdfFile(event) {
+            const files = event.target.files
+            if (files) {
+                this.pdf_file = files[0]
             }
 
         },
@@ -122,10 +143,17 @@ export default {
 
 
             var filename = null
+            var pdf_filename = null
             if (this.file != null) {
                 filename = generateFileName(this.file)
             } else {
                 filename = this.recipeData.image
+            }
+
+            if (this.pdf_file != null) {
+                pdf_filename = generateFileName(this.pdf_file)
+            } else {
+                pdf_filename = this.dietData.attachment
             }
 
             var formData = {
@@ -133,6 +161,7 @@ export default {
                 servings: values.servings,
                 cook_time: values.cook_time,
                 image: filename,
+                attachment: pdf_filename,
                 ingredients: values.ingredients,
                 steps: values.steps,
                 codes: values.codes,
@@ -141,8 +170,15 @@ export default {
             if(this.recipeId) {
                 axiosInstance.put(`/recipes/${this.recipeId}`, formData)
                 .then(response => {
+                    const recipeId = response.data.data.id;
+                    if(this.pdf_file != null) {
+                        const pdf_uploader = uploadFile(this.pdf_file, 'recipes', recipeId, pdf_filename)
+                        pdf_uploader.axios
+                            .then(response => {
+                                setTimeout(() => this.fileStore.getPdfLinkForRecipe(this.recipeData, true), 1000)
+                            })
+                    }
                     if (this.file != null) {
-                        const recipeId = response.data.data.id;
                         const uploader = uploadFile(this.file, 'recipes', recipeId, filename)
                         uploader.axios
                             .then(response => {
@@ -166,8 +202,15 @@ export default {
 
             axiosInstance.post('/recipes', formData)
                 .then(response => {
+                    const dietid = response.data.data.id;
+                    if(this.pdf_file != null) {
+                        const pdf_uploader = uploadFile(this.pdf_file, 'recipes', recipeId, pdf_filename)
+                        pdf_uploader.axios
+                            .then(response => {
+                                setTimeout(() => this.fileStore.getPdfLinkForRecipe(this.recipeData, true), 1000)
+                            })
+                    }
                     if (this.file != null) {
-                        const recipeId = response.data.data.id;
                         const uploader = uploadFile(this.file, 'recipes', recipeId, filename)
                         uploader.axios
                             .then(response => {
@@ -227,11 +270,21 @@ export default {
                 </div> 
 
                 <div class="add-diet-head">
-                    <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" />
+                    <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" accept="image/*" />
                     <div class="add-diet upload-photo" @click="selectFile()">
                         <label>Upload Photo</label>
                         
                         <img v-if="recipeImage" :src="recipeImage" style="width:150px;height:150px;aspect-ratio: 1;"/>
+                        <div>
+                            <CameraIcon />
+                        </div>
+                        
+                    </div>
+
+                    <input hidden type="file" name="pdf-attachment" @change="addPdfFile" ref="pdfFileUpload" accept="application/pdf" />
+                    <a v-if="recipePdf" :href="recipePdf" target="_blank">Download attachment</a>
+                    <div class="add-diet upload-photo" @click="selectPdfFile()">
+                        <label>Upload Attachment</label>
                         <div>
                             <CameraIcon />
                         </div>

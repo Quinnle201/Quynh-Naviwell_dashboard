@@ -25,6 +25,7 @@ export default {
             alertStore,
             fileStore,
             file: null,
+            pdf_file: null,
             dxCodes: [],
             selectedDxCodes: [],
         }
@@ -35,6 +36,14 @@ export default {
                 return URL.createObjectURL(this.file)
             } else if(this.fileStore.dietImages(this.dietData)){
                 return this.fileStore.dietImages(this.dietData)
+            }
+            return null
+        },
+        dietPdf() {
+            if(this.pdf_file) {
+                return URL.createObjectURL(this.pdf_file)
+            } else if(this.fileStore.dietPdfFiles(this.dietData)){
+                return this.fileStore.dietPdfFiles(this.dietData)
             }
             return null
         }
@@ -100,7 +109,8 @@ export default {
                     this.dietId = this.dietData.id;
                     this.selectedDxCodes = this.dietData.codes;
                     this.getDxCodes()
-                    this.fileStore.getPhotoLinkForDiet(this.dietData)       
+                    this.fileStore.getPhotoLinkForDiet(this.dietData)   
+                    this.fileStore.getPdfLinkForDiet(this.dietData)       
                 })
                 .catch(error => {
                     this.alertStore.error(error.response.data.message)
@@ -114,6 +124,10 @@ export default {
             const r = this.$refs.fileUpload;
             r.click();
         },
+        selectPdfFile() {
+            const r = this.$refs.pdfFileUpload;
+            r.click();
+        },
         addFile(event) {
             const files = event.target.files
             if (files) {
@@ -121,28 +135,50 @@ export default {
             }
 
         },
+        addPdfFile(event) {
+            const files = event.target.files
+            if (files) {
+                this.pdf_file = files[0]
+            }
+
+        },
         addDiet(values) {
             values.codes = this.selectedDxCodes.map(v => v.value)
 
             var filename = null
+            var pdf_filename = null
             if (this.file != null) {
                 filename = generateFileName(this.file)
             } else {
                 filename = this.dietData.image
             }
 
+            if (this.pdf_file != null) {
+                pdf_filename = generateFileName(this.pdf_file)
+            } else {
+                pdf_filename = this.dietData.attachment
+            }
+
             var formData = {
                 title: values.title,
                 description: values.description,
                 image: filename,
+                attachment: pdf_filename,
                 days: values.days,
                 codes: values.codes,
             }
             if (this.dietId) {
                 axiosInstance.put(`/diet/${this.dietId}`, formData)
                     .then(response => {
+                        const dietid = response.data.data.id;
+                        if(this.pdf_file != null) {
+                            const pdf_uploader = uploadFile(this.pdf_file, 'diets', dietid, pdf_filename)
+                            pdf_uploader.axios
+                                .then(response => {
+                                    setTimeout(() => this.fileStore.getPdfLinkForDiet(this.dietData, true), 1000)
+                                })
+                        }
                         if (this.file != null) {
-                            const dietid = response.data.data.id;
                             const uploader = uploadFile(this.file, 'diets', dietid, filename)
                             uploader.axios
                                 .then(response => {
@@ -165,8 +201,15 @@ export default {
             } else {
                 axiosInstance.post('/diet', formData)
                     .then(response => {
+                        const dietid = response.data.data.id;
+                        if(this.pdf_file != null) {
+                            const pdf_uploader = uploadFile(this.pdf_file, 'diets', dietid, pdf_filename)
+                            pdf_uploader.axios
+                                .then(response => {
+                                    setTimeout(() => this.fileStore.getPdfLinkForDiet(this.dietData, true), 1000)
+                                })
+                        }
                         if (this.file != null) {
-                            const dietid = response.data.data.id;
                             const uploader = uploadFile(this.file, 'diets', dietid, filename)
                             uploader.axios
                                 .then(response => {
@@ -227,7 +270,7 @@ export default {
                 </div> 
 
                 <div class="add-diet-head">
-                    <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" />
+                    <input hidden type="file" name="attachment" @change="addFile" ref="fileUpload" accept="image/*" />
                     <div class="add-diet upload-photo" @click="selectFile()">
                         <label>Upload Photo</label>
                         
@@ -237,6 +280,17 @@ export default {
                         </div>
                         
                     </div>
+
+                    <input hidden type="file" name="pdf-attachment" @change="addPdfFile" ref="pdfFileUpload" accept="application/pdf" />
+                    <a v-if="dietPdf" :href="dietPdf" target="_blank">Download attachment</a>
+                    <div class="add-diet upload-photo" @click="selectPdfFile()">
+                        <label>Upload Attachment</label>
+                        <div>
+                            <CameraIcon />
+                        </div>
+                        
+                    </div>
+                    
 
                     <div class="add-diet-inner">
                         <div class="add-diet">
