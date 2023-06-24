@@ -51,7 +51,7 @@ export default {
       return date.currentWeekdayShort + ' ' + date.currentDay + ' ' + date.currentMonth + ' ' + date.currentYear;
     },
     localDate() {
-      return (time) => formatAMPT(new Date(time))
+      return (time) => formatAMPM(new Date(time))
     },
     inTime() {
       return (date) => {
