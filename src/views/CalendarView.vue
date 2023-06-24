@@ -62,7 +62,7 @@ export default {
     },
     computed: {
         localDate() {
-            return (time) => formatAMPM(new Date(time))
+            return (time) => new Date(time).toLocaleString();
         },
         calendarEventClass() {
             return (appt) => {
