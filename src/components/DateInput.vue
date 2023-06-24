@@ -140,17 +140,17 @@ export default {
   <div class="FormDate" :class="isError ? 'FormDate-error' : ''" @keyup.capture="updateValue">
 
     <input v-if="showDay" ref="day" v-model="day" class="FormDate__input FormDate__input--day" type="text"
-      placeholder="dd" @input="updateDay" />
+      placeholder="Day" @input="updateDay" />
 
     <span v-if="showDay && showMonth" class="FormDate__divider">/</span>
 
     <input v-if="showMonth" ref="month" v-model="month" class="FormDate__input FormDate__input--month" type="text"
-      placeholder="mm" @input="updateMonth" />
+      placeholder="Month" @input="updateMonth" />
 
     <span v-if="showYear && (showDay || showMonth)" class="FormDate__divider">/</span>
 
     <input v-if="showYear" ref="year" v-model="year" class="FormDate__input FormDate__input--year" type="text"
-      placeholder="yyyy" />
+      placeholder="Year" />
 
     <Field :name="fieldName" type="hidden" v-model="finalDate"/>  
 
@@ -196,12 +196,9 @@ export default {
   outline: none;
 }
 
-.FormDate__input--day,
-.FormDate__input--month {
-  width: 56px;
-}
-
-.FormDate__input--year {
+.FormDate__input--year,
+.FormDate__input--month,
+.FormDate__input--day {
   width: 72px;
 }
 

@@ -30,12 +30,12 @@ export default {
                         {text: 'Do you have brittle nails?', value: -1},
                         {text: 'Frequent fast heartbeat?', value: -1},
                         {text: 'Shortness of breath', value: -1},
-                        {text: 'Do you get headaches', value: -1},
+                        {text: 'Do you get headaches?', value: -1},
                         {text: 'Muscle/leg cramping', value: -1},
                         {text: 'Lack of Motivation', value: -1},
                         {text: 'Dryness of skin', value: -1},
                         {text: 'Experience mental sluggishness', value: -1},
-                        {text: 'Do you get sick frequently', value: -1},
+                        {text: 'Do you get sick frequently?', value: -1},
                         {text: 'Slow wound healing', value: -1},
                     ],
                 },
@@ -63,8 +63,8 @@ export default {
                     questions: [
                         {text: 'Do you experience mood changes?', value: -1},
                         {text: 'Inability to concentrate?', value: -1},
-                        {text: 'Menstruation changes/infrequency (female)', value: -1},
-                        {text: 'Difficulty with erections? (males)', value: -1},
+                        {text: 'Menstruation changes/infrequency (female)', value: -1, genderSpecific: true},
+                        {text: 'Difficulty with erections? (males)', value: -1, genderSpecific: true},
                         {text: 'Cannot fall/stay asleep?', value: -1},
                         {text: 'Crave salt or salty foods?', value: -1},
                         {text: 'Perspire easily?', value: -1},
@@ -118,8 +118,11 @@ export default {
             this.sections.forEach(section => {
                 answers[section.codename] = []
                 section.questions.forEach(question => {
-                    if(!question.value || question.value == -1) {
+                    if( (!question.value || question.value == -1) && !question.genderSpecific) {
                         errors = true;
+                    }
+                    if(question.genderSpecific && question.value == -1){
+                        question.value = '0';
                     }
                     answers[section.codename].push(question.value)
                 });
