@@ -92,12 +92,16 @@ export default {
                 duration: 1,
                 days: [
                     {
+                        "morning-snack": '',
                         breakfast: '',
+                        "afternoon-snack": '',
                         lunch: '',
                         dinner: ''
                     },
                     {
+                        "morning-snack": '',
                         breakfast: '',
+                        "afternoon-snack": '',
                         lunch: '',
                         dinner: ''
                     }
@@ -305,8 +309,16 @@ export default {
                             <div class="add-diet-day-grid-item title">Day {{ index + 1 }}</div>
                             <button v-if="fields.length > 1" type="button" @click="remove(index);dietData.duration--" class="remove">Remove Day</button>
                             <div class="add-diet">
+                                <label>Snack</label>
+                                <Field as="textarea" :name="`days[${index}].morning-snack`" placeholder="Morning snack" />
+                            </div>
+                            <div class="add-diet">
                                 <label>Breakfast</label>
                                 <Field as="textarea" :name="`days[${index}].breakfast`" placeholder="e.g. Greek yogurt with strawberries and chia seeds" />
+                            </div>
+                            <div class="add-diet">
+                                <label>Afternoon snack</label>
+                                <Field as="textarea" :name="`days[${index}].afternoon-snack`" placeholder="Afternoon snack" />
                             </div>
                             <div class="add-diet">
                                 <label>Lunch</label>

@@ -54,10 +54,22 @@ export default {
                 <div class="diet-details-day" v-for="(day, index) in dietData.days">
                     <h6>Day {{ index + 1 }}</h6>
                     <ul>
+                        <li v-if="day['morning-snack']">
+                            <span>Snack</span>
+                            <ul>
+                                <li>{{ day['morning-snack'] }}</li>
+                            </ul>
+                        </li>
                         <li v-if="day.breakfast">
                             <span>Breakfast</span>
                             <ul>
                                 <li>{{ day.breakfast }}</li>
+                            </ul>
+                        </li>
+                        <li v-if="day['afternoon-snack']">
+                            <span>Afternoon snack</span>
+                            <ul>
+                                <li>{{ day['afternoon-snack'] }}</li>
                             </ul>
                         </li>
                         <li v-if="day.lunch">
