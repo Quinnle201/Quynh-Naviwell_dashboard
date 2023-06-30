@@ -39,7 +39,13 @@ export default {
     };
   },
   watch: {
-
+    finalDate(current, prev) {
+      if(prev == null) {
+        this.day = `${current ? new Date(current).getDate() : ``}`
+        this.month = `${current ? new Date(current).getMonth() + 1 : ``}`
+        this.year = `${current ? new Date(current).getFullYear() : ``}`
+      }
+    },
     day(current, prev) {
       let value = current
       if (value.length > 2) { value = prev }
@@ -82,6 +88,7 @@ export default {
       }
       const parts = s.split('/').map((p) => parseInt(p, 10));
       parts[0] -= 1;
+      parts[1] -= 1;
       const d = new Date(parts[0], parts[1], parts[2]);
       return d.getMonth() === parts[1] && d.getDate() === parts[2] && d.getFullYear() === parts[0];
     },
@@ -104,13 +111,20 @@ export default {
         return
       }
 
-      const month = this.month;
-      const day = this.day;
-      const year = this.year;
+      let month = this.month;
+      let day = this.day;
+      let year = this.year;
+
+      if(day < 10 && day.length == 1) {
+        day = "0"+day
+      }
+      if(month < 10 && month.length == 1){
+        month = "0"+month
+      }
 
       // const input = `${month}/${day}/${year}`
       const input = `${year}/${month}/${day}`
-      if (Number.isNaN(input) || !this.isValidDate(input)) {
+      if (!this.isValidDate(input)) {
         // borderline with red to indicate error
         this.isError = true
         this.finalDate = null

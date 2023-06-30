@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import PatientInputGenerator from '@/components/Patient/PatientInputGenerator.vue'
 import RemoveIcon from '@/components/icons/IconRemoveCircle.vue';
 import AddIcon from '@/components/icons/IconAdd.vue';
+import DateInput from '@/components/DateInput.vue';
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
@@ -21,6 +22,7 @@ export default {
         PatientInputGenerator,
         RemoveIcon,
         AddIcon,
+        DateInput
     },
     props: {
         patient: Object
@@ -66,7 +68,7 @@ export default {
                 {
                     label: 'DOB',
                     name: 'profile.dob',
-                    as: 'input',
+                    as: 'date-input',
                     model: 'dob',
                     rules: Yup.date().nullable(),
                 },
@@ -277,6 +279,8 @@ export default {
         setPatientData(patient) {
             const pt = Object.assign({}, patient);;
             pt.dob = new Date(pt.dob).format("YYYY/MM/DD");
+            this.$refs.generalInfo.$refs.dateInput.value = pt.dob
+
             this.generalInfo.fields.forEach((item) => {
                 if (item.model) {
                     this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
@@ -332,6 +336,10 @@ export default {
             this.$refs.addPatientForm.setValues({})
         },
         onSubmit(values) {
+            if(!values.profile.dob) {
+                this.alertStore.error("Date of birth is required!")
+                return;
+            }
 
             const healthData = values['health-data'];
             const height = `${healthData.height_ft}'${healthData.height_in}"`
@@ -408,7 +416,7 @@ export default {
                         <div class="add-patient-card-title">General Information</div>
 
                         <div class="addpatient-card-content">
-                            <PatientInputGenerator :schema="generalInfo" />
+                            <PatientInputGenerator :schema="generalInfo" ref="generalInfo" />
                         </div>
                     </div>
 
@@ -800,4 +808,8 @@ export default {
             font-size: 14px;
         }
     }
+
+.FormDate {
+    border: 1px solid transparent;
+}
 </style>
