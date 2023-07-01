@@ -14,7 +14,7 @@ import RemoveIcon from '@/components/icons/IconRemoveCircle.vue';
 import AddIcon from '@/components/icons/IconAdd.vue';
 
 import ScheduleModal from '@/components/Modals/ScheduleModal.vue'
-
+import EmailModal from '@/components/Modals/EmailModal.vue'
 
 import { Form, Field, FieldArray } from 'vee-validate';
 import { RouterLink } from 'vue-router'
@@ -37,6 +37,7 @@ export default {
         Modal,
         AddPatientModal,
         ScheduleModal,
+        EmailModal,
         DeleteModal,
         Form,
         Field,
@@ -110,7 +111,7 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, patient_id: null, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, isScheduleModalVisible: false, medsData: false, isChatModalVisible: false, medicineArray: [], patientDrugs: [] }
+        return { patient, patient_id: null, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, isScheduleModalVisible: false, isEmailModalVisible: false, medsData: false, isChatModalVisible: false, medicineArray: [], patientDrugs: [] }
     },
     async mounted() {
         await this.getMedicine()
@@ -241,6 +242,14 @@ export default {
         },
         closeScheduleModal() {
             this.isScheduleModalVisible = false
+            this.patient_id = null
+        },
+        showEmailModal() {
+            this.isEmailModalVisible = true
+            this.patient_id = this.patient.id
+        },
+        closeEmailModal() {
+            this.isEmailModalVisible = false
             this.patient_id = null
         },
         updatePatientInfo(patient) {
@@ -433,7 +442,7 @@ export default {
                             </template>
                             <template #btn-name>Video</template>
                         </RoundBtnDelete>
-                        <RoundBtn>
+                        <RoundBtn @click="showEmailModal()">
                             <template #btn-icon>
                                 <MessagesIcon width="30" height="30" />
                             </template>
@@ -751,6 +760,8 @@ export default {
         </Modal>
         <!-- Scheduling modal -->
         <ScheduleModal v-show="isScheduleModalVisible" @close="closeScheduleModal" :patient_id="patient_id" />
+        <!-- Email modal -->
+        <EmailModal v-show="isEmailModalVisible" @close="closeEmailModal" />
         <!-- update parient info modal -->
         <AddPatientModal v-show="updateModal" :patient="patient"
             v-on:update:patient="updatePatientInfo($event)" @close="closeModal" @showMeds="showMeds()">
