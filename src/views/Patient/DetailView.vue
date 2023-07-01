@@ -761,7 +761,7 @@ export default {
         <!-- Scheduling modal -->
         <ScheduleModal v-show="isScheduleModalVisible" @close="closeScheduleModal" :patient_id="patient_id" />
         <!-- Email modal -->
-        <EmailModal v-show="isEmailModalVisible" @close="closeEmailModal" />
+        <EmailModal v-show="isEmailModalVisible" @close="closeEmailModal" :patient_id="patient_id" :patient="patient" />
         <!-- update parient info modal -->
         <AddPatientModal v-show="updateModal" :patient="patient"
             v-on:update:patient="updatePatientInfo($event)" @close="closeModal" @showMeds="showMeds()">
