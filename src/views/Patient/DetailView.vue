@@ -4,6 +4,7 @@ import VideoIcon from '@/components/icons/IconVideo.vue'
 import MessagesIcon from '@/components/icons/IconMessages.vue'
 import CalendarIcon from '@/components/icons/IconCalendar.vue'
 import RoundBtn from '@/components/Buttons/RoundBtn.vue'
+import RoundBtnDelete from '@/components/Buttons/RoundBtnDelete.vue'
 import LineChart from '@/components/LineChart.vue'
 import AddPatientModal from './AddModal.vue'
 import Modal from '@/components/Modals/Modal.vue'
@@ -31,6 +32,7 @@ export default {
         MessagesIcon,
         CalendarIcon,
         RoundBtn,
+        RoundBtnDelete,
         LineChart,
         Modal,
         AddPatientModal,
@@ -425,12 +427,12 @@ export default {
                             </template>
                             <template #btn-name>Chat</template>
                         </RoundBtn>
-                        <RoundBtn>
+                        <RoundBtnDelete >
                             <template #btn-icon>
                                 <VideoIcon width="30" height="30" />
                             </template>
                             <template #btn-name>Video</template>
-                        </RoundBtn>
+                        </RoundBtnDelete>
                         <RoundBtn>
                             <template #btn-icon>
                                 <MessagesIcon width="30" height="30" />
