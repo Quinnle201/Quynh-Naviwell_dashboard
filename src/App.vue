@@ -44,7 +44,7 @@ onMounted(() => {
 
 <template>
   <div class="app-container"
-    :class="authStore.isPatient ? 'pg-header' : ''">
+    :class="authStore.isPatient ? 'pt-header' : 'pg-header'">
     <RouterView />
     <Alert />
   </div>
