@@ -217,7 +217,7 @@ export default {
                 <template #header>{{ selectedQuote? 'Edit Quote': 'Add New Quote' }}</template>
                 <template #content>
                     <Form @submit="submitQuote" ref="quoteForm">
-                        <div class="popup-content-item popup-content-item--select">
+                        <!-- <div class="popup-content-item popup-content-item--select">
                             <label>Select Patients</label>
                             <VueMultiselect
                                 v-model="selectedPatients"
@@ -258,7 +258,7 @@ export default {
                                 >
                                 <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
                             </VueMultiselect>
-                        </div>
+                        </div> -->
 
                         <div class="popup-content-item">
                             <Field as="textarea" placeholder="Write a quote..." name="text" />
