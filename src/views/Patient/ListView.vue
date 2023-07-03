@@ -218,7 +218,7 @@ export default {
                             <th scope="col">Patient Name</th>
                             <th scope="col">Age</th>
                             <th scope="col">Next Appointment</th>
-                            <th scope="col">Quiz Status(incomplete)</th>
+                            <th scope="col">Questionnaire Status</th>
                             <th scope="col">Details</th>
                         </tr>
                     </thead>
@@ -233,9 +233,9 @@ export default {
                             </td>
                             <td data-label="Age">{{ age(patient) }}</td>
                             <td data-label="Next Appointment"> {{ apptDate(patient.appointments[0]) }}</td>
-                            <td data-label="Quiz Status(incomplete)">
-                                <div class="label-status incomplete">Incomplete</div>
-                                <!-- <div class="label-status complete">Complete</div> -->
+                            <td data-label="Questionnaire Status">
+                                <div v-if="patient.questionnaireRequired" class="label-status incomplete">Incomplete</div>
+                                <div v-else class="label-status complete">Complete</div>
                             </td>
                             <td class="patients-details" data-label="Details">
                                 <img @click="showDetails(index)" src="@/assets/img/details-icon.png"
