@@ -40,22 +40,11 @@ onMounted(() => {
   }
 
 })
-
-watch(route, (to) => {
-  currentRoute.value = to.path;
-});
-
-function checkPath(path) {
-  if (currentRoute.value === path) {
-    return true;
-  }
-}
-
 </script>
 
 <template>
   <div class="app-container"
-    :class="authStore.user, checkPath('/home') ? '' : checkPath('/patient-home') ? 'pt-header' : checkPath('/onboarding') ? '' : checkPath('/quiz') ? '' : checkPath('/lifestyle') ? '' : 'pg-header'">
+    :class="authStore.isPatient ? 'pg-header' : ''">
     <RouterView />
     <Alert />
   </div>
