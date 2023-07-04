@@ -34,6 +34,8 @@ import PatientProfileView from '@/views/PatientProfileView.vue'
 import PatientLabResultsView from '@/views/PatientLabResultsView.vue'
 import NotFound from '@/views/404.vue'
 
+import MiddlewareStylesheet from "./middleware/stylesheet";
+
 function isPatient(){
   const authStore = useAuthStore();
   return authStore.isPatient;
@@ -85,7 +87,7 @@ const router = createRouter({
           path: '',
           name: 'onboarding',
           component: OnboardingView,
-          meta: { physician: false, patient: true },
+          meta: { physician: false, patient: true, stylesheet: 'onboarding' },
           beforeEnter: (to, from) => {
             const programmaticAccess = useProgrammaticAccesStore();
             if(programmaticAccess.getAccessPage == "onboarding"){
@@ -99,7 +101,7 @@ const router = createRouter({
           path: '/get-started',
           name: 'get-started',
           component: GetStartedView,
-          meta: { physician: false, patient: true },
+          meta: { physician: false, patient: true, stylesheet: 'onboarding' },
           beforeEnter: (to, from) => {
             const programmaticAccess = useProgrammaticAccesStore();
             if(programmaticAccess.getAccessPage == "get-started"){
@@ -113,7 +115,7 @@ const router = createRouter({
           path: '/quiz',
           name: 'quiz',
           component: QuizView,
-          meta: { physician: false, patient: true },
+          meta: { physician: false, patient: true, stylesheet: 'onboarding' },
           beforeEnter: (to, from) => {
             const programmaticAccess = useProgrammaticAccesStore();
             if(programmaticAccess.getAccessPage == "quiz"){
@@ -127,7 +129,7 @@ const router = createRouter({
           path: '/lifestyle',
           name: 'lifestyle',
           component: LifestyleView,
-          meta: { physician: false, patient: true },
+          meta: { physician: false, patient: true, stylesheet: 'onboarding' },
           beforeEnter: (to, from) => {
             const programmaticAccess = useProgrammaticAccesStore();
             if(programmaticAccess.getAccessPage == "lifestyle"){
@@ -141,7 +143,7 @@ const router = createRouter({
           path: '/complete-info',
           name: 'complete-info',
           component: CompleteInfoView,
-          meta: { physician: false, patient: true },
+          meta: { physician: false, patient: true, stylesheet: 'onboarding' },
           beforeEnter: (to, from) => {
             const programmaticAccess = useProgrammaticAccesStore();
             if(programmaticAccess.getAccessPage == "complete-info"){
@@ -379,5 +381,7 @@ router.beforeEach(async (to) => {
     }
 
 });
+
+router.beforeEach(MiddlewareStylesheet);
 
 export default router

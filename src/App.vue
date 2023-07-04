@@ -38,13 +38,22 @@ onMounted(() => {
   if (authStore.user && authStore.claim) {
     authStore.getUser()
   }
-
 })
+
+watch(route, (to) => {
+  currentRoute.value = to.path;
+});
+
+function checkPath(path) {
+  if (currentRoute.value === path) {
+    return true;
+  }
+}
 </script>
 
 <template>
   <div class="app-container"
-    :class="authStore.isPatient ? 'pt-header' : 'pg-header'">
+    :class="authStore.isPatient ? 'pt-header' : checkPath('/home') ? '' : 'pg-header'">
     <RouterView />
     <Alert />
   </div>

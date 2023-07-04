@@ -1,0 +1,5 @@
+.header-datetime, 
+.header-logo,
+.quote {
+  display: none!important;
+}
