@@ -22,7 +22,8 @@ export default {
             authStore,
             quizData: null,
             lifestyleDropdowns: [],
-            interested_healthier: "1"
+            interested_healthier: "1",
+            isSubmitting: false,
         }
     },
     computed: {
@@ -47,15 +48,21 @@ export default {
                 sections: this.quizData,
                 lifestyle_data: values
             }
+            if(this.isSubmitting) {
+                return;
+            }
+            this.isSubmitting = true;
             axiosInstance.post(`/patients/${this.patientId}/questionnaire`, formData)
                 .then(response => {
                     const programmaticAccess = useProgrammaticAccesStore();
                     programmaticAccess.tempData.pdf = response.data.data.questionnaire?.patient_report
                     programmaticAccess.setAccessPage('complete-info')
+                    this.isSubmitting = false;
                 })
                 .catch(error => {
                     console.log(error)
                     this.alertStore.error(error.response.data.message)
+                    this.isSubmitting = false;
                 });
         },
         getLifestyleData() {
