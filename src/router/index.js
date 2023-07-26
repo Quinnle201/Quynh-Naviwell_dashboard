@@ -382,6 +382,6 @@ router.beforeEach(async (to) => {
 
 });
 
-router.beforeEach(MiddlewareStylesheet);
+// router.beforeEach(MiddlewareStylesheet);
 
 export default router
