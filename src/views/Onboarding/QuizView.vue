@@ -197,6 +197,12 @@ export default {
             </div>
             <div class="quiz-form">
                 <p>Mark all that apply</p>
+                <div class="quiz-form-scale">
+                    <span>0 = Not at all</span>
+                    <span>1 = Mild</span>
+                    <span>2 = Moderate</span>
+                    <span>3 = Severe</span>
+                </div>
                 
                 <Form :keepValues="true">
                     
@@ -207,22 +213,22 @@ export default {
                                     <div class="quiz-form-options">
                                         <div class="quiz-form-input">
                                             <Field type="radio" :name="`${currentSection.codename}[${questionIndex(index)}]`" v-model="currentSection.questions[questionIndex(index)].value" value="0" />
-                                            <label>Never</label> 
+                                            <label>0</label> 
                                         </div>
                                             
                                         <div class="quiz-form-input">
                                             <Field type="radio" :name="`${currentSection.codename}[${questionIndex(index)}]`" v-model="currentSection.questions[questionIndex(index)].value" value="1" />
-                                            <label>Sometimes</label>
+                                            <label>1</label>
                                         </div>
 
                                         <div class="quiz-form-input">
                                             <Field type="radio" :name="`${currentSection.codename}[${questionIndex(index)}]`" v-model="currentSection.questions[questionIndex(index)].value" value="2" />
-                                            <label>Often</label>
+                                            <label>2</label>
                                         </div>
                                         
                                         <div class="quiz-form-input">
                                             <Field type="radio" :name="`${currentSection.codename}[${questionIndex(index)}]`" v-model="currentSection.questions[questionIndex(index)].value" value="3" />
-                                            <label>Always</label>
+                                            <label>3</label>
                                         </div>
                                     </div>
                             </fieldset>
@@ -256,7 +262,7 @@ export default {
     .welcome-wrapper {
         background-color: #F4F4FF;
         min-height: calc(100vh - 64px);
-        margin: 0px -0.5rem 0 -7.5rem;
+        margin: -3.6px -1.2rem 0 -0.8rem;
         padding-bottom: 32px;
         display: flex;
         flex-direction: column;
@@ -376,10 +382,18 @@ export default {
     }
 
     .quiz-form p {
-        margin: 0 0 4px 0;
-        font-size: 14px;
+        margin: 0;
+        font-size: 16px;
         font-weight: 400;
+    }
+
+    .quiz-form-scale {
+        margin-bottom: 16px;
         color: var(--primary);
+    }
+
+    .quiz-form-scale span:not(span:last-child) {
+        margin-right: 8px;
     }
 
     .quiz-form fieldset {
@@ -393,13 +407,14 @@ export default {
 
     .quiz-form-options {
         margin-top: 4px;
+        padding: 0 48px;
         display: flex;
         justify-content: space-between;
     }
 
     .quiz-form-input {
-        max-width: 24%;
-        flex: 0 0 24%;
+        width: 40px;
+        height: 40px;
         font-size: 14px;
         font-weight: 500;
         text-align: center;
@@ -416,32 +431,20 @@ export default {
     }
 
     .quiz-form-input input + label {
-        /* background-color: var(--primary); */
         width: 100%;
         height: 100%;
         padding: 4px 0;
         position: relative;
-        border: 1px solid #CCCCCC;
-        border-radius: 16px;
+        font-size: 16px;
+        line-height: 32px;
+        border: 1px solid var(--primary);
+        border-radius: 50%;
     }
 
     .quiz-form-input input:checked + label {
         background-color: var(--primary);
         color: #FFFFFF;
         border: 1px solid var(--primary);
-    }
-
-    .quiz-form-input input + label:before {
-        content: '';
-        background-color: #FFFFFF;
-        width: 16px;
-        height: 16px;
-        position: absolute;
-        left: 8px;
-        top: 8px;
-        border: 1px solid #CCCCCC;
-        border-radius: 50%;
-        z-index: 2;
     }
 
     .quiz-form-input input:checked + label:before {
@@ -521,9 +524,8 @@ export default {
             max-width: 90%;
         }
 
-        .quiz-form-input {
-            max-width: 100%;
-            flex: auto;
+        .quiz-form-options {
+            padding: 0 16px;
         }
 
         .quiz-form-options {
