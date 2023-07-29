@@ -312,7 +312,7 @@ const router = createRouter({
               meta: { physician: true, patient: false },
             },
             {
-              path: "result-quiz",
+              path: "result/:id",
               name: "result-quiz",
               component: ResultQuizView,
               meta: { physician: true, patient: true },

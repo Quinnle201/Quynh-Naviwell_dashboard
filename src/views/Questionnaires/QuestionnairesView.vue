@@ -73,7 +73,7 @@ export default {
                         <span>{{quiz.questions.length}} questions</span>
                     </div>
                     <RouterLink v-if="!quiz.isCompleted" :to="{ name: 'question-details', params: { id: quiz.id } }">Begin</RouterLink>
-                    <a v-else href="#">Completed</a>
+                    <RouterLink v-else :to="{ name: 'result-quiz', params: { id: quiz.id } }">Results</RouterLink>
                 </li>
             </ul>
 

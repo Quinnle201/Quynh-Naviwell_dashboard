@@ -1,29 +1,84 @@
 <script>
+
+import { axiosInstance } from '@/helpers';
+import { useAlertStore, useAuthStore } from '@/stores';
+
 export default {
     data() {
+        const alertStore = useAlertStore()
+        const authStore = useAuthStore()
         return {
-            quizzes: [
-                { title: 'Eating carbohydrates increases the blood sugar level, but the extent of this rise depends on a food’s _________.', answers : [{ item : 'Iron levels' },{ item : 'Protein content', correct: 'wrong-answer' }, { item: 'Organic nature'}, { item: 'Glycemic Index', correct: 'right-answer'}]},
-                { title: 'Foods with a low glycemic index are quickly broken down, leading to sharp increases in blood sugar, followed by sharp drops.', answers : [{ item : 'True', correct: 'wrong-answer' },{ item : 'False', correct: 'right-answer' }]},
-                { title: 'Sharp fluctuations in the blood sugar level can increase the risk of diabetes, obesity and heart disease.', answers : [{ item : 'True', correct: 'right-answer' },{ item : 'False', correct: 'wrong-answer' }]}
-            ]
+            alertStore,
+            authStore,
+            quizId: null,
+            quizData: null,
+            userAnswerData: null,
         }
     },
+    computed: {
+        user() {
+            return this.authStore.user
+        },
+        answerClass() {
+            return (questionId, answerId, quiz) => {
+                console.log(quiz.text)
+                console.log(quiz.correct)
+                console.log(this.userAnswerData[questionId])
+                if (quiz.correct == this.userAnswerData[questionId] && answerId == quiz.correct) {
+                    return 'right-answer'
+                } 
+                else if(this.userAnswerData[questionId] == answerId) {
+                    return 'wrong-answer'
+                } else {
+                    return ""
+                }
+            } 
+        },
+    },
+    watch: {
+        '$route.params': {
+            handler(toParams, previousParams) {
+                const id = toParams.id;
+                if (id) {
+                    this.getQuiz(id)
+                }
+            },
+            immediate: true
+        }
+    },
+    methods: {
+        close() {
+            this.$router.replace({ path: '/quizzes' })
+        },
+        getQuiz(id) {
+            axiosInstance.get(`/quizzes/${id}`)
+                .then(response => {
+                    const data = response.data.data;
+                    const userData = data.completedResults.find(({profile_id}) => profile_id == this.user.profile_id)
+                    this.userAnswerData = JSON.parse(userData.answer_data)
+                    this.quizData = data;
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                    this.close()
+                });
+        }
+    }
 }
 </script>
 
 <template>
-    <div class="page-wrapper">
+    <div class="page-wrapper" v-if="this.quizData">
         <div class="layout-wrapper quiz">
-            <h3>What Happens When You Diet?</h3>
+            <h3>{{this.quizData.title}}</h3>
         </div>
 
         <div class="quizzes-wrapper page-bg">
-            <div v-for="(quiz, index) in quizzes" :key="quiz.key" class="quiz-result-card">
+            <div v-for="(quiz, index) in this.quizData.questions" :key="quiz.key" class="quiz-result-card">
                 <span>Question {{ index + 1 }}</span>
-                <div class="quiz-result-card-question">{{ quiz.title }}</div>
+                <div class="quiz-result-card-question">{{ quiz.text }}</div>
                 <ul>
-                    <li v-for="(answer) in quiz.answers" :class="answer.correct">{{ answer.item }}</li>
+                    <li v-for="(answer, idx) in quiz.answers" :class="answerClass(index, idx, quiz)" >{{ answer }}</li>
                 </ul>
             </div>
         </div>

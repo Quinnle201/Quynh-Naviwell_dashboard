@@ -99,7 +99,7 @@ export default {
             }
         }, 
         saveQuizData() {
-            axiosInstance.post("/patients/quiz", { id: this.quizId, score: `${this.quizScore.percentage}%` })
+            axiosInstance.post("/patients/quiz", { id: this.quizId, answers: this.userAnswers, score: `${this.quizScore.percentage}%` })
             .then(response => {
                        console.log("Saved")
                     })
