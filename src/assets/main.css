@@ -3518,6 +3518,53 @@ button.remove {
   border-radius: 16px;
 }
 
+/* quiz result */
+.quiz-result-card {
+  background-color: #FFFFFF;
+  margin-bottom: 16px;
+  padding: 18px 16px;
+  border-radius: 16px;
+}
+
+.quiz-result-card > span {
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.quiz-result-card-question {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.quiz-result-card ul {
+  max-width: 50%;
+  list-style: none;
+}
+
+.quiz-result-card ul li {
+  padding: 4px 8px;
+  font-size: 16px;
+  border: 1px solid #E7E7E7;
+  border-radius: 8px;
+}
+
+.quiz-result-card ul li:not(:last-child) {
+  margin-bottom: 4px;
+}
+
+.quiz-result-card ul li.right-answer {
+  background-color: #CCEED0;
+  color: #00B733;
+  border-color: #CCEED0;
+}
+
+.quiz-result-card ul li.wrong-answer {
+  background-color: #FDD3D3;
+  color: #FF0000;
+  border-color: #FDD3D3;
+}
+
+
 /* patient diet and recipes */
 .diet-grid.pt-diet-grid {
   height: calc(100% - 82px);
@@ -4600,6 +4647,10 @@ button.remove {
 
   .add-diet-wrapper .addquote-selects {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .quiz-result-card ul {
+    max-width: 100%;
   }
 }
 

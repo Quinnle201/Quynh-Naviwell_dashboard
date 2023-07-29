@@ -19,6 +19,7 @@ import AddQuoteView from '@/views/Quotes/AddView.vue'
 
 import QuestionDetailsView from '@/views/Questionnaires/QuestionDetailsView.vue'
 import AddQuizView from '@/views/Quizzes/AddQuizView.vue'
+import ResultQuizView from '@/views/Quizzes/ResultQuizView.vue'
 
 import PatientDietDetailsView from '@/views/Diet/PatientDietDetailsView.vue'
 import PatientRecipeDetailsView from '@/views/Diet/PatientRecipeDetailsView.vue'
@@ -311,11 +312,16 @@ const router = createRouter({
               meta: { physician: true, patient: false },
             },
             {
+              path: "result-quiz",
+              name: "result-quiz",
+              component: ResultQuizView,
+              meta: { physician: true, patient: true },
+            },
+            {
               path: ':id',
               name: 'question-details',
               component: QuestionDetailsView,
               meta: { physician: false, patient: true },
-              
             },
           ]
         },
