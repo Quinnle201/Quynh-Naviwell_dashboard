@@ -21,9 +21,6 @@ export default {
         },
         answerClass() {
             return (questionId, answerId, quiz) => {
-                console.log(quiz.text)
-                console.log(quiz.correct)
-                console.log(this.userAnswerData[questionId])
                 if (quiz.correct == this.userAnswerData[questionId] && answerId == quiz.correct) {
                     return 'right-answer'
                 } 
