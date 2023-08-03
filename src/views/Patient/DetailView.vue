@@ -111,10 +111,11 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, patient_id: null, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, isScheduleModalVisible: false, isEmailModalVisible: false, medsData: false, isChatModalVisible: false, medicineArray: [], patientDrugs: [] }
+        return { patient, patient_id: null, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, isScheduleModalVisible: false, isEmailModalVisible: false, medsData: false, isChatModalVisible: false, medicineArray: [], patientDrugs: [], userPrimaryDiag: null, dxCodes: [], }
     },
     async mounted() {
         await this.getMedicine()
+        await this.getDxCodes()
         const id = this.$route.params.id;
         this.getPatientById(id)
         this.getPatientHealthData(id)
@@ -134,6 +135,7 @@ export default {
             axiosInstance.get(`/patients/${id}`)
                 .then(response => {
                     this.patient = response.data.data;
+                    this.userPrimaryDiag = this.patient.dxcode
                     this.fileStore.getPhotoLinkForUser(this.patient.user)
 
                     this.patientDrugs = []
@@ -309,6 +311,28 @@ export default {
                     this.alertStore.error(error.response.data.message)
                 });
         },
+        onPrimaryDiagChange() {
+            axiosInstance.put(`/patients/${this.patient.id}`, {'dxcode': this.userPrimaryDiag})
+                .then(response => {
+                    this.alertStore.success('Patient primary diagnosis set.');
+
+                })
+                .catch(error => {
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+        getDxCodes() {
+            axiosInstance.get('/dx-codes')
+                .then(response => {
+                    this.dxCodes = response.data.map(code => {
+                        return {'name': code.value, 'value': code.id };
+                    });
+
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        },
     },
     computed: {
         isLoaded() {
@@ -428,6 +452,13 @@ export default {
                             <span>{{ user.email }}</span>
                         </div>
                     </div>
+
+
+                    Primary diagnosis:
+                    <select name="LeaveType" v-model="userPrimaryDiag" @change="onPrimaryDiagChange()" class="form-control">
+                        <option value="" disabled>Pick one</option>
+                        <option v-for="code in dxCodes" :value="code.value">{{ code.name }}</option>
+                    </select>
 
                     <div class="patient-profile-left-btn">
                         <RoundBtn @click="showChatModal()">
