@@ -202,19 +202,25 @@ export default {
         </Card>
 
         <div class="cards-wrapper-grid">
+          <RouterLink to="/patient-lab-results">
           <Card>
             <template #card-title>Diagnostic results</template>
             <LabIcon />
-            <span class="dashboard-card-btn active-btn">New Results Available</span>
+            <template #card-btn>
+            New Results Available
+          </template>
           </Card>
+        </RouterLink>
 
+          <RouterLink to="/diet">
           <Card>
             <template #card-title>Diet & Recipes</template>
             <RecipeIcon />
             <template #card-btn>
-              <RouterLink to="/diet" class="dashboard-card-btn active-btn">New Recipes for You</RouterLink>
+              New Recipes for You
             </template>
           </Card>
+         </RouterLink>
         </div>
       </div>
 
