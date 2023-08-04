@@ -16,6 +16,7 @@
 <style>
     .dashboard-card {
         background-color: #FFFEFE;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
