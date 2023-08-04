@@ -1622,10 +1622,10 @@ button.vuecal__arrow {
 
 .patient-profile-left {
   width: 100%;
-  /* margin-right: 18px; */
   padding: 16px 26px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .patient-profile-left-info {
@@ -1681,6 +1681,23 @@ button.vuecal__arrow {
 
 .patient-profile-left-btn .btn-wrapper .btn-icon {
   margin-bottom: 4px;
+}
+
+.patient-profile-diagnosis {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.patient-profile-diagnosis div {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.patient-profile-diagnosis select, 
+.patient-profile-diagnosis option {
+  cursor: pointer;
 }
 
 .patient-profile-right {
@@ -4421,6 +4438,12 @@ button.remove {
   .patient-profile-left {
     padding: 16px 26px 0;
     flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .patient-profile-diagnosis {
+    margin-bottom: 16px;
   }
 
   .patient-profile-left-info {
@@ -4429,7 +4452,7 @@ button.remove {
   }
 
   .patient-profile-left-btn {
-    margin: 0 0 16px 16px;
+    margin: 0 0 16px;
   }
 
   .patient-info {
@@ -5340,10 +5363,6 @@ button.remove {
     margin-bottom: 0;
     font-size: 20px;
     text-align: left;
-  }
-
-  .patient-profile-left-btn {
-    margin: 0 0 16px;
   }
 
   .btn-wrapper .btn-icon {

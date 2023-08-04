@@ -453,12 +453,13 @@ export default {
                         </div>
                     </div>
 
-
-                    Primary diagnosis:
-                    <select name="LeaveType" v-model="userPrimaryDiag" @change="onPrimaryDiagChange()" class="form-control">
-                        <option value="" disabled>Pick one</option>
-                        <option v-for="code in dxCodes" :value="code.value">{{ code.name }}</option>
-                    </select>
+                    <div class="patient-profile-diagnosis">
+                        <div>Primary diagnosis:</div>
+                        <select name="LeaveType" v-model="userPrimaryDiag" @change="onPrimaryDiagChange()" class="form-control">
+                            <option value="" disabled>Pick one</option>
+                            <option v-for="code in dxCodes" :value="code.value">{{ code.name }}</option>
+                        </select>
+                    </div>
 
                     <div class="patient-profile-left-btn">
                         <RoundBtn @click="showChatModal()">
