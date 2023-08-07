@@ -328,10 +328,10 @@ const router = createRouter({
           ]
         },
         {
-          path: "questionnaires-results",
-          name: "questionnaires-results",
+          path: "questionnaires",
+          name: "questionnaire-results",
           component: QuestionnairesResultsView,
-          meta: { physician: true, patient: true },
+          meta: { physician: true, patient: false },
         },
         // {
         //   path: '/questionnaire',
