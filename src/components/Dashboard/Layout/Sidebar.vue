@@ -13,6 +13,7 @@ import SettingsIcon from '../../icons/IconSettings.vue'
 
 import MedicineIcon from '../../icons/IconMedicine.vue'
 import ProfileIcon from '../../icons/IconProfile.vue'
+import QuestionnaireResultsIcon from '../../icons/IconQResults.vue'
 import { RouterLink } from 'vue-router'
 
 import { useAuthStore } from '@/stores';
@@ -84,6 +85,10 @@ const physicianLinks = [
   {
     route: "/lab-results",
     icon: markRaw(ResultsIcon)
+  },
+  {
+    route: "/questionnaires",
+    icon: markRaw(QuestionnaireResultsIcon)
   },
   {
     route: "/diet",
