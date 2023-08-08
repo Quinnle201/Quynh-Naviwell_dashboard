@@ -180,7 +180,7 @@ export default {
               </div>
 
               <RouterLink to="/quizzes" class="dashboard-card-btn">
-                <span>*1 New Quiz* Go to Quizzes</span>
+                <span>Go to Quizzes</span>
               </RouterLink>
             </div>
 
