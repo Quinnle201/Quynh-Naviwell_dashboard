@@ -230,7 +230,8 @@ export default {
 
           <ul>
             <li v-for="msg in messages">
-              <div class="messages-card-name">Dr. {{msg.from.last_name}}</div>
+              <div v-if="msg.from.id == user.id" class="messages-card-name">You</div>
+              <div v-else class="messages-card-name">Dr. {{msg.from.last_name}}</div>
               <div>Re: {{msg.body.message}}</div>
             </li>
           </ul>
