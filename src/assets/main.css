@@ -2675,6 +2675,10 @@ ul.messages-list li.physician-message .message-list-time {
   height: calc(100% - 42px);
 }
 
+.diet-tabs .tabs-content {
+  padding: 0;
+}
+
 .diet-search-wrapper {
   margin-bottom: 32px;
   display: grid;

@@ -1,9 +1,13 @@
 <script>
-
 import { axiosInstance } from '@/helpers';
 import { useAlertStore, useAuthStore } from '@/stores';
 
+import Tabs from "@/components/Tabs.vue"
+
 export default {
+    components: {
+        Tabs
+    },
     data() {
         const alertStore = useAlertStore()
         const authStore = useAuthStore()
@@ -13,6 +17,7 @@ export default {
             quizId: null,
             quizData: null,
             userAnswerData: null,
+            tabList: ["Results", "Education"],
         }
     },
     computed: {
@@ -70,20 +75,26 @@ export default {
             <h3>{{this.quizData.title}}</h3>
         </div>
 
-        <div class="page-bg quiz-details">
-                <div class="quiz-details-info">
-                    <div class="ck-content" v-html="quizData.article"></div>
+        <tabs class="diet-tabs" :tabList="tabList">
+            <template v-slot:tabPanel-1>
+                <div class="quizzes-wrapper page-bg">
+                    <div v-for="(quiz, index) in this.quizData.questions" :key="quiz.key" class="quiz-result-card">
+                        <span>Question {{ index + 1 }}</span>
+                        <div class="quiz-result-card-question">{{ quiz.text }}</div>
+                        <ul>
+                            <li v-for="(answer, idx) in quiz.answers" :class="answerClass(index, idx, quiz)" >{{ answer }}</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-
-        <div class="quizzes-wrapper page-bg">
-            <div v-for="(quiz, index) in this.quizData.questions" :key="quiz.key" class="quiz-result-card">
-                <span>Question {{ index + 1 }}</span>
-                <div class="quiz-result-card-question">{{ quiz.text }}</div>
-                <ul>
-                    <li v-for="(answer, idx) in quiz.answers" :class="answerClass(index, idx, quiz)" >{{ answer }}</li>
-                </ul>
-            </div>
-        </div>
+            </template>
+            
+            <template v-slot:tabPanel-2>  
+                <div class="page-bg quiz-details">
+                    <div class="quiz-details-info">
+                        <div class="ck-content" v-html="quizData.article"></div>
+                    </div>
+                </div>
+            </template>
+        </tabs>
     </div>
 </template>
