@@ -70,6 +70,12 @@ export default {
             <h3>{{this.quizData.title}}</h3>
         </div>
 
+        <div class="page-bg quiz-details">
+                <div class="quiz-details-info">
+                    <div class="ck-content" v-html="quizData.article"></div>
+                </div>
+            </div>
+
         <div class="quizzes-wrapper page-bg">
             <div v-for="(quiz, index) in this.quizData.questions" :key="quiz.key" class="quiz-result-card">
                 <span>Question {{ index + 1 }}</span>
