@@ -10,6 +10,9 @@ import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
 import _ from 'lodash';
 
+import draggable from 'vuedraggable';
+import DraggableIcon from '@/components/icons/IconDraggable.vue'
+
 export default {
     components: {
         AddIcon,
@@ -17,7 +20,9 @@ export default {
         EditIcon,
         DetailModal,
         DeleteModal,
-        Pagination
+        Pagination,
+        draggable,
+        DraggableIcon
     },
     data() {
         const alertStore = useAlertStore()
@@ -30,6 +35,9 @@ export default {
             totalPages: 1,
             currentPage: 1,
             searchTerm: "",
+            drag: false,
+            enabled: false,
+            dragging: false
         }
     },
     watch: {
@@ -115,11 +123,23 @@ export default {
     <div class="page-wrapper">
         <div class="layout-wrapper quiz">
             <h3>Quizzes</h3>
+            
+            <div class="quizzes-btns">
+                <div class="sort-button">
+                    <input
+                        id="disabled"
+                        type="checkbox"
+                        v-model="enabled"
+                        class="form-check-input"
+                    />
+                    <label class="form-check-label" for="disabled">Reorder quizzes</label>
+                </div>
 
-            <RouterLink :to="{ name: 'add-quiz' }" class="add-button">
-                <AddIcon />
-                <button type="button">Add New Quiz</button>
-            </RouterLink>
+                <RouterLink :to="{ name: 'add-quiz' }" class="add-button">
+                    <AddIcon />
+                    <button type="button">Add New Quiz</button>
+                </RouterLink>
+            </div>
         </div>
 
         <div class="quizzes-wrapper page-bg">
@@ -130,24 +150,38 @@ export default {
                 </label>
             </div>
 
-            <div class="quizzes-grid">
-                <div class="quizzes-grid-item" v-for="(quiz, index) in quizzes[currentPage]" :key="quiz.id">
-                    <div class="quizzes-grid-item-content">
-                        <h6>{{ quiz.title }}</h6>
-                        <div class="quizzes-grid-item-date">{{ localDate(quiz.created_at) }}</div>
-                    </div>
-                    <div class="quizzes-grid-item-btn">
-                        <div class="quizzes-grid-item-btn-img" @click="showDetailModal(index)">
-                            <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+            <draggable v-model="quizzes[currentPage]" class="quizzes-grid" 
+            item-key="title" 
+            tag="div"
+            :disabled="!enabled"
+            ghost-class="ghost"
+            :move="checkMove" 
+            @start="dragging = true"
+            @end="dragging = false" handle=".handle">
+                <template #item="{ element }">
+                    <div class="quizzes-grid-item" :class="{ 'draggable': enabled }">
+                        <div class="quizzes-grid-item-content">
+                            <h6>{{ element.title }}</h6>
+                            <div class="quizzes-grid-item-date">{{ localDate(element.created_at) }}</div>
                         </div>
 
-                        <Transition>
-                            <DetailModal v-if="isDetailModalVisible === index" @update="updateQuiz(quiz.id)"
-                                @close="closeDetails" @delete="showDeleteModal(quiz.id)" />
-                        </Transition>
+                        <div class="handle">
+                            <DraggableIcon />
+                        </div>
+
+                        <div class="quizzes-grid-item-btn">
+                            <div class="quizzes-grid-item-btn-img" @click="showDetailModal(index)">
+                                <img src="@/assets/img/details-icon.png" alt="Details Icon" />
+                            </div>
+
+                            <Transition>
+                                <DetailModal v-if="isDetailModalVisible === index" @update="updateQuiz(element.id)"
+                                    @close="closeDetails" @delete="showDeleteModal(element.id)" />
+                            </Transition>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </template>
+            </draggable>
 
             <pagination
                 v-if="totalPages > 1"
