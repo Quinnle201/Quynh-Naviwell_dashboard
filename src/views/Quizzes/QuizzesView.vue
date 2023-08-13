@@ -37,7 +37,8 @@ export default {
             searchTerm: "",
             drag: false,
             enabled: false,
-            dragging: false
+            dragging: false,
+            show: false
         }
     },
     watch: {
@@ -132,7 +133,18 @@ export default {
                         v-model="enabled"
                         class="form-check-input"
                     />
-                    <label class="form-check-label" for="disabled">Reorder quizzes</label>
+                    <label class="form-check-label" for="disabled" @click="show = !show">Reorder quizzes</label>
+
+                    <transition name="slide">
+                        <!-- <div class="dropdown-menu" v-if="show">
+                            <a class="dropdown-item" href="#">categoty</a>
+                            <a class="dropdown-item" href="#">category</a>
+                        </div> -->
+                        <Field as="select" name="category" class="dropdown-menu" v-if="show">
+                            <option class="dropdown-item">categoty</option>
+                            <option class="dropdown-item">categoty</option>
+                        </Field>
+                    </transition>
                 </div>
 
                 <RouterLink :to="{ name: 'add-quiz' }" class="add-button">
