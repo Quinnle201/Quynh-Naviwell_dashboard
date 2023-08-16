@@ -8,7 +8,7 @@ import Pagination from '@/components/Pagination.vue';
 
 import { axiosInstance } from '@/helpers';
 import { useAlertStore } from '@/stores';
-import _ from 'lodash';
+import _, { get, set } from 'lodash';
 
 import draggable from 'vuedraggable';
 import DraggableIcon from '@/components/icons/IconDraggable.vue'
@@ -38,7 +38,13 @@ export default {
             drag: false,
             enabled: false,
             dragging: false,
-            show: false
+            show: false,
+            //Quiz reorder:
+            dxCodes: [],
+            sortQuizzes: [],
+            showReorder: false,
+            showReorderCategory: false,
+            reorderCategory: null,
         }
     },
     watch: {
@@ -49,11 +55,21 @@ export default {
     },
     mounted() {
         this.getQuizList()
+        this.getDxCodes()
     },
     computed: {
         localDate() {
             return (time) => new Date(time).format('DD.MM.YYYY')
         },
+        quizList: {
+            get() {
+                return this.enabled ? this.sortQuizzes : this.quizzes[this.currentPage]
+            },
+            set(val) {
+                this.sortQuizzes = val
+            }
+            
+        }
     },
     methods: {
         searchQuizzes: _.debounce(function(self, newVal) {
@@ -115,7 +131,85 @@ export default {
         onPageChange(page) {
             this.currentPage = page;
             this.getQuizList()
-        }
+        },
+
+
+        // Quiz reordering logic:
+        setOrderCategory(val) {
+            this.enabled = true
+            this.reorderCategory = val
+            this.showReorderCategory = false
+            this.sortQuizzes = []
+            this.getQuizzesByCode(val)
+        },
+        startReorder() {
+            this.showReorder = true
+            this.showReorderCategory = true
+        },
+
+        cancelReorder() {
+            this.enabled = false
+            this.reorderCategory = null
+            this.showReorder = false
+            this.showReorderCategory = false
+        },
+
+        saveReorderValues() {
+            this.enabled = false
+            this.showReorder = false
+            this.showReorderCategory = false
+            console.log("save reorder")
+            axiosInstance.put('/quizzes/set-order', { quizzes: this.sortQuizzes, code: this.reorderCategory } )
+                .then(response => {
+                    this.alertStore.success(response.data.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+            
+        },
+
+        getDxCodes() {
+            axiosInstance.get('/dx-codes')
+                .then(response => {
+                    this.dxCodes = response.data.map(code => {
+                        return {'name': code.value, 'value': code.id };
+                    });
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        },
+
+        getQuizzesByCode(code) {
+            axiosInstance.get(`/quizzes`, { params: { code: code, per_page: 1000 } })
+                .then(response => {
+                    const quizzes = response.data.data.quizzes
+                    let quizOrder = 1;
+                    quizzes.forEach(element => {
+                        element.order = quizOrder
+                        quizOrder++;
+                    });
+                    this.sortQuizzes = quizzes;
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+
+        updateListSortOrder ({ moved }) {
+            const newList = [...this.sortQuizzes].map((item, index) => {
+                const newSort = index + 1;
+                let hasChanged = item.order !== newSort;
+                if (hasChanged) {
+                    item.order = newSort;
+                }
+                return item;
+            });
+            this.sortQuizzes = newList;
+        },
+
     }
 }
 </script>
@@ -127,23 +221,17 @@ export default {
             
             <div class="quizzes-btns">
                 <div class="sort-button">
-                    <input
-                        id="disabled"
-                        type="checkbox"
-                        v-model="enabled"
-                        class="form-check-input"
-                    />
-                    <label class="form-check-label" for="disabled" @click="show = !show">Reorder quizzes</label>
+                    
+                    <div  v-if="showReorder && !showReorderCategory">
+                        <label class="form-check-label" style="background-color: var(--primary); color: white;" @click="cancelReorder">Cancel</label>
+                        <label class="form-check-label" style="background-color: var(--primary); color: white;" @click="saveReorderValues">Save values</label>
+                    </div>
+                    <label v-else class="form-check-label" @click="startReorder">Reorder quizzes</label>
 
                     <transition name="slide">
-                        <!-- <div class="dropdown-menu" v-if="show">
-                            <a class="dropdown-item" href="#">categoty</a>
-                            <a class="dropdown-item" href="#">category</a>
-                        </div> -->
-                        <Field as="select" name="category" class="dropdown-menu" v-if="show">
-                            <option class="dropdown-item">categoty</option>
-                            <option class="dropdown-item">categoty</option>
-                        </Field>
+                        <div class="dropdown-menu" v-if="showReorderCategory">
+                            <a v-for="code in dxCodes" class="dropdown-item" href="#" @click="setOrderCategory(code.value)">{{code.name}}</a>
+                        </div>
                     </transition>
                 </div>
 
@@ -162,18 +250,18 @@ export default {
                 </label>
             </div>
 
-            <draggable v-model="quizzes[currentPage]" class="quizzes-grid" 
-            item-key="title" 
+            <draggable v-model="quizList" class="quizzes-grid" 
+            item-key="id" 
             tag="div"
             :disabled="!enabled"
             ghost-class="ghost"
-            :move="checkMove" 
+            @change="updateListSortOrder"
             @start="dragging = true"
             @end="dragging = false" handle=".handle">
-                <template #item="{ element }">
+                <template #item="{ element, index }">
                     <div class="quizzes-grid-item" :class="{ 'draggable': enabled }">
                         <div class="quizzes-grid-item-content">
-                            <h6>{{ element.title }}</h6>
+                            <h6><span style="color:#0258BC" v-if="enabled">{{index+1}}.</span> {{ element.title }}</h6>
                             <div class="quizzes-grid-item-date">{{ localDate(element.created_at) }}</div>
                         </div>
 
