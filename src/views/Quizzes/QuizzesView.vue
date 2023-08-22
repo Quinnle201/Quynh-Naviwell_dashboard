@@ -261,7 +261,7 @@ export default {
                 <template #item="{ element, index }">
                     <div class="quizzes-grid-item" :class="{ 'draggable': enabled }">
                         <div class="quizzes-grid-item-content">
-                            <h6><span style="color:#0258BC" v-if="enabled">{{index+1}}.</span> {{ element.title }}</h6>
+                            <h6><span style="color:#0258BC">{{index+1}}.</span> {{ element.title }}</h6>
                             <div class="quizzes-grid-item-date">{{ localDate(element.created_at) }}</div>
                         </div>
 
