@@ -158,14 +158,13 @@ export default {
             this.enabled = false
             this.showReorder = false
             this.showReorderCategory = false
-            console.log("save reorder")
-            axiosInstance.put('/quizzes/set-order', { quizzes: this.sortQuizzes, code: this.reorderCategory } )
-                .then(response => {
-                    this.alertStore.success(response.data.data)
-                })
-                .catch(error => {
-                    console.log(error)
-                });
+            // axiosInstance.put('/quizzes/set-order', { quizzes: this.sortQuizzes, code: this.reorderCategory } )
+            //     .then(response => {
+            //         this.alertStore.success(response.data.data)
+            //     })
+            //     .catch(error => {
+            //         console.log(error)
+            //     });
             
         },
 
@@ -226,13 +225,14 @@ export default {
                         <label class="form-check-label" style="background-color: var(--primary); color: white;" @click="cancelReorder">Cancel</label>
                         <label class="form-check-label" style="background-color: var(--primary); color: white;" @click="saveReorderValues">Save values</label>
                     </div>
-                    <label v-else class="form-check-label" @click="startReorder">Reorder quizzes</label>
+
+                    <!-- <label v-else class="form-check-label" @click="startReorder">Reorder quizzes</label>
 
                     <transition name="slide">
                         <div class="dropdown-menu" v-if="showReorderCategory">
                             <a v-for="code in dxCodes" class="dropdown-item" href="#" @click="setOrderCategory(code.value)">{{code.name}}</a>
                         </div>
-                    </transition>
+                    </transition> -->
                 </div>
 
                 <RouterLink :to="{ name: 'add-quiz' }" class="add-button">
