@@ -345,13 +345,13 @@ export default {
             return Math.floor((new Date() - new Date(this.patient.dob).getTime()) / 3.15576e+10)
         },
         dob() {
-            return new Date(this.patient.dob).format("YYYY/MM/DD");
+            return new Date(this.patient.dob).format("MM/DD/YYYY");
         },
         gender() {
             return this.patient.gender == 'm' ? 'Male' : 'Female'
         },
         since() {
-            return new Date(this.patient.createdAt).format("YYYY/MM/DD");
+            return new Date(this.patient.createdAt).format("MM/DD/YYYY");
         },
         bmi() {
             return (values) => {
@@ -549,7 +549,7 @@ export default {
                         <div v-if="patient.completed_quizzes[0]" class="patient-status-item">
                             <div class="patient-status-item-date">
                                 <div>{{ patient.completed_quizzes[0].title }} quiz:</div>
-                                <div>{{ new Date(patient.completed_quizzes[0].completed_at).format("YYYY/MM/DD") }}</div>
+                                <div>{{ new Date(patient.completed_quizzes[0].completed_at).format("MM/DD/YYYY") }}</div>
                             </div>
 
                             <div class="label-status complete">Completed</div>
@@ -569,7 +569,7 @@ export default {
                         <div class="patient-status-item">
                             <div class="patient-status-item-date">
                                 <div>Next Quarterly Questionnaire Assigned:</div>
-                                <div>{{ new Date(patient.questionnaireAssignDate).format("YYYY/MM/DD") }}</div>
+                                <div>{{ new Date(patient.questionnaireAssignDate).format("MM/DD/YYYY") }}</div>
                             </div>
 
                             <div :class="questionnaire ? 'complete' : 'incomplete'" class="label-status">{{ questionnaire ?
@@ -577,7 +577,7 @@ export default {
 
                             <div class="patient-status-item-duration">
                                 <div v-if="questionnaire">Completed on <span>{{ new
-                                    Date(questionnaire.created_at).format("YYYY/MM/DD") }}</span></div>
+                                    Date(questionnaire.created_at).format("MM/DD/YYYY") }}</span></div>
                             </div>
 
                             <div v-if="questionnaire" class="patient-status-item-btn" @click="downloadReport">View

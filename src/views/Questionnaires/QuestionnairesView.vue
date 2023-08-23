@@ -24,7 +24,7 @@ export default {
     },
     computed: {
         localDate() {
-            return (time) => new Date(time).format('DD.MM.YYYY')
+            return (time) => new Date(time).format('MM/DD/YYYY')
         },
     },
     methods: {

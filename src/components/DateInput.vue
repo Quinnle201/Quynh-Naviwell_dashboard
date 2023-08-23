@@ -96,14 +96,15 @@ export default {
       let day = this.day ? this.day : '0'
       if (day == "00" || day.length < 2) return;
       day = day.padStart(2, 0);
-      if (this.showMonth) this.$refs.month.select();
-      else if (this.showYear) this.$refs.year.select();
+      if (this.showYear) this.$refs.year.select();
+      // else if (this.showYear) this.$refs.year.select();
     },
     updateMonth() {
       let month = this.month ? this.month : '0'
       if (month == "00" || month.length < 2) return;
       month = month.padStart(2, 0);
-      if (this.showYear) this.$refs.year.select();
+      if (this.showDay) this.$refs.day.select();
+      // else if (this.showYear) this.$refs.year.select();
     },
     updateValue() {
       this.isError = false
@@ -153,13 +154,13 @@ export default {
 <template>
   <div class="FormDate" :class="isError ? 'FormDate-error' : ''" @keyup.capture="updateValue">
 
-    <input v-if="showDay" ref="day" v-model="day" class="FormDate__input FormDate__input--day" type="text"
-      placeholder="Day" @input="updateDay" />
-
-    <span v-if="showDay && showMonth" class="FormDate__divider">/</span>
-
     <input v-if="showMonth" ref="month" v-model="month" class="FormDate__input FormDate__input--month" type="text"
       placeholder="Month" @input="updateMonth" />
+
+      <span v-if="showDay && showMonth" class="FormDate__divider">/</span>
+
+    <input v-if="showDay" ref="day" v-model="day" class="FormDate__input FormDate__input--day" type="text"
+      placeholder="Day" @input="updateDay" />
 
     <span v-if="showYear && (showDay || showMonth)" class="FormDate__divider">/</span>
 
