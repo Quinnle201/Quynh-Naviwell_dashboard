@@ -69,7 +69,7 @@ export default {
                         <QuestionnaireIcon />
                     </div>
                     <div class="q-info">
-                        <div>{{quiz.title}}</div>
+                        <div>{{ index+1  }}. {{quiz.title}}</div>
                         <span>{{quiz.questions.length}} questions</span>
                     </div>
                     <RouterLink v-if="!quiz.isCompleted" :to="{ name: 'question-details', params: { id: quiz.id } }">Begin</RouterLink>
