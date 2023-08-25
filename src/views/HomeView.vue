@@ -139,7 +139,7 @@ export default {
       <ClinicLogoBlock/>
 
       <div class="top-block-info">
-        <h3>{{ greetTime }} Dr. {{ user.last_name }}</h3>
+        <h3>{{ greetTime }} {{ user.last_name }}</h3>
         <div class="top-block-info-date">
           <span>{{ dateBanner }}</span>
           <span>
