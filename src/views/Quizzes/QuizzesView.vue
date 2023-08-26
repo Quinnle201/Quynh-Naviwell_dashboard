@@ -221,10 +221,10 @@ export default {
             <div class="quizzes-btns">
                 <div class="sort-button">
                     
-                    <div  v-if="showReorder && !showReorderCategory">
+                    <!-- <div  v-if="showReorder && !showReorderCategory">
                         <label class="form-check-label" style="background-color: var(--primary); color: white;" @click="cancelReorder">Cancel</label>
                         <label class="form-check-label" style="background-color: var(--primary); color: white;" @click="saveReorderValues">Save values</label>
-                    </div>
+                    </div> -->
 
                     <!-- <label v-else class="form-check-label" @click="startReorder">Reorder quizzes</label>
 
@@ -235,10 +235,10 @@ export default {
                     </transition> -->
                 </div>
 
-                <RouterLink :to="{ name: 'add-quiz' }" class="add-button">
+                <!-- <RouterLink :to="{ name: 'add-quiz' }" class="add-button">
                     <AddIcon />
                     <button type="button">Add New Quiz</button>
-                </RouterLink>
+                </RouterLink> -->
             </div>
         </div>
 
@@ -269,7 +269,7 @@ export default {
                             <DraggableIcon />
                         </div>
 
-                        <div class="quizzes-grid-item-btn">
+                        <!-- <div class="quizzes-grid-item-btn">
                             <div class="quizzes-grid-item-btn-img" @click="showDetailModal(index)">
                                 <img src="@/assets/img/details-icon.png" alt="Details Icon" />
                             </div>
@@ -278,7 +278,7 @@ export default {
                                 <DetailModal v-if="isDetailModalVisible === index" @update="updateQuiz(element.id)"
                                     @close="closeDetails" @delete="showDeleteModal(element.id)" />
                             </Transition>
-                        </div>
+                        </div> -->
                     </div>
                 </template>
             </draggable>
@@ -291,11 +291,11 @@ export default {
             />
         </div>
 
-        <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal" @delete="deleteQuiz">
+        <!-- <DeleteModal v-show="isDeleteModalVisible" @close="closeDeleteModal" @delete="deleteQuiz">
             <template #content>
                 <h4>Delete this quiz?</h4>
                 <p>You will not be able to recover it</p>
             </template>
-        </DeleteModal>
+        </DeleteModal> -->
     </div>
 </template>

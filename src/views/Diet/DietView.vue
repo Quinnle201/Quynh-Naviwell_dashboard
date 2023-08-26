@@ -200,10 +200,10 @@ export default {
                             </label>
                         </form>
 
-                        <RouterLink :to="{ name: 'add-diet' }" class="add-button">
+                        <!-- <RouterLink :to="{ name: 'add-diet' }" class="add-button">
                             <AddIcon />
                             <button type="button">Add New Diet</button>
-                        </RouterLink>
+                        </RouterLink> -->
                     </div>
 
                     <div class="diet-grid">
@@ -217,14 +217,14 @@ export default {
                                 </div>
                             </div>
 
-                            <div class="diet-grid-item-btn">
+                            <!-- <div class="diet-grid-item-btn">
                                 <img src="@/assets/img/details-icon.png" alt="Details Icon" @click="showDetailModal(diet)" />
 
                                 <Transition>
                                     <DetailModal v-if="isDetailModalVisible === diet" @update="updateDiet(diet.id)" @close="closeDetails" @delete="showDeleteModal">
                                     </DetailModal>
                                 </Transition>
-                            </div>
+                            </div> -->
                         </div>
 
                     </div>
