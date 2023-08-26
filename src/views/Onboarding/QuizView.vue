@@ -72,7 +72,7 @@ export default {
                         {text: 'Feel cold frequently?', value: -1},
                         {text: 'Decreased or low libido?', value: -1},
                         {text: 'Thinning of hair?', value: -1},
-                        {text: 'Time of day with low energy?', value: -1},
+                        {text: 'Experience energy drops throughout the day?', value: -1},
                     ],
                 },
                 {
