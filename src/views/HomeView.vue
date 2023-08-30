@@ -221,14 +221,16 @@ export default {
           <h4>Patient Education</h4>
 
           <ul>
-            <li>
+            <!-- <li>
               <img src="@/assets/img/icon-3.png" alt="Icon" />
               <span class="dashboard-card-btn active-btn">4 Quiz Results to Review</span>
-            </li>
+            </li> -->
 
             <li>
-              <img src="@/assets/img/icon-4.png" alt="Icon" />
-              <span class="dashboard-card-btn active-btn">2 Questionnaire Results to Review</span>
+              <RouterLink :to="{ name: 'questionnaire-results' }">
+                <img src="@/assets/img/icon-4.png" alt="Icon" />
+                <span class="dashboard-card-btn active-btn">2 Questionnaire Results to Review</span>
+              </RouterLink>
             </li>
           </ul>
         </div>
