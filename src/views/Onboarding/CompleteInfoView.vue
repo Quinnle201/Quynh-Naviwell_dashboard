@@ -28,6 +28,10 @@ export default {
             this.alertStore.success(`Opening your report`)
             downloadFile(null, `${this.userId}/reports/${quizReportRef}`, 'users')
 
+        }, 
+
+        goHome() {
+            this.$router.replace({ name: 'home' })
         }
     }
 }
@@ -38,10 +42,11 @@ export default {
         <div class="welcome-inner">
             <div class="welcome-heading">
                 <h4>Congratulations!</h4>
-                <h6>Questionnaires completed</h6>
+                <h6>Questionnaire completed</h6>
             </div>
 
             <button class="info-form-button" @click="downloadReport">Report</button>
+            <button class="info-form-button" @click="goHome">Open dashboard</button>
         </div>
     </div>
 </template>
