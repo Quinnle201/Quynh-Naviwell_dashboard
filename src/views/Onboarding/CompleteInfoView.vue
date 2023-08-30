@@ -45,8 +45,10 @@ export default {
                 <h6>Questionnaire completed</h6>
             </div>
 
-            <button class="info-form-button" @click="downloadReport">Report</button>
-            <button class="info-form-button" @click="goHome">Open dashboard</button>
+            <div class="info-form-wrap">
+                <button class="info-form-button secondary" @click="goHome">Open dashboard</button>
+                <button class="info-form-button" @click="downloadReport">Report</button>
+            </div>
         </div>
     </div>
 </template>
@@ -110,11 +112,17 @@ export default {
         color: var(--primary);
     }
 
+    .info-form-wrap {
+        width: 75%;
+        margin-top: 32px;
+        display: flex;
+        justify-content: space-between;
+    }
+
     .info-form-button {
         background-color: var(--primary);
         width: 220px;
         height: 56px;
-        margin-top: 32px;
         padding: 12px 32px;
         font-size: 18px;
         font-weight: 500;
@@ -123,5 +131,11 @@ export default {
         border-radius: 16px;
         cursor: pointer;
         z-index: 2;
+    }
+
+    .info-form-button.secondary {
+        background-color: #FFFFFF;
+        border: 2px solid var(--primary);
+        color: var(--primary);
     }
 </style>
