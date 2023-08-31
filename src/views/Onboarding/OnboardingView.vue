@@ -350,11 +350,11 @@ export default {
     .welcome-wrapper {
         background-color: #F4F4FF;
         height: 100vh;
-        margin: -3.6px -1.2rem 0 -0.8rem;
+        margin: -64px -1.2rem 0 -8rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
+        align-items: center; 
     }
 
     .quiz-progressbar {
