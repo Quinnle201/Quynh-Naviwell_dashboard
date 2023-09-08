@@ -193,6 +193,9 @@ async function onSubmit() {
 
     @media screen and (max-width: 768px), 
     screen and (max-height: 700px) {
+        .login-wrapper {
+            margin: -4rem 0 0;
+        }
         .login-inner {
             margin-top: 0;
         }
