@@ -220,7 +220,7 @@ export default {
 
       <div class="cards-wrapper">
         <div class="dashboard-card education-card">
-          <h4>Patient Education</h4>
+          <h4>Questionnaire Results</h4>
 
           <ul>
             <!-- <li>
