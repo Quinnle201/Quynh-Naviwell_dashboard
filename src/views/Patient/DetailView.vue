@@ -572,7 +572,7 @@ export default {
                                 <div>{{ new Date(patient.questionnaireAssignDate).format("MM/DD/YYYY") }}</div>
                             </div>
 
-                            <div :class="questionnaire ? 'complete' : 'incomplete'" class="label-status">{{ questionnaire ?
+                            <div :class="questionnaire && !patient.questionnaireRequired ? 'complete' : 'incomplete'" class="label-status">{{ questionnaire && !patient.questionnaireRequired ?
                                 'Complete' : 'Incomplete' }}</div>
 
                             <div class="patient-status-item-duration">
