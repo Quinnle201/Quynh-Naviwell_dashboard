@@ -171,8 +171,8 @@ export default {
           <Card>
             <template #card-title>Diagnostic results</template>
             <LabIcon />
-            <RouterLink :to="{ name: 'lab-results' }">
-              <span class="dashboard-card-btn active-btn">3 New Reports to Review</span>
+            <RouterLink :to="{ name: 'lab-results' }" style="text-align: center;">
+              <span class="dashboard-card-btn">Results</span>
             </RouterLink>
           </Card>
 
@@ -229,9 +229,9 @@ export default {
             </li> -->
 
             <li>
-              <RouterLink :to="{ name: 'questionnaire-results' }">
+              <RouterLink :to="{ name: 'questionnaire-results' }" style="text-align: center;">
                 <img src="@/assets/img/icon-4.png" alt="Icon" />
-                <span class="dashboard-card-btn active-btn">2 Questionnaire Results to Review</span>
+                <span class="dashboard-card-btn">Results</span>
               </RouterLink>
             </li>
           </ul>
