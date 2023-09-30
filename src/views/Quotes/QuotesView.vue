@@ -192,7 +192,7 @@ export default {
             <div class="quotes-grid">
                 <div class="quotes-grid-item" v-for="quote in quotes[currentPage]">
                     <div class="quotes-grid-item-date">
-                        <div>{{ new Date(quote.created_at).format('MM/DD/YYYY') }}</div>
+                        <div>{{ new Date(quote.scheduled_at).format('MM/DD/YYYY') }}</div>
                     </div>
                     <div class="quotes-grid-item-content">
                         <p>{{ quote.text }}</p>
