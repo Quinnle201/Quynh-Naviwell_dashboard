@@ -213,7 +213,7 @@ export default {
             </li>
           </ul>
           <template #card-btn>
-            <RouterLink :to="{ name: 'patients' }">Add New Patient</RouterLink>
+            <RouterLink :to="{ name: 'patients' }">Patient list</RouterLink>
           </template>
         </Card>
       </div>
