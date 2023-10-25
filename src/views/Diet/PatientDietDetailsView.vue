@@ -13,12 +13,21 @@ export default {
             fileStore,
         }
     },
+    computed: {
+        dietPdf() {
+            if(this.fileStore.dietPdfFiles(this.dietData)){
+                return this.fileStore.dietPdfFiles(this.dietData)
+            }
+            return null
+        },
+    },
     methods: {
         getDiet(id) {
             axiosInstance.get(`/diet/${id}`)
                 .then(response => {
                     this.dietData = response.data.data;
                     this.fileStore.getPhotoLinkForDiet(this.dietData)
+                    this.fileStore.getPdfLinkForDiet(this.dietData)
                 })
                 .catch(error => {
                     this.alertStore.error(error.response.data.message)
@@ -47,6 +56,8 @@ export default {
             <div class="diet-details-descr">
                 <p>{{ dietData.description }}</p>
             </div>
+
+            <a v-if="dietPdf" :href="dietPdf" target="_blank">Download attachment</a>
 
             <div class="diet-details-plan">
                 <h5>Diet plan</h5>
