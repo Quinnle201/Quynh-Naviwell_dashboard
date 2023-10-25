@@ -53,11 +53,12 @@ export default {
                 <img :src="fileStore.dietImages(dietData)" alt="">
             </div>
 
+            <a v-if="dietPdf" :href="dietPdf" target="_blank">Click Here for Your NaviWell Lifestyle Upgrades</a>
+
             <div class="diet-details-descr">
                 <p>{{ dietData.description }}</p>
             </div>
 
-            <a v-if="dietPdf" :href="dietPdf" target="_blank">Download attachment</a>
 
             <div class="diet-details-plan">
                 <h5>Diet plan</h5>
