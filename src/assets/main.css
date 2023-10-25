@@ -3817,13 +3817,15 @@ button.remove {
 }
 
 .diet-details-img h3 {
+  width: 100%;
   position: absolute;
-  bottom: 16px;
+  bottom: 64px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 40px;
   font-weight: 600;
   color: #FFFFFF;
+  text-align: center;
   z-index: 1;
 }
 
@@ -3833,6 +3835,31 @@ button.remove {
   margin: 0 auto;
   border-radius: 16px;
   filter: brightness(0.6);
+}
+
+.diet-details-img a {
+  width: fit-content;
+  margin-top: 16px;
+  display: block;
+  position: relative;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--main-color);
+  transition: .3s ease;
+  z-index: 0;
+}
+
+.diet-details-img a:before {
+  content: "";
+  background-color: var(--primary);
+  position: absolute;
+  width: 100%;
+  height: 6px;
+  display: block;
+  opacity: .2;
+  bottom: 8px;
+  z-index: -1;
+  transition: .3s ease;
 }
 
 .diet-details-descr {
@@ -4234,8 +4261,13 @@ button.remove {
 
 /* hover */
 @media (hover: hover) and (pointer: fine) {
-  .dashboard-card-btn:hover {
+  .dashboard-card-btn:hover, 
+  .diet-details-img a:hover {
     color: #222873;
+  }
+
+  .diet-details-img a:hover:before {
+    height: 50%;
   }
 
   .patient-btns a:hover {
@@ -4724,10 +4756,9 @@ button.remove {
   }
   
   /* patient diet/recipes */
-  /* .diet-wrapper, 
-  .diet-tabs {
-    height: auto;
-  } */
+  .diet-details {
+    max-width: 90%;
+  }
 
   .diet-grid.pt-diet-grid {
     margin-bottom: 0;
@@ -5075,8 +5106,23 @@ button.remove {
     max-width: 100%;
   }
 
+  .diet-details-descr {
+    margin-top: 16px;
+  }
+
   .diet-details-img h3 {
     font-size: 32px;
+  }
+
+  .diet-details-img a {
+    width: 100%;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+  }
+
+  .diet-details-img a:before {
+    display: none;
   }
 
   /* recipe details */
