@@ -13,12 +13,22 @@ export default {
             fileStore,
         }
     },
+    computed: {
+        recipePdf() {
+            if(this.fileStore.recipePdfFiles(this.recipeData)){
+                return this.fileStore.recipePdfFiles(this.recipeData)
+            }
+            return null
+        }
+    },
     methods: {
+
         getRecipe(id) {
             axiosInstance.get(`/recipes/${id}`)
                 .then(response => {
                     this.recipeData = response.data.data;
                     this.fileStore.getPhotoLinkForRecipe(this.recipeData)
+                    this.fileStore.getPdfLinkForRecipe(this.recipeData)
                 })
                 .catch(error => {
                     this.alertStore.error(error.response.data.message)
@@ -62,6 +72,8 @@ export default {
                         <img src="@/assets/img/time.svg" alt="Icon">
                         {{recipeData.cook_time}} min
                     </span>
+
+                    <a v-if="recipePdf" :href="recipePdf" target="_blank">Click here for more recipe details</a>
                 </div>
 
                 <div class="recipe-details-dir">
