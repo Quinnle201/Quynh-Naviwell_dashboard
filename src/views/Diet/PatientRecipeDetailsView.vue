@@ -73,7 +73,9 @@ export default {
                         {{recipeData.cook_time}} min
                     </span>
 
-                    <a v-if="recipePdf" :href="recipePdf" target="_blank">Click here for more recipe details</a>
+                    <div class="recipe-details-link">
+                        <a v-if="recipePdf" :href="recipePdf" target="_blank">Click here for more recipe details</a>
+                    </div>
                 </div>
 
                 <div class="recipe-details-dir">
