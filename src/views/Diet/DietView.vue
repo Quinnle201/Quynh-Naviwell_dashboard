@@ -157,10 +157,10 @@ export default {
             this.closeDeleteModal()
         },
         updateDiet(id) {
-            this.$router.push({ name: 'add-diet', params: { id: id } })
+            this.$router.push({ name: 'patient-diet-details', params: { id: id } })
         },
         updateRecipe(id) {
-            this.$router.push({ name: 'add-recipe', params: { id: id } })
+            this.$router.push({ name: 'patient-recipe-details', params: { id: id } })
         },
         onRecipePageChange(page) {
             this.currentPage = page;
@@ -217,6 +217,10 @@ export default {
                                 </div>
                             </div>
 
+                            <div class="quotes-grid-item-btn" @click="updateDiet(diet.id)">
+                                <EditIcon />
+                            </div>
+
                             <!-- <div class="diet-grid-item-btn">
                                 <img src="@/assets/img/details-icon.png" alt="Details Icon" @click="showDetailModal(diet)" />
 
@@ -246,10 +250,10 @@ export default {
                             </label>
                         </form>
 
-                        <RouterLink :to="{ name: 'add-recipe' }" class="add-button">
+                        <!-- <RouterLink :to="{ name: 'add-recipe' }" class="add-button">
                             <AddIcon />
                             <button type="button">Add New Recipe</button>
-                        </RouterLink>
+                        </RouterLink> -->
                     </div>
 
                     <div class="diet-grid recipe-grid">

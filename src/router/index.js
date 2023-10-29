@@ -208,13 +208,13 @@ const router = createRouter({
               path: ':id',
               name: 'patient-diet-details',
               component: PatientDietDetailsView,
-              meta: { physician: false, patient: true }
+              meta: { physician: true, patient: true }
             },
             {
               path: '/recipe/:id',
               name: 'patient-recipe-details',
               component: PatientRecipeDetailsView,
-              meta: { physician: false, patient: true }
+              meta: { physician: true, patient: true }
             },
             {
               path: "add-diet/:id?",
@@ -226,7 +226,7 @@ const router = createRouter({
               path: "add-recipe/:id?",
               name: "add-recipe",
               component: AddRecipeView,
-              meta: { physician: true, patient: false }
+              meta: { physician: false, patient: false }
             }
           ]
         },
