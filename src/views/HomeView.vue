@@ -180,7 +180,7 @@ export default {
             <template #card-title>Diet & Recipes</template>
             <RecipeIcon />
             <template #card-btn>
-              <RouterLink :to="{ name: 'add-diet' }">Add New Diet/Recipes</RouterLink>
+              <RouterLink :to="{ name: 'diet' }">View Diets</RouterLink>
             </template>
           </Card>
         </div>
