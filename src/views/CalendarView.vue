@@ -80,7 +80,9 @@ export default {
                     case 'followup':
                         evtType = { class: 'box_yellow', label: 'Follow-Up Visit' }
                         break;
-
+                    case 'cancelled': 
+                        evtType = { class: 'box_red', label: 'No Show' }
+                        break;
                 }
                 return evtType
             }

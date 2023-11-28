@@ -179,6 +179,12 @@ export default {
                         <CheckIcon />
                         <div class="label-bg">Follow-Up Visit</div>
                     </label>
+
+                    <label class="checkbox path">
+                        <Field type="radio" name="visit_type" value="cancelled"></Field>
+                        <CheckIcon />
+                        <div class="label-bg">No Show</div>
+                    </label>
                 </div>
 
                 <div v-if="patient_id == null" class="popup-content-item popup-content-item--search">

@@ -1503,6 +1503,10 @@ button.vuecal__arrow {
   background-color: #FFFCBC;
 }
 
+.box_red {
+  background-color: #e7b2b2;
+}
+
 .closed {
   background:#fff7f0 repeating-linear-gradient(-45deg, rgba(255, 162, 87, 0.25), rgba(255, 162, 87, 0.25) 5px, rgba(255, 255, 255, 0) 5px, rgba(255, 255, 255, 0) 15px);
   color: #f6984c;
