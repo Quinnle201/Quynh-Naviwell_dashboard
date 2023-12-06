@@ -5,7 +5,7 @@ import ScheduleModal from '@/components/Modals/PatientScheduleModal.vue'
 
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
-import { axiosInstance } from '@/helpers';
+import { axiosInstance, formatAMPM } from '@/helpers';
 import { useAlertStore } from '@/stores';
 import userMixin from '@/mixins/user.js'
 import _find from 'lodash/find';
@@ -58,7 +58,7 @@ export default {
     },
     computed: {
         localDate() {
-            return (time) => new Date(time).toLocaleString()
+            return (time) => formatAMPM(new Date(time))
         },
         calendarEventClass() {
             return (appt) => {
@@ -108,7 +108,7 @@ export default {
             {
                 dataObject: data,
                 id: data.id,
-                start: this.localDate(data.start_time),
+                start: this.localDate(data.start_time),    
                 end: this.localDate(data.finish_time),
                 title: this.calendarEventClass(data).label,
                 content: `Dr. ${data.physician.user.last_name}`,
