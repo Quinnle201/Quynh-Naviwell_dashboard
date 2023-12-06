@@ -144,7 +144,7 @@ export default {
                 axiosInstance.post('/lab-results', formData)
                     .then(response => {
                         if (this.file != null) {
-                            const uploader = uploadFile(this.file, 'results', values.patient_id, filename)
+                            const uploader = uploadFile(this.file, 'results', values.patient_id, fileref)
                             uploader.axios
                                 .then(response => {
                                     this.alertStore.success("Result created!")
