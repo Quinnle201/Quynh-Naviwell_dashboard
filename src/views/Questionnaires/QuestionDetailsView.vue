@@ -154,7 +154,7 @@ export default {
                     </div>
                     <h4>{{quizLabel.title}}</h4>
                     <h6>{{quizLabel.description}}</h6>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ante magna, rutrum sit amet ante a, ultrices aliquet quam.</p>
+                    <p>Before you go, click the button below to go back and review your answers and the material. It's a fantastic way to reinforce what you've learned and gear up for even greater success!</p>
 
                     <RouterLink :to="{ name: 'quizzes' }">Go back to quizzes</RouterLink>
                 </div>

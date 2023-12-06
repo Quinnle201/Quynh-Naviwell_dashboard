@@ -59,8 +59,7 @@ export default {
 
         <div class="page-bg">
             <div class="q-title">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ante magna, rutrum sit amet ante a, ultrices
-                aliquet quam.
+                Each quiz is your chance to reinforce what we've discussed during our sessions. The best part? Just one quiz per session!
             </div>
 
             <ul class="q-list">
