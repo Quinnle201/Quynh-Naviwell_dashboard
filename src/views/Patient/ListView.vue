@@ -197,12 +197,12 @@ export default {
                         </label>
                     </form>
 
-                    <select v-model="selected" class="patient-select">
+                    <!-- <select v-model="selected" class="patient-select">
                         <option disabled value="">Sort</option>
                         <option v-for="option in options" :value="option.value">
                             {{ option.text }}
                         </option>
-                    </select>
+                    </select> -->
                 </div>
 
                 <div class="add-button" @click="showModal(null)">
