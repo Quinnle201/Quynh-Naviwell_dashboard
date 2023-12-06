@@ -196,8 +196,8 @@ export default {
                     </div>
                     <div class="quotes-grid-item-content">
                         <p>{{ quote.text }}</p>
-                        <span v-if="new Date(quote.scheduled_at).format('MM/DD/YYYY') == beginOfWeek">active</span>
-                        <span v-else-if="new Date(quote.scheduled_at).format('MM/DD/YYYY') < beginOfWeek">passed</span>
+                        <span v-if="new Date(quote.scheduled_at).format('MM/DD/YYYY') == beginOfWeek" style="background-color: green;">active</span>
+                        <span v-else-if="new Date(quote.scheduled_at).format('MM/DD/YYYY') < beginOfWeek" style="background-color: red;">passed</span>
                         <span v-else>upcoming</span>
                     </div>
                     <div class="quotes-grid-item-btn" @click="showModal(quote)">
