@@ -116,12 +116,13 @@ export default {
         width: 75%;
         margin-top: 32px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
+        gap: 32px;
     }
 
     .info-form-button {
         background-color: var(--primary);
-        width: 220px;
+        min-width: 220px;
         height: 56px;
         padding: 12px 32px;
         font-size: 18px;
@@ -137,5 +138,30 @@ export default {
         background-color: #FFFFFF;
         border: 2px solid var(--primary);
         color: var(--primary);
+    }
+
+    @media screen and (max-width: 1440px) {
+      .welcome-inner {
+        max-width: 75%;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .welcome-inner {
+        max-width: 94%;
+      }
+
+      .info-form-button {
+        min-width: 184px;
+        width: 100%;
+        padding: 12px 16px;
+        white-space: nowrap;
+      }
+    }
+
+    @media screen and (max-width: 576px) {
+      .info-form-wrap {
+        flex-direction: column;
+      }
     }
 </style>
