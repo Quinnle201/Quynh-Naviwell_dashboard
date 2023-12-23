@@ -26,20 +26,20 @@ export default {
       <ul class="tabs-list">
         <li
           v-for="(tab, index) in tabList"
-          :key="index"
+          :key="tab + index"
           class=""
           :class="{
             'tab-item tab-item-active': index + 1 === activeTab,
             'tab-item': index + 1 !== activeTab,
           }"
         >
-          <label :for="index" v-text="tab" class="" />
-          <input :id="index" type="radio" name="" :value="index + 1" v-model="activeTab" class="" />
+          <label :for="tab + index" v-text="tab" class="" />
+          <input :id="tab + index" type="radio" name="" :value="index + 1" v-model="activeTab" class="" />
         </li>
       </ul>
 
       <template v-for="(tab, index) in tabList">
-        <div :key="index" v-if="index + 1 === activeTab" class="tabs-content" :class="getIndex(index)">
+        <div :key="tab + index" v-if="index + 1 === activeTab" class="tabs-content" :class="getIndex(index)">
           <slot :name="`tabPanel-${index + 1}`" />
         </div>
       </template>

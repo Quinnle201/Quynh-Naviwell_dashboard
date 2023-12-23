@@ -269,6 +269,16 @@ export default {
                     this.alertStore.error(error.response.data.message)
                 });
         },
+        forceManualQuestionnaire() {
+            axiosInstance.post(`/patients/${this.patient.id}/force-quiz`, {})
+                .then(response => {
+                    this.alertStore.success(response.data.data);
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
         sendMessage(values) {
             const formBody = {
                 attachments: [],
@@ -433,6 +443,7 @@ export default {
             <div class="patient-btns">
                 <button type="button" class="w-btn" @click="showUpdate()">Edit Patient Info</button>
                 <button type="button" class="w-btn" @click=showHealthData()>Add Health Data</button>
+                <button type="button" class="w-btn" @click="forceManualQuestionnaire()">Assign questionnaire</button>
                 <button type="button" class="w-btn w-btn-delete" @click="showDeleteModal()">Delete Patient</button>
                 <RouterLink to="/patients">Return to My Patients</RouterLink>
             </div>
