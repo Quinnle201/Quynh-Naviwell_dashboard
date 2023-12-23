@@ -223,6 +223,10 @@ export default {
                     <Field as="textarea" name="notes"></Field>
                 </div>
 
+                <div class="popup-link" v-if="event">
+                    <a href="/notes" target="_blank">View Clinical Note</a>
+                </div>
+
                 <div class="popup-footer">
                     <button :type="event ? 'button' : 'reset'"
                         :class='event ? "w-btn w-btn-delete" : "w-btn w-btn-close"'
@@ -239,9 +243,30 @@ export default {
 </template>
 
 <style>
-.details-inner.grid-two {
-    display: flex;
-    align-items: center;
-    transform: translateX(-50%);
-}
+    .details-inner.grid-two {
+        display: flex;
+        align-items: center;
+        transform: translateX(-50%);
+    }
+
+    .popup-link {
+        background-color: var(--primary);
+        width: 100%;
+        margin-bottom: 16px;
+        border-radius: 20px;
+    }
+
+    .popup-link a {
+        width: 100%;
+        padding: 8px 16px;
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        color: #FFFFFF;
+    }
+
+    .popup-link a:hover {
+        color: #FFFFFF;
+    }
 </style>
