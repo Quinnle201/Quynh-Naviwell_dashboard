@@ -27,6 +27,10 @@ export default {
     fieldName: {
       type: String,
       required: true,
+    },
+    checkDate: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -131,17 +135,23 @@ export default {
         this.finalDate = null
         return;
       }
-      //Check if date is within acceptable range, ie. no more than 110 year ago and no less than 13 years from now.
-      const now = new Date()
-      const date = new Date(input)
-      const minYear = new Date(now.getFullYear() - 110, 0, 1).getTime(); // 110 years from now
-      const maxYear = new Date(now.getFullYear() - 13, 0, 1).getTime() // 13 years from now
+      if(this.checkDate) {
+        //Check if date is within acceptable range, ie. no more than 110 year ago and no less than 13 years from now.
+        const now = new Date()
+        const date = new Date(input)
+        const minYear = new Date(now.getFullYear() - 110, 0, 1).getTime(); // 110 years from now
+        const maxYear = new Date(now.getFullYear() - 13, 0, 1).getTime() // 13 years from now
 
-      if (date >= minYear && date <= maxYear) {
-        this.isError = false
-        console.log("date check passed", input)
-        this.finalDate = input
-        return;
+        if (date >= minYear && date <= maxYear) {
+          this.isError = false
+          console.log("date check passed", input)
+          this.finalDate = input
+          return;
+        }
+      } else {
+          this.isError = false
+          this.finalDate = input
+          return;
       }
       this.finalDate = null
       this.isError = true

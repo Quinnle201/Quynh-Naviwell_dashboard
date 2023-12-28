@@ -11,6 +11,7 @@ import { useAlertStore } from '@/stores';
 
 import _find from 'lodash/find';
 import userMixin from '@/mixins/user.js'
+import { RouterLink } from 'vue-router';
 
 export default {
     props: {
@@ -21,13 +22,14 @@ export default {
         userMixin
     ],
     components: {
-        Modal,
-        Form,
-        Field,
-        CheckIcon,
-        CalendarIcon,
-        PatientAutocomplete,
-    },
+    Modal,
+    Form,
+    Field,
+    CheckIcon,
+    CalendarIcon,
+    PatientAutocomplete,
+    RouterLink
+},
     data() {
         const alertStore = useAlertStore()
         return {
@@ -224,7 +226,7 @@ export default {
                 </div>
 
                 <div class="popup-link" v-if="event">
-                    <a href="/notes" target="_blank">View Clinical Note</a>
+                    <RouterLink :to="{ name: 'notes', state: { apptId: event.id, patientId: event.patient.id, noteId: event.clinical_note_id }}" >View Clinical Note</RouterLink>
                 </div>
 
                 <div class="popup-footer">

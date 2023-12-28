@@ -1,9 +1,19 @@
 <script>
+
+import { Field } from 'vee-validate';
+
     export default {
+    components: {
+        Field,
+    },
     props: {
         tags: {
             type: Array,
             default: () => []
+        },
+        fieldName: {
+            type: String,
+            required: true,
         }
     },
     data() {
@@ -18,7 +28,7 @@
             document.body.addEventListener('click', this.closeTagPopup);
         },
         addTag(tag) {
-            this.text += `${tag} `;
+            this.text += `${tag.text} `;
             this.showPopup = false;
             this.removeClickListener();
         },
@@ -40,11 +50,11 @@
 
 <template>
     <div>
-        <textarea @click="showTagPopup" v-model="text"></textarea>
+        <Field as="textarea" @click="showTagPopup" v-model="text" :name="fieldName"></Field>
 
         <div v-if="showPopup" class="tag-popup" ref="tagPopup">
             <ul>
-                <li v-for="tag in tags" :key="tag" @click="addTag(tag)">{{ tag }}</li>
+                <li v-for="tag in tags" :key="tag" @click="addTag(tag)">{{ tag.id }}</li>
             </ul>
         </div>
     </div>
