@@ -211,6 +211,21 @@ export default {
             this.health_data = h_d
         },
 
+        downloadPdf(id) {
+            axiosInstance.get(`/notes/pdf/${id}`, {responseType: 'arraybuffer'})
+                .then(response => {
+                    let blob = new Blob([response.data], { type: 'application/pdf' })
+                    let link = document.createElement('a')
+                    link.href = window.URL.createObjectURL(blob)
+                    link.download = 'report.pdf'
+                    link.click()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+
 
         submitNote(values) {
 
@@ -345,6 +360,7 @@ export default {
                     </label>
                 </div>
 
+                <button type="button" @click="downloadPdf(note.id)" class="w-btn" v-if="note">Download pdf</button>
                 <button type="submit" class="w-btn" v-if="note">Update</button>
                 <button type="submit" class="w-btn" v-else>Save</button>
             </Form>
