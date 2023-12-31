@@ -364,12 +364,14 @@ export default {
                     </label>
                 </div>
 
-                <button type="button" @click="downloadPdf(note.id)" class="w-btn" v-if="note">
-                    <span>Download pdf</span>
-                    <DownloadIcon class="attach-icon" /> 
-                </button>
-                <button type="submit" class="w-btn" v-if="note">Update</button>
-                <button type="submit" class="w-btn" v-else>Save</button>
+                <div class="notes-btn-wrapper">
+                    <button type="button" @click="downloadPdf(note.id)" class="w-btn" v-if="note">
+                        <span>Download pdf</span>
+                        <DownloadIcon class="attach-icon" /> 
+                    </button>
+                    <button type="submit" class="w-btn" v-if="note">Update</button>
+                    <button type="submit" class="w-btn" v-else>Save</button>
+                </div>
             </Form>
         </div>
 
@@ -510,6 +512,16 @@ export default {
         font-size: 16px;
         color: #FFFFFF;
         border-radius: 16px;
+    }
+
+    .notes-btn-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        gap: 16px;
+    }
+
+    .notes-wrapper .notes-btn-wrapper .w-btn {
+        margin-left: 0;
     }
 
     .notes-wrapper .attach-icon {
