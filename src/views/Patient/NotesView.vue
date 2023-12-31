@@ -2,6 +2,8 @@
 import TagsTextarea from "@/components/Tags.vue";
 import DateInput from '@/components/DateInput.vue';
 
+import DownloadIcon from '@/components/icons/IconDownload.vue'
+
 import { useAlertStore } from '@/stores';
 import { axiosInstance, calculateBMI } from '@/helpers';
 
@@ -14,6 +16,7 @@ export default {
     components: {
         TagsTextarea,
         DateInput,
+        DownloadIcon,
         Form,
         Field,
     },
@@ -316,8 +319,9 @@ export default {
                     </label>
                 </div>
 
+                <button type="button" @click="prefillFromLastHealth" class="notes-health-btn">Fill from last health data</button>
+
                 <div class="notes-input-wrapper notes-health-input">
-                    <button type="button" @click="prefillFromLastHealth">Fill from last health data</button>
                     <div class="notes-height-wrapper">
                         <label>Height</label>
                         <div class="notes-height-input">
@@ -360,7 +364,10 @@ export default {
                     </label>
                 </div>
 
-                <button type="button" @click="downloadPdf(note.id)" class="w-btn" v-if="note">Download pdf</button>
+                <button type="button" @click="downloadPdf(note.id)" class="w-btn" v-if="note">
+                    <span>Download pdf</span>
+                    <DownloadIcon class="attach-icon" /> 
+                </button>
                 <button type="submit" class="w-btn" v-if="note">Update</button>
                 <button type="submit" class="w-btn" v-else>Save</button>
             </Form>
@@ -413,7 +420,7 @@ export default {
 
     .notes-input-wrapper label span {
         margin-bottom: 4px;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 500;
     }
 
@@ -455,7 +462,7 @@ export default {
 
     .notes-height-wrapper > label {
         margin-bottom: 4px;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 500;
     }
 
@@ -492,6 +499,25 @@ export default {
         padding: 16px 56px;
         display: flex;
         justify-content: center;
+        align-items: center;
         font-size: 18px;
+    }
+
+    .notes-health-btn {
+        background-color: var(--primary);
+        margin-bottom: 8px;
+        padding: 8px 16px;
+        font-size: 16px;
+        color: #FFFFFF;
+        border-radius: 16px;
+    }
+
+    .notes-wrapper .attach-icon {
+        padding-left: 16px;
+        box-sizing: content-box;
+    }
+
+    .notes-wrapper .attach-icon path {
+        fill: var(--main-color);
     }
 </style>
