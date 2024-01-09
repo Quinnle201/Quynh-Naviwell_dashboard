@@ -31,6 +31,7 @@ export default {
             appointment: null,
             note: null,
             discussed: null,
+            counselling: "Spent the stated time counseling the patient on the risks of diabetes, heart disease, metabolic syndromes, how to eat healthy, stress management techniques, the use of lifestyle improvements, how to begin or expand on an exercise regimen, and prescription drug management if needed. The patients presenting problems are best supported by utilizing techniques of scientifically back lifestyle improvements such as those listed above. The coordination of care includes all activities known to an individual patient such as tobacco use, alcohol consumption, physical activity, and nutritional habits. The purpose of this coordination of care is to allow the provider to give feedback tailored to the patient about information collected in each counseling session to promote health and reduce illness and injury. Oxygen saturation, heart rate, and medication reconciliation were obtained. InBody body analytics are collected every 4-6 visits to objectify outcomes and progressions. Exercise regimens include, but are not limited to, cross-crawl patterns, enhanced efficiency of blood flow, core stability, balance and coordination, major muscle group balancing, and enhanced pulmonary function. Pt responded well to counseling therapy at today's visit. Continue current treatment direction and care plan.",
 
             health_data: {
                 height: null,
@@ -198,7 +199,7 @@ export default {
                 .then(response => {
                     const quiz = response.data.data
                     if(quiz){
-                        this.discussed = quiz.title
+                        this.discussed = quiz.article
                     }
                 })
                 .catch(error => {
@@ -286,7 +287,7 @@ export default {
 
                     <label for="" class="bg-textarea">
                         <span>Counselling</span>
-                        <TagsTextarea :tags="tags" fieldName="counselling" />
+                        <Field as="textarea" v-model="counselling" name="counselling"></Field>
                     </label>
                 </div>
 
