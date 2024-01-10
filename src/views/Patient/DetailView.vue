@@ -111,7 +111,7 @@ export default {
         }
         const dataLoaded = false;
 
-        return { patient, patient_id: null, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, isScheduleModalVisible: false, isEmailModalVisible: false, medsData: false, isChatModalVisible: false, medicineArray: [], patientDrugs: [], userPrimaryDiag: null, dxCodes: [], }
+        return { patient, patient_id: null, alertStore, fileStore, dataChart, dataLoaded, isModalVisible: false, updateModal: false, healthData: false, isDeleteModalVisible: false, isScheduleModalVisible: false, isEmailModalVisible: false, medsData: false, isChatModalVisible: false, isNotesModalVisible: false, medicineArray: [], patientDrugs: [], userPrimaryDiag: null, dxCodes: [], }
     },
     async mounted() {
         await this.getMedicine()
@@ -256,6 +256,12 @@ export default {
         },
         updatePatientInfo(patient) {
             this.patient = patient
+        },
+        showNotesModal() {
+            this.isNotesModalVisible = true
+        },
+        closeNotesModal() {
+            this.isNotesModalVisible = false
         },
         addMedsData(values) {
             return
@@ -444,6 +450,7 @@ export default {
                 <button type="button" class="w-btn" @click="showUpdate()">Edit Patient Info</button>
                 <button type="button" class="w-btn" @click=showHealthData()>Add Health Data</button>
                 <button type="button" class="w-btn" @click="forceManualQuestionnaire()">Assign questionnaire</button>
+                <button type="button" class="w-btn" @click="showNotesModal()">Clinical Notes</button>
                 <button type="button" class="w-btn w-btn-delete" @click="showDeleteModal()">Delete Patient</button>
                 <RouterLink to="/patients">Return to My Patients</RouterLink>
             </div>
@@ -809,6 +816,16 @@ export default {
         <AddPatientModal v-show="updateModal" :patient="patient"
             v-on:update:patient="updatePatientInfo($event)" @close="closeModal" @showMeds="showMeds()">
         </AddPatientModal>
+        <!-- clinical notes modal -->
+        <Modal v-show="isNotesModalVisible" @close="closeNotesModal">
+            <template #header>Clinical Notes</template>
+            <template #content>
+                <ul class="notes-list">
+                    <li>Appointment date(10/01/2024) - <a href="">View clinical note</a></li>
+                    <li>Appointment date(11/01/2024) - <a href="">View clinical note</a></li>
+                </ul>
+            </template>
+        </Modal>
         <!-- delete modal -->
         <DeleteModal v-show="isDeleteModalVisible" @close="closeModal">
             <template #content>

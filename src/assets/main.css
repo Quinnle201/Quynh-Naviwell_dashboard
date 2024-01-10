@@ -1598,7 +1598,7 @@ button.vuecal__arrow {
 }
 
 .patient-btns .w-btn {
-   margin-right: 32px;
+   margin-right: 16px;
 }
 
 .patient-btns a {
@@ -1966,6 +1966,22 @@ button.vuecal__arrow {
   font-weight: 400;
   color: #000000;
   border-radius: 10px;
+}
+
+.notes-list {
+  list-style: none;
+  line-height: 18px;
+}
+
+.notes-list li {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.notes-list li a {
+  font-size: 14px;
+  color: var(--main-color);
 }
 
 /* quotes */
