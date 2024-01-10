@@ -1,4 +1,5 @@
 <script>
+import Tabs from "@/components/Tabs.vue";
 import TagsTextarea from "@/components/Tags.vue";
 import DateInput from '@/components/DateInput.vue';
 
@@ -14,6 +15,7 @@ import { Form, Field } from 'vee-validate';
 
 export default {
     components: {
+        Tabs,
         TagsTextarea,
         DateInput,
         DownloadIcon,
@@ -26,6 +28,7 @@ export default {
     data() {
         const alertStore = useAlertStore()
         return {
+            tabList: ["Preventative Encounter", "Nutrition Assessment"],
             alertStore,
             patient: null,
             appointment: null,
@@ -270,114 +273,268 @@ export default {
         <div class="layout-wrapper">
             <h3>{{this.userName(patient?.user)}}</h3>
         </div>
+        
+        <tabs class="diet-tabs" :tabList="tabList">
+            <template v-slot:tabPanel-1>
+                <div class="page-bg notes-wrapper">
+                    <Form @submit="submitNote" ref="noteForm" v-slot="{ values }">
+                        <div class="notes-input-wrapper">
+                            <div class="notes-input-inner">
+                                <label for="">
+                                    <span>Time In</span>
+                                    <TagsTextarea :tags="tags" fieldName="time_in" />
+                                </label>
+                                <label for="">
+                                    <span>Time Out</span>
+                                    <TagsTextarea :tags="tags" fieldName="time_out" />
+                                </label>
+                            </div>
 
-        <div class="page-bg notes-wrapper">
-            <Form @submit="submitNote" ref="noteForm" v-slot="{ values }">
-                <div class="notes-input-wrapper">
-                    <div class="notes-input-inner">
-                        <label for="">
-                            <span>Time In</span>
-                            <TagsTextarea :tags="tags" fieldName="time_in" />
-                        </label>
-                        <label for="">
-                            <span>Time Out</span>
-                            <TagsTextarea :tags="tags" fieldName="time_out" />
-                        </label>
-                    </div>
-
-                    <label for="" class="bg-textarea">
-                        <span>Counselling</span>
-                        <Field as="textarea" v-model="counselling" name="counselling"></Field>
-                    </label>
-                </div>
-
-                <div class="notes-input-wrapper">
-                    <label for="">
-                        <span>Discussed the following:</span>
-                        <Field as="textarea" v-model="discussed" name="discussed"></Field>
-                    </label>
-
-                    <label for="">
-                        <span>Next session date</span>
-                        <Field as="textarea" name="next_appt"></Field>
-                    </label>
-                </div>
-
-                <div class="notes-input-wrapper">
-                    <label for="">
-                        <span>Patient homework</span>
-                        <TagsTextarea :tags="tags" fieldName="homework" />
-                    </label>
-
-                    <label for="">
-                        <span>Date of next scheduled office visit with provider: ___ Physical</span>
-                        <Field type="date" name="next_followup_physical"/>
-                    </label>
-
-                    <label for="">
-                        <span>Date of next scheduled office visit with provider: ___ Labs</span>
-                        <Field type="date" name="next_followup_labs"/>
-                    </label>
-                </div>
-
-                <button type="button" @click="prefillFromLastHealth" class="notes-health-btn">Fill from last health data</button>
-
-                <div class="notes-input-wrapper notes-health-input">
-                    <div class="notes-height-wrapper">
-                        <label>Height</label>
-                        <div class="notes-height-input">
-                            <label for="">
-                                <Field type="text" v-model="health_data.height_ft" name="health-data.height_ft"/>
-                                <span>ft</span>
-                            </label>
-                            <label for="">
-                                <Field type="text" v-model="health_data.height_in" name="health-data.height_in"/>
-                                <span>in</span>
+                            <label for="" class="bg-textarea">
+                                <span>Counselling</span>
+                                <Field as="textarea" v-model="counselling" name="counselling"></Field>
                             </label>
                         </div>
-                    </div>
 
-                    <label>
-                        <span>Weight (lbs)</span>
-                        <Field type="text" v-model="health_data.weight" name="health-data.weight"/>
-                    </label>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Discussed the following:</span>
+                                <Field as="textarea" v-model="discussed" name="discussed"></Field>
+                            </label>
 
-                    <label>
-                        <span>Body Fat (%)</span>
-                        <Field type="text" v-model="health_data.body_fat" name="health-data.bodyfat"/>
-                    </label>
+                            <label for="">
+                                <span>Next session date</span>
+                                <Field as="textarea" name="next_appt"></Field>
+                            </label>
+                        </div>
+
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Patient homework</span>
+                                <TagsTextarea :tags="tags" fieldName="homework" />
+                            </label>
+
+                            <label for="">
+                                <span>Date of next scheduled office visit with provider: ___ Physical</span>
+                                <Field type="date" name="next_followup_physical"/>
+                            </label>
+
+                            <label for="">
+                                <span>Date of next scheduled office visit with provider: ___ Labs</span>
+                                <Field type="date" name="next_followup_labs"/>
+                            </label>
+                        </div>
+
+                        <button type="button" @click="prefillFromLastHealth" class="notes-health-btn">Fill from last health data</button>
+
+                        <div class="notes-input-wrapper notes-health-input">
+                            <div class="notes-height-wrapper">
+                                <label>Height</label>
+                                <div class="notes-height-input">
+                                    <label for="">
+                                        <Field type="text" v-model="health_data.height_ft" name="health-data.height_ft"/>
+                                        <span>ft</span>
+                                    </label>
+                                    <label for="">
+                                        <Field type="text" v-model="health_data.height_in" name="health-data.height_in"/>
+                                        <span>in</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <label>
+                                <span>Weight (lbs)</span>
+                                <Field type="text" v-model="health_data.weight" name="health-data.weight"/>
+                            </label>
+
+                            <label>
+                                <span>Body Fat (%)</span>
+                                <Field type="text" v-model="health_data.body_fat" name="health-data.bodyfat"/>
+                            </label>
+                        </div>
+
+                        <div class="notes-input-wrapper notes-health-input">
+                            <label>
+                                <span>BP</span>
+                                <Field type="text" v-model="health_data.bp" name="health-data.bp"/>
+                            </label>
+
+                            <label>
+                                <span>BMI</span>
+                                <input name="bmi" type="text" :value="bmi(values)" disabled />
+                            </label>
+                        
+                            <label>
+                                <span>Resting HR</span>
+                                <Field type="text" v-model="health_data.resting_hr" name="health-data.resting_hr"/>
+                            </label>
+                        </div>
+
+                        <div class="notes-btn-wrapper">
+                            <button type="button" @click="downloadPdf(note.id)" class="w-btn" v-if="note">
+                                <span>Download pdf</span>
+                                <DownloadIcon class="attach-icon" /> 
+                            </button>
+                            <button type="submit" class="w-btn" v-if="note">Update</button>
+                            <button type="submit" class="w-btn" v-else>Save</button>
+                        </div>
+                    </Form>
                 </div>
+            </template>
 
-                <div class="notes-input-wrapper notes-health-input">
-                    <label>
-                        <span>BP</span>
-                        <Field type="text" v-model="health_data.bp" name="health-data.bp"/>
-                    </label>
+            <template v-slot:tabPanel-2>
+                <div class="page-bg notes-wrapper">
+                    <Form>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Age</span>
+                                <input type="checkbox" id="age" />
+                                <label for="age"></label>
+                            </label>
 
-                    <label>
-                        <span>BMI</span>
-                        <input name="bmi" type="text" :value="bmi(values)" disabled />
-                    </label>
-                
-                    <label>
-                        <span>Resting HR</span>
-                        <Field type="text" v-model="health_data.resting_hr" name="health-data.resting_hr"/>
-                    </label>
+                            <label for="">
+                                <span>Height</span>
+                                <input type="checkbox" id="height" />
+                                <label for="height"></label>
+                            </label>
+                        </div>
+
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Weight</span>
+                                <input type="checkbox" id="weight" />
+                                <label for="weight"></label>
+                            </label>
+
+                            <label for="">
+                                <span>BMI</span>
+                                <input type="checkbox" id="bmi" />
+                                <label for="bmi"></label>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>IBW</span>
+                                <Field as="textarea" name="ibw"></Field>
+                            </label>
+
+                            <label for="">
+                                <span>BMR</span>
+                                <Field as="textarea" name="bmr"></Field>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Food Allergies/Intolerances</span>
+                                <Field as="textarea" name="intolerances"></Field>
+                            </label>
+
+                            <label for="">
+                                <span>Medication Allergies</span>
+                                <Field as="textarea" name="Allergy"></Field>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Nutrition Relevant Labs: (Date)</span>
+                                <Field as="textarea" name="nutrition"></Field>
+                            </label>
+
+                            <label for="">
+                                <span>Nutrition Relevant Medications</span>
+                                <Field as="textarea" name="medications"></Field>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Nutrition Related Diagnosis</span>
+                                <Field as="textarea" name="diagnosis"></Field>
+                            </label>
+
+                            <label for="">
+                                <span>Diet Order</span>
+                                <Field as="textarea" name="order"></Field>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Texture</span>
+                                <Field as="textarea" name="texture"></Field>
+                            </label>
+
+                            <label for="">
+                                <span>Complications</span>
+                                <Field as="textarea" name="complications"></Field>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Estimated Calories Per Day</span>
+                                <Field as="textarea" name="calories"></Field>
+                            </label>
+
+                            <label for="">
+                                <span>Estimated Protein Per Day</span>
+                                <Field as="textarea" name="protein"></Field>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Estimated Carbs Per Day</span>
+                                <Field as="textarea" name="carbs"></Field>
+                            </label>
+
+                            <label for="">
+                                <span>Estimated Fat Per Day</span>
+                                <Field as="textarea" name="fat"></Field>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper notes-input-wrapper-sm">
+                            <label for="">
+                                <span>Estimated Fluid Needs Per Day</span>
+                                <Field as="textarea" name="fluidneeds"></Field>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Intake/24-HR Recall</span>
+                                <input type="checkbox" id="intake" />
+                                <label for="intake"></label>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Physical Activity</span>
+                                <input type="checkbox" id="activity" />
+                                <label for="activity"></label>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Interventions</span>
+                                <Field as="textarea" name="interventions"></Field>
+                            </label>
+
+                            <label for="">
+                                <span>Plan</span>
+                                <Field as="textarea" name="plan"></Field>
+                            </label>
+                        </div>
+                        <div class="notes-input-wrapper">
+                            <label for="">
+                                <span>Sample Meal Plan</span>
+                                <input type="checkbox" id="mealplan" />
+                                <label for="mealplan"></label>
+                            </label>
+                        </div>
+
+                        <div class="notes-btn-wrapper">
+                            <button type="submit" class="w-btn">Save</button>
+                        </div>
+                    </Form>
                 </div>
-
-                <div class="notes-btn-wrapper">
-                    <button type="button" @click="downloadPdf(note.id)" class="w-btn" v-if="note">
-                        <span>Download pdf</span>
-                        <DownloadIcon class="attach-icon" /> 
-                    </button>
-                    <button type="submit" class="w-btn" v-if="note">Update</button>
-                    <button type="submit" class="w-btn" v-else>Save</button>
-                </div>
-            </Form>
-        </div>
-
-        <div>
-    </div>
+            </template>
+        </tabs>
     </div>
 </template>
 
@@ -413,6 +570,10 @@ export default {
         color: #000000;
         outline: none;
         border: 1px solid #E7E7E7;
+    }
+
+    .notes-input-wrapper.notes-input-wrapper-sm textarea {
+        max-width: calc(50% - 16px);
     }
 
     .notes-input-wrapper label {
@@ -532,5 +693,47 @@ export default {
 
     .notes-wrapper .attach-icon path {
         fill: var(--main-color);
+    }
+
+    input[type=checkbox] {
+        width: 0!important;
+        height: 0!important;
+        visibility: hidden;
+    }
+
+    input[type=checkbox] + label {
+        background-color: #8E8E8E;
+        width: 80px;
+        height: 42px;
+        display: block;
+        position: relative;
+        cursor: pointer;
+        text-indent: -99px;
+        border-radius: 100px;
+    }
+
+    input[type=checkbox] + label:after {
+        content: "";
+        background-color: #FFFFFF;
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+
+    input[type=checkbox]:checked + label {
+        background-color: #74C973;
+    }
+
+    input[type=checkbox]:checked + label:after {
+        left: calc(100% - 5px);
+        transform: translateX(-100%);
+    }
+
+    input[type=checkbox] + label:active:after {
+        width: 32px;
     }
 </style>
