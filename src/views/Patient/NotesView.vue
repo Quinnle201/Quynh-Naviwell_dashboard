@@ -31,6 +31,7 @@ export default {
             tabList: ["Preventative Encounter", "Nutrition Assessment"],
             alertStore,
             patient: null,
+            patientId: null,
             appointment: null,
             note: null,
             discussed: null,
@@ -117,6 +118,7 @@ export default {
             this.getNote(state.noteId)
         } else {
             if(state.patientId) {
+                this.patientId = state.patientId
                 this.getPatient(state.patientId)
             } else {
                 this.alertStore.error("Patient is undefined. Please report to administrator.")
@@ -162,6 +164,7 @@ export default {
                     const note = response.data.data;
                     this.note = note;
                     this.patient = note.patient;
+                    this.patientId = this.patient.id;
                     this.appointment = note.appointment;
                     let health_data = note.health_data;
                     let height = null
@@ -188,6 +191,34 @@ export default {
                         'health-data.resting_hr': health_data?.resting_hr,
 
                     });
+
+                    this.$refs.noteNutritionForm.setValues({
+                        include: note.include,
+                        age: note.age == null ? "0" : note.age+"",
+                        height: note.height == null ? "0" : note.height+"",
+                        weight: note.weight == null ? "0" : note.weight+"",
+                        bmi: note.bmi == null ? "0" : note.bmi+"",
+                        ibw: note.ibw,
+                        bmr: note.bmr,
+                        food_allergies: note.food_allergies,
+                        med_allergies: note.med_allergies,
+                        nutrition_rel_labs: note.nutrition_rel_labs,
+                        nutrition_rel_meds: note.nutrition_rel_meds,
+                        nutrition_rel_diag: note.nutrition_rel_diag,
+                        diet_order: note.diet_order,
+                        texture: note.texture,
+                        complications: note.complications,
+                        est_cal_per_day: note.est_cal_per_day,
+                        est_protein_per_day: note.est_protein_per_day,
+                        est_carbs_per_day: note.est_carbs_per_day,
+                        est_fat_per_day: note.est_fat_per_day,
+                        est_fluid_per_day: note.est_fluid_per_day,
+                        intake: note.intake,
+                        activity: note.activity,
+                        interventions: note.interventions,
+                        notes: note.notes,
+                    });
+
 
                 })
                 .catch(error => {
@@ -233,6 +264,27 @@ export default {
                 });
         },
 
+        prefillLastNote() {
+            axiosInstance.get(`/patients/${this.patientId}/last-note`)
+                .then(response => {
+                    const note = response.data.data;
+
+                    this.$refs.noteForm.setValues({
+                        time_in: note.time_in,
+                        time_out: note.time_out,
+                        counselling: note.counselling,
+                        next_appt: note.next_appt,
+                        homework: note.homework,
+                        next_followup_physical: new Date(note.next_followup_physical).toISOString().substring(0, 10),
+                        next_followup_labs: new Date(note.next_followup_labs).toISOString().substring(0, 10),
+                    });
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
 
         submitNote(values) {
 
@@ -240,6 +292,33 @@ export default {
                 values['health-data'].height = values['health-data'].height_ft + "'" + (values['health-data'].height_in ? values['health-data'].height_in : '0') + '"'
             }
             values['health-data'].bmi = this.bmi(values)
+            values.appt_id = this.appointment.id;
+            values.patient_id = this.patient.id;
+            if(!this.note) { 
+                axiosInstance.post(`/notes`, values)
+                    .then(response => {
+                        this.note = response.data.data
+                        history.state.noteId = this.note.id
+                        this.alertStore.success('Note saved')
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alertStore.error(error.response.data.message)
+                    });
+            } else {
+                axiosInstance.put(`/notes/${this.note.id}`, values)
+                    .then(response => {
+                        this.alertStore.success('Note updated')
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alertStore.error(error.response.data.message)
+                    });
+            }
+        },
+
+
+        submitNutritionNote(values) {
             values.appt_id = this.appointment.id;
             values.patient_id = this.patient.id;
             if(!this.note) { 
@@ -272,6 +351,8 @@ export default {
     <div class="page-wrapper">
         <div class="layout-wrapper">
             <h3>{{this.userName(patient?.user)}}</h3>
+
+            <button type="button" class="w-btn" @click="prefillLastNote">Prefill from last note</button>
         </div>
         
         <tabs class="diet-tabs" :tabList="tabList">
@@ -384,38 +465,51 @@ export default {
 
             <template v-slot:tabPanel-2>
                 <div class="page-bg notes-wrapper">
-                    <Form>
+                    <Form @submit="submitNutritionNote" ref="noteNutritionForm" v-slot="{ values }">
+
                         <div class="notes-input-wrapper">
+
+                            <label for="">
+                                <span>Include in note</span>
+                                <Field type="checkbox" id="include" name="include" value="1" unchecked-value="0"/>
+                                <label for="include"></label>
+                            </label>
+
+                        </div>
+
+                        <div class="notes-input-wrapper">
+
                             <label for="">
                                 <span>Age</span>
-                                <input type="checkbox" id="age" />
+                                <Field type="checkbox" id="age" name="age" value="1" unchecked-value="0"/>
                                 <label for="age"></label>
                             </label>
 
                             <label for="">
                                 <span>Height</span>
-                                <input type="checkbox" id="height" />
+                                <Field type="checkbox" id="height" name="height" value="1" unchecked-value="0"/>
                                 <label for="height"></label>
                             </label>
+
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Weight</span>
-                                <input type="checkbox" id="weight" />
+                                <Field type="checkbox" id="weight" name="weight" value="1" unchecked-value="0"/>
                                 <label for="weight"></label>
                             </label>
 
                             <label for="">
                                 <span>BMI</span>
-                                <input type="checkbox" id="bmi" />
+                                <Field type="checkbox" id="bmi" name="bmi" value="1" unchecked-value="0"/>
                                 <label for="bmi"></label>
                             </label>
                         </div>
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>IBW</span>
-                                <Field as="textarea" name="ibw"></Field>
+                                <Field as="textarea" name="ibw"/>
                             </label>
 
                             <label for="">
@@ -426,34 +520,34 @@ export default {
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Food Allergies/Intolerances</span>
-                                <Field as="textarea" name="intolerances"></Field>
+                                <Field as="textarea" name="food_allergies"></Field>
                             </label>
 
                             <label for="">
                                 <span>Medication Allergies</span>
-                                <Field as="textarea" name="Allergy"></Field>
+                                <Field as="textarea" name="med_allergies"></Field>
                             </label>
                         </div>
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Nutrition Relevant Labs: (Date)</span>
-                                <Field as="textarea" name="nutrition"></Field>
+                                <Field as="textarea" name="nutrition_rel_labs"></Field>
                             </label>
 
                             <label for="">
                                 <span>Nutrition Relevant Medications</span>
-                                <Field as="textarea" name="medications"></Field>
+                                <Field as="textarea" name="nutrition_rel_meds"></Field>
                             </label>
                         </div>
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Nutrition Related Diagnosis</span>
-                                <Field as="textarea" name="diagnosis"></Field>
+                                <Field as="textarea" name="nutrition_rel_diag"></Field>
                             </label>
 
                             <label for="">
                                 <span>Diet Order</span>
-                                <Field as="textarea" name="order"></Field>
+                                <Field as="textarea" name="diet_order"></Field>
                             </label>
                         </div>
                         <div class="notes-input-wrapper">
@@ -470,43 +564,29 @@ export default {
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Estimated Calories Per Day</span>
-                                <Field as="textarea" name="calories"></Field>
+                                <Field as="textarea" name="est_cal_per_day"></Field>
                             </label>
 
                             <label for="">
                                 <span>Estimated Protein Per Day</span>
-                                <Field as="textarea" name="protein"></Field>
+                                <Field as="textarea" name="est_protein_per_day"></Field>
                             </label>
                         </div>
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Estimated Carbs Per Day</span>
-                                <Field as="textarea" name="carbs"></Field>
+                                <Field as="textarea" name="est_carbs_per_day"></Field>
                             </label>
 
                             <label for="">
                                 <span>Estimated Fat Per Day</span>
-                                <Field as="textarea" name="fat"></Field>
+                                <Field as="textarea" name="est_fat_per_day"></Field>
                             </label>
                         </div>
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="">
                                 <span>Estimated Fluid Needs Per Day</span>
-                                <Field as="textarea" name="fluidneeds"></Field>
-                            </label>
-                        </div>
-                        <div class="notes-input-wrapper">
-                            <label for="">
-                                <span>Intake/24-HR Recall</span>
-                                <input type="checkbox" id="intake" />
-                                <label for="intake"></label>
-                            </label>
-                        </div>
-                        <div class="notes-input-wrapper">
-                            <label for="">
-                                <span>Physical Activity</span>
-                                <input type="checkbox" id="activity" />
-                                <label for="activity"></label>
+                                <Field as="textarea" name="est_fluid_per_day"></Field>
                             </label>
                         </div>
                         <div class="notes-input-wrapper">
@@ -520,11 +600,11 @@ export default {
                                 <Field as="textarea" name="plan"></Field>
                             </label>
                         </div>
+
                         <div class="notes-input-wrapper">
-                            <label for="">
-                                <span>Sample Meal Plan</span>
-                                <input type="checkbox" id="mealplan" />
-                                <label for="mealplan"></label>
+                        <label for="" class="bg-textarea">
+                                <span>Notes</span>
+                                <Field as="textarea" name="notes"></Field>
                             </label>
                         </div>
 

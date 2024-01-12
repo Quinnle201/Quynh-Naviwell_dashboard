@@ -39,7 +39,7 @@ export default {
       </ul>
 
       <template v-for="(tab, index) in tabList">
-        <div :key="tab + index" v-if="index + 1 === activeTab" class="tabs-content" :class="getIndex(index)">
+        <div v-show="index + 1 === activeTab" class="tabs-content" :class="getIndex(index)">
           <slot :name="`tabPanel-${index + 1}`" />
         </div>
       </template>
