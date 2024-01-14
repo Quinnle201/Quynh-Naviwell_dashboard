@@ -824,7 +824,7 @@ export default {
             v-on:update:patient="updatePatientInfo($event)" @close="closeModal" @showMeds="showMeds()">
         </AddPatientModal>
         <!-- clinical notes modal -->
-        <Modal v-show="isNotesModalVisible" @close="closeNotesModal">
+        <Modal v-show="isNotesModalVisible" @close="closeNotesModal" class="notes-modal">
             <template #header>Clinical Notes</template>
             <template #content>
                 <ul class="notes-list">
