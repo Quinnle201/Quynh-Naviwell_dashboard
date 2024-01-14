@@ -194,7 +194,7 @@ const router = createRouter({
               ]
             },
             {
-              path: "/notes",
+              path: "/notes/:noteId?",
               name: "notes",
               component: PatientNotesView,
             }

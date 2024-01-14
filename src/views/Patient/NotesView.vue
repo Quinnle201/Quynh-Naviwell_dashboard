@@ -28,6 +28,7 @@ export default {
     data() {
         const alertStore = useAlertStore()
         return {
+            id: null,
             tabList: ["Preventative Encounter", "Nutrition Assessment"],
             alertStore,
             patient: null,
@@ -113,9 +114,10 @@ export default {
     },
     mounted() {
         const state = history.state;
+        this.id = this.$route.params.noteId;
 
-        if(state.noteId) {
-            this.getNote(state.noteId)
+        if(this.id) {
+            this.getNote(this.id)
         } else {
             if(state.patientId) {
                 this.patientId = state.patientId
@@ -223,6 +225,7 @@ export default {
 
                 })
                 .catch(error => {
+                    console.log("note error")
                     console.log(error)
                     this.alertStore.error(error.response.data.message)
                 });
@@ -327,7 +330,7 @@ export default {
                 axiosInstance.post(`/notes`, values)
                     .then(response => {
                         this.note = response.data.data
-                        history.state.noteId = this.note.id
+                        this.$router.push({ name: 'notes', params: { id: this.note.id} })
                         this.alertStore.success('Note saved')
                     })
                     .catch(error => {
@@ -354,7 +357,7 @@ export default {
                 axiosInstance.post(`/notes`, values)
                     .then(response => {
                         this.note = response.data.data
-                        history.state.noteId = this.note.id
+                        this.$router.push({ name: 'notes', params: { id: this.note.id} })
                         this.alertStore.success('Note saved')
                     })
                     .catch(error => {

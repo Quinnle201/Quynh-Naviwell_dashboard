@@ -226,7 +226,7 @@ export default {
                 </div>
 
                 <div class="popup-link" v-if="event">
-                    <RouterLink :to="{ name: 'notes', state: { apptId: event.id, patientId: event.patient.id, noteId: event.clinical_note_id }}" >View Clinical Note</RouterLink>
+                    <RouterLink :to="{ name: 'notes', params: {noteId: event.clinical_note_id}, state: { apptId: event.id, patientId: event.patient.id }}" >View Clinical Note</RouterLink>
                 </div>
 
                 <div class="popup-footer">
