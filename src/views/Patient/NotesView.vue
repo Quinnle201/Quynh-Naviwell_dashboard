@@ -216,6 +216,7 @@ export default {
                         intake: note.intake,
                         activity: note.activity,
                         interventions: note.interventions,
+                        plan: note.plan,
                         notes: note.notes,
                     });
 
@@ -255,7 +256,7 @@ export default {
                     let blob = new Blob([response.data], { type: 'application/pdf' })
                     let link = document.createElement('a')
                     link.href = window.URL.createObjectURL(blob)
-                    link.download = 'report.pdf'
+                    link.download = `${this.userName(this.patient?.user)}-report.pdf`
                     link.click()
                 })
                 .catch(error => {
@@ -277,6 +278,34 @@ export default {
                         homework: note.homework,
                         next_followup_physical: new Date(note.next_followup_physical).toISOString().substring(0, 10),
                         next_followup_labs: new Date(note.next_followup_labs).toISOString().substring(0, 10),
+                    });
+
+                    this.$refs.noteNutritionForm.setValues({
+                        include: note.include,
+                        age: note.age == null ? "0" : note.age+"",
+                        height: note.height == null ? "0" : note.height+"",
+                        weight: note.weight == null ? "0" : note.weight+"",
+                        bmi: note.bmi == null ? "0" : note.bmi+"",
+                        ibw: note.ibw,
+                        bmr: note.bmr,
+                        food_allergies: note.food_allergies,
+                        med_allergies: note.med_allergies,
+                        nutrition_rel_labs: note.nutrition_rel_labs,
+                        nutrition_rel_meds: note.nutrition_rel_meds,
+                        nutrition_rel_diag: note.nutrition_rel_diag,
+                        diet_order: note.diet_order,
+                        texture: note.texture,
+                        complications: note.complications,
+                        est_cal_per_day: note.est_cal_per_day,
+                        est_protein_per_day: note.est_protein_per_day,
+                        est_carbs_per_day: note.est_carbs_per_day,
+                        est_fat_per_day: note.est_fat_per_day,
+                        est_fluid_per_day: note.est_fluid_per_day,
+                        intake: note.intake,
+                        activity: note.activity,
+                        interventions: note.interventions,
+                        plan: note.plan,
+                        notes: note.notes,
                     });
 
                 })
@@ -609,7 +638,12 @@ export default {
                         </div>
 
                         <div class="notes-btn-wrapper">
-                            <button type="submit" class="w-btn">Save</button>
+                            <button type="button" @click="downloadPdf(note.id)" class="w-btn" v-if="note">
+                                <span>Download pdf</span>
+                                <DownloadIcon class="attach-icon" /> 
+                            </button>
+                            <button type="submit" class="w-btn" v-if="note">Update</button>
+                            <button type="submit" class="w-btn" v-else>Save</button>
                         </div>
                     </Form>
                 </div>
