@@ -136,6 +136,11 @@ export default {
         }
     },
     methods: {
+        removeHtmlTags(htmlString) {
+            const tmp = document.createElement('DIV');
+            tmp.innerHTML = htmlString;
+            return tmp.textContent || tmp.innerText || '';
+        },
         getPatient(id) {
             axiosInstance.get(`/patients/${id}`)
                 .then(response => {
@@ -180,7 +185,7 @@ export default {
                         time_in: note.time_in,
                         time_out: note.time_out,
                         counselling: note.counselling,
-                        discussed: note.discussed,
+                        discussed: this.removeHtmlTags(note.discussed),
                         next_appt: note.next_appt,
                         homework: note.homework,
                         next_followup_physical: new Date(note.next_followup_physical).toISOString().substring(0, 10),
@@ -237,7 +242,7 @@ export default {
                 .then(response => {
                     const quiz = response.data.data
                     if(quiz){
-                        this.discussed = quiz.article
+                        this.discussed = this.removeHtmlTags(quiz.article)
                     }
                 })
                 .catch(error => {
@@ -410,7 +415,7 @@ export default {
                         </div>
 
                         <div class="notes-input-wrapper">
-                            <label for="">
+                            <label for="" class="bg-textarea">
                                 <span>Discussed the following:</span>
                                 <Field as="textarea" v-model="discussed" name="discussed"></Field>
                             </label>
