@@ -66,7 +66,7 @@ export default {
         hoursSelect() {
             const array = []
             var min = ['00', '15', '30', '45'];
-            for (var h = 8; h < 18; h++) {
+            for (var h = 5; h < 19; h++) {
                 for (var m = 0; m < min.length; m++) {
                     var hour = h;
                     if (hour < 10) {
