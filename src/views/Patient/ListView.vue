@@ -139,7 +139,7 @@ export default {
             if(this.patients[this.currentPage]) {
                 return
             }
-            axiosInstance.get(`/patients?page=${this.currentPage}`, { params: { per_page: 4, searchTerm: this.searchTerm } })
+            axiosInstance.get(`/patients?page=${this.currentPage}`, { params: { per_page: 24, searchTerm: this.searchTerm } })
                 .then(response => {
                     const patients = response.data.data.patients
                     this.patients[this.currentPage] = patients
