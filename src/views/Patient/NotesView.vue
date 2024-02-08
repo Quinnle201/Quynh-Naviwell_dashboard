@@ -422,7 +422,7 @@ export default {
 
                             <label for="">
                                 <span>Next session date</span>
-                                <Field as="textarea" name="next_appt"></Field>
+                                <Field type="date" name="next_appt"></Field>
                             </label>
                         </div>
 
