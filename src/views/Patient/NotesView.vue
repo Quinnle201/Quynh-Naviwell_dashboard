@@ -179,13 +179,15 @@ export default {
                         height = this.height(health_data?.height) ?? ['', ''];
                     }
                     
+                    this.discussed = note.discussed;
+                    
                     this.$refs.noteForm.setValues({
                         appt_id: note.appointment.id,
                         patient_id: note.patient.id,
                         time_in: note.time_in,
                         time_out: note.time_out,
                         counselling: note.counselling,
-                        discussed: this.removeHtmlTags(note.discussed),
+                        // discussed: this.removeHtmlTags(note.discussed),
                         next_appt: note.next_appt,
                         homework: note.homework,
                         next_followup_physical: new Date(note.next_followup_physical).toISOString().substring(0, 10),
@@ -241,8 +243,21 @@ export default {
             axiosInstance.get(`/patients/${id}/last-quiz`)
                 .then(response => {
                     const quiz = response.data.data
+                    console.log(quiz)
                     if(quiz){
-                        this.discussed = this.removeHtmlTags(quiz.article)
+                        let quizData = quiz.article
+                        //get questions and results for patient:
+                        const results = quiz.completedResults.find(({profile_id}) => profile_id == id)
+                        const userAnswerData = JSON.parse(results.answer_data)
+
+                        quizData += "</br><b>User answers:</b></br>"
+                        quiz.questions.forEach( (question, index) => {
+                            let isCorrect = question.correct == userAnswerData[index];
+                            let text = isCorrect ? '<p style="color:green">Correct</p>' : '<p style="color:red">Incorrect</p>';
+                            quizData += question.text + " - " + text;
+                        });
+                         
+                        this.discussed = quizData
                     }
                 })
                 .catch(error => {
@@ -331,6 +346,8 @@ export default {
             values['health-data'].bmi = this.bmi(values)
             values.appt_id = this.appointment.id;
             values.patient_id = this.patient.id;
+
+            values.discussed = this.discussed;
             if(!this.note) { 
                 axiosInstance.post(`/notes`, values)
                     .then(response => {
@@ -417,7 +434,7 @@ export default {
                         <div class="notes-input-wrapper">
                             <label for="" class="bg-textarea">
                                 <span>Discussed the following:</span>
-                                <Field as="textarea" v-model="discussed" name="discussed"></Field>
+                                <div class="editable-div" v-html="discussed"></div>
                             </label>
 
                             <label for="">
@@ -661,6 +678,19 @@ export default {
 </template>
 
 <style>
+
+    .editable-div {
+        background-color: #FFFFFF;
+        width: 100%;
+        height: 165px;
+        padding: 8px 12px;
+        border-radius: 10px;
+        color: #000000;
+        outline: none;
+        border: 1px solid #E7E7E7;
+        overflow-y: scroll; 
+    }
+
     .notes-input-wrapper {
         width: 100%;
         margin-bottom: 16px;
