@@ -87,4 +87,16 @@ export default {
   .tabs-content.border-r {
     border-radius: 16px;
   }
+
+  .inner-tablist ul.tabs-list {
+    margin-bottom: 16px;
+  }
+
+  .inner-tablist ul.tabs-list li.tab-item {
+    font-size: 16px;
+  }
+
+  .inner-tablist ul.tabs-list li.tab-item label {
+    padding: 0 16px 2px;
+  }
 </style>

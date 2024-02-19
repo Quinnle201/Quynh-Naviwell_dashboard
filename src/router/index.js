@@ -12,6 +12,7 @@ import ResetPassword from '@/views/Auth/ResetPassword.vue'
 import PatientsView from '@/views/Patient/ListView.vue'
 import PatientDetailView from '@/views/Patient/DetailView.vue'
 import PatientNotesView from '@/views/Patient/NotesView.vue'
+import SoapView from '@/views/Patient/SoapView.vue'
 import CalendarView from '@/views/CalendarView.vue'
 import LabResultsView from '@/views/LabResults/LabResultsView.vue'
 import AddResultView from '@/views/LabResults/AddResultView.vue'
@@ -197,6 +198,11 @@ const router = createRouter({
               path: "/notes/:noteId?",
               name: "notes",
               component: PatientNotesView,
+            },
+            {
+              path: "/soap",
+              name: "soap",
+              component: SoapView,
             }
           ]
         },
