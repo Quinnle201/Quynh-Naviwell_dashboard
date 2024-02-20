@@ -94,9 +94,15 @@ export default {
 
   .inner-tablist ul.tabs-list li.tab-item {
     font-size: 16px;
+    border-bottom: 2px solid transparent;
+    transition: .3s ease;
   }
 
   .inner-tablist ul.tabs-list li.tab-item label {
     padding: 0 16px 2px;
+  }
+
+  .inner-tablist ul.tabs-list li.tab-item-active {
+    border-bottom: 2px solid var(--text-color);
   }
 </style>

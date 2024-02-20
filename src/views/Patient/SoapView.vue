@@ -1182,7 +1182,27 @@ export default {
                         <template v-slot:tabPanel-1>
                             <Form>
                                 <div class="notes-input-wrapper">
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Medication</th>
+                                                <th>SIG</th>
+                                                <th>Dispense</th>
+                                                <th>Refills</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>lorem</td>
+                                                <td>ipsum</td>
+                                                <td>dolor</td>
+                                                <td>sit</td>
+                                                <td>amet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
 
                                 <div class="notes-btn-wrapper">
@@ -1193,7 +1213,23 @@ export default {
                         <template v-slot:tabPanel-2>
                             <Form>
                                 <div class="notes-input-wrapper">
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Allergy</th>
+                                                <th>Reaction</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>lorem</td>
+                                                <td>ipsum</td>
+                                                <td>dolor</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
 
                                 <div class="notes-btn-wrapper">
@@ -1204,7 +1240,27 @@ export default {
                         <template v-slot:tabPanel-3>
                             <Form>
                                 <div class="notes-input-wrapper">
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Risk</th>
+                                                <th>Severity</th>
+                                                <th>Drug 1</th>
+                                                <th>Drug 2</th>
+                                                <th>Interaction Summary</th>		
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>lorem</td>
+                                                <td>ipsum</td>
+                                                <td>dolor</td>
+                                                <td>sit</td>
+                                                <td>amet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
 
                                 <div class="notes-btn-wrapper">
@@ -1217,8 +1273,150 @@ export default {
             </template>
 
             <template v-slot:tabPanel-6>
-                <div class="page-bg notes-wrapper">
-                    <Form></Form>
+                <div class="page-bg notes-wrapper billing-inner">
+                    <div class="billing-inner-left">
+                        <div class="billing-inner-item">
+                            <div class="panel-heading">
+                                <span>ICD-9 Codes</span>
+                                <input type="text" placeholder="Find Diagnosis codes" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Code</th>
+                                        <th colspan="4">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>lorem</td>
+                                        <td>ipsum</td>
+                                        <td>dolor</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="billing-inner-item">
+                            <div class="panel-heading">
+                                <span>ICD-10 Codes</span>
+                                <input type="text" placeholder="Find Diagnosis codes" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Code</th>
+                                        <th colspan="4">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>lorem</td>
+                                        <td>ipsum</td>
+                                        <td>dolor</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="billing-inner-item">
+                            <div class="panel-heading">
+                                <span>NDC Codes</span>
+                                <input type="text" placeholder="Find NDC codes" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>NDC Code</th>
+                                        <th>Quantity</th>
+                                        <th>Units</th>
+                                        <th>Line Item</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>lorem</td>
+                                        <td>ipsum</td>
+                                        <td>dolor</td>
+                                        <td>sit</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="billing-inner-item">
+                            <div class="panel-heading">
+                                <span>ICD-9 Codes</span>
+                                <input type="text" placeholder="Find Custom Procedure codes" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Description</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>lorem</td>
+                                        <td>ipsum</td>
+                                        <td>dolor</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="billing-inner-right">
+                        <div class="billing-inner-item">
+                            <div class="panel-heading">
+                                <span>CPT Codes</span>
+                                <input type="text" placeholder="Find CPT Procedure codes" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Description</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>lorem</td>
+                                        <td>ipsum</td>
+                                        <td>dolor</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="billing-inner-item">
+                            <div class="panel-heading">
+                                <span>HCPCS Codes</span>
+                                <input type="text" placeholder="Find HCPCS Procedure codes" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Description</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>lorem</td>
+                                        <td>ipsum</td>
+                                        <td>dolor</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </template>
         </tabs>
@@ -1436,5 +1634,64 @@ export default {
         border-radius: 16px;
         outline: 1px solid #E1E1E1;
         resize: none;
+    }
+
+    .notes-input-wrapper table {
+        background-color: #F4F4FF;
+        width: 100%;
+        border-collapse: separate;
+    }
+
+    .notes-input-wrapper table, 
+    .notes-input-wrapper th, 
+    .notes-input-wrapper td {
+        border: 1px solid #E1E1E1;
+        border-collapse: collapse;
+    }
+
+    .notes-input-wrapper th, 
+    .notes-input-wrapper td {
+        padding: 8px 16px;
+    }
+
+    .page-bg.notes-wrapper.billing-inner {
+        display: grid;
+        grid-template-columns: 50fr 50fr;
+        gap: 0 32px;
+    }
+
+    .billing-inner-item {
+        background-color: #F4F4FF;
+        margin-bottom: 8px;
+        padding: 8px;
+        border: 1px solid #E1E1E1;
+        border-radius: 16px;
+    }
+
+    .billing-inner-item .panel-heading {
+        width: 100%;
+        margin-bottom: 8px;
+        padding: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #E1E1E1;
+    }
+
+    .billing-inner-item .panel-heading span {
+        width: 100%;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    .billing-inner-item .panel-heading input {
+        width: 100%;
+        padding: 4px 8px;
+        border: 1px solid #E1E1E1;
+        border-radius: 6px;
+    }
+
+    .billing-inner-item table {
+        width: 100%;
     }
 </style>
