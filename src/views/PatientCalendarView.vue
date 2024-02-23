@@ -175,7 +175,7 @@ export default {
         </div>
 
         <div class="calendar-wrapper">
-            <vue-cal :time-from="8 * 60" :time-to="18 * 60.5" :time-step="15" :twelveHour="true" today-button
+            <vue-cal :time-from="5 * 60" :time-to="20 * 60.5" :time-step="15" :twelveHour="true" today-button
                 :disable-views="['years', 'year']" hide-view-selector
                 :editable-events="{ title: false, drag: false, resize: false, delete: false, create: false }"
                 :events="events" :on-event-click="showModal">
