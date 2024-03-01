@@ -285,4 +285,55 @@ export default {
         accent-color: var(--main-color);
         cursor: pointer;
     }
+
+    @media screen and (max-width: 1440px) {
+        .welcome-wrapper {
+            margin-top: -2rem;
+        }
+        
+        .welcome-inner {
+            max-width: 60%;
+        }
+    }
+
+    @media screen and (max-width: 1199px) {
+        .welcome-inner {
+            max-width: 80%;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .welcome-inner {
+            padding: 16px 24px;
+        }
+
+        .welcome-heading h4 {
+            font-size: 20px;
+        }
+
+        .welcome-heading h6 {
+            font-size: 14px;
+        }
+    }
+
+    @media screen and (max-width: 576px) {
+        .welcome-inner {
+            max-width: 90%;
+        }
+
+        .info-form {
+            max-width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 375px) {
+        .welcome-heading h4 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .welcome-inner {
+            padding: 16px 12px;
+        }
+    }
 </style>
