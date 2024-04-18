@@ -226,6 +226,21 @@ export default {
         showDeleteModal() {
             this.isDeleteModalVisible = true;
         },
+        deletePatient(){
+            
+            axiosInstance.delete(`/patients/${this.$route.params.id}`)
+                .then(response => {
+                    const data = response.data.data;
+                    this.alertStore.success(data);
+                    this.$router.push({ name: 'patients' })
+                    console.log(data)
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+                this.isDeleteModalVisible = false;
+        },
         showMeds() {
             this.medsData = true;
             this.$refs.medicationForm.setFieldValue("drugs", this.patientDrugs)
@@ -833,7 +848,7 @@ export default {
             </template>
         </Modal>
         <!-- delete modal -->
-        <DeleteModal v-show="isDeleteModalVisible" @close="closeModal">
+        <DeleteModal v-show="isDeleteModalVisible" @close="closeModal" @delete="deletePatient">
             <template #content>
                 <h4>Delete this patient?</h4>
                 <p>This will delete all data regarding this patient.</p>
