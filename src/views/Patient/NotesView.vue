@@ -188,6 +188,8 @@ export default {
                         time_out: note.time_out,
                         counselling: note.counselling,
                         // discussed: this.removeHtmlTags(note.discussed),
+                        icd_code: note.icd_code,
+                        cpt_code: note.cpt_code,
                         next_appt: note.next_appt,
                         homework: note.homework,
                         next_followup_physical: new Date(note.next_followup_physical).toISOString().substring(0, 10),
@@ -296,6 +298,8 @@ export default {
                     this.$refs.noteForm.setValues({
                         time_in: note.time_in,
                         time_out: note.time_out,
+                        icd_code: note.icd_code,
+                        cpt_code: note.cpt_code,
                         counselling: note.counselling,
                         next_appt: note.next_appt,
                         homework: note.homework,
@@ -429,6 +433,20 @@ export default {
                                 <span>Counselling</span>
                                 <Field as="textarea" v-model="counselling" name="counselling"></Field>
                             </label>
+                        </div>
+
+                        <div class="notes-input-wrapper">
+                            <div class="notes-input-inner">
+                                <label for="">
+                                    <span>ICD-10 code</span>
+                                    <TagsTextarea :tags="tags" fieldName="icd_code" />
+                                </label>
+                                <label for="">
+                                    <span>CPT code</span>
+                                    <TagsTextarea :tags="tags" fieldName="cpt_code" />
+                                </label>
+                            </div>
+
                         </div>
 
                         <div class="notes-input-wrapper">
