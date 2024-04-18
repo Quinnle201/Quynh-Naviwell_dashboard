@@ -250,14 +250,16 @@ export default {
                         let quizData = quiz.article
                         //get questions and results for patient:
                         const results = quiz.completedResults.find(({profile_id}) => profile_id == id)
-                        const userAnswerData = JSON.parse(results.answer_data)
-
-                        quizData += "</br><b>User answers:</b></br>"
-                        quiz.questions.forEach( (question, index) => {
-                            let isCorrect = question.correct == userAnswerData[index];
-                            let text = isCorrect ? '<p style="color:green">Correct</p>' : '<p style="color:red">Incorrect</p>';
-                            quizData += question.text + " - " + text;
-                        });
+                        if(results.answer_data) {
+                            const userAnswerData = JSON.parse(results.answer_data)
+                            quizData += "</br><b>User answers:</b></br>"
+                            quiz.questions.forEach( (question, index) => {
+                                let isCorrect = question.correct == userAnswerData[index];
+                                let text = isCorrect ? '<p style="color:green">Correct</p>' : '<p style="color:red">Incorrect</p>';
+                                quizData += question.text + " - " + text;
+                            });
+                        }
+                        
                          
                         this.discussed = quizData
                     }
