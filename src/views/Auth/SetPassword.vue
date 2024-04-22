@@ -1,6 +1,6 @@
 <script setup>
 import { useAuthStore, useClinicStore } from '@/stores';
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const authStore = useAuthStore();
 const data = JSON.parse(window.atob(authStore.user));
@@ -9,6 +9,8 @@ const password = ref(data['password'])
 const newPasword = ref("")
 const newPasswordConfirmation = ref("")
 
+const isProcessing = ref(false);
+
 const clinicStore = useClinicStore();
 
  const clinic = computed(() => {
@@ -16,8 +18,45 @@ const clinicStore = useClinicStore();
 })
 
 async function onSubmit() {
+    if(isProcessing.value) {
+        return;
+    }
+    isProcessing.value = true
     await authStore.changePassword(email.value, password.value, newPasword.value, newPasswordConfirmation.value, true);
+    isProcessing.value = false
 }
+
+const passwordRequirements = computed(() => ([
+  {
+    name: 'At least 1 uppercase letter (A-Z)',
+    predicate: newPasword.value.toLowerCase() !== newPasword.value,
+  },
+  {
+    name: 'At least 1 lowercase letter (a-z)',
+    predicate: newPasword.value.toUpperCase() !== newPasword.value,
+  },
+  {
+    name: 'At least 1 number (0-9)',
+    predicate: /\d/.test(newPasword.value),
+  },
+  {
+    name: 'At least 1 symbol (@-$)',
+    predicate: /\W/.test(newPasword.value),
+  },
+  {
+    name: 'At least 8 characters long',
+    predicate: newPasword.value.length >= 8,
+  },
+  {
+    name: 'Passwords must match',
+    predicate: newPasword.value === newPasswordConfirmation.value && newPasword.value != "",
+  }
+]))
+
+const requirementsSatisfied = computed(() => 
+    passwordRequirements.value.reduce((v, p) => v && p.predicate, true)
+)
+
 </script>
 
 <template>
@@ -53,9 +92,20 @@ async function onSubmit() {
                         <label>New password confirmation</label>
                         <input name="password"  v-model="newPasswordConfirmation" type="password" class="form-control" />
                     </div>
+
+                    <ul class="requirements">
+                        <li
+                            v-for="(requirement, key) in passwordRequirements"
+                            :key="key"
+                            :class="requirement.predicate ? 'is-success' : 'is-error'"
+                        >
+                            {{ requirement.name }}
+                        </li>
+                    </ul>
+
                     <div class="form-group login-btn">
 
-                        <button>Proceed</button>
+                        <button :disabled="!requirementsSatisfied">Proceed</button>
                     </div>
                 </Form>
             </div>
@@ -157,6 +207,10 @@ async function onSubmit() {
         border-radius: 20px;
     }
 
+    .login-form .login-btn button:disabled {
+        background-color: #5c90f175
+    }
+
     .login-form .login-btn .login-checkbox {
         display: flex;
         align-items: center;
@@ -170,5 +224,19 @@ async function onSubmit() {
     .login-form .login-btn .login-checkbox input {
         width: 20px;
         height: 20px;
+    }
+
+
+
+    .requirements {
+        font-weight: bold;
+    }
+
+    .is-success {
+        color: #96CA2D;
+    }
+
+    .is-error {
+        color: #BA3637;
     }
 </style>
