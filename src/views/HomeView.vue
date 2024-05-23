@@ -161,9 +161,9 @@ export default {
             <ul>
               <li :class="inTime(visit.start_time) ? 'active' : ''" v-for="visit in todayVisits">
                 <RouterLink :to="{ name: 'calendar', params: { id: visit.id } }"  style="color: #000000; width: 100%; ">
-                  <div style="width: 100%; display: flex;">
-                    <div class="calendar-list-time">{{ localDate(visit.start_time) }}</div>
-                    <div class="calendar-list-time">{{ userName(visit.patient.user) }}</div>
+                  <div style="width: 100%;">
+                    <div class="calendar-list-time">{{ localDate(visit.start_time) }} {{ userName(visit.patient.user) }}</div>
+                    <div>{{ visit.visit_type_readable }}</div>
                   </div>
               </RouterLink>
               </li>
