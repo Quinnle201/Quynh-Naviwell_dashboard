@@ -618,7 +618,7 @@ export default {
 
                                             <div v-if="message.from?.profile.id == selectedPatient.id"
                                                 class="message-list-time">{{ time(message.time) }}</div>
-                                            <div v-else class="message-list-time">Dr. {{ message.from?.last_name }} • {{
+                                            <div v-else class="message-list-time">{{ message.from?.last_name }} • {{
                                                 time(message.time) }}</div>
                                         </div>
                                     </li>
