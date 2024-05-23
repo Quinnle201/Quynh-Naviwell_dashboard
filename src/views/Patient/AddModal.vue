@@ -52,28 +52,28 @@ export default {
         const generalInfo = {
             fields: [
                 {
-                    label: 'First name',
+                    label: 'First name *',
                     name: 'user.first_name',
                     as: 'input',
                     model: 'user.first_name',
                     rules: Yup.string().required('Name is required'),
                 },
                 {
-                    label: 'Last name',
+                    label: 'Last name *',
                     name: 'user.last_name',
                     as: 'input',
                     model: 'user.last_name',
                     rules: Yup.string().required('Last name is required'),
                 },
                 {
-                    label: 'DOB',
+                    label: 'DOB *',
                     name: 'profile.dob',
                     as: 'date-input',
                     model: 'dob',
                     rules: Yup.date().nullable(),
                 },
                 {
-                    label: 'Gender',
+                    label: 'Gender *',
                     name: 'profile.gender',
                     as: 'select',
                     model: 'gender',
@@ -241,7 +241,7 @@ export default {
         const patientInfo = {
             fields: [
                 {
-                    label: 'Weight',
+                    label: 'Weight *',
                     name: 'health-data.weight',
                     as: 'input',
                     model: 'current_health_data.weight',
@@ -449,7 +449,7 @@ export default {
 
                                 <ul class="patientInfo">
                                     <li class="heightInput">
-                                        <label for="health-data.height">Height</label>
+                                        <label for="health-data.height">Height *</label>
                                         <div>
                                             <Field name="health-data.height_ft" type="number" />
                                             <label for="health-data.height_ft">ft</label>
