@@ -357,6 +357,8 @@ body {
 .dashboard-card.calendar-card {
   padding-bottom: 0;
   justify-content: flex-start;
+  height: 45vh;
+  overflow-y: scroll;
 }
 
 .calendar-card h4 {

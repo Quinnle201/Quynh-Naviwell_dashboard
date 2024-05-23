@@ -34,6 +34,8 @@ export default {
             showDialog: false,
             isDeleteModalVisible: false,
             events: [],
+            currentPage: 1,
+            totalPages: 1,
         };
     },
     watch: {
@@ -165,9 +167,16 @@ export default {
                 this.alertStore.error('Unexpected error')
             }
         },
+        loadMoreAppts() {
+            if(this.currentPage <= this.totalPages) {
+                this.currentPage += 1
+                this.getEvents();
+            }
+        },
         getEvents() {
-            axiosInstance.get('/appointments')
+            axiosInstance.get(`/appointments?page=${this.currentPage}`, { params: { per_page: 100 } })
                 .then(response => {
+                    this.totalPages = response.data.data.meta.last
                     response.data.data.appointments.forEach(appt => {
                         this.addVisit(appt)
                     });
@@ -242,7 +251,7 @@ export default {
             <vue-cal :time-from="5 * 60" :time-to="20 * 60.5" :time-step="15" :twelveHour="true" today-button
                 :disable-views="['years', 'year']" hide-view-selector
                 :editable-events="{ title: false, drag: false, resize: false, delete: false, create: false }"
-                :events="events" :on-event-click="showModal">
+                :events="events" :on-event-click="showModal" @view-change="loadMoreAppts()">
             </vue-cal>
         </div>
     </div>

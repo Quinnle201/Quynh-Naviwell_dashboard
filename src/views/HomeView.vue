@@ -160,8 +160,12 @@ export default {
             <h4 v-else>No visits for today</h4>
             <ul>
               <li :class="inTime(visit.start_time) ? 'active' : ''" v-for="visit in todayVisits">
-                <div class="calendar-list-time">{{ localDate(visit.start_time) }}</div>
-                <div>{{ userName(visit.patient.user) }}</div>
+                <RouterLink :to="{ name: 'calendar', params: { id: visit.id } }"  style="color: #000000; width: 100%; ">
+                  <div style="width: 100%; display: flex;">
+                    <div class="calendar-list-time">{{ localDate(visit.start_time) }}</div>
+                    <div class="calendar-list-time">{{ userName(visit.patient.user) }}</div>
+                  </div>
+              </RouterLink>
               </li>
             </ul>
           </div>
