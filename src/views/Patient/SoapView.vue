@@ -6,6 +6,9 @@ import DownloadIcon from '@/components/icons/IconDownload.vue'
 import { Form, Field } from 'vee-validate';
 import VueMultiselect from 'vue-multiselect'
 
+import { useAlertStore } from '@/stores';
+import { axiosInstance } from '@/helpers';
+
 export default {
     components: {
         Tabs,
@@ -17,8 +20,14 @@ export default {
         VueMultiselect
     },
     data() {
+        const alertStore = useAlertStore()
         return {
-            tabList: ["Subjective", "Objective", "Assessment", "Plan", "Medications/Allergies", "Billing"],
+            soap: null,
+            alertStore,
+            noteId: null,
+            // tabList: ["Subjective", "Objective", "Assessment", "Plan", "Medications/Allergies", "Billing"],
+            tabList: ["Subjective", "Objective", "Assessment", "Plan"],
+
             assessmentTabList: ["Billing ICD10", "Problems", "Billing ICD9", "Problem History", "Assessments"], 
             planTabList: ["Clinical Info", "Labs"],
             medTabList: ["Medication", "Allergy", "Interactions"],
@@ -55,7 +64,6 @@ export default {
             valueNeurologic: null,
             valueEndocrine: null,
             valuePsychiatric: null,
-            valueGeneralWnl: null,
             valueGeneralWnl: null,
             valueHeentlWnl: null,
             valueNecklWnl: null,
@@ -104,19 +112,141 @@ export default {
             optionsGenInstructions: []
         };
     },
+    methods: {
+        splitNull(value) {
+            if(value) {
+                return value.split("|")
+            } 
+            return null
+        },
+        joinNull(array) {
+            if(array){
+                return array.join("|")
+            }
+            return null
+        },
+        submitSoap(values) {
+            values.clinical_note_id = this.noteId;
+
+            values.general_dd =     this.joinNull(this.valueGeneral)
+            values.skin_dd =        this.joinNull(this.valueSkin)
+            values.heent_dd =       this.joinNull(this.valueHeent)
+            values.neck_dd =        this.joinNull(this.valueNeck)
+            values.cardio_dd =      this.joinNull(this.valueCardiovascular)
+            values.respiratory_dd = this.joinNull(this.valueRespiratory)
+            values.gi_dd =          this.joinNull(this.valueGi)
+            values.urinary_dd =     this.joinNull(this.valueUrinary)
+            values.periph_vasc_dd = this.joinNull(this.valueVasc)
+            values.msk_dd =         this.joinNull(this.valueMsk)
+            values.neuro_dd =       this.joinNull(this.valueNeurologic)
+            values.endo_dd =        this.joinNull(this.valueEndocrine)
+            values.psychiatric_dd = this.joinNull(this.valuePsychiatric)
+            values.general_wnl_dd = this.joinNull(this.valueGeneralWnl)
+            values.heent_wnl_dd =   this.joinNull(this.valueHeentlWnl)
+            values.neck_wnl_dd =    this.joinNull(this.valueNecklWnl)
+            values.cardio_wnl_dd =  this.joinNull(this.valueCardiovascularlWnl)
+            values.lungs_wnl_dd =   this.joinNull(this.valueLungslWnl)
+            values.abdomen_wnl_dd = this.joinNull(this.valueAbdomenlWnl)
+            values.msk_wnl_dd =     this.joinNull(this.valueMsklWnl)
+            values.neuro_wnl_dd =   this.joinNull(this.valueNeurolWnl)
+            values.extremities_wnl_dd = this.joinNull(this.valueExtremlWnl)
+
+
+            if(!this.soap) { 
+                axiosInstance.post(`/soap`, values)
+                    .then(response => {
+                        this.soap = response.data.data
+                        this.$router.push({ name: 'soap', params: { soapId: this.soap.id} })
+                        this.alertStore.success('Note saved')
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alertStore.error(error.response.data.message)
+                    });
+            } else {
+                axiosInstance.put(`/soap/${this.soap.id}`, values)
+                    .then(response => {
+                        this.alertStore.success('Note updated')
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alertStore.error(error.response.data.message)
+                    });
+            }
+        },
+        getSoap(id) {
+            axiosInstance.get(`/soap/${id}`)
+                .then(response => {
+
+                    let soap = response.data.data
+                    this.soap = soap
+                    this.noteId = soap.clinical_note_id;
+
+                    this.$refs.subjectiveForm.setValues(soap);
+                    this.$refs.wnlForm.setValues(soap);
+                    this.$refs.billing_icd10Form.setValues(soap);
+                    this.$refs.problemsForm.setValues(soap);
+                    this.$refs.billing_icd9Form.setValues(soap);
+                    this.$refs.problemHistoryForm.setValues(soap);
+                    this.$refs.assesmentsForm.setValues(soap);
+
+                    this.valueGeneral = this.splitNull(soap.general_dd)
+                    this.valueSkin = this.splitNull(soap.skin_dd)
+                    this.valueHeent = this.splitNull(soap.heent_dd)
+                    this.valueNeck = this.splitNull(soap.neck_dd)
+                    this.valueCardiovascular = this.splitNull(soap.cardio_dd)
+                    this.valueRespiratory = this.splitNull(soap.respiratory_dd)
+                    this.valueGi = this.splitNull(soap.gi_dd)
+                    this.valueUrinary = this.splitNull(soap.urinary_dd)
+                    this.valueVasc = this.splitNull(soap.periph_vasc_dd)
+                    this.valueMsk = this.splitNull(soap.msk_dd)
+                    this.valueNeurologic = this.splitNull(soap.neuro_dd)
+                    this.valueEndocrine = this.splitNull(soap.endo_dd)
+                    this.valuePsychiatric = this.splitNull(soap.psychiatric_dd)
+                    this.valueGeneralWnl = this.splitNull(soap.general_wnl_dd)
+                    this.valueHeentlWnl = this.splitNull(soap.heent_wnl_dd)
+                    this.valueNecklWnl = this.splitNull(soap.neck_wnl_dd)
+                    this.valueCardiovascularlWnl = this.splitNull(soap.cardio_wnl_dd)
+                    this.valueLungslWnl = this.splitNull(soap.lungs_wnl_dd)
+                    this.valueAbdomenlWnl = this.splitNull(soap.abdomen_wnl_dd)
+                    this.valueMsklWnl = this.splitNull(soap.msk_wnl_dd)
+                    this.valueNeurolWnl = this.splitNull(soap.neuro_wnl_dd)
+                    this.valueExtremlWnl = this.splitNull(soap.extremities_wnl_dd)
+
+                })
+                .catch(error => {
+                    console.log("soap error")
+                    console.log(error)
+                    this.alertStore.error(error.response.data.message)
+                });
+        },
+    },
+    mounted() {
+        const state = history.state;
+        this.id = this.$route.params.soapId;
+
+        if(this.id) {
+            this.getSoap(this.id)
+        } else {
+            if(state.noteId) {
+                this.noteId = state.noteId
+            } else {
+                this.alertStore.error("Note is undefined. Please report to administrator.")
+            }
+        }
+    },
 };
 </script> 
 
 <template>
     <div class="page-wrapper">
         <div class="layout-wrapper">
-            <!-- <h3>{{this.userName(patient?.user)}}</h3> -->
         </div>
         
         <tabs class="diet-tabs" :tabList="tabList">
             <template v-slot:tabPanel-1>
                 <div class="page-bg notes-wrapper">
-                    <Form>
+                    <Form ref="subjectiveForm" @submit="submitSoap">
                         <div class="notes-input-wrapper">
                             <label for="" class="bg-textarea">
                                 <span>HPI</span>
@@ -125,28 +255,30 @@ export default {
 
                             <label for="" class="bg-textarea">
                                 <span>Social HX</span>
-                                <TagsTextarea :tags="tags" fieldName="hx" />
+                                <TagsTextarea :tags="tags" fieldName="social_hx" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Family HX</span>
-                                <TagsTextarea :tags="tags" fieldName="fhx" />
+                                <TagsTextarea :tags="tags" fieldName="family_hx" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Past Medical HX</span>
-                                <TagsTextarea :tags="tags" fieldName="phx" />
+                                <TagsTextarea :tags="tags" fieldName="past_medical_hx" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>General [-]</span>
-                                <Field type="checkbox" id="general" name="general"/>
+                                <Field v-slot="{ field }" name="general" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="general" id="general" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="general"></label>
                             </label>
 
@@ -172,14 +304,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>General Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="phx" />
+                                <TagsTextarea :tags="tags" fieldName="general_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Skin [-]</span>
-                                <Field type="checkbox" id="skin" name="skin"/>
+                                <Field v-slot="{ field }" name="skin" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="skin" id="skin" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="skin"></label>
                             </label>
 
@@ -205,14 +339,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Skin Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="phx" />
+                                <TagsTextarea :tags="tags" fieldName="skin_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>HEENT [-]</span>
-                                <Field type="checkbox" id="heent" name="heent"/>
+                                <Field v-slot="{ field }" name="heent" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="heent" id="heent" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="heent"></label>
                             </label>
 
@@ -238,15 +374,17 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>HEENT Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="phx" />
+                                <TagsTextarea :tags="tags" fieldName="heent_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Neck [-]</span>
-                                <Field type="checkbox" id="heent" name="heent"/>
-                                <label for="heent"></label>
+                                <Field v-slot="{ field }" name="neck" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="neck" id="neck" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="neck"></label>
                             </label>
 
                             <label for="">
@@ -271,14 +409,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Neck Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="neck" />
+                                <TagsTextarea :tags="tags" fieldName="neck_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Cardiovascular [-]</span>
-                                <Field type="checkbox" id="cardiovascular" name="cardiovascular"/>
+                                <Field v-slot="{ field }" name="cardiovascular" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="cardiovascular" id="cardiovascular" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="cardiovascular"></label>
                             </label>
 
@@ -304,14 +444,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>CV Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="cv" />
+                                <TagsTextarea :tags="tags" fieldName="cardio_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Respiratory [-]</span>
-                                <Field type="checkbox" id="respiratory" name="respiratory"/>
+                                <Field v-slot="{ field }" name="respiratory" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="respiratory" id="respiratory" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="respiratory"></label>
                             </label>
 
@@ -337,14 +479,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Resp Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="resp" />
+                                <TagsTextarea :tags="tags" fieldName="respiratory_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>GI [-]</span>
-                                <Field type="checkbox" id="gi" name="gi"/>
+                                <Field v-slot="{ field }" name="gi" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="gi" id="gi" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="gi"></label>
                             </label>
 
@@ -370,14 +514,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>GI Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="resp" />
+                                <TagsTextarea :tags="tags" fieldName="gi_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Urinary [-]</span>
-                                <Field type="checkbox" id="urinary" name="urinary"/>
+                                <Field v-slot="{ field }" name="urinary" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="urinary" id="urinary" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="urinary"></label>
                             </label>
 
@@ -403,14 +549,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Urinary Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="urinary" />
+                                <TagsTextarea :tags="tags" fieldName="urinary_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Periph. Vasc. [-]</span>
-                                <Field type="checkbox" id="periph" name="periph"/>
+                                <Field v-slot="{ field }" name="periph_vasc" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="periph_vasc" id="periph" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="periph"></label>
                             </label>
 
@@ -436,14 +584,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Periph. Vasc. Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="vasc" />
+                                <TagsTextarea :tags="tags" fieldName="periph_vasc_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>MSK [-]</span>
-                                <Field type="checkbox" id="msk" name="msk"/>
+                                <Field v-slot="{ field }" name="msk" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="msk" id="msk" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="msk"></label>
                             </label>
 
@@ -469,14 +619,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>MSK Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="msk" />
+                                <TagsTextarea :tags="tags" fieldName="msk_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Neurologic [-]</span>
-                                <Field type="checkbox" id="neuro" name="neuro"/>
+                                <Field v-slot="{ field }" name="neuro" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="neuro" id="neuro" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="neuro"></label>
                             </label>
 
@@ -502,14 +654,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Neuro Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="neuro" />
+                                <TagsTextarea :tags="tags" fieldName="neuro_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Endocrine [-]</span>
-                                <Field type="checkbox" id="endo" name="endo"/>
+                                <Field v-slot="{ field }" name="endo" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="endo" id="endo" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="endo"></label>
                             </label>
 
@@ -535,14 +689,16 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Endo Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="endo" />
+                                <TagsTextarea :tags="tags" fieldName="endo_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Psychiatric [-]</span>
-                                <Field type="checkbox" id="psychiatric" name="psychiatric"/>
+                                <Field v-slot="{ field }" name="psychiatric" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="psychiatric" id="psychiatric" v-bind="field" :value="1" />
+                                </Field>
                                 <label for="psychiatric"></label>
                             </label>
 
@@ -569,7 +725,7 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Psychiatric Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="psychiatric" />
+                                <TagsTextarea :tags="tags" fieldName="psychiatric_comments" />
                             </label>
                         </div>
                         
@@ -582,12 +738,14 @@ export default {
 
             <template v-slot:tabPanel-2>
                 <div class="page-bg notes-wrapper">
-                    <Form>
+                    <Form ref="wnlForm" @submit="submitSoap">
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>General WNL</span>
-                                <Field type="checkbox" name="general"/>
-                                <label for="general"></label>
+                                <Field v-slot="{ field }" name="general_wnl" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="general_wnl" id="general_wnl" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="general_wnl"></label>
                             </label>
 
                             <label for="">
@@ -612,15 +770,17 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>General Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="generalWnl" />
+                                <TagsTextarea :tags="tags" fieldName="general_wnl_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>HEENT WNL</span>
-                                <Field type="checkbox" name="general"/>
-                                <label for="general"></label>
+                                <Field v-slot="{ field }" name="heent_wnl" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="heent_wnl" id="heent_wnl" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="heent_wnl"></label>
                             </label>
 
                             <label for="">
@@ -645,36 +805,42 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>HEENT Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="heentWnl" />
+                                <TagsTextarea :tags="tags" fieldName="heent_wnl_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Skin WNL</span>
-                                <Field type="checkbox" name="skinWnl"/>
-                                <label for="skinWnl"></label>
+                                <Field v-slot="{ field }" name="skin_wnl" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="skin_wnl" id="skin_wnl" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="skin_wnl"></label>
                             </label>
 
                             <label for="">
                                 <span>Skin Lesion</span>
-                                <Field type="checkbox" name="skinLession"/>
-                                <label for="skinLession"></label>
+                                <Field v-slot="{ field }" name="skin_wnl_dd" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="skin_wnl_dd" id="skin_wnl_dd" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="skin_wnl_dd"></label>
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Skin Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="skinWnl" />
+                                <TagsTextarea :tags="tags" fieldName="skin_wnl_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Neck WNL</span>
-                                <Field type="checkbox" name="neckWnl"/>
-                                <label for="neckWnl"></label>
+                                <Field v-slot="{ field }" name="neck_wnl" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="neck_wnl" id="neck_wnl" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="neck_wnl"></label>
                             </label>
 
                             <label for="">
@@ -699,15 +865,17 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Neck Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="neckWnl" />
+                                <TagsTextarea :tags="tags" fieldName="neck_wnl_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Cardiovascular WNL</span>
-                                <Field type="checkbox" name="cardiovascularkWnl"/>
-                                <label for="cardiovascularkWnl"></label>
+                                <Field v-slot="{ field }" name="cardio_wnl" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="cardio_wnl" id="cardio_wnl" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="cardio_wnl"></label>
                             </label>
 
                             <label for="">
@@ -732,15 +900,17 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Cardiovascular Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="cardiovascularWnl" />
+                                <TagsTextarea :tags="tags" fieldName="cardio_wnl_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Lungs WNL</span>
-                                <Field type="checkbox" name="lungskWnl"/>
-                                <label for="lungskWnl"></label>
+                                <Field v-slot="{ field }" name="lungs_wnl" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="lungs_wnl" id="lungs_wnl" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="lungs_wnl"></label>
                             </label>
 
                             <label for="">
@@ -765,15 +935,17 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Lungs Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="lungsWnl" />
+                                <TagsTextarea :tags="tags" fieldName="lungs_wnl_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Abdomen WNL</span>
-                                <Field type="checkbox" name="abdomenWnl"/>
-                                <label for="abdomenWnl"></label>
+                                <Field v-slot="{ field }" name="abdomen_wnl" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="abdomen_wnl" id="abdomen_wnl" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="abdomen_wnl"></label>
                             </label>
 
                             <label for="">
@@ -798,15 +970,17 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Abdomen Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="abdomenWnl" />
+                                <TagsTextarea :tags="tags" fieldName="abdomen_wnl_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>MSK WNL</span>
-                                <Field type="checkbox" name="mskWnl"/>
-                                <label for="mskWnl"></label>
+                                <Field v-slot="{ field }" name="msk_wnl" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="msk_wnl" id="msk_wnl" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="msk_wnl"></label>
                             </label>
 
                             <label for="">
@@ -831,15 +1005,17 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>MSK Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="mskWnl" />
+                                <TagsTextarea :tags="tags" fieldName="msk_wnl_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Neuro WNL</span>
-                                <Field type="checkbox" name="neuroWnl"/>
-                                <label for="neuroWnl"></label>
+                                <Field v-slot="{ field }" name="neuro_wnl" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="neuro_wnl" id="neuro_wnl" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="neuro_wnl"></label>
                             </label>
 
                             <label for="">
@@ -864,15 +1040,17 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Neuro Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="neuroWnl" />
+                                <TagsTextarea :tags="tags" fieldName="neuro_wnl_comments" />
                             </label>
                         </div>
 
                         <div class="notes-input-wrapper">
                             <label for="">
                                 <span>Extremities WNL</span>
-                                <Field type="checkbox" name="extremWnl"/>
-                                <label for="extremWnl"></label>
+                                <Field v-slot="{ field }" name="extremities_wnl" type="checkbox" :value="1" :unchecked-value="0">
+                                        <input type="checkbox" name="extremities_wnl" id="extremities_wnl" v-bind="field" :value="1" />
+                                </Field>
+                                <label for="extremities_wnl"></label>
                             </label>
 
                             <label for="">
@@ -897,7 +1075,7 @@ export default {
                         <div class="notes-input-wrapper notes-input-wrapper-sm">
                             <label for="" class="bg-textarea">
                                 <span>Extrem Comments</span>
-                                <TagsTextarea :tags="tags" fieldName="extremWnl" />
+                                <TagsTextarea :tags="tags" fieldName="extremities_wnl_comments" />
                             </label>
                         </div>
 
@@ -912,9 +1090,9 @@ export default {
                 <div class="page-bg notes-wrapper">
                     <tabs class="diet-tabs inner-tablist" :tabList="assessmentTabList">
                         <template v-slot:tabPanel-1>
-                            <Form>
+                            <Form ref="billing_icd10Form" @submit="submitSoap">
                                 <div class="notes-input-wrapper">
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    <Field as="textarea" name="billing_icd10" id="" cols="30" rows="10"></Field>
                                 </div>
 
                                 <div class="notes-btn-wrapper">
@@ -923,9 +1101,9 @@ export default {
                             </Form>
                         </template>
                         <template v-slot:tabPanel-2>
-                            <Form>
+                            <Form ref="problemsForm" @submit="submitSoap">
                                 <div class="notes-input-wrapper">
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    <Field as="textarea" name="problems" id="" cols="30" rows="10"></Field>
                                 </div>
 
                                 <div class="notes-btn-wrapper">
@@ -934,9 +1112,9 @@ export default {
                             </Form>
                         </template>
                         <template v-slot:tabPanel-3>
-                            <Form>
+                            <Form ref="billing_icd9Form" @submit="submitSoap">
                                 <div class="notes-input-wrapper">
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    <Field as="textarea" name="billing_icd9" id="" cols="30" rows="10"></Field>
                                 </div>
 
                                 <div class="notes-btn-wrapper">
@@ -945,9 +1123,9 @@ export default {
                             </Form>
                         </template>
                         <template v-slot:tabPanel-4>
-                            <Form>
+                            <Form ref="problemHistoryForm" @submit="submitSoap">
                                 <div class="notes-input-wrapper">
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    <Field as="textarea" name="problem_history" id="" cols="30" rows="10"></Field>
                                 </div>
 
                                 <div class="notes-btn-wrapper">
@@ -956,9 +1134,9 @@ export default {
                             </Form>
                         </template>
                         <template v-slot:tabPanel-5>
-                            <Form>
+                            <Form ref="assesmentsForm" @submit="submitSoap">
                                 <div class="notes-input-wrapper">
-                                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                                    <Field as="textarea" name="assesments" id="" cols="30" rows="10"></Field>
                                 </div>
 
                                 <div class="notes-btn-wrapper">

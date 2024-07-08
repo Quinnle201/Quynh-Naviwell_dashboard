@@ -291,7 +291,13 @@ export default {
                     this.alertStore.error(error.response.data.message)
                 });
         },
-
+        gotoSoap() {
+            if(this.note.soapId) {
+                this.$router.push({ name: 'soap', params: { soapId: this.note.soapId} })
+            } else {
+                this.$router.push({ name: 'soap', state: { noteId: this.note.id } })
+            }
+        },
         prefillLastNote() {
             axiosInstance.get(`/patients/${this.patientId}/last-note`)
                 .then(response => {
@@ -412,7 +418,10 @@ export default {
         <div class="layout-wrapper">
             <h3>{{this.userName(patient?.user)}}</h3>
 
+            <div>
+            <button type="button" class="w-btn" v-if="note" @click="gotoSoap">SOAP</button>
             <button type="button" class="w-btn" @click="prefillLastNote">Prefill from last note</button>
+            </div>
         </div>
         
         <tabs class="diet-tabs" :tabList="tabList">

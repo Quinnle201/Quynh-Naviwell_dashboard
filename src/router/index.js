@@ -200,7 +200,7 @@ const router = createRouter({
               component: PatientNotesView,
             },
             {
-              path: "/soap",
+              path: "/soap/:soapId?",
               name: "soap",
               component: SoapView,
             }
