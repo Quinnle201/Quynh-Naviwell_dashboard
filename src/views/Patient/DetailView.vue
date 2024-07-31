@@ -381,7 +381,7 @@ export default {
         },
         dob() {
             // Parse the date as UTC
-            const date = new Date(this.patient.dob + "T00:00:00Z");
+            const date = new Date(this.patient.dob);
 
             // Extract year, month, and day
             const year = date.getUTCFullYear();
