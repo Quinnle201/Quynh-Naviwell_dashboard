@@ -380,7 +380,17 @@ export default {
             return Math.floor((new Date() - new Date(this.patient.dob).getTime()) / 3.15576e+10)
         },
         dob() {
-            return new Date(this.patient.dob).format("MM/DD/YYYY");
+            // Parse the date as UTC
+            const date = new Date(dateString + "T00:00:00Z");
+
+            // Extract year, month, and day
+            const year = date.getUTCFullYear();
+            const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const day = String(date.getUTCDate()).padStart(2, '0');
+
+            // Format the date as "MM/DD/YYYY"
+            const formattedDate = `${month}/${day}/${year}`;
+            return formattedDate
         },
         gender() {
             return this.patient.gender == 'm' ? 'Male' : 'Female'
