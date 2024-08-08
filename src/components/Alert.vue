@@ -7,7 +7,7 @@ const { alerts } = storeToRefs(alertStore);
 </script>
 
 <template>
-    <TransitionGroup tag="div" name="slide-fade" class="position-absolute bottom-0 end-0">
+    <TransitionGroup tag="div" name="slide-fade" class="alert-block position-sticky bottom-0 end-0">
         <div v-for="alert in alerts" class="alert alert-dismissible" :class="alert.type" role="alert" :key="alert.uid"
             @click="alertStore.cancelTimer(alert.uid)">
             {{ alert.message }}
@@ -17,6 +17,10 @@ const { alerts } = storeToRefs(alertStore);
 </template>
 
 <style>
+.alert-block {
+    float: right;
+}
+
 .slide-fade-move,
 .slide-fade-enter-active {
     transition: all 0.3s ease-out;
