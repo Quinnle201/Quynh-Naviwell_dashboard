@@ -112,10 +112,12 @@ export default {
             this.show = null;
             this.selectedPatient = patient;
             this.isModalVisible = true;
+            document.body.style.overflow = "hidden";
         },
         closeModal() {
             this.selectedPatient = null;
             this.isModalVisible = false;
+            document.body.style.overflow = "";
         },
         showDeleteModal() {
             this.show = null;
