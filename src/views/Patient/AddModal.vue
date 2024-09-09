@@ -517,10 +517,15 @@ export default {
     .addpatient-wrapper {
         background-color: #FFFFFF;
         width: 100%;
-        height: 100%;
+        height: 100vh;
         padding: 28px 32px;
         position: absolute;
         top: 0;
+        overflow: auto;
+    }
+
+    .addpatient-wrapper form {
+        padding-bottom: 32px;
     }
 
     .addpatient-head {
