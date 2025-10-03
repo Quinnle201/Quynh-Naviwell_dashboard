@@ -17,24 +17,24 @@ export const useAuthStore = defineStore({
   },
   actions: {
 // --------- Patient Test ----------
-mockLogin() {
-    this.user = {
-      id: 1,
-      email: "test@patient.com",
-      profile_type: ["PatientProfile"],
-      profile: {
-        patient_confirmed: false,
-        questionnaireRequired: false,
-      },
-      name: "Test Patient",
-    };
-    this.claim = { AccessToken: "mock-token" }; // minimal claim
-    localStorage.setItem("user", JSON.stringify(this.user));
-    localStorage.setItem("claim", JSON.stringify(this.claim));
+// mockLogin() {
+//     this.user = {
+//       id: 1,
+//       email: "test@patient.com",
+//       profile_type: ["PatientProfile"],
+//       profile: {
+//         patient_confirmed: false,
+//         questionnaireRequired: false,
+//       },
+//       name: "Test Patient",
+//     };
+//     this.claim = { AccessToken: "mock-token" }; // minimal claim
+//     localStorage.setItem("user", JSON.stringify(this.user));
+//     localStorage.setItem("claim", JSON.stringify(this.claim));
 
-    const programmaticAccess = useProgrammaticAccesStore();
-    programmaticAccess.setAccessPage("ReviewAccess"); //onboarding, ReviewAccess, lifestyle
-  },
+//     const programmaticAccess = useProgrammaticAccesStore();
+//     programmaticAccess.setAccessPage("ReviewAccess"); //onboarding, ReviewAccess, lifestyle
+//   },
 
 // --------- Physician Test ----------
 
