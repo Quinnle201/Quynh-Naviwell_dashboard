@@ -128,7 +128,7 @@ export default {
         <div class="welcome-inner">
             <div class="welcome-heading">
                 <h4>Lifestyle</h4>
-                <h6>Lorem ipsum dolor sit amet, consectetur adipiscing elit</h6>
+                <h6>"Take care of your body. It's the only place you have to live." – Jim Rohn</h6>
             </div>
 
             <Form class="info-form" @submit="submitQuizForm">

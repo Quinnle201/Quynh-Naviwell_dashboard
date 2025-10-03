@@ -1,146 +1,205 @@
-import { defineStore, acceptHMRUpdate } from 'pinia';
+import { defineStore, acceptHMRUpdate } from "pinia";
 
-import { axiosInstance } from '@/helpers';
-import router from '@/router';
-import { useAlertStore, useProgrammaticAccesStore } from '@/stores';
+import { axiosInstance } from "@/helpers";
+import router from "@/router";
+import { useAlertStore, useProgrammaticAccesStore } from "@/stores";
 
 export const useAuthStore = defineStore({
-    id: 'auth',
-    state: () => ({
-        // initialize state from local storage to enable user to stay logged in
-        user: JSON.parse(localStorage.getItem('user')),
-        claim: JSON.parse(localStorage.getItem('claim')),
-        returnUrl: null
-    }),
-    getters: {
-        isPatient: (state) => state.user?.profile_type?.includes("PatientProfile")
+  id: "auth",
+  state: () => ({
+    // initialize state from local storage to enable user to stay logged in
+    user: JSON.parse(localStorage.getItem("user")),
+    claim: JSON.parse(localStorage.getItem("claim")),
+    returnUrl: null,
+  }),
+  getters: {
+    isPatient: (state) => state.user?.profile_type?.includes("PatientProfile"),
+  },
+  actions: {
+// --------- Patient Test ----------
+mockLogin() {
+    this.user = {
+      id: 1,
+      email: "test@patient.com",
+      profile_type: ["PatientProfile"],
+      profile: {
+        patient_confirmed: false,
+        questionnaireRequired: false,
       },
-    actions: {
-        async login(email, password) {
-            try {
-                const response = await axiosInstance.post('/login', { email, password });
-                const data = response.data;
+      name: "Test Patient",
+    };
+    this.claim = { AccessToken: "mock-token" }; // minimal claim
+    localStorage.setItem("user", JSON.stringify(this.user));
+    localStorage.setItem("claim", JSON.stringify(this.claim));
 
-                if(data.message == "NEW_PASSWORD_REQUIRED") {
-                    this.user = window.btoa(JSON.stringify({'email': email, 'password': password}))
-                    router.push({ path: '/set-password' })
-                    return;
-                }
+    const programmaticAccess = useProgrammaticAccesStore();
+    programmaticAccess.setAccessPage("ReviewAccess"); //onboarding, ReviewAccess, lifestyle
+  },
 
-                // update pinia state
-                this.user = data.data.user;
-                this.claim = data.data.auth
+// --------- Physician Test ----------
 
-                this.getUser()
+    // mockLogin() {
+    //   this.user = {
+    //     id: 1,
+    //     email: "test@patient.com",
+    //     profile_type: ["PhysicianProfile"],
+    //     profile: {
+    //       patient_confirmed: false, 
+    //       questionnaireRequired: false,
+    //     },
+    //     name: "Test Patient",
+    //   };
+    //   this.claim = { AccessToken: "mock-token" }; // minimal claim
+    //   localStorage.setItem("user", JSON.stringify(this.user));
+    //   localStorage.setItem("claim", JSON.stringify(this.claim));
 
-                // store user details and jwt in local storage to keep user logged in between page refreshes
-                localStorage.setItem('user', JSON.stringify(this.user));
-                localStorage.setItem('claim', JSON.stringify(this.claim));
+    //   const programmaticAccess = useProgrammaticAccesStore();
+    //   programmaticAccess.setAccessPage(""); 
+    // },
 
-                // redirect to previous url or default to home page
-                router
-                    .push({ path: '/' })
-                    .then(() => { router.go() })
-                return true;
-            } catch (error) {
-                const alertStore = useAlertStore();
-                alertStore.error(error.response.data.message);
-                return false;
-            }
-        },
+    async login(email, password) {
+      try {
+        const response = await axiosInstance.post("/login", {
+          email,
+          password,
+        });
+        const data = response.data;
 
-        async getUser() {
-            try {
-                const response = await axiosInstance.get('/user');
-                
-                const data = response.data;
-                this.user = data.data;
-                localStorage.setItem('user', JSON.stringify(this.user));
-
-                if(this.isPatient) {
-                    const programmaticAccess = useProgrammaticAccesStore();
-                    if(!this.user.profile.patient_confirmed) {
-                        programmaticAccess.setAccessPage('onboarding')
-                    } else if(this.user.profile.questionnaireRequired) {
-                        programmaticAccess.setAccessPage('quiz')
-                    }
-
-                }
-
-            } catch (error) {
-                const alertStore = useAlertStore();
-                alertStore.error(error.response.data.message);
-            }
-        },
-
-        async logout() {
-            await axiosInstance.get('/logout')
-                .catch(function (error) {});
-
-            this.user = null;
-            this.claim = null;
-            localStorage.removeItem('user');
-            localStorage.removeItem('claim');
-            router.push('/login');
-            
-        },
-
-        async changePassword(email, password, new_password, new_password_confirmation, isInitial) {
-            const refresh_token = "123"; //temporary until ellaysis pkg is updated
-            try {
-            const response = await axiosInstance.post('/change-password', { email, password, new_password, new_password_confirmation, refresh_token });
-
-            const data = response.data;
-
-            if(isInitial) {
-                await this.login(email, new_password);
-            }
-
-            } catch (error) {
-                const alertStore = useAlertStore();
-                alertStore.error(error.response.data.message);
-            }
-        },
-
-        async refreshToken() {
-            if(!this.user || !this.claim) {
-                this.logout();
-                return;
-            }
-            var email = this.user.email;
-            var refresh_token = this.claim.RefreshToken;
-            const response = await axiosInstance.post('/refresh', { email, refresh_token });
-            const data = response.data
-            this.claim = data.data;
-            localStorage.setItem('claim', JSON.stringify(this.claim));
-        },
-
-        async resetPassword(email) {
-            try {
-                const response = await axiosInstance.post('/reset-password', { email });
-                return true;
-
-            } catch (error) {
-                const alertStore = useAlertStore();
-                alertStore.error(error.response.data.message);
-                return false
-            } 
-        },
-
-        async setForgotPassword(email, code, password, password_confirmation) {
-            try {
-                const response = await axiosInstance.post('/set-password', { email, code, password, password_confirmation });
-                return true;
-
-            } catch (error) {
-                const alertStore = useAlertStore();
-                alertStore.error(error.response.data.message);
-                return false
-            }
+        if (data.message == "NEW_PASSWORD_REQUIRED") {
+          this.user = window.btoa(
+            JSON.stringify({ email: email, password: password })
+          );
+          router.push({ path: "/set-password" });
+          return;
         }
-    }
+
+        // update pinia state
+        this.user = data.data.user;
+        this.claim = data.data.auth;
+
+        this.getUser();
+
+        // store user details and jwt in local storage to keep user logged in between page refreshes
+        localStorage.setItem("user", JSON.stringify(this.user));
+        localStorage.setItem("claim", JSON.stringify(this.claim));
+
+        // redirect to previous url or default to home page
+        router.push({ path: "/" }).then(() => {
+          router.go();
+        });
+        return true;
+      } catch (error) {
+        const alertStore = useAlertStore();
+        alertStore.error(error.response.data.message);
+        return false;
+      }
+    },
+
+    async getUser() {
+      try {
+        const response = await axiosInstance.get("/user");
+
+        const data = response.data;
+        this.user = data.data;
+        localStorage.setItem("user", JSON.stringify(this.user));
+
+        if (this.isPatient) {
+          const programmaticAccess = useProgrammaticAccesStore();
+          if (!this.user.profile.patient_confirmed) {
+            programmaticAccess.setAccessPage("onboarding");
+          } else if (this.user.profile.questionnaireRequired) {
+            programmaticAccess.setAccessPage("quiz");
+          }else {programmaticAccess.setAccessPage("")}
+        }
+      } catch (error) {
+        const alertStore = useAlertStore();
+        alertStore.error(error.response.data.message);
+      }
+    },
+
+    async logout() {
+      await axiosInstance.get("/logout").catch(function (error) {});
+
+      this.user = null;
+      this.claim = null;
+      localStorage.removeItem("user");
+      localStorage.removeItem("claim");
+      router.push("/login");
+    },
+
+    async changePassword(
+      email,
+      password,
+      new_password,
+      new_password_confirmation,
+      isInitial
+    ) {
+      const refresh_token = "123"; //temporary until ellaysis pkg is updated
+      try {
+        const response = await axiosInstance.post("/change-password", {
+          email,
+          password,
+          new_password,
+          new_password_confirmation,
+          refresh_token,
+        });
+
+        const data = response.data;
+
+        if (isInitial) {
+          await this.login(email, new_password);
+        }
+      } catch (error) {
+        const alertStore = useAlertStore();
+        alertStore.error(error.response.data.message);
+      }
+    },
+
+    async refreshToken() {
+      if (!this.user || !this.claim) {
+        this.logout();
+        return;
+      }
+      var email = this.user.email;
+      var refresh_token = this.claim.RefreshToken;
+      const response = await axiosInstance.post("/refresh", {
+        email,
+        refresh_token,
+      });
+      const data = response.data;
+      this.claim = data.data;
+      localStorage.setItem("claim", JSON.stringify(this.claim));
+    },
+
+    async resetPassword(email) {
+      try {
+        const response = await axiosInstance.post("/reset-password", { email });
+        return true;
+      } catch (error) {
+        const alertStore = useAlertStore();
+        alertStore.error(error.response.data.message);
+        return false;
+      }
+    },
+
+    async setForgotPassword(email, code, password, password_confirmation) {
+      try {
+        const response = await axiosInstance.post("/set-password", {
+          email,
+          code,
+          password,
+          password_confirmation,
+        });
+        return true;
+      } catch (error) {
+        const alertStore = useAlertStore();
+        alertStore.error(error.response.data.message);
+        return false;
+      }
+    },
+  },
 });
 
 if (import.meta.hot) {
-    import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot));
 }

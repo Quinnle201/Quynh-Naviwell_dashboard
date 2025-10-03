@@ -1,820 +1,877 @@
 <script>
-import { Form, Field, ErrorMessage, FieldArray } from 'vee-validate';
-import * as Yup from 'yup';
-import PatientInputGenerator from '@/components/Patient/PatientInputGenerator.vue'
-import RemoveIcon from '@/components/icons/IconRemoveCircle.vue';
-import AddIcon from '@/components/icons/IconAdd.vue';
-import DateInput from '@/components/DateInput.vue';
+import { Form, Field, ErrorMessage, FieldArray } from "vee-validate";
+import * as Yup from "yup";
+import PatientInputGenerator from "@/components/Patient/PatientInputGenerator.vue";
+import RemoveIcon from "@/components/icons/IconRemoveCircle.vue";
+import AddIcon from "@/components/icons/IconAdd.vue";
+import DateInput from "@/components/DateInput.vue";
 
-import { axiosInstance } from '@/helpers';
-import { useAlertStore } from '@/stores';
-import { calculateBMI } from '@/helpers';
-import _get from 'lodash/get';
-import _find from 'lodash/find';
-import he from 'vue-cal/dist/i18n/he.cjs';
+import { axiosInstance } from "@/helpers";
+import { useAlertStore } from "@/stores";
+import { calculateBMI } from "@/helpers";
+import _get from "lodash/get";
+import _find from "lodash/find";
+import he from "vue-cal/dist/i18n/he.cjs";
 
 export default {
-    components: {
-        Form,
-        Field,
-        ErrorMessage,
-        FieldArray,
-        PatientInputGenerator,
-        RemoveIcon,
-        AddIcon,
-        DateInput
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+    FieldArray,
+    PatientInputGenerator,
+    RemoveIcon,
+    AddIcon,
+    DateInput,
+  },
+  props: {
+    patient: Object,
+  },
+  watch: {
+    patient: {
+      handler(value) {
+        if (value != null) {
+          this.setPatientData(value);
+        } else {
+          this.resetPatientData();
+        }
+      },
+      deep: true,
     },
-    props: {
-        patient: Object
-    },
-    watch: {
-        patient: {
-            handler(value) {
-                if (value != null) {
-                    this.setPatientData(value)
-                } else {
-                    this.resetPatientData()
-                }
+  },
+  async mounted() {
+    await this.getMedicine();
 
+    if (this.patient != null) {
+      this.setPatientData(this.patient);
+    }
+  },
+  data() {
+    const generalInfo = {
+      fields: [
+        {
+          label: "First name *",
+          name: "user.first_name",
+          as: "input",
+          model: "user.first_name",
+          rules: Yup.string().required("Name is required"),
+        },
+        {
+          label: "Last name *",
+          name: "user.last_name",
+          as: "input",
+          model: "user.last_name",
+          rules: Yup.string().required("Last name is required"),
+        },
+        {
+          label: "DOB *",
+          name: "profile.dob",
+          as: "date-input",
+          model: "dob",
+          rules: Yup.date().nullable(),
+        },
+        {
+          label: "Gender *",
+          name: "profile.gender",
+          as: "select",
+          model: "gender",
+          class: "form-select",
+          children: [
+            {
+              label: "Select gender",
+              value: "",
+              tag: "option",
+              disabled: "",
             },
-            deep: true,
-        }
+            {
+              label: "Male",
+              value: "m",
+              tag: "option",
+            },
+            {
+              label: "Female",
+              value: "f",
+              tag: "option",
+            },
+          ],
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: "Race",
+          name: "profile.race",
+          as: "input",
+          model: "race",
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: "Ethnicity",
+          name: "profile.ethnicity",
+          as: "input",
+          model: "ethnicity",
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: "Language",
+          name: "profile.language",
+          as: "input",
+          model: "language",
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: "Religion",
+          name: "profile.religion",
+          as: "input",
+          model: "religion",
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: "Notes",
+          name: "profile.notes",
+          as: "textarea",
+          model: "notes",
+          rules: Yup.string().nullable(),
+        },
+      ],
+    };
+
+    const contactInfo = {
+      fields: [
+        {
+          label: "Street Address",
+          name: "contact.address",
+          as: "input",
+          model: "contact_info.address",
+          classattr: "fullw-input",
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: "Street Address cont’d",
+          name: "contact.current-address",
+          as: "input",
+          model: "contact_info.current-address",
+          classattr: "fullw-input",
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: "City, State",
+          name: "contact.city",
+          as: "input",
+          model: "contact_info.city",
+          classattr: "fullw-input",
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: "Zip code",
+          name: "contact.zip",
+          as: "input",
+          model: "contact_info.zip",
+          classattr: "fullw-input",
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: 'Email *',
+          name: "user.email",
+          as: "input",
+          model: "user.email",
+          rules: Yup.string().required("Email is required"),
+        },
+        {
+          label: 'Phone *',
+          name: "user.phone",
+          as: "input",
+          model: "user.phone",
+          rules: Yup.string().required("Phone number is required"),
+          mask: "(###) ###-####",
+        },
+      ],
+    };
+
+    const emergencyContactInfo = {
+      fields: [
+        {
+          label: "Emergency Contact Name",
+          name: "emergency.contact",
+          as: "input",
+          model: "emergency_contact.contact",
+          classattr: "fullw-input",
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: "Phone Number",
+          name: "emergency.phone",
+          as: "input",
+          model: "emergency_contact.phone",
+          classattr: "fullw-input",
+          rules: Yup.string().nullable(),
+          mask: "(###) ###-####",
+
+        },
+        {
+          label: "Relation to patient",
+          name: "emergency.relation",
+          as: "input",
+          model: "emergency_contact.relation",
+          classattr: "fullw-input",
+          rules: Yup.string().nullable(),
+        },
+      ],
+    };
+
+    const insuranceInfo = {
+      fields: [
+        {
+          label: "Insurance company",
+          name: "insurance.name",
+          as: "input",
+          model: "insurance_info.name",
+          classattr: "fullw-input",
+          rules: Yup.string().nullable(),
+        },
+        {
+          label: "Subscriber/Member Number",
+          name: "insurance.number",
+          as: "input",
+          model: "insurance_info.number",
+          classattr: "fullw-input",
+          rules: Yup.string().nullable(),
+        },
+      ],
+    };
+
+    const patientInfo = {
+      fields: [
+        {
+          label: "Weight *",
+          name: "health-data.weight",
+          as: "input",
+          model: "current_health_data.weight",
+          rules: Yup.string().required("Weight data is required"),
+        },
+        {
+          label: "Allergies",
+          name: "additional-data.allergies",
+          as: "input",
+          model: "additional_data.allergies",
+          rules: Yup.string().nullable(),
+        },
+      ],
+    };
+
+    const alertStore = useAlertStore();
+    return {
+      generalInfo,
+      contactInfo,
+      emergencyContactInfo,
+      insuranceInfo,
+      patientInfo,
+      alertStore,
+      medicineArray: [],
+    };
+  },
+  methods: {
+    close() {
+      this.$emit("close");
+      this.resetPatientData();
     },
-    async mounted() {
-        await this.getMedicine();
-
-        if (this.patient != null) {
-            this.setPatientData(this.patient)
-        }
+    async getMedicine() {
+      try {
+        const response = await axiosInstance.get("/medicine");
+        this.medicineArray = response.data.map((code) => {
+          return { name: code.name, value: code.id };
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
-    data() {
+    setPatientData(patient) {
+      const pt = Object.assign({}, patient);
+      pt.dob = new Date(pt.dob).format("YYYY/MM/DD");
+      this.$refs.generalInfo.$refs.dateInput.value = pt.dob;
 
-        const generalInfo = {
-            fields: [
-                {
-                    label: 'First name *',
-                    name: 'user.first_name',
-                    as: 'input',
-                    model: 'user.first_name',
-                    rules: Yup.string().required('Name is required'),
-                },
-                {
-                    label: 'Last name *',
-                    name: 'user.last_name',
-                    as: 'input',
-                    model: 'user.last_name',
-                    rules: Yup.string().required('Last name is required'),
-                },
-                {
-                    label: 'DOB *',
-                    name: 'profile.dob',
-                    as: 'date-input',
-                    model: 'dob',
-                    rules: Yup.date().nullable(),
-                },
-                {
-                    label: 'Gender *',
-                    name: 'profile.gender',
-                    as: 'select',
-                    model: 'gender',
-                    class: 'form-select',
-                    children: [
-                        {
-                            label: 'Select gender',
-                            value: '',
-                            tag: 'option',
-                            disabled: ''
-                        },
-                        {
-                            label: 'Male',
-                            value: 'm',
-                            tag: 'option'
-                        },
-                        {
-                            label: 'Female',
-                            value: 'f',
-                            tag: 'option'
-                        },
-
-                    ],
-                    rules: Yup.string().nullable(),
-                },
-                {
-                    label: 'Race',
-                    name: 'profile.race',
-                    as: 'input',
-                    model: 'race',
-                    rules: Yup.string().nullable(),
-                },
-                {
-                    label: 'Ethnicity',
-                    name: 'profile.ethnicity',
-                    as: 'input',
-                    model: 'ethnicity',
-                    rules: Yup.string().nullable(),
-                },
-                {
-                    label: 'Language',
-                    name: 'profile.language',
-                    as: 'input',
-                    model: 'language',
-                    rules: Yup.string().nullable(),
-                },
-                {
-                    label: 'Religion',
-                    name: 'profile.religion',
-                    as: 'input',
-                    model: 'religion',
-                    rules: Yup.string().nullable(),
-                },
-                {
-                    label: 'Notes',
-                    name: 'profile.notes',
-                    as: 'textarea',
-                    model: 'notes',
-                    rules: Yup.string().nullable()
-                }
-            ],
-        };
-
-        const contactInfo = {
-            fields: [
-                {
-                    label: 'Street Address',
-                    name: 'contact.address',
-                    as: 'input',
-                    model: 'contact_info.address',
-                    classattr: 'fullw-input',
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: 'Street Address cont’d',
-                    name: 'contact.current-address',
-                    as: 'input',
-                    model: 'contact_info.current-address',
-                    classattr: 'fullw-input',
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: 'City, State',
-                    name: 'contact.city',
-                    as: 'input',
-                    model: 'contact_info.city',
-                    classattr: 'fullw-input',
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: 'Zip code',
-                    name: 'contact.zip',
-                    as: 'input',
-                    model: 'contact_info.zip',
-                    classattr: 'fullw-input',
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: 'Email *',
-                    name: 'user.email',
-                    as: 'input',
-                    model: 'user.email',
-                    rules: Yup.string().required('Email is required'),
-                },
-                {
-                    label: 'Phone',
-                    name: 'user.phone',
-                    as: 'input',
-                    model: 'user.phone',
-                    rules: Yup.string().nullable(),
-                },
-            ]
+      this.generalInfo.fields.forEach((item) => {
+        if (item.model) {
+          this.$refs.addPatientForm.setFieldValue(
+            item.name,
+            _get(pt, item.model)
+          );
         }
-
-        const emergencyContactInfo = {
-            fields: [
-                {
-                    label: 'Emergency Contact Name',
-                    name: 'emergency.contact',
-                    as: 'input',
-                    model: 'emergency_contact.contact',
-                    classattr: 'fullw-input',
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: 'Phone Number',
-                    name: 'emergency.phone',
-                    as: 'input',
-                    model: 'emergency_contact.phone',
-                    classattr: 'fullw-input',
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: 'Relation to patient',
-                    name: 'emergency.relation',
-                    as: 'input',
-                    model: 'emergency_contact.relation',
-                    classattr: 'fullw-input',
-                    rules: Yup.string().nullable()
-                }
-            ]
+      });
+      this.contactInfo.fields.forEach((item) => {
+        if (item.model) {
+          this.$refs.addPatientForm.setFieldValue(
+            item.name,
+            _get(pt, item.model)
+          );
         }
-
-        const insuranceInfo = {
-            fields: [
-                {
-                    label: 'Insurance company',
-                    name: 'insurance.name',
-                    as: 'input',
-                    model: 'insurance_info.name',
-                    classattr: 'fullw-input',
-                    rules: Yup.string().nullable()
-                },
-                {
-                    label: 'Subscriber/Member Number',
-                    name: 'insurance.number',
-                    as: 'input',
-                    model: 'insurance_info.number',
-                    classattr: 'fullw-input',
-                    rules: Yup.string().nullable()
-                }
-            ]
+        if (item.name == "user.email") {
+          item.disabled = "true";
         }
-
-        const patientInfo = {
-            fields: [
-                {
-                    label: 'Weight *',
-                    name: 'health-data.weight',
-                    as: 'input',
-                    model: 'current_health_data.weight',
-                    rules: Yup.string().required('Weight data is required'),
-                },
-                {
-                    label: 'Allergies',
-                    name: 'additional-data.allergies',
-                    as: 'input',
-                    model: 'additional_data.allergies',
-                    rules: Yup.string().nullable()
-                },
-            ]
+      });
+      this.emergencyContactInfo.fields.forEach((item) => {
+        if (item.model) {
+          this.$refs.addPatientForm.setFieldValue(
+            item.name,
+            _get(pt, item.model)
+          );
         }
+      });
+      this.insuranceInfo.fields.forEach((item) => {
+        if (item.model) {
+          this.$refs.addPatientForm.setFieldValue(
+            item.name,
+            _get(pt, item.model)
+          );
+        }
+      });
+      this.patientInfo.fields.forEach((item) => {
+        if (item.model) {
+          this.$refs.addPatientForm.setFieldValue(
+            item.name,
+            _get(pt, item.model)
+          );
+        }
+      });
 
+      const drugs = [];
+      if (pt.meds) {
+        pt.meds.forEach((med, index) => {
+          var medValue = "";
+          var medType = "";
+          const medArray = med.split(":");
+          medType = medArray[0].trim();
+          medValue = medArray[1].trim();
+          drugs.push({ type: medType, amount: medValue });
+        });
+      }
 
-        const alertStore = useAlertStore();
-        return { generalInfo, contactInfo, emergencyContactInfo, insuranceInfo, patientInfo, alertStore, medicineArray: [] }
+      if (drugs.length == 0) {
+        drugs.push({ type: "", amount: null });
+        drugs.push({ type: "", amount: null });
+      }
+      this.$refs.addPatientForm.setFieldValue("drugs", drugs);
     },
-    methods: {
-        close() {
-            this.$emit('close');
-            this.resetPatientData()
-        },
-        async getMedicine() {
-            try {
-                const response = await axiosInstance.get('/medicine')
-                this.medicineArray = response.data.map(code => {
-                    return { 'name': code.name, 'value': code.id };
-                });
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        setPatientData(patient) {
-            const pt = Object.assign({}, patient);;
-            pt.dob = new Date(pt.dob).format("YYYY/MM/DD");
-            this.$refs.generalInfo.$refs.dateInput.value = pt.dob
-
-            this.generalInfo.fields.forEach((item) => {
-                if (item.model) {
-                    this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
-                }
-            })
-            this.contactInfo.fields.forEach((item) => {
-                if (item.model) {
-                    this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
-                }
-                if (item.name == 'user.email') {
-                    item.disabled = "true"
-                }
-
-            })
-            this.emergencyContactInfo.fields.forEach((item) => {
-                if (item.model) {
-                    this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
-                }
-            })
-            this.insuranceInfo.fields.forEach((item) => {
-                if (item.model) {
-                    this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
-                }
-            })
-            this.patientInfo.fields.forEach((item) => {
-                if (item.model) {
-                    this.$refs.addPatientForm.setFieldValue(item.name, _get(pt, item.model));
-                }
-            })
-
-            const drugs = [];
-            if(pt.meds) {
-                pt.meds.forEach((med, index) => {
-                    var medValue = ""
-                    var medType = ""
-                    const medArray = med.split(":");
-                    medType = medArray[0].trim();
-                    medValue = medArray[1].trim();
-                    drugs.push({ type: medType, amount: medValue });
-
-                });
-            }
-
-            if (drugs.length == 0) {
-                drugs.push({ type: '', amount: null });
-                drugs.push({ type: '', amount: null });
-            }
-            this.$refs.addPatientForm.setFieldValue("drugs", drugs)
-
-        },
-        resetPatientData() {
-            _find(this.contactInfo.fields, ['name', 'user.email']).disabled = undefined;
-            this.$refs.addPatientForm.setValues({})
-        },
-        onSubmit(values) {
-            if(!values.profile.dob) {
-                this.alertStore.error("Date of birth is required!")
-                return;
-            }
-
-            const healthData = values['health-data'];
-            const height = `${healthData.height_ft}'${healthData.height_in}"`
-            if (healthData.height_ft && healthData.height_ft && healthData.weight) {
-                healthData.bmi = calculateBMI(height, healthData.weight)
-                values['health-data']['height'] = height
-            }
-
-            if(values.drugs) {
-                const medications = values.drugs.filter(drug => drug.type)
-                const keysAndValues = medications.map(med => {
-                    let amount = parseInt(med.amount, 10)
-                    let type = med.type
-                    if (Number.isNaN(amount)) {
-                        amount = 0;
-                    }
-                    return { type, amount }
-                })
-                const uniqueMedValues = keysAndValues.reduce(function (res, value) {
-                    if (!res[value.type]) {
-                        res[value.type] = 0;
-                    }
-                    res[value.type] += value.amount;
-                    return res;
-                }, {});
-                let medicine = []
-                Object.keys(uniqueMedValues).forEach(function (key, index) {
-                    medicine.push(`${key}: ${uniqueMedValues[key]}`)
-                });
-
-                values.meds = medicine
-            }
-
-            if (this.patient != null) {
-                axiosInstance.put(`/patients/${this.patient.id}`, values)
-                    .then(response => {
-                        this.$emit('update:patient', response.data.data)
-                        this.alertStore.success('Patient updated.');
-                        this.close()
-                    })
-                    .catch(error => {
-                        this.alertStore.error(error.response.data.message)
-                    });
-            } else {
-                axiosInstance.post('/patients', values)
-                    .then(response => {
-                        this.close()
-                        this.alertStore.success('Patient created.');
-                    })
-                    .catch(error => {
-                        this.alertStore.error(error.response.data.message)
-                    });
-            }
-        },
+    resetPatientData() {
+      _find(this.contactInfo.fields, ["name", "user.email"]).disabled =
+        undefined;
+      this.$refs.addPatientForm.setValues({});
     },
+    onSubmit(values) {
+      if (!values.profile.dob) {
+        this.alertStore.error("Date of birth is required!");
+        return;
+      }
+
+      const healthData = values["health-data"];
+      const height = `${healthData.height_ft}'${healthData.height_in}"`;
+      if (healthData.height_ft && healthData.height_ft && healthData.weight) {
+        healthData.bmi = calculateBMI(height, healthData.weight);
+        values["health-data"]["height"] = height;
+      }
+
+      if (values.drugs) {
+        const medications = values.drugs.filter((drug) => drug.type);
+        const keysAndValues = medications.map((med) => {
+          let amount = parseInt(med.amount, 10);
+          let type = med.type;
+          if (Number.isNaN(amount)) {
+            amount = 0;
+          }
+          return { type, amount };
+        });
+        const uniqueMedValues = keysAndValues.reduce(function (res, value) {
+          if (!res[value.type]) {
+            res[value.type] = 0;
+          }
+          res[value.type] += value.amount;
+          return res;
+        }, {});
+        let medicine = [];
+        Object.keys(uniqueMedValues).forEach(function (key, index) {
+          medicine.push(`${key}: ${uniqueMedValues[key]}`);
+        });
+
+        values.meds = medicine;
+      }
+
+      if (this.patient != null) {
+        axiosInstance
+          .put(`/patients/${this.patient.id}`, values)
+          .then((response) => {
+            this.$emit("update:patient", response.data.data);
+            this.alertStore.success("Patient updated.");
+            this.close();
+          })
+          .catch((error) => {
+            this.alertStore.error(error.response.data.message);
+          });
+      } else {
+        axiosInstance
+          .post("/patients", values)
+          .then((response) => {
+            this.close();
+            this.alertStore.success("Patient created.");
+          })
+          .catch((error) => {
+            this.alertStore.error(error.response.data.message);
+          });
+      }
+    },
+  },
 };
 </script>
 
 <template>
-    <Transition>
-        <div class="addpatient-wrapper">
-            <Form @submit="onSubmit" ref="addPatientForm">
-                <div class="addpatient-head">
-                    <h4>{{ patient == null ? 'Create New Patient' : "Edit patient information" }}</h4>
-                    <div>
-                        <button type="submit" class="w-btn w-btn-save">{{ patient == null ? 'Save' : "Update"
-                        }}</button>
-                        <button type="reset" class="w-btn w-btn-close" @click="close">Cancel</button>
-                    </div>
-                </div>
-
-                <div class="add-patient-inner">
-                    <div class="add-patient-card">
-                        <div class="add-patient-card-title">General Information</div>
-
-                        <div class="addpatient-card-content">
-                            <PatientInputGenerator :schema="generalInfo" ref="generalInfo" />
-                        </div>
-                    </div>
-
-                    <div class="add-patient-card">
-                        <div class="add-patient-card-title">Contact Information</div>
-
-                        <div class="addpatient-card-content">
-                            <PatientInputGenerator :schema="contactInfo" />
-
-                            <div class="addpatient-card-content">
-                                <div class="add-patient-card-title">Emergency Contact Information</div>
-                                <PatientInputGenerator :schema="emergencyContactInfo" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="addpatient-card-two">
-                        <div class="add-patient-card">
-                            <div class="add-patient-card-title">Insurance Provider</div>
-
-                            <div class="addpatient-card-content">
-                                <PatientInputGenerator :schema="insuranceInfo" />
-                            </div>
-                        </div>
-
-                        <div class="add-patient-card">
-                            <div class="add-patient-card-title">Patient Information</div>
-
-                            <div class="addpatient-card-content">
-
-                                <ul class="patientInfo">
-                                    <li class="heightInput">
-                                        <label for="health-data.height">Height *</label>
-                                        <div>
-                                            <Field name="health-data.height_ft" type="number" />
-                                            <label for="health-data.height_ft">ft</label>
-                                            <Field name="health-data.height_in" type="number" />
-                                            <label for="health-data.height_in">in</label>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <PatientInputGenerator :schema="patientInfo" class="patientInfo" />
-
-                                <div class="addpatient-card-content-title">Current Medications and Supplements</div>
-                                <div class="profile-card-content">
-                                    <div class="medication-block">
-                                        <FieldArray name="drugs" v-slot="{ fields, push, remove }">
-                                            <fieldset v-for="(field, index) in fields" :key="field.key">
-                                                <div class="info-form-item-wrapper">
-                                                    <label class="info-form-item">
-                                                        Drug Class
-                                                        <Field as="select" :name="`drugs[${index}].type`"
-                                                            class="form-select">
-                                                            <option value="" disabled>Pick one</option>
-                                                            <option v-for="code in medicineArray" :value="code.value">{{
-                                                                code.name }}</option>
-                                                        </Field>
-                                                    </label>
-                                                    <label class="info-form-item">
-                                                        Number of Medications
-                                                        <Field type="number" :name="`drugs[${index}].amount`"
-                                                            placeholder="0" />
-                                                    </label>
-                                                    <div class="info-form-add-btn remove" v-if="fields.length > 1"
-                                                        @click="remove(index);">
-                                                        <RemoveIcon width="35" height="35" />
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                            <div class="info-form-add-btn" v-if="fields.length < 15"
-                                                @click="push({ type: '', amount: null });">
-                                                <AddIcon />
-                                                Add Medicine
-                                            </div>
-                                        </FieldArray>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </Form>
+  <Transition>
+    <div class="addpatient-wrapper">
+      <Form @submit="onSubmit" ref="addPatientForm">
+        <div class="addpatient-head">
+          <h4>
+            {{
+              patient == null
+                ? "Create New Patient"
+                : "Edit patient information"
+            }}
+          </h4>
+          <div>
+            <button type="submit" class="w-btn w-btn-save">
+              {{ patient == null ? "Save" : "Update" }}
+            </button>
+            <button type="reset" class="w-btn w-btn-close" @click="close">
+              Cancel
+            </button>
+          </div>
         </div>
-    </Transition>
+
+        <div class="add-patient-inner">
+          <div class="add-patient-card">
+            <div class="add-patient-card-title">General Information</div>
+
+            <div class="addpatient-card-content">
+              <PatientInputGenerator :schema="generalInfo" ref="generalInfo" />
+            </div>
+          </div>
+
+          <div class="add-patient-card">
+            <div class="add-patient-card-title">Contact Information</div>
+
+            <div class="addpatient-card-content">
+              <PatientInputGenerator :schema="contactInfo" />
+
+              <div class="addpatient-card-content">
+                <div class="add-patient-card-title">
+                  Emergency Contact Information
+                </div>
+                <PatientInputGenerator :schema="emergencyContactInfo" />
+              </div>
+            </div>
+          </div>
+
+          <div class="addpatient-card-two">
+            <div class="add-patient-card">
+              <div class="add-patient-card-title">Insurance Provider</div>
+
+              <div class="addpatient-card-content">
+                <PatientInputGenerator :schema="insuranceInfo" />
+              </div>
+            </div>
+
+            <div class="add-patient-card">
+              <div class="add-patient-card-title">Patient Information</div>
+
+              <div class="addpatient-card-content">
+                <ul class="patientInfo">
+                  <li class="heightInput">
+                    <label for="health-data.height">Height *</label>
+                    <div>
+                      <Field name="health-data.height_ft" type="number" />
+                      <label for="health-data.height_ft">ft</label>
+                      <Field name="health-data.height_in" type="number" />
+                      <label for="health-data.height_in">in</label>
+                    </div>
+                  </li>
+                </ul>
+                <PatientInputGenerator
+                  :schema="patientInfo"
+                  class="patientInfo"
+                />
+
+                <div class="addpatient-card-content-title">
+                  Current Medications and Supplements
+                </div>
+                <div class="profile-card-content">
+                  <div class="medication-block">
+                    <FieldArray name="drugs" v-slot="{ fields, push, remove }">
+                      <fieldset
+                        v-for="(field, index) in fields"
+                        :key="field.key"
+                      >
+                        <div class="info-form-item-wrapper">
+                          <label class="info-form-item">
+                            Drug Class
+                            <Field
+                              as="select"
+                              :name="`drugs[${index}].type`"
+                              class="form-select"
+                            >
+                              <option value="" disabled>Pick one</option>
+                              <option
+                                v-for="code in medicineArray"
+                                :value="code.value"
+                              >
+                                {{ code.name }}
+                              </option>
+                            </Field>
+                          </label>
+                          <label class="info-form-item">
+                            Number of Medications
+                            <Field
+                              type="number"
+                              :name="`drugs[${index}].amount`"
+                              placeholder="0"
+                            />
+                          </label>
+                          <div
+                            class="info-form-add-btn remove"
+                            v-if="fields.length > 1"
+                            @click="remove(index)"
+                          >
+                            <RemoveIcon width="35" height="35" />
+                          </div>
+                        </div>
+                      </fieldset>
+                      <div
+                        class="info-form-add-btn"
+                        v-if="fields.length < 15"
+                        @click="push({ type: '', amount: null })"
+                      >
+                        <AddIcon />
+                        Add Medicine
+                      </div>
+                    </FieldArray>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Form>
+    </div>
+  </Transition>
 </template>
 
 <style>
-    .v-enter-active,
-    .v-leave-active {
-        transition: opacity 0.4s ease;
-    }
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.4s ease;
+}
 
-    .v-enter-from,
-    .v-leave-to {
-        opacity: 0;
-    }
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 
-    .addpatient-wrapper {
-        background-color: #FFFFFF;
-        width: 100%;
-        height: 100vh;
-        padding: 28px 32px;
-        position: absolute;
-        top: 0;
-        overflow: auto;
-    }
+.addpatient-wrapper {
+  background-color: #ffffff;
+  width: 100%;
+  height: 100vh;
+  padding: 28px 32px;
+  position: absolute;
+  top: 0;
+  overflow: auto;
+}
 
-    .addpatient-wrapper form {
-        padding-bottom: 32px;
-    }
+.addpatient-wrapper form {
+  padding-bottom: 32px;
+}
 
-    .addpatient-head {
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+.addpatient-head {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    .addpatient-head h4 {
-        font-size: 24px;
-        font-weight: 400;
-        line-height: 24px;
-        color: #000000;
-    }
+.addpatient-head h4 {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #000000;
+}
 
-    .addpatient-head button.w-btn.w-btn-close {
-        margin-left: 36px;
-    }
+.addpatient-head button.w-btn.w-btn-close {
+  margin-left: 36px;
+}
 
-    .add-patient-inner {
-        height: 98%;
-        padding-bottom: 30px;
-        display: grid;
-        grid-template-columns: 35fr 30fr 35fr;
-        gap: 26px;
-    }
+.add-patient-inner {
+  height: 98%;
+  padding-bottom: 30px;
+  display: grid;
+  grid-template-columns: 35fr 30fr 35fr;
+  gap: 26px;
+}
 
-    .add-patient-card {
-        background-color: #FFFEFE;
-        padding: 0 30px 24px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        border-radius: 16px;
-        box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
-    }
+.add-patient-card {
+  background-color: #fffefe;
+  padding: 0 30px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 16px;
+  box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-    .addpatient-card-two .add-patient-card:first-child {
-        margin-bottom: 26px;
-    }
+.addpatient-card-two .add-patient-card:first-child {
+  margin-bottom: 26px;
+}
 
-    .add-patient-card-title {
-        margin-top: 24px;
-        margin-bottom: 18px;
-        font-size: 20px;
-        font-weight: 400;
-        line-height: 20px;
-        color: #000000;
-        text-align: center;
-    }
+.add-patient-card-title {
+  margin-top: 24px;
+  margin-bottom: 18px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #000000;
+  text-align: center;
+}
 
-    .addpatient-card-content ul {
-        list-style: none;
-    }
+.addpatient-card-content ul {
+  list-style: none;
+}
 
-    .addpatient-card-content ul li {
-        margin-bottom: 16px;
-        display: grid;
-        grid-template-columns: 30fr 70fr;
-        align-items: center;
-        gap: 26px;
-    }
+.addpatient-card-content ul li {
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: 30fr 70fr;
+  align-items: center;
+  gap: 26px;
+}
 
-    .addpatient-card-content ul li:last-child {
-        margin-bottom: 0;
-    }
+.addpatient-card-content ul li:last-child {
+  margin-bottom: 0;
+}
 
-    .addpatient-card-content ul li input+span[role="alert"] {
-        background-color: #FF0000;
-        width: 65%;
-        padding: 3px 6px;
-        position: absolute;
-        right: 0;
-        bottom: -34px;
-        color: #FFFFFF;
-        border-radius: 3px;
-        z-index: 9;
-    }
+.addpatient-card-content ul li input + span[role="alert"] {
+  background-color: #ff0000;
+  width: 65%;
+  padding: 3px 6px;
+  position: absolute;
+  right: 0;
+  bottom: -34px;
+  color: #ffffff;
+  border-radius: 3px;
+  z-index: 9;
+}
 
-    .addpatient-card-content ul li input+span[role="alert"]:before {
-        content: '';
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 8px solid #FF0000;
-        position: absolute;
-        top: -7px;
-        left: 7px;
-    }
+.addpatient-card-content ul li input + span[role="alert"]:before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #ff0000;
+  position: absolute;
+  top: -7px;
+  left: 7px;
+}
 
-    .addpatient-card-content ul li.fullw-input {
-        grid-template-columns: 1fr;
-        gap: 0;
-        text-align: center;
-    }
+.addpatient-card-content ul li.fullw-input {
+  grid-template-columns: 1fr;
+  gap: 0;
+  text-align: center;
+}
 
-    .addpatient-card-content ul li.fullw-input label {
-        margin-bottom: 3px;
-    }
+.addpatient-card-content ul li.fullw-input label {
+  margin-bottom: 3px;
+}
 
-    .addpatient-card-content ul li label {
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 16px;
-        color: #000000;
-        white-space: nowrap;
-    }
+.addpatient-card-content ul li label {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #000000;
+  white-space: nowrap;
+}
 
-    .addpatient-card-content ul li input,
-    .addpatient-card-content ul li textarea {
-        background-color: #F4F4FF;
-        width: 100%;
-        padding-left: 22px;
-        border-radius: 10px;
-        color: #000000;
-        outline: none;
-        border: none;
-    }
+.addpatient-card-content ul li input,
+.addpatient-card-content ul li textarea {
+  background-color: #f4f4ff;
+  width: 100%;
+  padding-left: 22px;
+  border-radius: 10px;
+  color: #000000;
+  outline: none;
+  border: none;
+}
 
-    .addpatient-card-content ul li input {
-        height: 40px;
-    }
+.addpatient-card-content ul li input {
+  height: 40px;
+}
 
-    .addpatient-card-content ul li textarea {
-        height: 100%;
-        grid-row: span 6;
-        grid-column: span 2;
-        padding-top: 16px;
-        resize: none;
-    }
+.addpatient-card-content ul li textarea {
+  height: 100%;
+  grid-row: span 6;
+  grid-column: span 2;
+  padding-top: 16px;
+  resize: none;
+}
 
-    .addpatient-card-content ul li textarea::placeholder {
-        color: #000000;
-    }
+.addpatient-card-content ul li textarea::placeholder {
+  color: #000000;
+}
 
-    .addpatient-card-content-title {
-        margin: 8px 0;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 16px;
-        color: #000000;
-        text-align: center;
-    }
+.addpatient-card-content-title {
+  margin: 8px 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #000000;
+  text-align: center;
+}
 
-    .addpatient-card-content .medication-block {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.addpatient-card-content .medication-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    .addpatient-card-content .medication-block ul {
-        width: 100%;
-        max-height: 180px;
-        overflow-y: auto;
-    }
+.addpatient-card-content .medication-block ul {
+  width: 100%;
+  max-height: 180px;
+  overflow-y: auto;
+}
 
-    .addpatient-card-content .medication-block ul::-webkit-scrollbar {
-        width: 8px;
-    }
+.addpatient-card-content .medication-block ul::-webkit-scrollbar {
+  width: 8px;
+}
 
-    .addpatient-card-content .medication-block ul::-webkit-scrollbar-track {
-        background-color: #E7E7E7;
-        border-radius: 8px;
-    }
+.addpatient-card-content .medication-block ul::-webkit-scrollbar-track {
+  background-color: #e7e7e7;
+  border-radius: 8px;
+}
 
-    .addpatient-card-content .medication-block ul::-webkit-scrollbar-thumb {
-        background-color: #5C90F1;
-        border-radius: 8px;
-    }
+.addpatient-card-content .medication-block ul::-webkit-scrollbar-thumb {
+  background-color: #5c90f1;
+  border-radius: 8px;
+}
 
-    .addpatient-card-content .medication-block button {
-        margin-top: 16px;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 14px;
-        color: #0258BC;
-    }
+.addpatient-card-content .medication-block button {
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 14px;
+  color: #0258bc;
+}
 
-    .patientInfo {
-        margin-bottom: 16px;
-    }
+.patientInfo {
+  margin-bottom: 16px;
+}
 
-    .heightInput div {
-        display: flex;
-        margin-right: -16px;
-    }
+.heightInput div {
+  display: flex;
+  margin-right: -16px;
+}
 
-    .heightInput div input {
-        margin-right: 3px;
-    }
+.heightInput div input {
+  margin-right: 3px;
+}
 
-    .heightInput div label {
-        margin: auto 16px auto 0;
-    }
+.heightInput div label {
+  margin: auto 16px auto 0;
+}
 
-    @media screen and (max-width: 1440px) {
-        .addpatient-wrapper {
-            padding: 24px 6px 24px 0;
-        }
+@media screen and (max-width: 1440px) {
+  .addpatient-wrapper {
+    padding: 24px 6px 24px 0;
+  }
 
-        .addpatient-head {
-            margin-bottom: 8px;
-        }
+  .addpatient-head {
+    margin-bottom: 8px;
+  }
 
-        .addpatient-head h4 {
-            margin: 0;
-            font-size: 18px;
-        }
+  .addpatient-head h4 {
+    margin: 0;
+    font-size: 18px;
+  }
 
-        .add-patient-inner {
-            grid-template-columns: 1fr 1fr;
-        }
+  .add-patient-inner {
+    grid-template-columns: 1fr 1fr;
+  }
 
-        .add-patient-inner .addpatient-card-two {
-            grid-column: 1/3;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 26px;
-        }
+  .add-patient-inner .addpatient-card-two {
+    grid-column: 1/3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+  }
 
-        .addpatient-card-two .add-patient-card:first-child {
-            height: fit-content;
-            margin-bottom: 0;
-        }
-    }
+  .addpatient-card-two .add-patient-card:first-child {
+    height: fit-content;
+    margin-bottom: 0;
+  }
+}
 
-    @media screen and (max-width: 992px) {
-        .addpatient-head {
-            flex-direction: column;
-            align-items: flex-start;
-        }
+@media screen and (max-width: 992px) {
+  .addpatient-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-        .addpatient-head h4 {
-            margin-bottom: 8px;
-        }
+  .addpatient-head h4 {
+    margin-bottom: 8px;
+  }
 
-        .addpatient-head button.w-btn {
-            min-width: auto;
-            padding: 10px 32px;
-        }
+  .addpatient-head button.w-btn {
+    min-width: auto;
+    padding: 10px 32px;
+  }
 
-        .addpatient-head button.w-btn.w-btn-close {
-            margin-left: 16px;
-        }
+  .addpatient-head button.w-btn.w-btn-close {
+    margin-left: 16px;
+  }
 
-        .add-patient-inner {
-            grid-template-columns: 1fr;
-        }
+  .add-patient-inner {
+    grid-template-columns: 1fr;
+  }
 
-        .add-patient-inner .addpatient-card-two {
-            grid-column: auto;
-            grid-template-columns: 1fr;
-        }
-    }
+  .add-patient-inner .addpatient-card-two {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+}
 
-    @media screen and (max-width: 576px) {
-        .add-patient-card {
-            padding: 0 18px 16px;
-        }
+@media screen and (max-width: 576px) {
+  .add-patient-card {
+    padding: 0 18px 16px;
+  }
 
-        .add-patient-card-title {
-            margin: 16px 0;
-            font-size: 18px;
-        }
+  .add-patient-card-title {
+    margin: 16px 0;
+    font-size: 18px;
+  }
 
-        .addpatient-card-content ul li label,
-        .addpatient-card-content .form-select {
-            font-size: 14px;
-        }
+  .addpatient-card-content ul li label,
+  .addpatient-card-content .form-select {
+    font-size: 14px;
+  }
 
-        .add-patient-inner, 
-        .add-patient-inner .addpatient-card-two {
-            gap: 16px;
-        }
+  .add-patient-inner,
+  .add-patient-inner .addpatient-card-two {
+    gap: 16px;
+  }
 
-        .addpatient-card-content .medication-block .info-form-item-wrapper {
-            padding-right: 0;
-        }
+  .addpatient-card-content .medication-block .info-form-item-wrapper {
+    padding-right: 0;
+  }
 
-        .addpatient-card-content .medication-block label.info-form-item {
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-    }
+  .addpatient-card-content .medication-block label.info-form-item {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+}
 
 .FormDate {
-    border: 1px solid transparent;
+  border: 1px solid transparent;
 }
+
 </style>

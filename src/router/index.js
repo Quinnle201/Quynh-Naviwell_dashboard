@@ -1,47 +1,49 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore, useProgrammaticAccesStore } from '@/stores';
-import { h } from 'vue'
-import { RouterView } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore, useProgrammaticAccesStore } from "@/stores";
+import { h } from "vue";
+import { RouterView } from "vue-router";
 
-import Dashboard from '@/components/Dashboard/Dashboard.vue'
+import Dashboard from "@/components/Dashboard/Dashboard.vue";
 
-import Login from '@/views/Auth/Login.vue'
-import SetPassword from '@/views/Auth/SetPassword.vue'
-import ResetPassword from '@/views/Auth/ResetPassword.vue'
+import Login from "@/views/Auth/Login.vue";
+import SetPassword from "@/views/Auth/SetPassword.vue";
+import ResetPassword from "@/views/Auth/ResetPassword.vue";
 
-import PatientsView from '@/views/Patient/ListView.vue'
-import PatientDetailView from '@/views/Patient/DetailView.vue'
-import PatientNotesView from '@/views/Patient/NotesView.vue'
-import SoapView from '@/views/Patient/SoapView.vue'
-import CalendarView from '@/views/CalendarView.vue'
-import LabResultsView from '@/views/LabResults/LabResultsView.vue'
-import AddResultView from '@/views/LabResults/AddResultView.vue'
-import QuotesView from '@/views/Quotes/QuotesView.vue'
-import AddQuoteView from '@/views/Quotes/AddView.vue'
+import PatientsView from "@/views/Patient/ListView.vue";
+import PatientDetailView from "@/views/Patient/DetailView.vue";
+import PatientNotesView from "@/views/Patient/NotesView.vue";
+import SoapView from "@/views/Patient/SoapView.vue";
+import CalendarView from "@/views/CalendarView.vue";
+import LabResultsView from "@/views/LabResults/LabResultsView.vue";
+import AddResultView from "@/views/LabResults/AddResultView.vue";
+import QuotesView from "@/views/Quotes/QuotesView.vue";
+import AddQuoteView from "@/views/Quotes/AddView.vue";
 
-import QuestionDetailsView from '@/views/Questionnaires/QuestionDetailsView.vue'
-import QuestionnairesResultsView from '@/views/Questionnaires/QuestionnairesResultsView.vue'
+import QuestionDetailsView from "@/views/Questionnaires/QuestionDetailsView.vue";
+import QuestionnairesResultsView from "@/views/Questionnaires/QuestionnairesResultsView.vue";
 
-import AddQuizView from '@/views/Quizzes/AddQuizView.vue'
-import ResultQuizView from '@/views/Quizzes/ResultQuizView.vue'
+import AddQuizView from "@/views/Quizzes/AddQuizView.vue";
+import ResultQuizView from "@/views/Quizzes/ResultQuizView.vue";
 
-import PatientDietDetailsView from '@/views/Diet/PatientDietDetailsView.vue'
-import PatientRecipeDetailsView from '@/views/Diet/PatientRecipeDetailsView.vue'
-import AddDietView from '@/views/Diet/AddDietView.vue'
-import AddRecipeView from '@/views/Diet/AddRecipeView.vue'
-import SettingsView from '@/views/SettingsView.vue'
-import OnboardingView from '@/views//Onboarding/OnboardingView.vue'
-import QuizView from '@/views/Onboarding/QuizView.vue'
-import LifestyleView from '@/views/Onboarding/LifestyleView.vue'
-import GetStartedView from '@/views/Onboarding/GetStartedView.vue'
-import CompleteInfoView from '@/views/Onboarding/CompleteInfoView.vue'
-import PatientProfileView from '@/views/PatientProfileView.vue'
-import PatientLabResultsView from '@/views/PatientLabResultsView.vue'
-import NotFound from '@/views/404.vue'
+import PatientDietDetailsView from "@/views/Diet/PatientDietDetailsView.vue";
+import PatientRecipeDetailsView from "@/views/Diet/PatientRecipeDetailsView.vue";
+import AddDietView from "@/views/Diet/AddDietView.vue";
+import AddRecipeView from "@/views/Diet/AddRecipeView.vue";
+import SettingsView from "@/views/SettingsView.vue";
+import OnboardingView from "@/views//Onboarding/OnboardingView.vue";
+import QuizView from "@/views/Onboarding/QuizView.vue";
+import LifestyleView from "@/views/Onboarding/LifestyleView.vue";
+import GetStartedView from "@/views/Onboarding/GetStartedView.vue";
+import CompleteInfoView from "@/views/Onboarding/CompleteInfoView.vue";
+import PatientProfileView from "@/views/PatientProfileView.vue";
+import PatientLabResultsView from "@/views/PatientLabResultsView.vue";
+import NotFound from "@/views/404.vue";
+import ReviewAccessView from "@/views/Security/ReviewAccessView.vue";
+import checkActivityView from '@/views/Security/checkActivity.vue';
 
 import MiddlewareStylesheet from "./middleware/stylesheet";
 
-function isPatient(){
+function isPatient() {
   const authStore = useAuthStore();
   return authStore.isPatient;
 }
@@ -50,137 +52,153 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/login',
-      name: 'login',
+      path: "/security/review-access",
+      name: "ReviewAccess",
+      component: ReviewAccessView,
+      meta: { physician: true, patient: true },
+    },
+    {
+    path: '/security/review-access-page',
+    name: 'checkActivity',
+    component: checkActivityView,
+    meta: { physician: true, patient: true }
+  },
+    {
+      path: "/login",
+      name: "login",
       component: Login,
       meta: { physician: true, patient: true },
       beforeEnter: (to, from) => {
         const authStore = useAuthStore();
-        if(authStore.user || authStore.claim != null){
-          return from
+        if (authStore.user || authStore.claim != null) {
+          return from;
         }
       },
     },
     {
-      path: '/set-password',
-      name: 'setpassword',
+      path: "/set-password",
+      name: "setpassword",
       component: SetPassword,
       meta: { physician: true, patient: true },
       beforeEnter: (to, from) => {
         const authStore = useAuthStore();
-        if(!authStore.user || authStore.claim != null){
-          return from
+        if (!authStore.user || authStore.claim != null) {
+          return from;
         }
       },
     },
     {
-      path: '/reset-password',
-      name: 'resetpassword',
+      path: "/reset-password",
+      name: "resetpassword",
       component: ResetPassword,
       meta: { physician: true, patient: true },
       beforeEnter: (to, from) => {
         const authStore = useAuthStore();
-        if(authStore.user || authStore.claim != null){
-          return from
+        if (from.name === "checkActivity") return true; // allow
+        if (authStore.user || authStore.claim != null) {
+          return from;
         }
       },
     },
     {
-      path: '/onboarding',
+      path: "/onboarding",
       children: [
         {
-          path: '',
-          name: 'onboarding',
+          path: "",
+          name: "onboarding",
           component: OnboardingView,
-          meta: { physician: false, patient: true, stylesheet: 'onboarding' },
+          meta: { physician: false, patient: true, stylesheet: "onboarding" },
           beforeEnter: (to, from) => {
             const programmaticAccess = useProgrammaticAccesStore();
-            if(programmaticAccess.getAccessPage == "onboarding"){
-              programmaticAccess.setAccessPage(null)
+            if (programmaticAccess.getAccessPage == "onboarding") {
+              programmaticAccess.setAccessPage(null);
               return true;
             }
-            return from
+            return from;
           },
         },
         {
-          path: '/get-started',
-          name: 'get-started',
+          path: "/get-started",
+          name: "get-started",
           component: GetStartedView,
-          meta: { physician: false, patient: true, stylesheet: 'onboarding' },
+          meta: { physician: false, patient: true, stylesheet: "onboarding" },
           beforeEnter: (to, from) => {
             const programmaticAccess = useProgrammaticAccesStore();
-            if(programmaticAccess.getAccessPage == "get-started"){
-              programmaticAccess.setAccessPage(null)
+            if (programmaticAccess.getAccessPage == "get-started") {
+              programmaticAccess.setAccessPage(null);
               return true;
             }
-            return from
+            return from;
           },
         },
         {
-          path: '/quiz',
-          name: 'quiz',
+          path: "/quiz",
+          name: "quiz",
           component: QuizView,
-          meta: { physician: false, patient: true, stylesheet: 'onboarding' },
+          meta: { physician: false, patient: true, stylesheet: "onboarding" },
           beforeEnter: (to, from) => {
             const programmaticAccess = useProgrammaticAccesStore();
-            if(programmaticAccess.getAccessPage == "quiz"){
-              programmaticAccess.setAccessPage(null)
+            if (programmaticAccess.getAccessPage == "quiz") {
+              programmaticAccess.setAccessPage(null);
               return true;
             }
-            return from
+            return from;
           },
         },
         {
-          path: '/lifestyle',
-          name: 'lifestyle',
+          path: "/lifestyle",
+          name: "lifestyle",
           component: LifestyleView,
-          meta: { physician: false, patient: true, stylesheet: 'onboarding' },
+          meta: { physician: false, patient: true, stylesheet: "onboarding" },
           beforeEnter: (to, from) => {
             const programmaticAccess = useProgrammaticAccesStore();
-            if(programmaticAccess.getAccessPage == "lifestyle"){
-              programmaticAccess.setAccessPage(null)
+            if (programmaticAccess.getAccessPage == "lifestyle") {
+              programmaticAccess.setAccessPage(null);
               return true;
             }
-            return from
+            return from;
           },
         },
         {
-          path: '/complete-info',
-          name: 'complete-info',
+          path: "/complete-info",
+          name: "complete-info",
           component: CompleteInfoView,
-          meta: { physician: false, patient: true, stylesheet: 'onboarding' },
+          meta: { physician: false, patient: true, stylesheet: "onboarding" },
           beforeEnter: (to, from) => {
             const programmaticAccess = useProgrammaticAccesStore();
-            if(programmaticAccess.getAccessPage == "complete-info"){
-              programmaticAccess.setAccessPage(null)
+            if (programmaticAccess.getAccessPage == "complete-info") {
+              programmaticAccess.setAccessPage(null);
               return true;
             }
-            return from
+            return from;
           },
-        }
-      ]
+        },
+      ],
     },
     {
-      path: '/',
-      name: '',
-      redirect: 'home',
+      path: "/",
+      name: "",
+      redirect: "home",
       component: Dashboard,
       children: [
         {
           path: "home",
           name: "home",
-          component: () => isPatient() ? import('@/views/PatientHomeView.vue') : import('@/views/HomeView.vue'),
+          component: () =>
+            isPatient()
+              ? import("@/views/PatientHomeView.vue")
+              : import("@/views/HomeView.vue"),
           meta: { physician: true, patient: true },
         },
         {
-          path: '/patients',
+          path: "/patients",
           component: { render: () => h(RouterView) },
           meta: { physician: true, patient: false },
           children: [
             {
-              path: '',
-              name: 'patients',
-              component: PatientsView
+              path: "",
+              name: "patients",
+              component: PatientsView,
             },
             {
               path: ":id",
@@ -190,9 +208,9 @@ const router = createRouter({
                 {
                   path: "report",
                   name: "report",
-                  component: PatientDetailView
-                }
-              ]
+                  component: PatientDetailView,
+                },
+              ],
             },
             {
               path: "/notes/:noteId?",
@@ -203,58 +221,61 @@ const router = createRouter({
               path: "/soap/:soapId?",
               name: "soap",
               component: SoapView,
-            }
-          ]
+            },
+          ],
         },
         {
-          path: '/diet',
+          path: "/diet",
           component: { render: () => h(RouterView) },
           children: [
             {
-              path: '',
-              name: 'diet',
-              component: () => isPatient() ? import('@/views/Diet/PatientDietView.vue') : import('@/views/Diet/DietView.vue'),
+              path: "",
+              name: "diet",
+              component: () =>
+                isPatient()
+                  ? import("@/views/Diet/PatientDietView.vue")
+                  : import("@/views/Diet/DietView.vue"),
               meta: { physician: true, patient: true },
             },
             {
-              path: ':id',
-              name: 'patient-diet-details',
+              path: ":id",
+              name: "patient-diet-details",
               component: PatientDietDetailsView,
-              meta: { physician: true, patient: true }
+              meta: { physician: true, patient: true },
             },
             {
-              path: '/recipe/:id',
-              name: 'patient-recipe-details',
+              path: "/recipe/:id",
+              name: "patient-recipe-details",
               component: PatientRecipeDetailsView,
-              meta: { physician: true, patient: true }
+              meta: { physician: true, patient: true },
             },
             {
               path: "add-diet/:id?",
               name: "add-diet",
               component: AddDietView,
-              meta: { physician: false, patient: false }
+              meta: { physician: false, patient: false },
             },
             {
               path: "add-recipe/:id?",
               name: "add-recipe",
               component: AddRecipeView,
-              meta: { physician: false, patient: false }
-            }
-          ]
+              meta: { physician: false, patient: false },
+            },
+          ],
         },
         {
-          path: 'profile',
-          name: 'profile',
+          path: "profile",
+          name: "profile",
           component: PatientProfileView,
           meta: { physician: false, patient: true },
         },
         {
-          path: '/quotes',
+          path: "/quotes",
           component: { render: () => h(RouterView) },
           children: [
             {
-              path: '',
-              name: 'quotes',
+              path: "",
+              name: "quotes",
               component: QuotesView,
               meta: { physician: true, patient: false },
             },
@@ -263,23 +284,26 @@ const router = createRouter({
               name: "quotes-mass-add",
               component: AddQuoteView,
               meta: { physician: true, patient: false },
-            }
-          ]
+            },
+          ],
         },
         {
           path: "calendar/:id?",
           name: "calendar",
           // component: CalendarView,
-          component: () => isPatient() ? import('@/views/PatientCalendarView.vue') : import('@/views/CalendarView.vue'),
+          component: () =>
+            isPatient()
+              ? import("@/views/PatientCalendarView.vue")
+              : import("@/views/CalendarView.vue"),
           meta: { physician: true, patient: true },
         },
         {
-          path: '/lab-results',
+          path: "/lab-results",
           component: { render: () => h(RouterView) },
           children: [
             {
-              path: '',
-              name: 'lab-results',
+              path: "",
+              name: "lab-results",
               component: LabResultsView,
               meta: { physician: true, patient: false },
             },
@@ -288,8 +312,8 @@ const router = createRouter({
               name: "add-result",
               component: AddResultView,
               meta: { physician: true, patient: false },
-            }
-          ]
+            },
+          ],
         },
         {
           path: "patient-lab-results",
@@ -300,7 +324,10 @@ const router = createRouter({
         {
           path: "messages",
           name: "messages",
-          component: () => isPatient() ? import('@/views/PatientMessagesView.vue') : import('@/views/MessagesView.vue'),
+          component: () =>
+            isPatient()
+              ? import("@/views/PatientMessagesView.vue")
+              : import("@/views/MessagesView.vue"),
           meta: { physician: true, patient: true },
         },
         {
@@ -310,13 +337,16 @@ const router = createRouter({
           meta: { physician: true, patient: true },
         },
         {
-          path: '/quizzes',
+          path: "/quizzes",
           component: { render: () => h(RouterView) },
           children: [
             {
-              path: '',
-              name: 'quizzes',
-              component: () => isPatient() ? import('@/views/Questionnaires/QuestionnairesView.vue') : import('@/views/Quizzes/QuizzesView.vue'),
+              path: "",
+              name: "quizzes",
+              component: () =>
+                isPatient()
+                  ? import("@/views/Questionnaires/QuestionnairesView.vue")
+                  : import("@/views/Quizzes/QuizzesView.vue"),
               meta: { physician: true, patient: true },
             },
             {
@@ -332,12 +362,12 @@ const router = createRouter({
               meta: { physician: true, patient: true },
             },
             {
-              path: ':id',
-              name: 'question-details',
+              path: ":id",
+              name: "question-details",
               component: QuestionDetailsView,
               meta: { physician: false, patient: true },
             },
-          ]
+          ],
         },
         {
           path: "questionnaires",
@@ -359,7 +389,7 @@ const router = createRouter({
         //       name: 'question-details',
         //       component: QuestionDetailsView,
         //       meta: { physician: false, patient: true },
-              
+
         //     },
         //     {
         //       path: 'question-details/question',
@@ -376,19 +406,19 @@ const router = createRouter({
         //   ]
         // },
         {
-          path: '/:pathMatch(.*)*',
-          name: 'NotFound',
+          path: "/:pathMatch(.*)*",
+          name: "NotFound",
           component: NotFound,
           meta: { physician: true, patient: true },
-        }
-      ]
+        },
+      ],
     },
-  ]
-})
+  ],
+});
 
 router.beforeEach(async (to) => {
 
-  // redirect to login page if not logged in and trying to access a restricted page 
+  // redirect to login page if not logged in and trying to access a restricted page
   const publicPages = ['/login', '/set-password', '/reset-password' ];
   const authRequired = !publicPages.includes(to.path);
   const authStore = useAuthStore();
@@ -410,4 +440,5 @@ router.beforeEach(async (to) => {
 
 // router.beforeEach(MiddlewareStylesheet);
 
-export default router
+
+export default router;
